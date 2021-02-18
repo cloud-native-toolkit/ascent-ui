@@ -8,6 +8,7 @@ import {
   SideNavItems,
   SideNavMenu,
   SideNavMenuItem,
+  SideNavLink
 } from 'carbon-components-react/lib/components/UIShell/';
 import UIShellBody from "./UIShellBody";
 
@@ -23,33 +24,30 @@ const Fade20 = () => (
 );
 
 class UIShell extends Component {
-  header = "Garage for Cloud Catalyst";
-  menuTitle = "12 Design Pattern";
+  header = "Architecture Builder";
   menuItems = [
-    "Display Form",
-    "Validating Form",
-    "Update Form",
-    "Validating Form Wizard 1",
-    "Validating Form Wizard 2",
-    "Search Form",
-    "Simple List",
-    "Table List",
-    "Linked List",
-    "List to List",
-    "Search List",
-    "Create, Read, Update, Delete",
-    "Master Detail"
-    /*"Linked List",
-    "Master Detail",
-    "Create, Read, Update, Delete",
-    "Search List",
-    "Search Form"*/
-  ];
+    "Overview",
+    "Builder",
+    "Compliance"
+  ]
+  builderMenuItems = [
+    "Architecture",
+    "Services",
+    "Autmation",
+    "Provisioner"
+  ]
+  complianceMenuItems = [
+    "Controls",
+    "Mapping",
+    "Service",
+    "Nist-800"
+  ]
+
 
   constructor(props) {
     super(props);
     this.state = {
-      patternName: this.menuItems[0]
+      patternName: "Overview"
     };
   }
 
@@ -57,11 +55,22 @@ class UIShell extends Component {
     this.setState({ patternName: label });
   };
 
-  renderSideNavItems = () => {
-    return this.menuItems.map(label => this.renderSideNavItem(label));
+  renderbuilderSideNavItems = () => {
+    return this.builderMenuItems.map(label => this.renderbuilderSideNavItem(label));
   };
 
-  renderSideNavItem = label => {
+  renderbuilderSideNavItem = label => {
+    return (
+      <SideNavMenuItem href="# " isActive={label === this.state.patternName ? true : false} onClick={e => this.onPatternSelection(label)}>{label}</SideNavMenuItem>
+    );
+  };
+
+
+  rendercomplianceSideNavItems = () => {
+    return this.complianceMenuItems.map(label => this.rendercomplianceSideNavItem(label));
+  };
+
+  rendercomplianceSideNavItem = label => {
     return (
       <SideNavMenuItem href="# " isActive={label === this.state.patternName ? true : false} onClick={e => this.onPatternSelection(label)}>{label}</SideNavMenuItem>
     );
@@ -76,17 +85,19 @@ class UIShell extends Component {
             {this.header}
           </HeaderName>
         </Header>
+
         <SideNav aria-label="Side navigation">
           <SideNavItems>
-            <SideNavMenu
-              defaultExpanded
-              icon={<Fade20 />}
-              title={this.menuTitle}
-            >
-              {this.renderSideNavItems()}
+            <SideNavLink href="javascript:void(0)">OverView</SideNavLink>
+            <SideNavMenu title="Builder">
+              {this.renderbuilderSideNavItems()}
+            </SideNavMenu>
+            <SideNavMenu title="Compliance" >
+              {this.rendercomplianceSideNavItems()}
             </SideNavMenu>
           </SideNavItems>
         </SideNav>
+
         <Content id="main-content"><UIShellBody patternName={this.state.patternName} /></Content>
       </div>
     );
