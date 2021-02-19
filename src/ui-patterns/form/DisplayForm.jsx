@@ -31,7 +31,7 @@ class DisplayForm extends Component {
         {showDescription && (
           <Header
             title="Display Form"
-            subtitle="Displays a model object as a form in a read only display."
+            subtitle=""
           />
         )}
         <div className="bx--row">
