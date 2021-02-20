@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+import FormLabel from 'carbon-components-react/lib/components/FormLabel';
+import Tooltip from 'carbon-components-react/lib/components/Tooltip';
+
 import ResourceCard from './ResourceCard';
 //import ArticleCard from './ArticleCard';
 //import CodePatternCard from './CodePatternCard';
@@ -55,13 +58,26 @@ class ArchitectureView extends Component {
                             <ResourceCard
                                 title={arch.name}
                                 subTitle={arch.short_desc}
-                                href={arch._id}
                             >
                                 <img
                                     className="resource-img"
                                     src={getImage(arch._id,arch.diagram_link_png)}
                                     alt={arch.short_desc}
                                 />
+
+                                <div class="labels">
+
+                                    <FormLabel>
+
+                                        <Tooltip triggerText="Label">This is the content of the tooltip.</Tooltip>
+                                        <Tooltip triggerText="Label">This is the content of the tooltip.</Tooltip>
+                                        <Tooltip triggerText="Label">This is the content of the tooltip.</Tooltip>
+                                        <Tooltip triggerText="Label">This is the content of the tooltip.</Tooltip>
+
+                                    </FormLabel>
+
+
+                                </div>
 
 
                             </ResourceCard>

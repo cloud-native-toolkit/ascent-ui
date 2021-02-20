@@ -17,7 +17,7 @@ class OverView extends Component {
                                 fontSize: "20px"
                             }}
                         >
-                            Purpose and function
+                            FS Cloud Arcitecture Builder
                         </h2>
                         <p style={{ lineHeight: "20px" }}>
                             The shell is perhaps the most crucial piece of any UI built with
@@ -26,8 +26,11 @@ class OverView extends Component {
                             ohesive and elegant way.The shell is the home of the topmost
                             vigation, where users can quickly and dependably gain their
                             bearings and move between pages.
-                            <br />
-                            <br />
+                            <br /> <br />
+
+                            <img src="/data-model.png"></img>
+                            <br /> <br />
+
                             The shell was designed with maximum flexibility built in, to serve
                             the needs of a broad range of products and users.Adopting the shell
                             ensures compliance with IBM design standards, simplifies development
