@@ -7,10 +7,9 @@ class OverView extends Component {
             <div className="bx--grid">
                 <Header
                     title="Overview"
-                    subtitle="Displays a model object as a form in a read only display."
                 />
                 <div className="bx--row">
-                    <section className="bx--offset-lg-3 bx--col-lg-13">
+                    <section >
                         <h2
                             style={{
                                 fontWeight: "800",

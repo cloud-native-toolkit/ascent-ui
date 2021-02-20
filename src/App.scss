@@ -2,7 +2,13 @@ $feature-flags: (
   components-x: true,
   ui-shell: true
 );
+
 @import "~carbon-components/src/globals/scss/styles.scss";
+
+@import "./ui-patterns/builder/_ArchitectureView.scss";
+
+@import "./ui-patterns/builder/ResourceCard/resource-card.scss";
+@import "./ui-patterns/builder/ResourceCard/resource-card-group.scss";
 
 .App {
   font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
@@ -16,3 +22,12 @@ $feature-flags: (
 .bx--content {
   padding: 0px;
 }
+
+
+.resource-img {
+  height:35em;
+  padding-bottom: 5px;
+}
+
+
+
