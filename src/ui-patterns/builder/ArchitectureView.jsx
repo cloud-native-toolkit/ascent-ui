@@ -4,11 +4,10 @@ import FormLabel from 'carbon-components-react/lib/components/FormLabel';
 import Tooltip from 'carbon-components-react/lib/components/Tooltip';
 
 import ResourceCard from './ResourceCard';
-//import ArticleCard from './ArticleCard';
-//import CodePatternCard from './CodePatternCard';
+import ArticleCard from './ArticleCard';
+import CodePatternCard from './CodePatternCard';
 
 import _ from 'lodash';
-import ArchReferenceCard from "./ArchReferenceCard";
 
 class ArchitectureView extends Component {
 
@@ -53,34 +52,36 @@ class ArchitectureView extends Component {
             for(var i=0;i<architectures.length;i++) {
                 const arch = architectures[i];
                 archTiles.push(
-                    <div className="bx--column bx--col-md-8  bx--no-gutter-lg">
+                    <div className="bx--col-md-8 bx--col-lg-8">
+                        <ArticleCard
+                            title={arch.name}
+                            author={arch.short_desc}
+                            desc={arch.long_desc}
+                            date="March 12, 2021"
+                            readTime="Terraform | FS Ready | Cloud-Native"
+                            color="dark">
 
-                            <ResourceCard
-                                title={arch.name}
-                                subTitle={arch.short_desc}
-                            >
-                                <img
-                                    className="resource-img"
-                                    src={getImage(arch._id,arch.diagram_link_png)}
-                                    alt={arch.short_desc}
-                                />
+                            <img
+                                className="resource-img"
+                                src={getImage(arch._id,arch.diagram_link_png)}
+                                alt={arch.short_desc}
+                                className="article-img"
+                            />
 
-                                <div class="labels">
+                            <div className="labels">
 
-                                    <FormLabel>
+                                <FormLabel>
 
-                                        <Tooltip triggerText="Label">This is the content of the tooltip.</Tooltip>
-                                        <Tooltip triggerText="Label">This is the content of the tooltip.</Tooltip>
-                                        <Tooltip triggerText="Label">This is the content of the tooltip.</Tooltip>
-                                        <Tooltip triggerText="Label">This is the content of the tooltip.</Tooltip>
+                                    <Tooltip triggerText="FS Ready">This Architecture is FS Ready</Tooltip>
+                                    <Tooltip triggerText="Hippa">This architecture support Hippa Services</Tooltip>
+                                    <Tooltip triggerText="Terraform">This architecture supports Terraform.</Tooltip>
 
-                                    </FormLabel>
+                                </FormLabel>
+
+                            </div>
 
 
-                                </div>
-
-
-                            </ResourceCard>
+                        </ArticleCard>
 
                     </div>
                 );
@@ -92,7 +93,7 @@ class ArchitectureView extends Component {
 
         return (
 
-            <div className="bx--grid bx--grid--no-gutter bx--grid--full-width">
+            <div className="bx--grid bx--grid--full-width">
 
                 <div className="bx--row">
                     <div className="bx--col-lg-16">
@@ -102,17 +103,18 @@ class ArchitectureView extends Component {
                         </h2>
                         <br></br>
                         <p>
-                            Navigate the reference architectures and see the bill of materials
+                            Navigate to the reference architecture you are interested in and see the IBM Cloud bill of materials
                         </p>
                         <br></br>
                     </div>
                 </div>
 
-                <div className="bx--row ">
-                    <div className="bx--row resource-card-group">
-                        {getArchitectures(this.state.architectures, true)}
-                    </div>
+                <div className="bx--row">
+
+                    {getArchitectures(this.state.architectures, true)}
+
                 </div>
+
             </div>
 
         );

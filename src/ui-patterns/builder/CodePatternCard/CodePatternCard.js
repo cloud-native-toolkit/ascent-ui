@@ -10,7 +10,7 @@ import { settings } from 'carbon-components';
 
 const { prefix } = settings;
 
-export default class ArchReferenceCard extends React.Component {
+export default class CodePatternCard extends React.Component {
   static propTypes = {
     children: PropTypes.node,
 
@@ -111,7 +111,7 @@ export default class ArchReferenceCard extends React.Component {
     const cardContent = (
       <>
         <div className={`${prefix}--article-card__img`}>{children}</div>
-        <div className={aspectRatioClassNames}>
+        <div className={aspectRatioClassNames}>        
 
           <div
             className={`${prefix}--aspect-ratio--object ${prefix}--starterkit-card__tile`}
@@ -124,13 +124,13 @@ export default class ArchReferenceCard extends React.Component {
                       <img
                         src={`${process.env.PUBLIC_URL}/node-32.png`}
                         alt="Node"
-                      />
+                      />            
                     ) : null}
                     {language === 'Java' || language === 'Spring' || language === 'Liberty' ?(
                       <img
                         src={`${process.env.PUBLIC_URL}/java-32.png`}
                         alt="Java"
-                      />
+                      />            
                     ) : null}
                     {language === 'Go' ?(
                         <img
@@ -143,11 +143,11 @@ export default class ArchReferenceCard extends React.Component {
                       <img
                         src={`${process.env.PUBLIC_URL}/webui-32.png`}
                         alt="Java"
-                      />
+                      />            
                     ) : null}
-                  </div>
-                  {title}
-
+                  </div>    
+                  {title}  
+                  
               </h4>
             ) : null}
 
@@ -174,9 +174,9 @@ export default class ArchReferenceCard extends React.Component {
             </div>
 
             <div className="icon-row">
-
+             
               <div className={`${prefix}--article-card__icon--action`}>
-
+              
                 {actionIcon === 'launch' && !disabled ? (
                   <Launch20 aria-label="Open" />
                 ) : null}
@@ -199,13 +199,13 @@ export default class ArchReferenceCard extends React.Component {
                       target="_blank"
                       rel="noopener noreferrer"
                       href={href}
-                    >
+                    >  
                     <div>
                       <img
                         src={`${process.env.PUBLIC_URL}/github-icon.png`}
                         alt="Github"
-                      />
-                    </div>
+                      />                              
+                    </div>      
                     </a>
               </div>
             </div>

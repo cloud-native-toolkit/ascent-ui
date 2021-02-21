@@ -7,6 +7,10 @@
   "proxy": "http://localhost:3001",
   "dependencies": {
     "@babel/core": "7.1.0",
+    "@babel/plugin-transform-react-jsx": "^7.12.17",
+    "@carbon/colors": "^10.20.0",
+    "@carbon/grid": "^10.20.0",
+    "@carbon/icons-react": "^10.25.0",
     "@svgr/webpack": "2.4.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
@@ -142,10 +146,14 @@
   },
   "babel": {
     "presets": [
+      "@babel/preset-react",
+      "@babel/preset-env",
       "react-app"
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.12.13",
+    "@babel/preset-env": "^7.12.17",
     "@types/jest": "^24.0.21",
     "@types/node": "^11.13.19",
     "@types/react": "^16.9.11",
