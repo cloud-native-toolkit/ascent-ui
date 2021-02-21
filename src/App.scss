@@ -3,10 +3,19 @@ $feature-flags: (
   ui-shell: true
 );
 
-@import "~carbon-components/src/globals/scss/styles.scss";
+$feature-flags: (
+    grid-columns-16: true,
+);
 
+// If you're including all the styles for Carbon
+@import '~carbon-components/scss/globals/scss/styles.scss';
+
+@import '~@carbon/colors/scss/colors';
+
+@import '~@carbon/grid/scss/grid';
 @import "./ui-patterns/builder/_ArchitectureView.scss";
 
+@import "./ui-patterns/builder/ArticleCard/article-card.scss";
 @import "./ui-patterns/builder/ResourceCard/resource-card.scss";
 @import "./ui-patterns/builder/ResourceCard/resource-card-group.scss";
 
@@ -15,14 +24,6 @@ $feature-flags: (
   font-weight: 400;
   text-align: center;
 }
-
-.bx--row {
-  display:block;
-}
-.bx--content {
-  padding: 0px;
-}
-
 
 .resource-img {
   height:35em;

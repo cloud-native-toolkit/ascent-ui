@@ -29,6 +29,18 @@
   color: $text-01;
 }
 
+.#{$prefix}--article-card__description {
+  @include carbon--type-style('body-long-01');
+  font-weight: 100;
+  color: #6e98df;
+  overflow-wrap: overflow-wrap;
+  text-decoration: none;
+  overflow: hidden; /* make sure it hides the content that overflows */
+  white-space: nowrap; /* don't break the line */
+  text-overflow: ellipsis; /* give the beautiful '...' effect */
+  color: yellow;
+}
+
 .#{$prefix}--article-card__info {
   @include carbon--type-style('caption-01');
   position: absolute;

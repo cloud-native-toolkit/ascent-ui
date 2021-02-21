@@ -28,7 +28,7 @@ class OverView extends Component {
                             bearings and move between pages.
                             <br /> <br />
 
-                            <img src="/data-model.png"></img>
+                            <img src="/images/data-model.png"></img>
                             <br /> <br />
 
                             The shell was designed with maximum flexibility built in, to serve

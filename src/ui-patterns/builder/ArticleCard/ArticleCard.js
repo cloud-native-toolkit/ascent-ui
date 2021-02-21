@@ -30,6 +30,11 @@ export default class ArticleCard extends React.Component {
     subTitle: PropTypes.string,
 
     /**
+     * desc
+     */
+    desc: PropTypes.string,
+
+    /**
      * Author
      */
     author: PropTypes.string,
@@ -77,6 +82,7 @@ export default class ArticleCard extends React.Component {
       href,
       title,
       subTitle,
+      desc,
       author,
       date,
       readTime,
@@ -124,6 +130,13 @@ export default class ArticleCard extends React.Component {
                   {subTitle}
                 </h5>
             ) : null}
+
+            {desc ? (
+                <h5 className={`${prefix}--article-card__description`}>
+                  {desc}
+                </h5>
+            ) : null}
+
 
             <div className={`${prefix}--article-card__info`}>
               {author ? (
