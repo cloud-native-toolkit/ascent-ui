@@ -3,9 +3,7 @@ import React, { Component } from "react";
 import FormLabel from 'carbon-components-react/lib/components/FormLabel';
 import Tooltip from 'carbon-components-react/lib/components/Tooltip';
 
-import ResourceCard from './ResourceCard';
 import ArticleCard from './ArticleCard';
-import CodePatternCard from './CodePatternCard';
 
 import _ from 'lodash';
 
@@ -35,7 +33,6 @@ class ArchitectureView extends Component {
             });
 
     };
-
 
     render() {
 
@@ -68,7 +65,7 @@ class ArchitectureView extends Component {
                                 className="article-img"
                             />
 
-                            <div className="labels">
+                                <div className="labels">
 
                                 <FormLabel>
 
