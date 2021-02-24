@@ -28,11 +28,7 @@ class ArchitectureView extends Component {
                 this.setState(Object.assign(
                     {},
                     this.state,
-<<<<<<< HEAD
                     { architectures: data },
-=======
-                    {architectures: data},
->>>>>>> a7bf57c1a5542ee0d95beed31becbda4f749ef69
                 ));
             });
 
@@ -41,28 +37,16 @@ class ArchitectureView extends Component {
     render() {
 
         function getImage(id, image) {
-<<<<<<< HEAD
             return "/images/" + id + "/" + image;
-=======
-            return "/images/"+id+"/"+image;
->>>>>>> a7bf57c1a5542ee0d95beed31becbda4f749ef69
         }
 
         function getArchitectures(architectures) {
 
-<<<<<<< HEAD
             if (_.isUndefined(architectures))
                 return [];
 
             var archTiles = []
             for (var i = 0; i < architectures.length; i++) {
-=======
-            if (_.isUndefined(architectures) )
-                return [];
-
-            var archTiles = []
-            for(var i=0;i<architectures.length;i++) {
->>>>>>> a7bf57c1a5542ee0d95beed31becbda4f749ef69
                 const arch = architectures[i];
                 archTiles.push(
                     <div className="bx--col-md-8 bx--col-lg-8">
@@ -76,20 +60,12 @@ class ArchitectureView extends Component {
 
                             <img
                                 className="resource-img"
-<<<<<<< HEAD
                                 src={getImage(arch._id, arch.diagram_link_png)}
-=======
-                                src={getImage(arch._id,arch.diagram_link_png)}
->>>>>>> a7bf57c1a5542ee0d95beed31becbda4f749ef69
                                 alt={arch.short_desc}
                                 className="article-img"
                             />
 
-<<<<<<< HEAD
                             <div className="labels">
-=======
-                                <div className="labels">
->>>>>>> a7bf57c1a5542ee0d95beed31becbda4f749ef69
 
                                 <FormLabel>
 
