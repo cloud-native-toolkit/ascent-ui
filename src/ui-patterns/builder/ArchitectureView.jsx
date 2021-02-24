@@ -28,7 +28,7 @@ class ArchitectureView extends Component {
                 this.setState(Object.assign(
                     {},
                     this.state,
-                    {architectures: data},
+                    { architectures: data },
                 ));
             });
 
@@ -37,16 +37,16 @@ class ArchitectureView extends Component {
     render() {
 
         function getImage(id, image) {
-            return "/images/"+id+"/"+image;
+            return "/images/" + id + "/" + image;
         }
 
         function getArchitectures(architectures) {
 
-            if (_.isUndefined(architectures) )
+            if (_.isUndefined(architectures))
                 return [];
 
             var archTiles = []
-            for(var i=0;i<architectures.length;i++) {
+            for (var i = 0; i < architectures.length; i++) {
                 const arch = architectures[i];
                 archTiles.push(
                     <div className="bx--col-md-8 bx--col-lg-8">
@@ -60,12 +60,12 @@ class ArchitectureView extends Component {
 
                             <img
                                 className="resource-img"
-                                src={getImage(arch._id,arch.diagram_link_png)}
+                                src={getImage(arch._id, arch.diagram_link_png)}
                                 alt={arch.short_desc}
                                 className="article-img"
                             />
 
-                                <div className="labels">
+                            <div className="labels">
 
                                 <FormLabel>
 
