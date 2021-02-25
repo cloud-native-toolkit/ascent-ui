@@ -1,18 +1,31 @@
 import React, { Component } from "react";
 import Header from "../ui-shell/Header";
 import 'carbon-components/css/carbon-components.min.css';
-import { DataTable, TableContainer, Table, TableToolbar, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell } from 'carbon-components-react';
+import {
+    Delete16 as Delete,
+    Save16 as Save,
+    Download16 as Download,
+} from '@carbon/icons-react';
+import {
+    DataTable, TableContainer, Table, TableSelectAll, TableBatchAction, TableSelectRow,
+    TableBatchActions, TableToolbar, TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
+} from 'carbon-components-react';
+import { Button } from 'carbon-components-react';
+import { Pagination } from 'carbon-components-react';
+
 class BillofMaterialsView extends Component {
 
     constructor(props) {
         super(props);
+
+        console.log(this.props.bomService);
         this.state = {
             data: [],
             headersData: [
-                {
+                /*{
                     key: 'id',
                     header: 'Id',
-                },
+                },*/
                 {
                     key: 'ibm_service',
                     header: 'IBM Service',
@@ -29,7 +42,7 @@ class BillofMaterialsView extends Component {
                     key: 'compatibility',
                     header: 'Compatibility',
                 },
-                {
+                /*{
                     key: 'catalog_link',
                     header: 'Catalog View',
                 },
@@ -44,7 +57,7 @@ class BillofMaterialsView extends Component {
                 {
                     key: 'remarks',
                     header: 'Remarks',
-                },
+                },*/
                 {
                     key: 'provision',
                     header: 'Provision',
@@ -74,7 +87,7 @@ class BillofMaterialsView extends Component {
 
     }
     async componentDidMount() {
-        const jsonData = await this.props.bomService.doGetBOM("arch01");
+        const jsonData = await this.props.bomService.doGetBOM(this.props.archId);
         const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
         this.setState({
             data: bomDetails
@@ -107,32 +120,75 @@ class BillofMaterialsView extends Component {
                             headers,
                             getHeaderProps,
                             getRowProps,
-                            getTableProps,
+                            getSelectionProps,
                             getToolbarProps,
+                            getBatchActionProps,
                             onInputChange,
+                            selectedRows,
+                            getTableProps,
                             getTableContainerProps,
                         }) => (
                                 <TableContainer
                                     {...getTableContainerProps()}>
                                     <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
+                                        <TableBatchActions {...getBatchActionProps()}>
+                                            <TableBatchAction
+                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                renderIcon={Delete}
+                                            >
+                                                Delete
+                                           </TableBatchAction>
+                                            <TableBatchAction
+                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                renderIcon={Save}
+                                            >
+                                                Save
+                                           </TableBatchAction>
+                                            <TableBatchAction
+                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                renderIcon={Download}
+                                            >
+                                                Download
+                                           </TableBatchAction>
+                                        </TableBatchActions>
                                         <TableToolbarContent>
-                                            <TableToolbarSearch onChange={onInputChange} />
+                                            <TableToolbarSearch onChange={onInputChange} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
+                                            <TableToolbarMenu
+                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}>
+                                                <TableToolbarAction onClick={() => alert('Alert 1')}>
+                                                    Action 1
+                                               </TableToolbarAction>
+                                                <TableToolbarAction onClick={() => alert('Alert 2')}>
+                                                    Action 2
+                                                </TableToolbarAction>
+                                                <TableToolbarAction onClick={() => alert('Alert 3')}>
+                                                    Action 3
+                                                </TableToolbarAction>
+                                            </TableToolbarMenu>
+                                            <Button
+                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
 
+                                                size="small"
+                                                kind="primary">
+                                                Add new
+                                            </Button>
                                         </TableToolbarContent>
                                     </TableToolbar>
                                     <Table {...getTableProps()}>
                                         <TableHead>
                                             <TableRow>
-                                                {headers.map((header) => (
-                                                    <TableHeader key={header.key} {...getHeaderProps({ header })}>
+                                                <TableSelectAll {...getSelectionProps()} />
+                                                {headers.map((header, i) => (
+                                                    <TableHeader key={i} {...getHeaderProps({ header })}>
                                                         {header.header}
                                                     </TableHeader>
                                                 ))}
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {rows.map((row) => (
-                                                <TableRow key={row.id} {...getRowProps({ row })}>
+                                            {rows.map((row, i) => (
+                                                <TableRow key={i} {...getRowProps({ row })}>
+                                                    <TableSelectRow {...getSelectionProps({ row })} />
                                                     {row.cells.map((cell) => (
                                                         <TableCell key={cell.id}>{cell.value}</TableCell>
                                                     ))}
@@ -143,6 +199,24 @@ class BillofMaterialsView extends Component {
                                 </TableContainer>
                             )}
                     </DataTable>
+                    <div style={{ width: '800px' }}>
+                        <Pagination
+                            backwardText="Previous page"
+                            forwardText="Next page"
+                            itemsPerPageText="Items per page:"
+                            page={1}
+                            pageNumberText="Page Number"
+                            pageSize={10}
+                            pageSizes={[
+                                10,
+                                20,
+                                30,
+                                40,
+                                50
+                            ]}
+                            totalItems={103}
+                        />
+                    </div>
                 </div>
             </div>
         );
