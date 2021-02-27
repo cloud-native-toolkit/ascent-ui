@@ -1,30 +1,53 @@
 import React, { Component } from "react";
+
+
 import {
   Content,
   Header,
+  HeaderMenuButton,
   HeaderName,
+  HeaderNavigation,
+  HeaderMenu,
+  HeaderMenuItem,
+  HeaderGlobalBar,
+  HeaderGlobalAction,
+  HeaderPanel,
+  HeaderSideNavItems,
   SkipToContent,
   SideNav,
+  // Temporarily comment these out until they are needed again
+  // SideNavHeader,
+  // SideNavDetails,
+  // SideNavSwitcher,
+  SideNavDivider,
   SideNavItems,
+  SideNavLink,
   SideNavMenu,
   SideNavMenuItem,
-  SideNavLink
+  Switcher,
+  SwitcherItem,
+  SwitcherDivider,
 } from 'carbon-components-react/lib/components/UIShell/';
-import UIShellBody from "./UIShellBody";
 
-const Fade20 = () => (
-  <svg icon width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true">
-    <path d="M8.24 25.14L7 26.67a14 14 0 0 0 4.18 2.44l.68-1.88a12
-        12 0 0 1-3.62-2.09zm-4.05-7.07l-2 .35A13.89 13.89 0 0 0 3.86
-        23l1.73-1a11.9 11.9 0 0 1-1.4-3.93zm7.63-13.31l-.68-1.88A14
-        14 0 0 0 7 5.33l1.24 1.53a12 12 0 0 1 3.58-2.1zM5.59
-        10L3.86 9a13.89 13.89 0 0 0-1.64 4.54l2 .35A11.9 11.9 0 0 1 5.59
-        10zM16 2v2a12 12 0 0 1 0 24v2a14 14 0 0 0 0-28z" />
-  </svg>
-);
+
+import { Search20, Notification20, AppSwitcher20, Fade16 } from '@carbon/icons-react';
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams
+} from "react-router-dom";
+
+import DetailsViewComponent from "../../components/overview/DetailsView";
+import ArchitectureComponent from "../../components/builder/Architecture";
+import BillofMaterialsComponent from "../../components/bom/BillofMaterials";
+
 
 class UIShell extends Component {
   header = "Architecture Builder";
+
   menuItems = [
     "Overview",
     "Builder",
@@ -51,55 +74,132 @@ class UIShell extends Component {
     };
   }
 
-  onPatternSelection = label => {
-    this.setState({ patternName: label });
-  };
-
-  renderbuilderSideNavItems = () => {
-    return this.builderMenuItems.map(label => this.renderbuilderSideNavItem(label));
-  };
-
-  renderbuilderSideNavItem = label => {
-    return (
-      <SideNavMenuItem href="# " isActive={label === this.state.patternName ? true : false} onClick={e => this.onPatternSelection(label)}>{label}</SideNavMenuItem>
-    );
-  };
-
-
-  rendercomplianceSideNavItems = () => {
-    return this.complianceMenuItems.map(label => this.rendercomplianceSideNavItem(label));
-  };
-
-  rendercomplianceSideNavItem = label => {
-    return (
-      <SideNavMenuItem href="# " isActive={label === this.state.patternName ? true : false} onClick={e => this.onPatternSelection(label)}>{label}</SideNavMenuItem>
-    );
-  };
 
   render() {
+
+    function Child() {
+
+      let { id } = useParams();
+
+      return (
+          <div>
+            <h3>ID: {id}</h3>
+          </div>
+      );
+    }
+
+    function RenderBOM()  {
+
+      // We can use the `useParams` hook here to access
+      // the dynamic pieces of the URL.
+      let { bomid } = useParams();
+
+      return (
+          <BillofMaterialsComponent data={bomid}></BillofMaterialsComponent>
+      );
+    }
+
     return (
-      <div>
-        <Header aria-label="IBM Platform Name">
-          <SkipToContent />
-          <HeaderName href="#" prefix="IBM">
-            {this.header}
-          </HeaderName>
-        </Header>
 
-        <SideNav aria-label="Side navigation">
-          <SideNavItems>
-            <SideNavLink href="javascript:void(0)">OverView</SideNavLink>
-            <SideNavMenu title="Builder">
-              {this.renderbuilderSideNavItems()}
-            </SideNavMenu>
-            <SideNavMenu title="Compliance" >
-              {this.rendercomplianceSideNavItems()}
-            </SideNavMenu>
-          </SideNavItems>
-        </SideNav>
+        <div>
+          <Router>
+          <Header aria-label="IBM Platform Name">
+            <SkipToContent />
+            <HeaderMenuButton
+                aria-label="Open menu"
+            />
+            <HeaderName href="#" prefix="IBM">
+              FS Cloud Architectures
+            </HeaderName>
+            <HeaderNavigation aria-label="IBM [Platform]">
+              <HeaderMenuItem href="#">Link 1</HeaderMenuItem>
+              <HeaderMenuItem href="#">Link 2</HeaderMenuItem>
+              <HeaderMenuItem href="#">Link 3</HeaderMenuItem>
+              <HeaderMenu aria-label="Link 4" menuLinkName="Link 4">
+                <HeaderMenuItem href="#one">Sub-link 1</HeaderMenuItem>
+                <HeaderMenuItem href="#two">Sub-link 2</HeaderMenuItem>
+                <HeaderMenuItem href="#three">Sub-link 3</HeaderMenuItem>
+              </HeaderMenu>
+            </HeaderNavigation>
+            <HeaderGlobalBar>
+              <HeaderGlobalAction
+                  aria-label="Search">
+                <Search20 />
+              </HeaderGlobalAction>
+              <HeaderGlobalAction
+                  aria-label="Notifications">
+                <Notification20 />
+              </HeaderGlobalAction>
+              <HeaderGlobalAction
+                  aria-label="App Switcher">
+                <AppSwitcher20 />
+              </HeaderGlobalAction>
+            </HeaderGlobalBar>
+            <SideNav aria-label="Side navigation" expanded="true">
 
-        <Content id="main-content"><UIShellBody patternName={this.state.patternName} /></Content>
-      </div>
+
+
+
+              <SideNavItems>
+                <HeaderSideNavItems hasDivider={true}>
+                  <HeaderMenuItem href="#">Link 1</HeaderMenuItem>
+                  <HeaderMenuItem href="#">Link 2</HeaderMenuItem>
+                  <HeaderMenuItem href="#">Link 3</HeaderMenuItem>
+                  <HeaderMenu aria-label="Link 4" menuLinkName="Link 4">
+                    <HeaderMenuItem href="#">Sub-link 1</HeaderMenuItem>
+                    <HeaderMenuItem href="#">Sub-link 2</HeaderMenuItem>
+                    <HeaderMenuItem href="#">Sub-link 3</HeaderMenuItem>
+                  </HeaderMenu>
+                </HeaderSideNavItems>
+
+                <Link to="/">
+                  <SideNavMenuItem>Overview</SideNavMenuItem>
+                </Link>
+
+                <SideNavMenu title="Builder">
+
+                  <SideNavMenuItem>
+                    <Link to="/architectures">Architectures</Link>
+                  </SideNavMenuItem>
+
+                  <Link to="/services">
+                    <SideNavMenuItem>Services</SideNavMenuItem>
+                  </Link>
+
+
+                </SideNavMenu>
+                <SideNavMenu title="Compliance" >
+
+                  <Link to="/bom">
+                    <SideNavMenuItem>Controls</SideNavMenuItem>
+                  </Link>
+
+                </SideNavMenu>
+
+              </SideNavItems>
+            </SideNav>
+          </Header>
+
+          <Content>
+
+            <Switch>
+              <Route exact path="/">
+                <DetailsViewComponent/>
+              </Route>
+              <Route path="/architectures">
+                <ArchitectureComponent/>
+              </Route>
+              <Route path="/bom/:bomid" children={<RenderBOM></RenderBOM>}></Route>
+
+              <Route path="/test/:id" children={<Child />} />
+
+            </Switch>
+
+          </Content>
+        </Router>
+    </div>
+
+
     );
   }
 }

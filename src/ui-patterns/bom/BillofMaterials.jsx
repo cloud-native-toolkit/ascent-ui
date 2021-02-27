@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import Header from "../ui-shell/Header";
 import 'carbon-components/css/carbon-components.min.css';
+
+import { Breadcrumb, BreadcrumbItem }  from 'carbon-components-react'
+
+import {
+    Link
+} from "react-router-dom";
+
 import {
     Delete16 as Delete,
     Save16 as Save,
@@ -19,6 +26,7 @@ class BillofMaterialsView extends Component {
         super(props);
 
         console.log(this.props.bomService);
+
         this.state = {
             data: [],
             headersData: [
@@ -87,11 +95,34 @@ class BillofMaterialsView extends Component {
 
     }
     async componentDidMount() {
+        console.log(JSON.stringify(this.props))
+
         const jsonData = await this.props.bomService.doGetBOM(this.props.archId);
+
         const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
         this.setState({
             data: bomDetails
         });
+    }
+
+    bcprops = () => ({
+        noTrailingSlash: false,
+        isCurrentPage: true,
+        onClick: function (action) {
+            console.log(action)
+        },
+    });
+
+    breadCrumbs( ) {
+
+        return (
+            <Breadcrumb {...this.bcprops}>
+                <BreadcrumbItem>
+                    <Link to="/architectures">Architectures</Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem href="#">SDZ OpenShift Region</BreadcrumbItem>
+            </Breadcrumb>
+        )
     }
 
     componentWillReceiveProps(nextProps) {
@@ -109,10 +140,23 @@ class BillofMaterialsView extends Component {
 
         return (
             <div className="bx--grid">
-                <Header
-                    title="Bill of Materials View"
-                    subtitle="Displays a model object as a form in a read only display."
-                />
+
+                {this.breadCrumbs()}
+
+                <div className="bx--row">
+                    <div className="bx--col-lg-16">
+                        <br></br>
+                        <h2 className="landing-page__subheading">
+                            Bill Of Materials
+                        </h2>
+                        <br></br>
+                        <p>
+                            List of IBM Cloud services that form the bill of materials for this reference architecture
+                        </p>
+                        <br></br>
+                    </div>
+                </div>
+
                 <div className="bx--row">
                     <DataTable rows={data} headers={headers}>
                         {({
