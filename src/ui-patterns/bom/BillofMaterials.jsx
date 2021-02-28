@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Header from "../ui-shell/Header";
 import 'carbon-components/css/carbon-components.min.css';
 
-import { Breadcrumb, BreadcrumbItem }  from 'carbon-components-react'
+import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 
 import {
     Link
@@ -113,7 +113,7 @@ class BillofMaterialsView extends Component {
         },
     });
 
-    breadCrumbs( ) {
+    breadCrumbs() {
 
         return (
             <Breadcrumb {...this.bcprops}>
