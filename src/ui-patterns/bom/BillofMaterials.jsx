@@ -150,7 +150,6 @@ class BillofMaterialsView extends Component {
     }
 
     render() {
-
         const data = this.state.data;
         const headers = this.state.headersData;
 
@@ -164,7 +163,7 @@ class BillofMaterialsView extends Component {
         return (
             <div className="bx--grid">
 
-                {this.breadCrumbs(title)}
+                {this.breadCrumbs()}
 
                 <div className="bx--row">
                     <div className="bx--col-lg-16">
