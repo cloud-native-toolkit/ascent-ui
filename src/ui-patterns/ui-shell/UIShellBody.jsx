@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 import DetailsViewComponent from "../../components/overview/DetailsView";
 import ArchitectureComponent from "../../components/builder/Architecture";
-import ControlsComponent from "../../components/compliance/Controls";
 import BillofMaterialsComponent from "../../components/bom/BillofMaterials";
 
 class UIShellBody extends Component {
@@ -18,9 +17,9 @@ class UIShellBody extends Component {
       this.props.patternName || this.defaultComponent
     ];
     return (
-
-      <PatternName showDescription={true} />
-
+      <div>
+        <PatternName showDescription={true} />
+      </div>
     );
   }
 }
