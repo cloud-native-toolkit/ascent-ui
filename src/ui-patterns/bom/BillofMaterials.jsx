@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Header from "../ui-shell/Header";
 import 'carbon-components/css/carbon-components.min.css';
 import * as _ from 'lodash';
+import * as truncate from "truncate-utf8-bytes";
+import * as filenamify from "filenamify/filenamify";
 
 import { Breadcrumb, BreadcrumbItem }  from 'carbon-components-react'
 
@@ -29,6 +31,7 @@ class BillofMaterialsView extends Component {
         super(props);
 
         this.state = {
+            archid: null,
             data: [],
             headersData: [
                 /*{
@@ -104,6 +107,7 @@ class BillofMaterialsView extends Component {
         const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
 
         this.setState({
+            archid : this.props.archId,
             data: bomDetails,
             architecture: arch
         });
@@ -117,6 +121,29 @@ class BillofMaterialsView extends Component {
         },
     });
 
+
+    sanitize(input, replacement) {
+
+        var illegalRe = /[\/\?<>\\:\*\|"]/g;
+        var controlRe = /[\x00-\x1f\x80-\x9f]/g;
+        var reservedRe = /^\.+$/;
+        var windowsReservedRe = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
+        var windowsTrailingRe = /[\. ]+$/;
+
+
+        if (typeof input !== 'string') {
+            throw new Error('Input must be string');
+        }
+        var sanitized = input
+            .replace(illegalRe, replacement)
+            .replace(controlRe, replacement)
+            .replace(reservedRe, replacement)
+            .replace(windowsReservedRe, replacement)
+            .replace(windowsTrailingRe, replacement);
+        return truncate(sanitized, 255);
+    }
+
+
     breadCrumbs( title ) {
 
         return (
@@ -129,8 +156,28 @@ class BillofMaterialsView extends Component {
         )
     }
 
-    downloadTerraform(){
-        alert("Download Terraform");
+    downloadTerraform (archid, archname) {
+
+        if (_.isNull(archid) ) {
+           alert("Cannot Download Terraform at this time"); // FIx with a Notification
+           return
+        }
+
+
+        // Create File name from Name of Architecture
+        var filename = archname.replace(/[^a-z0-9_\-]/gi, '-').replace(/_{2,}/g, '_').toLowerCase()
+        var url = "/automation/"+archid;
+        filename = filename+"-automation.zip";
+        fetch(url)
+            .then(response => {
+                response.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.click();
+                });
+            });
     }
 
     viewDiagram(){
@@ -153,8 +200,8 @@ class BillofMaterialsView extends Component {
 
         const data = this.state.data;
         const headers = this.state.headersData;
-
-        console.log(JSON.stringify(this.state.architecture.name));
+        const archid = this.state.archid;
+        console.log(JSON.stringify(archid));
 
         let title = "";
         if (!_.isUndefined(this.state.architecture.name)) {
@@ -219,19 +266,18 @@ class BillofMaterialsView extends Component {
                                            </TableBatchAction>
                                         </TableBatchActions>
                                         <TableToolbarContent>
-                                            <TableToolbarAction onClick={this.downloadTerraform}>
+                                            <TableToolbarAction onClick={()=>this.downloadTerraform(archid,title)} >
                                                 <Download /> Terraform
                                             </TableToolbarAction>
 
                                         </TableToolbarContent>
                                         <TableToolbarContent>
 
-
                                             <TableToolbarSearch onChange={onInputChange} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
 
                                             <TableToolbarMenu
                                                 tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}>
-                                                <TableToolbarAction onClick={this.downloadTerraform}>
+                                                <TableToolbarAction onClick={()=>this.downloadTerraform(archid,title)}>
                                                     <Download /> Terraform
                                                </TableToolbarAction>
                                                 <TableToolbarAction onClick={this.viewDiagram}>
