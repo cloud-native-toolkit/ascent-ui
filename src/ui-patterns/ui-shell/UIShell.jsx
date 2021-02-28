@@ -11,22 +11,13 @@ import {
   HeaderMenuItem,
   HeaderGlobalBar,
   HeaderGlobalAction,
-  HeaderPanel,
   HeaderSideNavItems,
   SkipToContent,
   SideNav,
-  // Temporarily comment these out until they are needed again
-  // SideNavHeader,
-  // SideNavDetails,
-  // SideNavSwitcher,
-  SideNavDivider,
   SideNavItems,
-  SideNavLink,
   SideNavMenu,
   SideNavMenuItem,
-  Switcher,
-  SwitcherItem,
-  SwitcherDivider,
+
 } from 'carbon-components-react/lib/components/UIShell/';
 
 
@@ -43,6 +34,7 @@ import {
 import DetailsViewComponent from "../../components/overview/DetailsView";
 import ArchitectureComponent from "../../components/builder/Architecture";
 import BillofMaterialsComponent from "../../components/bom/BillofMaterials";
+import Routes from "./router";
 
 
 class UIShell extends Component {
@@ -77,36 +69,15 @@ class UIShell extends Component {
 
   render() {
 
-    function Child() {
-
-      let { id } = useParams();
-
-      return (
-          <div>
-            <h3>ID: {id}</h3>
-          </div>
-      );
-    }
-
-    function RenderBOM()  {
-
-      // We can use the `useParams` hook here to access
-      // the dynamic pieces of the URL.
-      let { bomid } = useParams();
-
-      return (
-          <BillofMaterialsComponent data={bomid}></BillofMaterialsComponent>
-      );
-    }
 
     return (
 
-        <div>
-          <Router>
+      <div>
+        <Router>
           <Header aria-label="IBM Platform Name">
             <SkipToContent />
             <HeaderMenuButton
-                aria-label="Open menu"
+              aria-label="Open menu"
             />
             <HeaderName href="#" prefix="IBM">
               FS Cloud Architectures
@@ -123,15 +94,15 @@ class UIShell extends Component {
             </HeaderNavigation>
             <HeaderGlobalBar>
               <HeaderGlobalAction
-                  aria-label="Search">
+                aria-label="Search">
                 <Search20 />
               </HeaderGlobalAction>
               <HeaderGlobalAction
-                  aria-label="Notifications">
+                aria-label="Notifications">
                 <Notification20 />
               </HeaderGlobalAction>
               <HeaderGlobalAction
-                  aria-label="App Switcher">
+                aria-label="App Switcher">
                 <AppSwitcher20 />
               </HeaderGlobalAction>
             </HeaderGlobalBar>
@@ -182,22 +153,11 @@ class UIShell extends Component {
 
           <Content>
 
-            <Switch>
-              <Route exact path="/">
-                <DetailsViewComponent/>
-              </Route>
-              <Route path="/architectures">
-                <ArchitectureComponent/>
-              </Route>
-              <Route path="/bom/:bomid" children={<RenderBOM></RenderBOM>}></Route>
-
-              <Route path="/test/:id" children={<Child />} />
-
-            </Switch>
+            <Routes />
 
           </Content>
         </Router>
-    </div>
+      </div>
 
 
     );
