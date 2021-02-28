@@ -5,9 +5,6 @@ class OverView extends Component {
     render() {
         return (
             <div className="bx--grid">
-                <Header
-                    title="Overview"
-                />
                 <div className="bx--row">
                     <section >
                         <h2

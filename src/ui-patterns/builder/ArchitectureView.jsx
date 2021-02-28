@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import FormLabel from 'carbon-components-react/lib/components/FormLabel';
 import Tooltip from 'carbon-components-react/lib/components/Tooltip';
 import ArticleCard from './ArticleCard';
-import BillofMaterialsComponent from '../../components/bom/BillofMaterials';
 import _ from 'lodash';
+
+import {
+    Link
+} from "react-router-dom";
+
+import { useHistory } from "react-router-dom";
 
 class ArchitectureView extends Component {
 
@@ -12,10 +17,9 @@ class ArchitectureView extends Component {
         super(props);
 
         this.state = {
-            architectures: [],
-            isarchiId: false,
-            archiId: null
+            architectures: []
         };
+
     }
 
     // Load the Data into the Project
@@ -37,13 +41,8 @@ class ArchitectureView extends Component {
     getImage(id, image) {
         return "/images/" + id + "/" + image;
     }
-    doGetArchId(id) {
-        this.setState({
-            isarchiId: !this.state.isarchiId,
-            archiId: id
-        });
 
-    }
+
     getArchitectures(architectures) {
 
         if (_.isUndefined(architectures))
@@ -52,8 +51,12 @@ class ArchitectureView extends Component {
         var archTiles = []
         for (var i = 0; i < architectures.length; i++) {
             const arch = architectures[i];
+
+            var link = "/bom/"+arch._id;
+
+            console.log(link)
             archTiles.push(
-                <div className="bx--col-md-8 bx--col-lg-8">
+                <div className="bx--col-md-8 bx--col-lg-8" key={arch._id}>
                     <ArticleCard
                         title={arch.name}
                         author={arch.short_desc}
@@ -62,14 +65,18 @@ class ArchitectureView extends Component {
                         readTime="Terraform | FS Ready | Cloud-Native"
                         color="dark">
 
+                        {console.log(link)}
+                        <Link to={link}>
+
                         <img
                             className="resource-img"
                             src={this.getImage(arch._id, arch.diagram_link_png)}
                             alt={arch.short_desc}
-                            className="article-img" onClick={() => this.doGetArchId(arch._id)}
+                            className="article-img"
                         />
+                        </Link>
 
-                        <div className="labels">
+                    <div className="labels">
 
                             <FormLabel>
 
@@ -80,7 +87,6 @@ class ArchitectureView extends Component {
                             </FormLabel>
 
                         </div>
-
 
                     </ArticleCard>
 
@@ -94,40 +100,34 @@ class ArchitectureView extends Component {
 
 
     render() {
-        if (this.state.archiId) {
 
-            return (<BillofMaterialsComponent data={this.state.archiId}></BillofMaterialsComponent>);
-        } else {
-            return (
+        return (
 
+            <div className="bx--grid"  >
 
-                <div className="bx--grid bx--grid--full-width"  >
-
-                    <div className="bx--row">
-                        <div className="bx--col-lg-16">
-                            <br></br>
-                            <h2 className="landing-page__subheading">
-                                Architectures
+                <div className="bx--row">
+                    <div className="bx--col-lg-16">
+                        <br></br>
+                        <h2 className="landing-page__subheading">
+                            Architectures
                         </h2>
-                            <br></br>
-                            <p>
-                                Navigate to the reference architecture you are interested in and see the IBM Cloud bill of materials
-                        </p>
-                            <br></br>
-                        </div>
+                        <br></br>
+                        <p>
+                            Navigate to the reference architecture you are interested in and see the IBM Cloud bill of materials
+                    </p>
+                        <br></br>
                     </div>
+                </div>
 
-                    <div className="bx--row">
+                <div className="bx--row">
 
-                        {this.getArchitectures(this.state.architectures, true)}
-
-
-                    </div>
+                    {this.getArchitectures(this.state.architectures, true)}
 
                 </div>
 
-            );
-        }
+            </div>
+
+        );
     }
 }
 
