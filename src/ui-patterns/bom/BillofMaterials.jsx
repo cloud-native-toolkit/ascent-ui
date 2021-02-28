@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Header from "../ui-shell/Header";
 import 'carbon-components/css/carbon-components.min.css';
+import * as _ from 'lodash';
 
 import { Breadcrumb, BreadcrumbItem }  from 'carbon-components-react'
 
@@ -12,10 +13,12 @@ import {
     Delete16 as Delete,
     Save16 as Save,
     Download16 as Download,
+    ViewFilled16 as View
 } from '@carbon/icons-react';
 import {
     DataTable, TableContainer, Table, TableSelectAll, TableBatchAction, TableSelectRow,
     TableBatchActions, TableToolbar, TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
+    OverflowMenu,OverflowMenuItem
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
@@ -24,8 +27,6 @@ class BillofMaterialsView extends Component {
 
     constructor(props) {
         super(props);
-
-        console.log(this.props.bomService);
 
         this.state = {
             data: [],
@@ -90,18 +91,21 @@ class BillofMaterialsView extends Component {
                     key: 'availibity',
                     header: 'Availibity',
                 }
-            ]
+            ],
+            architecture: {}
         };
 
     }
     async componentDidMount() {
         console.log(JSON.stringify(this.props))
 
-        const jsonData = await this.props.bomService.doGetBOM(this.props.archId);
-
+        const arch   = await this.props.archService.getArchitectureById(this.props.archId);
+        const jsonData = await this.props.bomService.getBOM(this.props.archId);
         const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
+
         this.setState({
-            data: bomDetails
+            data: bomDetails,
+            architecture: arch
         });
     }
 
@@ -113,16 +117,28 @@ class BillofMaterialsView extends Component {
         },
     });
 
-    breadCrumbs( ) {
+    breadCrumbs( title ) {
 
         return (
             <Breadcrumb {...this.bcprops}>
                 <BreadcrumbItem>
                     <Link to="/architectures">Architectures</Link>
                 </BreadcrumbItem>
-                <BreadcrumbItem href="#">SDZ OpenShift Region</BreadcrumbItem>
+                <BreadcrumbItem href="#">{title}</BreadcrumbItem>
             </Breadcrumb>
         )
+    }
+
+    downloadTerraform(){
+        alert("Download Terraform");
+    }
+
+    viewDiagram(){
+        alert("Download Terraform");
+    }
+
+    addService(){
+        alert("Add Service");
     }
 
     componentWillReceiveProps(nextProps) {
@@ -134,14 +150,21 @@ class BillofMaterialsView extends Component {
     }
 
     render() {
+
         const data = this.state.data;
         const headers = this.state.headersData;
-        console.log(data);
+
+        console.log(JSON.stringify(this.state.architecture.name));
+
+        let title = "";
+        if (!_.isUndefined(this.state.architecture.name)) {
+            title = this.state.architecture.name
+        }
 
         return (
             <div className="bx--grid">
 
-                {this.breadCrumbs()}
+                {this.breadCrumbs(title)}
 
                 <div className="bx--row">
                     <div className="bx--col-lg-16">
@@ -196,25 +219,34 @@ class BillofMaterialsView extends Component {
                                            </TableBatchAction>
                                         </TableBatchActions>
                                         <TableToolbarContent>
+                                            <TableToolbarAction onClick={this.downloadTerraform}>
+                                                <Download /> Terraform
+                                            </TableToolbarAction>
+
+                                        </TableToolbarContent>
+                                        <TableToolbarContent>
+
+
                                             <TableToolbarSearch onChange={onInputChange} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
+
                                             <TableToolbarMenu
                                                 tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}>
-                                                <TableToolbarAction onClick={() => alert('Alert 1')}>
-                                                    Action 1
+                                                <TableToolbarAction onClick={this.downloadTerraform}>
+                                                    <Download /> Terraform
                                                </TableToolbarAction>
-                                                <TableToolbarAction onClick={() => alert('Alert 2')}>
-                                                    Action 2
-                                                </TableToolbarAction>
-                                                <TableToolbarAction onClick={() => alert('Alert 3')}>
-                                                    Action 3
+                                                <TableToolbarAction onClick={this.viewDiagram}>
+                                                    <View/> Diagram
                                                 </TableToolbarAction>
                                             </TableToolbarMenu>
+
+
                                             <Button
                                                 tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
-
                                                 size="small"
-                                                kind="primary">
-                                                Add new
+                                                kind="primary"
+                                                onClick={this.addService}
+                                            >
+                                                Add Service
                                             </Button>
                                         </TableToolbarContent>
                                     </TableToolbar>
@@ -227,8 +259,10 @@ class BillofMaterialsView extends Component {
                                                         {header.header}
                                                     </TableHeader>
                                                 ))}
+                                                <TableHeader />
                                             </TableRow>
                                         </TableHead>
+
                                         <TableBody>
                                             {rows.map((row, i) => (
                                                 <TableRow key={i} {...getRowProps({ row })}>
@@ -236,6 +270,13 @@ class BillofMaterialsView extends Component {
                                                     {row.cells.map((cell) => (
                                                         <TableCell key={cell.id}>{cell.value}</TableCell>
                                                     ))}
+                                                    <TableCell className="bx--table-column-menu">
+                                                        <OverflowMenu light flipped>
+                                                            <OverflowMenuItem>View Mapping</OverflowMenuItem>
+                                                            <OverflowMenuItem>View Service</OverflowMenuItem>
+                                                            <OverflowMenuItem>Delete</OverflowMenuItem>
+                                                        </OverflowMenu>
+                                                    </TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>

@@ -25,6 +25,8 @@ class ArchitectureView extends Component {
     // Load the Data into the Project
     componentDidMount() {
 
+
+
         fetch("/architectures")
             .then(response => response.json())
             .then(data => {
@@ -41,7 +43,6 @@ class ArchitectureView extends Component {
     getImage(id, image) {
         return "/images/" + id + "/" + image;
     }
-
 
     getArchitectures(architectures) {
 

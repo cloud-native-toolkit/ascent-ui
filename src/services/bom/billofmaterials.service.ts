@@ -9,7 +9,7 @@ export class BillofMaterialsService implements BillofMaterialsApi {
         this.baseUrl = baseUrl || '/architectures/';
     }
 
-    async doGetBOM(archiId: string): Promise<BillofMaterialsDataModel[]> {
+    async getBOM(archiId: string): Promise<BillofMaterialsDataModel[]> {
         return superagent
             .get(this.baseUrl + archiId + '/boms')
             .set('accept', 'application/json')

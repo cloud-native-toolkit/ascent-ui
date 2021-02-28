@@ -137,20 +137,7 @@ class UIShell extends Component {
             </HeaderGlobalBar>
             <SideNav aria-label="Side navigation" expanded="true">
 
-
-
-
               <SideNavItems>
-                <HeaderSideNavItems hasDivider={true}>
-                  <HeaderMenuItem href="#">Link 1</HeaderMenuItem>
-                  <HeaderMenuItem href="#">Link 2</HeaderMenuItem>
-                  <HeaderMenuItem href="#">Link 3</HeaderMenuItem>
-                  <HeaderMenu aria-label="Link 4" menuLinkName="Link 4">
-                    <HeaderMenuItem href="#">Sub-link 1</HeaderMenuItem>
-                    <HeaderMenuItem href="#">Sub-link 2</HeaderMenuItem>
-                    <HeaderMenuItem href="#">Sub-link 3</HeaderMenuItem>
-                  </HeaderMenu>
-                </HeaderSideNavItems>
 
                 <Link to="/">
                   <SideNavMenuItem>Overview</SideNavMenuItem>
@@ -165,7 +152,6 @@ class UIShell extends Component {
                   <Link to="/services">
                     <SideNavMenuItem>Services</SideNavMenuItem>
                   </Link>
-
 
                 </SideNavMenu>
                 <SideNavMenu title="Compliance" >
