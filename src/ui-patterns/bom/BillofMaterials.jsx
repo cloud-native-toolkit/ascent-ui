@@ -163,7 +163,6 @@ class BillofMaterialsView extends Component {
            return
         }
 
-
         // Create File name from Name of Architecture
         var filename = archname.replace(/[^a-z0-9_\-]/gi, '-').replace(/_{2,}/g, '_').toLowerCase()
         var url = "/automation/"+archid;
