@@ -25,8 +25,6 @@ class ArchitectureView extends Component {
     // Load the Data into the Project
     componentDidMount() {
 
-
-
         fetch("/architectures")
             .then(response => response.json())
             .then(data => {

@@ -163,11 +163,13 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.12.13",
     "@babel/preset-env": "^7.12.17",
+    "@types/adm-zip": "^0.4.33",
     "@types/jest": "^24.0.21",
     "@types/node": "^11.13.19",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.5",
     "@types/superagent": "^4.1.10",
+    "adm-zip": "^0.5.3",
     "nodemon": "^1.12.1",
     "sonarqube-scanner": "^2.5.0",
     "supertest": "^4.0.2"
