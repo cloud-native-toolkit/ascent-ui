@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "org": "IBM",
-   "type": "module",
   "description": "12 UI Patterns written with React and Node.js",
   "proxy": "http://localhost:3001",
   "dependencies": {
