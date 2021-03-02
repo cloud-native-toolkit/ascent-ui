@@ -12,7 +12,7 @@ import {
 } from '@carbon/icons-react';
 import {
     DataTable, TableContainer, Table,
-    TableToolbar, TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction
+    TableToolbar, TableToolbarMenu, OverflowMenu, OverflowMenuItem, TableSelectAll, TableSelectRow, TableBatchActions, TableBatchAction, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
@@ -40,10 +40,24 @@ class ServiceDataView extends Component {
             });
         }
     }
+    doGetServiceDetails(service_id) {
+        console.log(service_id);
+        //const jsonData = await this.props.service.doDeleteService();
+
+    }
+    batchActionClick(rows) {
+        rows.forEach(data => {
+            const jsonData = this.props.service.doDeleteService(data.id);
+            console.log(jsonData);
+        });
+
+    }
 
     render() {
         const data = this.state.data;
         const headers = this.state.headerData;
+
+
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -66,12 +80,37 @@ class ServiceDataView extends Component {
                             rows,
                             headers,
                             getHeaderProps,
+                            getSelectionProps,
+                            getToolbarProps,
+                            getBatchActionProps,
                             getRowProps,
                             getTableProps,
-                            onInputChange,
+                            selectedRows,
+                            onInputChange
+
                         }) => (
                                 <TableContainer>
                                     <TableToolbar>
+                                        <TableBatchActions {...getBatchActionProps()}>
+                                            <TableBatchAction
+                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                renderIcon={Delete}
+                                                onClick={() => this.batchActionClick(selectedRows)}>
+                                                Delete
+                                            </TableBatchAction>
+                                            {/*<TableBatchAction
+                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                renderIcon={Save}
+                                                onClick={batchActionClick(selectedRows)}>
+                                                Save
+                                            </TableBatchAction>
+                                            <TableBatchAction
+                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                renderIcon={Download}
+                                                onClick={batchActionClick(selectedRows)}>
+                                                Download
+                                            </TableBatchAction>*/}
+                                        </TableBatchActions>
                                         <TableToolbarContent>
                                             {/* pass in `onInputChange` change here to make filtering work */}
                                             <TableToolbarSearch onChange={onInputChange} />
@@ -86,12 +125,13 @@ class ServiceDataView extends Component {
                                                     Action 3
                                         </TableToolbarAction>
                                             </TableToolbarMenu>
-                                            <Button >Primary Button</Button>
+                                            <Button >Add</Button>
                                         </TableToolbarContent>
                                     </TableToolbar>
                                     <Table {...getTableProps()}>
                                         <TableHead>
                                             <TableRow>
+                                                <TableSelectAll {...getSelectionProps()} />
                                                 {headers.map((header) => (
                                                     <TableHeader key={header.key} {...getHeaderProps({ header })}>
                                                         {header.header}
@@ -102,9 +142,15 @@ class ServiceDataView extends Component {
                                         <TableBody>
                                             {rows.map((row) => (
                                                 <TableRow key={row.id} {...getRowProps({ row })}>
+                                                    <TableSelectRow {...getSelectionProps({ row })} />
                                                     {row.cells.map((cell) => (
                                                         <TableCell key={cell.id}>{cell.value}</TableCell>
                                                     ))}
+                                                    <TableCell className="bx--table-column-menu">
+                                                        <OverflowMenu light flipped >
+                                                            <OverflowMenuItem itemText="Edit" />
+                                                        </OverflowMenu>
+                                                    </TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>

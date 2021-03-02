@@ -30,6 +30,15 @@ export class ServiceData implements ServiceDataApi {
                 return res.body;
             });
     }
+    async doDeleteService(serviceId: string): Promise<ServiceDataModel> {
+        return superagent
+            .delete(this.baseUrl + serviceId)
+            .set('accept', 'application/json')
+            .then(res => {
+                console.log(res.status);
+                return res.body;
+            });
+    }
 }
 
 
