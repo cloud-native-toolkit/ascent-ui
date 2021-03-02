@@ -48,7 +48,6 @@ class ArchitectureView extends Component {
     getArchitectures(architectures) {
 
         // Move to global or env var
-
         if (_.isUndefined(architectures))
             return [];
 
