@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import Header from "../ui-shell/Header";
+
+
+
 class OverView extends Component {
 
     render() {
         return (
             <div className="bx--grid">
                 <div className="bx--row">
+
                     <section >
                         <h2
                             style={{
@@ -14,34 +18,16 @@ class OverView extends Component {
                                 fontSize: "20px"
                             }}
                         >
-                            FS Cloud Arcitecture Builder
+                            FS Cloud Architectures
                         </h2>
+
                         <p style={{ lineHeight: "20px" }}>
-                            The shell is perhaps the most crucial piece of any UI built with
-                            Carbon.It contains the shared navigation framework for the entire
-                            esign system and ties the products in IBM’s portfolio together in a
-                            ohesive and elegant way.The shell is the home of the topmost
-                            vigation, where users can quickly and dependably gain their
-                            bearings and move between pages.
-                            <br /> <br />
 
-                            <img src="/images/data-model.png"></img>
-                            <br /> <br />
+                            The Architecture builder's goal is to simplify the complexity of the data attributes that surround a
+                            reference architecture for the FS Cloud. When we review the Financial Controls the number of cloud services
+                            and the possible reference architectures these can be assembled in. It has become clear
+                            a tool will help manage this wide range of attributes.
 
-                            The shell was designed with maximum flexibility built in, to serve
-                            the needs of a broad range of products and users.Adopting the shell
-                            ensures compliance with IBM design standards, simplifies development
-                            efforts, and provides great user experiences.All IBM products built
-                            with Carbon are required to use the shell’s header.
-                            <br />
-                            <br />
-                            To better understand the purpose and function of the UI shell,
-                            consider the “shell” of MacOS, which contains the Apple menu,
-                            top-level navigation, and universal, OS-level controls at the top of
-                            the screen, as well as a universal dock along the bottom or side of
-                            the screen.The Carbon UI shell is roughly analogous in function to
-                            these parts of the Mac UI.For example, the app switcher portion of
-                            the shell can be compared to the dock in MacOS.
                         </p>
                         <h2
                             style={{
@@ -50,15 +36,32 @@ class OverView extends Component {
                                 fontSize: "20px"
                             }}
                         >
-                            Header responsive behavior
+                            Overview
                         </h2>
                         <p style={{ lineHeight: "20px" }}>
-                            As a header scales down to fit smaller screen sizes, headers with
-                            persistent side nav menus should have the side nav collapse into
-                            “hamburger” menu.See the example to better understand responsive
-                            behavior of the header.
+
+
+                            This application backend will enable a collection of APIs that will support the relationship between a
+                            Reference Architecture and its Bill of Materials(BOM) (list of comprising services). The BOM relationship to
+                            the list of FS Ready services. The mapping between the cloud services and the FS Controls. Finally you can
+                            view the FS Controls mapping to the Cloud Services and the supporting refernece Architectures.
+                            <p/>
+                            Once we have this data model in place, we will be able to link it to the Automation Catalog that is being
+                            built by Asset team,  we will be able to take the BOM and input it into the Solution Builder API they have built
+                            and output a package of consistent terraform.
+
+                            <br /> <br />
+
+                            <img src="/images/data-model.png"></img>
+                            <br /> <br />
+
                         </p>
-                        <h2
+
+                    </section>
+                </div>
+                <div className="bx--row">
+
+                            <h2
                             style={{
                                 fontWeight: "800",
                                 margin: "30px 0",
@@ -66,7 +69,8 @@ class OverView extends Component {
                             }}
                         >
                             Secondary navigation
-                        </h2>
+                       </h2>
+
                         <p style={{ lineHeight: "20px" }}>
                             The side-nav contains secondary navigation and fits below the
                             header.It can be configured to be either fixed-width or flexible,
@@ -77,7 +81,7 @@ class OverView extends Component {
                             page when using a side-nav, then the tabs are secondary in
                             hierarchy to the side-nav.
                         </p>
-                    </section>
+
                 </div>
             </div>
         );

@@ -22,6 +22,7 @@ class ArchitectureView extends Component {
 
     }
 
+
     // Load the Data into the Project
     componentDidMount() {
 
@@ -38,11 +39,15 @@ class ArchitectureView extends Component {
 
     };
 
-    getImage(id, image) {
-        return "/images/" + id + "/" + image;
+    getImage(folder, image) {
+
+        const refArchLink  =  "/images/"
+        return refArchLink+folder +"/"+ image;
     }
 
     getArchitectures(architectures) {
+
+        // Move to global or env var
 
         if (_.isUndefined(architectures))
             return [];
@@ -55,12 +60,12 @@ class ArchitectureView extends Component {
 
             console.log(link)
             archTiles.push(
-                <div className="bx--col-md-8 bx--col-lg-8" key={arch._id}>
+                <div className="bx--col-md-4 bx--col-lg-4" key={arch._id}>
                     <ArticleCard
                         title={arch.name}
                         author={arch.short_desc}
                         desc={arch.long_desc}
-                        date="March 12, 2021"
+                        date="March 22, 2021"
                         readTime="Terraform | FS Ready | Cloud-Native"
                         color="dark">
 
@@ -69,7 +74,7 @@ class ArchitectureView extends Component {
 
                         <img
                             className="resource-img"
-                            src={this.getImage(arch._id, arch.diagram_link_png)}
+                            src={this.getImage(arch.diagram_folder, arch.diagram_link_png)}
                             alt={arch.short_desc}
                             className="article-img"
                         />
@@ -78,11 +83,9 @@ class ArchitectureView extends Component {
                     <div className="labels">
 
                             <FormLabel>
-
                                 <Tooltip triggerText="FS Ready">This Architecture is FS Ready</Tooltip>
                                 <Tooltip triggerText="Hippa">This architecture support Hippa Services</Tooltip>
                                 <Tooltip triggerText="Terraform">This architecture supports Terraform.</Tooltip>
-
                             </FormLabel>
 
                         </div>
