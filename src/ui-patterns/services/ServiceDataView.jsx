@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Header from "../ui-shell/Header";
+
 import {
     Link
 } from "react-router-dom";
@@ -12,11 +13,14 @@ import {
 } from '@carbon/icons-react';
 import {
     DataTable, TableContainer, Table,
-    TableToolbar, TableToolbarMenu, OverflowMenu, OverflowMenuItem, TableSelectAll, TableSelectRow, TableBatchActions, TableBatchAction, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction
+    TableToolbar, TableToolbarMenu, Modal, SelectItem, TextInput, Select, OverflowMenu, OverflowMenuItem, TableSelectAll, TableSelectRow, TableBatchActions, TableBatchAction, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
 import { headerData } from './headerData';
+import FormModal from './AddDataModal';
+
+
 class ServiceDataView extends Component {
     constructor(props) {
         super(props);
@@ -42,22 +46,26 @@ class ServiceDataView extends Component {
     }
     doGetServiceDetails(service_id) {
         console.log(service_id);
-        //const jsonData = await this.props.service.doDeleteService();
-
     }
     batchActionClick(rows) {
+        let i = 0;
         rows.forEach(data => {
             const jsonData = this.props.service.doDeleteService(data.id);
+            this.state.data.splice(i, 1);
             console.log(jsonData);
+            i++;
         });
 
+        this.setState({
+            data: this.state.data
+        });
     }
+    doOpenForm() {
 
+    }
     render() {
         const data = this.state.data;
         const headers = this.state.headerData;
-
-
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -75,6 +83,7 @@ class ServiceDataView extends Component {
                 </div>
 
                 <div className="bx--row">
+
                     <DataTable rows={data} headers={headers}>
                         {({
                             rows,
@@ -125,7 +134,7 @@ class ServiceDataView extends Component {
                                                     Action 3
                                         </TableToolbarAction>
                                             </TableToolbarMenu>
-                                            <Button >Add</Button>
+                                            <Button onClick={() => this.doOpenForm()} >Add</Button>
                                         </TableToolbarContent>
                                     </TableToolbar>
                                     <Table {...getTableProps()}>
@@ -179,6 +188,7 @@ class ServiceDataView extends Component {
                 </div>
             </div >
         );
+
     }
 }
 export default ServiceDataView;
