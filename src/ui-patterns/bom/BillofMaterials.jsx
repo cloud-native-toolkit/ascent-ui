@@ -3,7 +3,7 @@ import Header from "../ui-shell/Header";
 import 'carbon-components/css/carbon-components.min.css';
 import * as _ from 'lodash';
 
-import { Breadcrumb, BreadcrumbItem }  from 'carbon-components-react'
+import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 
 import {
     Link
@@ -18,7 +18,7 @@ import {
 import {
     DataTable, TableContainer, Table, TableSelectAll, TableBatchAction, TableSelectRow,
     TableBatchActions, TableToolbar, TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
-    OverflowMenu,OverflowMenuItem
+    OverflowMenu, OverflowMenuItem
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
@@ -100,12 +100,12 @@ class BillofMaterialsView extends Component {
     async componentDidMount() {
         console.log(JSON.stringify(this.props))
 
-        const arch   = await this.props.archService.getArchitectureById(this.props.archId);
+        const arch = await this.props.archService.getArchitectureById(this.props.archId);
         const jsonData = await this.props.bomService.getBOM(this.props.archId);
         const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
 
         this.setState({
-            archid : this.props.archId,
+            archid: this.props.archId,
             data: bomDetails,
             architecture: arch
         });
@@ -120,7 +120,7 @@ class BillofMaterialsView extends Component {
     });
 
 
-    breadCrumbs( title ) {
+    breadCrumbs(title) {
 
         return (
             <Breadcrumb {...this.bcprops}>
@@ -132,17 +132,17 @@ class BillofMaterialsView extends Component {
         )
     }
 
-    downloadTerraform (archid, archname) {
+    downloadTerraform(archid, archname) {
 
-        if (_.isNull(archid) ) {
-           alert("Cannot Download Terraform at this time"); // FIx with a Notification
-           return
+        if (_.isNull(archid)) {
+            alert("Cannot Download Terraform at this time"); // FIx with a Notification
+            return
         }
 
         // Create File name from Name of Architecture
         var filename = archname.replace(/[^a-z0-9_\-]/gi, '-').replace(/_{2,}/g, '_').toLowerCase()
-        var url = "/automation/"+archid;
-        filename = filename+"-automation.zip";
+        var url = "/automation/" + archid;
+        filename = filename + "-automation.zip";
         fetch(url)
             .then(response => {
                 response.blob().then(blob => {
@@ -155,11 +155,11 @@ class BillofMaterialsView extends Component {
             });
     }
 
-    viewDiagram(){
+    viewDiagram() {
         alert("Download Terraform");
     }
 
-    addService(){
+    addService() {
         alert("Add Service");
     }
 
@@ -241,7 +241,7 @@ class BillofMaterialsView extends Component {
                                            </TableBatchAction>
                                         </TableBatchActions>
                                         <TableToolbarContent>
-                                            <TableToolbarAction onClick={()=>this.downloadTerraform(archid,title)} >
+                                            <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)} >
                                                 <Download /> Terraform
                                             </TableToolbarAction>
 
@@ -252,11 +252,11 @@ class BillofMaterialsView extends Component {
 
                                             <TableToolbarMenu
                                                 tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}>
-                                                <TableToolbarAction onClick={()=>this.downloadTerraform(archid,title)}>
+                                                <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)}>
                                                     <Download /> Terraform
                                                </TableToolbarAction>
                                                 <TableToolbarAction onClick={this.viewDiagram}>
-                                                    <View/> Diagram
+                                                    <View /> Diagram
                                                 </TableToolbarAction>
                                             </TableToolbarMenu>
 
