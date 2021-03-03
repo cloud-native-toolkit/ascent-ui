@@ -47,18 +47,19 @@ class ServiceDataView extends Component {
     doGetServiceDetails(service_id) {
         console.log(service_id);
     }
-    batchActionClick(rows) {
+    async batchActionClick(rows) {
         let i = 0;
+        console.log(this.state.data.length);
         rows.forEach(data => {
             const jsonData = this.props.service.doDeleteService(data.id);
             this.state.data.splice(i, 1);
             console.log(jsonData);
             i++;
         });
-
         this.setState({
             data: this.state.data
         });
+
     }
     doOpenForm() {
 
