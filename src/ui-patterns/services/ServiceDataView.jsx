@@ -76,7 +76,7 @@ class ServiceDataView extends Component {
         const headers = this.state.headerData;
         console.log(this.state.show);
         return (
-            <><FormModal show={this.state.show} handleClose={this.hideModal} />
+            <><FormModal show={this.state.show} handleClose={this.hideModal} service={this.props.service} />
                 <div className="bx--grid">
                     <div className="bx--row">
                         <div className="bx--col-lg-16">
