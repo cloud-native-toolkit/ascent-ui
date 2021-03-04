@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import Header from "../ui-shell/Header";
 
 import {
@@ -6,19 +6,17 @@ import {
 } from "react-router-dom";
 
 import {
-    Delete16 as Delete,
-    Save16 as Save,
-    Download16 as Download,
-    ViewFilled16 as View
+    Delete16 as Delete
 } from '@carbon/icons-react';
 import {
     DataTable, TableContainer, Table,
-    TableToolbar, TableToolbarMenu, Modal, SelectItem, TextInput, Select, OverflowMenu, OverflowMenuItem, TableSelectAll, TableSelectRow, TableBatchActions, TableBatchAction, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction
+    TableToolbar, TableToolbarMenu, OverflowMenu, OverflowMenuItem, TableSelectAll, TableSelectRow, TableBatchActions, TableBatchAction, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
 import { headerData } from './headerData';
 import FormModal from './AddDataModal';
+
 
 
 class ServiceDataView extends Component {
@@ -30,7 +28,9 @@ class ServiceDataView extends Component {
             show: false,
             totalItems: 0,
             firstRowIndex: 0,
-            currentPageSize: 10
+            currentPageSize: 10,
+            isUpdate: false,
+            serviceRecord: []
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -57,34 +57,55 @@ class ServiceDataView extends Component {
     doGetServiceDetails(service_id) {
         console.log(service_id);
     }
-    async batchActionClick(rows) {
+    batchActionClick(rows) {
+        console.log(this.state.data);
         let i = 0;
-        console.log(this.state.data.length);
         rows.forEach(data => {
-            const jsonData = this.props.service.doDeleteService(data.id);
-            this.state.data.splice(i, 1);
-            console.log(jsonData);
-            i++;
+            this.props.service.doDeleteService(data.id).then(res => {
+                let service_details = this.state.data.filter(details => details.id !== data.id);
+                this.setState({
+                    data: service_details,
+                    totalItems: this.state.data.length
+                });
+                i++;
+            });
         });
-        this.setState({
-            data: this.state.data,
-            totalItems: this.state.data.length
-        });
-
     }
     showModal = () => {
         this.setState({ show: true });
     };
 
     hideModal = () => {
-        this.setState({ show: false });
+        this.props.service.getServices().then(response => {
+            let serviceDetails = JSON.parse(JSON.stringify(response).replace(/\"service_id\":/g, "\"id\":"));
+            console.log(serviceDetails);
+            this.setState({
+                data: serviceDetails,
+                show: false
+            });
+        })
+
     };
+    doUpdateService(index) {
+        this.setState({
+            show: true,
+            isUpdate: true,
+            serviceRecord: this.state.data[index]
+        });
+
+    }
+
     render() {
-        const data = this.state.data;
-        const headers = this.state.headerData;
-        console.log(this.state.show);
+        let data = this.state.data;
+        let headers = this.state.headerData;
+        let showModal = this.state.show;
         return (
-            <><FormModal show={this.state.show} handleClose={this.hideModal} service={this.props.service} />
+
+            <><div>
+                {showModal &&
+                    <FormModal show={this.state.show} handleClose={this.hideModal} service={this.props.service} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} />
+                }
+            </div>
                 <div className="bx--grid">
                     <div className="bx--row">
                         <div className="bx--col-lg-16">
@@ -148,7 +169,7 @@ class ServiceDataView extends Component {
                                                     tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
                                                     size="small"
                                                     kind="primary"
-                                                    onClick={() => this.showModal()}>Add</Button>
+                                                    onClick={this.showModal}>Add</Button>
                                             </TableToolbarContent>
                                         </TableToolbar>
                                         <Table {...getTableProps()}>
@@ -164,7 +185,7 @@ class ServiceDataView extends Component {
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {rows.map((row) => (
+                                                {rows.map((row, i) => (
                                                     <TableRow key={row.id} {...getRowProps({ row })}>
                                                         <TableSelectRow {...getSelectionProps({ row })} />
                                                         {row.cells.map((cell) => (
@@ -172,7 +193,7 @@ class ServiceDataView extends Component {
                                                         ))}
                                                         <TableCell className="bx--table-column-menu">
                                                             <OverflowMenu light flipped>
-                                                                <OverflowMenuItem itemText="Edit" />
+                                                                <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(i)} />
                                                             </OverflowMenu>
                                                         </TableCell>
                                                     </TableRow>

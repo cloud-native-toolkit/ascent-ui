@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import Header from "../ui-shell/Header";
 import 'carbon-components/css/carbon-components.min.css';
 import * as _ from 'lodash';
-
-import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
+import { Breadcrumb, BreadcrumbItem }  from 'carbon-components-react'
+import SlidingPane from "react-sliding-pane";
 
 import {
     Link
@@ -192,9 +192,7 @@ class BillofMaterialsView extends Component {
 
         return (
             <div className="bx--grid">
-
                 {this.breadCrumbs(title)}
-
                 <div className="bx--row">
                     <div className="bx--col-lg-16">
                         <br></br>
@@ -297,7 +295,7 @@ class BillofMaterialsView extends Component {
                                         <TableBody>
                                             {rows.map((row, i) => (
                                                 <TableRow key={i} {...getRowProps({ row })}>
-                                                    <TableSelectRow {...getSelectionProps({ row })} />
+                                                    <TableSelectRow {...getSelectionProps({ row })} onClick={() => this.setState({ isPaneOpen: true, row:row })}/>
                                                     {row.cells.map((cell) => (
                                                         <TableCell key={cell.id}>{cell.value}</TableCell>
                                                     ))}
@@ -341,5 +339,24 @@ class BillofMaterialsView extends Component {
     }
 }
 
+
+/*
+            <>
+            <SlidingPane
+                className="some-custom-class"
+                overlayClassName="some-custom-overlay-class"
+                isOpen={state.isPaneOpen}
+                title="Hey, it is optional pane title.  I can be React component too."
+                subtitle="Optional subtitle."
+                onRequestClose={() => {
+                    // triggered on "<" on left top click or on outside click
+                    setState({ isPaneOpen: false });
+                }}
+            >
+                <div>And I am pane content. BTW, what rocks?</div>
+            </SlidingPane>
+            </>
+
+ */
 
 export default BillofMaterialsView;
