@@ -93,7 +93,10 @@ class BillofMaterialsView extends Component {
                     header: 'Availibity',
                 }
             ],
-            architecture: {}
+            architecture: {},
+            totalItems: 0,
+            firstRowIndex: 0,
+            currentPageSize: 10
         };
 
     }
@@ -107,7 +110,8 @@ class BillofMaterialsView extends Component {
         this.setState({
             archid: this.props.archId,
             data: bomDetails,
-            architecture: arch
+            architecture: arch,
+            totalItems: bomDetails.length
         });
     }
 
@@ -166,7 +170,10 @@ class BillofMaterialsView extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.data) {
             nextProps.data.getArchitectureDetails().then(data => {
-                this.setState({ data: nextProps.data });
+                this.setState({
+                    data: nextProps.data,
+                    totalItems: nextProps.data.length
+                });
             });
         }
     }
@@ -201,7 +208,10 @@ class BillofMaterialsView extends Component {
                 </div>
 
                 <div className="bx--row">
-                    <DataTable rows={data} headers={headers}>
+                    <DataTable rows={data.slice(
+                            this.state.firstRowIndex,
+                            this.state.firstRowIndex + this.state.currentPageSize
+                            )} headers={headers}>
                         {({
                             rows,
                             headers,
@@ -305,20 +315,22 @@ class BillofMaterialsView extends Component {
                     </DataTable>
                     <div style={{ width: '800px' }}>
                         <Pagination
+                            totalItems={this.state.totalItems}
                             backwardText="Previous page"
                             forwardText="Next page"
-                            itemsPerPageText="Items per page:"
-                            page={1}
-                            pageNumberText="Page Number"
-                            pageSize={10}
-                            pageSizes={[
-                                10,
-                                20,
-                                30,
-                                40,
-                                50
-                            ]}
-                            totalItems={103}
+                            pageSize={this.state.currentPageSize}
+                            pageSizes={[5, 10, 15, 25]}
+                            itemsPerPageText="Items per page"
+                            onChange={({ page, pageSize }) => {
+                                if (pageSize !== this.state.currentPageSize) {
+                                    this.setState({
+                                        currentPageSize: pageSize
+                                    });
+                                }
+                                this.setState({
+                                    firstRowIndex: pageSize * (page - 1)
+                                });
+                            }}
                         />
                     </div>
                 </div>

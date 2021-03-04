@@ -1,19 +1,131 @@
 import React, { Component } from "react";
-import Header from "../ui-shell/Header";
-class ControlsView extends Component {
+import {
+    DataTableSkeleton,
+    Pagination
+} from 'carbon-components-react';
+import ControlsTable from './ControlsTable';
 
+export const headers = [
+    {
+        key: 'id',
+        header: 'Control ID',
+    },
+    {
+        key: 'control_family',
+        header: 'Control Family',
+    },
+    {
+        key: 'cf_description',
+        header: 'Control Family Description',
+    },
+    {
+        key: 'base_control',
+        header: 'Base Control',
+    },
+    {
+        key: 'control_name',
+        header: 'Control Name',
+    },
+    {
+        key: 'candidate',
+        header: 'Candidate',
+    },
+    {
+        key: 'inherited',
+        header: 'Inherited',
+    },
+    {
+        key: 'platform_responsibility',
+        header: 'Platform Responsibility',
+    },
+    {
+        key: 'app_responsibility',
+        header: 'App Responsibility',
+    }
+];
+
+class ControlsView extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+            headerData: headers,
+            totalItems: 0,
+            firstRowIndex: 0,
+            currentPageSize: 10
+        };
+    }
+
+    async componentDidMount() {
+        const jsonData = await this.props.controls.getControls();
+        const controlsDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"control_id\":/g, "\"id\":"));
+        this.setState({
+            data: controlsDetails,
+            totalItems: controlsDetails.length
+        });
+    }
     render() {
+        const data = this.state.data;
+        const headers = this.state.headerData;
+        let table;
+        if (data.length === 0) {
+            table = <DataTableSkeleton
+                        columnCount={headers.length + 1}
+                        rowCount={10}
+                        headers={headers}
+                    />
+        } else {
+            table = <>
+                        <ControlsTable
+                            headers={headers}
+                            rows={data.slice(
+                            this.state.firstRowIndex,
+                            this.state.firstRowIndex + this.state.currentPageSize
+                            )}
+                        />
+                        <Pagination
+                            totalItems={this.state.totalItems}
+                            backwardText="Previous page"
+                            forwardText="Next page"
+                            pageSize={this.state.currentPageSize}
+                            pageSizes={[5, 10, 15, 25]}
+                            itemsPerPageText="Items per page"
+                            onChange={({ page, pageSize }) => {
+                                if (pageSize !== this.state.currentPageSize) {
+                                    this.setState({
+                                        currentPageSize: pageSize
+                                    });
+                                }
+                                this.setState({
+                                    firstRowIndex: pageSize * (page - 1)
+                                });
+                            }}
+                        />
+                    </>
+        }
         return (
             <div className="bx--grid">
-                <Header
-                    title="Controls View"
-                    subtitle="Displays a model object as a form in a read only display."
-                />
                 <div className="bx--row">
-
+                    <div className="bx--col-lg-16">
+                        <br></br>
+                        <h2 className="landing-page__subheading">
+                            Controls
+                        </h2>
+                        <br></br>
+                        <p>
+                            List of FS Cloud controls
+                        </p>
+                        <br></br>
+                    </div>
                 </div>
-            </div>
+                <div className="bx--row">
+                    <div className="bx--col-lg-16">
+                        {table}
+                    </div>
+                </div>
+            </div >
         );
+
     }
 }
 export default ControlsView;

@@ -26,6 +26,9 @@ class ServiceDataView extends Component {
             data: [],
             headerData: headerData,
             show: false,
+            totalItems: 0,
+            firstRowIndex: 0,
+            currentPageSize: 10,
             isUpdate: false,
             serviceRecord: []
         };
@@ -37,13 +40,17 @@ class ServiceDataView extends Component {
         const jsonData = await this.props.service.getServices();
         const serviceDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"service_id\":/g, "\"id\":"));
         this.setState({
-            data: serviceDetails
+            data: serviceDetails,
+            totalItems: serviceDetails.length
         });
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.data) {
             nextProps.data.getArchitectureDetails().then(data => {
-                this.setState({ data: nextProps.data });
+                this.setState({
+                    data: nextProps.data,
+                    totalItems: nextProps.data.length
+                });
             });
         }
     }
@@ -57,11 +64,11 @@ class ServiceDataView extends Component {
             this.props.service.doDeleteService(data.id).then(res => {
                 let service_details = this.state.data.filter(details => details.id !== data.id);
                 this.setState({
-                    data: service_details
+                    data: service_details,
+                    totalItems: this.state.data.length
                 });
                 i++;
             });
-
         });
     }
     showModal = () => {
@@ -116,7 +123,10 @@ class ServiceDataView extends Component {
 
                     <div className="bx--row">
 
-                        <DataTable rows={data} headers={headers}>
+                        <DataTable rows={data.slice(
+                            this.state.firstRowIndex,
+                            this.state.firstRowIndex + this.state.currentPageSize
+                            )} headers={headers}>
                             {({
                                 rows,
                                 headers,
@@ -193,23 +203,24 @@ class ServiceDataView extends Component {
                                     </TableContainer>
                                 )}
                         </DataTable>
-                        <div style={{ width: '800px' }}>
-                            <Pagination
-                                backwardText="Previous page"
-                                forwardText="Next page"
-                                itemsPerPageText="Items per page:"
-                                page={1}
-                                pageNumberText="Page Number"
-                                pageSize={10}
-                                pageSizes={[
-                                    10,
-                                    20,
-                                    30,
-                                    40,
-                                    50
-                                ]}
-                                totalItems={103} />
-                        </div>
+                        <Pagination
+                            totalItems={this.state.totalItems}
+                            backwardText="Previous page"
+                            forwardText="Next page"
+                            pageSize={this.state.currentPageSize}
+                            pageSizes={[5, 10, 15, 25]}
+                            itemsPerPageText="Items per page"
+                            onChange={({ page, pageSize }) => {
+                                if (pageSize !== this.state.currentPageSize) {
+                                    this.setState({
+                                        currentPageSize: pageSize
+                                    });
+                                }
+                                this.setState({
+                                    firstRowIndex: pageSize * (page - 1)
+                                });
+                            }}
+                        />
                     </div>
                 </div></>
         );

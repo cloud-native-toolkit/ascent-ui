@@ -127,7 +127,7 @@ class UIShell extends Component {
                 </SideNavMenu>
                 <SideNavMenu title="Compliance" >
 
-                  <Link to="/bom">
+                  <Link to="/controls">
                     <SideNavMenuItem>Controls</SideNavMenuItem>
                   </Link>
 
