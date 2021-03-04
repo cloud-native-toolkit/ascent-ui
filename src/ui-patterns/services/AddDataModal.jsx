@@ -5,27 +5,37 @@ class FormModal extends Component {
         super(props);
         this.state = {
             show: this.props.show,
+            onRequestClose: this.props.handleClose,
             fields: {
-                service_id: null,
-                grouping: null,
-                ibm_service: null,
-                desc: null,
-                deployment_method: null,
+                service_id: '',
+                grouping: '',
+                ibm_service: '',
+                desc: '',
+                deployment_method: '',
                 fs_ready: false,
-                quarter: null,
-                date: null,
-                provision: null,
-                cloud_automation_id: null,
-                hybrid_automation_id: null
+                quarter: '',
+                date: '',
+                provision: '',
+                cloud_automation_id: '',
+                hybrid_automation_id: ''
             }
         };
+        if (this.props.isUpdate) {
+            let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/\"id\":/g, "\"service_id\":"));
+            this.state = {
+                fields: jsonObject
+            }
+        }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
     handleChange(field, e) {
         let fields = this.state.fields;
+
         if (field === "fs_ready") {
-            fields[field] = e;
+            fields[field] = Boolean(e);
+        } else if (field === "date") {
+            fields[field] = e.target.value;
         } else {
             fields[field] = e.target.value;
         }
@@ -34,27 +44,31 @@ class FormModal extends Component {
     }
     handleSubmit = (event) => {
         event.preventDefault();
-        console.log(this.state.fields);
-        const jsonData = this.props.service.doAddService(this.state.fields);
+        if (!this.props.isUpdate) {
+            const jsonData = this.props.service.doAddService(this.state.fields);
+        } else {
+            this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id);
+        }
+        this.props.handleClose();
     }
     render() {
         const fieldsetRadioProps = {
-            className: 'some-class',
             legendText: 'FS Ready',
         };
+
         return (
             <div className="bx--grid">
                 <div className="bx--row">
 
                     <ComposedModal
                         open={this.props.show}
-                        onRequestClose={this.props.handleClose}>
+                        onClose={this.props.handleClose}>
                         <ModalHeader >
-                            <h2 class="bx--modal-header__label">Service resource</h2>
-                            <h3 class="bx--modal-header__heading">Add a Service</h3>
-                            <button class="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
+                            <h2 className="bx--modal-header__label">Service resource</h2>
+                            <h3 className="bx--modal-header__heading">Add a Service</h3>
+                            <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
-                        <ModalBody hasScrollingContent>
+                        <ModalBody>
                             <Form name="serviceform" onSubmit={this.handleSubmit.bind(this)}>
 
                                 <TextInput
@@ -137,12 +151,13 @@ class FormModal extends Component {
                                     placeholder="e.g. github.com"
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <DatePicker datePickerType="single">
+                                <DatePicker datePickerType="single" dateFormat='Y-m-d' >
                                     <DatePickerInput
-                                        placeholder="mm/dd/yyyy"
+                                        placeholder="Y-m-d"
                                         labelText="Date"
                                         id="date-time"
                                         name="date"
+                                        pattern="\d{4}\-\d{1,2}\-\d{4}"
                                         value={this.state.fields.date}
                                         onFocus={this.handleChange.bind(this, "date")}
 
@@ -178,9 +193,11 @@ class FormModal extends Component {
                                     placeholder="e.g. github.com"
                                     style={{ marginBottom: '1rem' }}
                                 />
-
                                 <ButtonSet style={{ margin: '2rem 0 2rem 0' }}>
-                                    <Button kind="primary" type="submit" style={{ margin: '0 1rem 0 0' }}>Submit</Button>
+                                    <Button kind="primary" type="submit" style={{ margin: '0 1rem 0 0' }}>
+                                        {!this.props.isUpdate && "Submit"}
+                                        {this.props.isUpdate && "Update"}
+                                    </Button>
                                     <Button kind='secondary' type="reset" style={{ margin: '0 1rem 0 1rem' }}> Reset</Button>
                                 </ButtonSet>
                             </Form>

@@ -32,17 +32,28 @@ export class ServiceData implements ServiceDataApi {
     }
     async doDeleteService(serviceId: string): Promise<ServiceDataModel> {
         return superagent
-            .delete(this.baseUrl + serviceId)
+            .delete(this.baseUrl + "/" + serviceId)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body;
+            });
+    }
+    async doAddService(service_details: any): Promise<ServiceDataModel> {
+
+        service_details.date = service_details.date + "T00:00:00.000Z";
+        return superagent
+            .post(this.baseUrl)
+            .send(service_details)
             .set('accept', 'application/json')
             .then(res => {
                 console.log(res.status);
                 return res.body;
             });
     }
-    async doAddService(service_details: any): Promise<ServiceDataModel> {
-        console.log(service_details);
+    async doUpdateService(service_details: any, serviceId: string): Promise<ServiceDataModel> {
+        service_details.date = service_details.date + "T00:00:00.000Z";
         return superagent
-            .post(this.baseUrl)
+            .patch(this.baseUrl + "/" + serviceId)
             .send(service_details)
             .set('accept', 'application/json')
             .then(res => {
