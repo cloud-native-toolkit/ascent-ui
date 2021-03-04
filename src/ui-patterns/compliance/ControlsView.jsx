@@ -66,53 +66,16 @@ class ControlsView extends Component {
     }
     render() {
         const data = this.state.data;
-        //setTotalItems(data.length)
         const headers = this.state.headerData;
+        let table;
         if (data.length === 0) {
-            return (
-                <div className="bx--grid">
-                    <div className="bx--row">
-                        <div className="bx--col-lg-16">
-                            <br></br>
-                            <h2 className="landing-page__subheading">
-                                Controls
-                            </h2>
-                            <br></br>
-                            <p>
-                                List of FS Cloud controls
-                            </p>
-                            <br></br>
-                        </div>
-                    </div>
-                    <div className="bx--row">
-                        <div className="bx--col-lg-16">
-                            <DataTableSkeleton
-                                columnCount={headers.length + 1}
-                                rowCount={10}
-                                headers={headers}
-                            />
-                        </div>
-                    </div>
-                </div >
-            );
-        }
-        return (
-            <div className="bx--grid">
-                <div className="bx--row">
-                    <div className="bx--col-lg-16">
-                        <br></br>
-                        <h2 className="landing-page__subheading">
-                            Controls
-                        </h2>
-                        <br></br>
-                        <p>
-                            List of FS Cloud controls
-                        </p>
-                        <br></br>
-                    </div>
-                </div>
-                <div className="bx--row">
-                    <div className="bx--col-lg-16">
+            table = <DataTableSkeleton
+                        columnCount={headers.length + 1}
+                        rowCount={10}
+                        headers={headers}
+                    />
+        } else {
+            table = <>
                         <ControlsTable
                             headers={headers}
                             rows={data.slice(
@@ -138,6 +101,26 @@ class ControlsView extends Component {
                                 });
                             }}
                         />
+                    </>
+        }
+        return (
+            <div className="bx--grid">
+                <div className="bx--row">
+                    <div className="bx--col-lg-16">
+                        <br></br>
+                        <h2 className="landing-page__subheading">
+                            Controls
+                        </h2>
+                        <br></br>
+                        <p>
+                            List of FS Cloud controls
+                        </p>
+                        <br></br>
+                    </div>
+                </div>
+                <div className="bx--row">
+                    <div className="bx--col-lg-16">
+                        {table}
                     </div>
                 </div>
             </div >
