@@ -24,8 +24,7 @@ export class ControlsData implements ControlsDataApi {
             .get(this.baseUrl + controlId)
             .set('accept', 'application/json')
             .then(res => {
-
-                return res.body;
+                return res.body || {};
             });
     }
     async doDeleteControls(controlId: string): Promise<ControlsDataModel> {

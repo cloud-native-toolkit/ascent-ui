@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Link,
   DataTable,
   TableContainer,
   Table,
@@ -40,6 +41,7 @@ const ControlsTable = ({ rows, headers }) => (
                   {header.header}
                 </TableHeader>
               ))}
+              <TableHeader>Details</TableHeader>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -48,6 +50,7 @@ const ControlsTable = ({ rows, headers }) => (
                 {row.cells.map((cell) => (
                   <TableCell key={cell.id}>{cell.value}</TableCell>
                 ))}
+                <TableCell><Link href={"/control/"+row.id}>Details</Link></TableCell>
               </TableRow>
             ))}
           </TableBody>

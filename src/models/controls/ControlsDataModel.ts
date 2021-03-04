@@ -12,4 +12,7 @@ export interface ControlsDataModel {
     inherited: string;
     platform_responsibility: string;
     app_responsibility: string;
+    nist: object;
+    services: object[];
+    architectures: object[];
 }
