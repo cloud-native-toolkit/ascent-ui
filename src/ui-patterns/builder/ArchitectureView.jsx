@@ -55,11 +55,11 @@ class ArchitectureView extends Component {
         for (var i = 0; i < architectures.length; i++) {
             const arch = architectures[i];
 
-            var link = "/bom/"+arch._id;
+            var link = "/bom/"+arch.arch_id;
 
             console.log(link)
             archTiles.push(
-                <div className="bx--col-md-4 bx--col-lg-4" key={arch._id}>
+                <div className="bx--col-md-4 bx--col-lg-4" key={arch.arch_id}>
                     <ArticleCard
                         title={arch.name}
                         author={arch.short_desc}
