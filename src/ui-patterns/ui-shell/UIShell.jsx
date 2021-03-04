@@ -127,10 +127,6 @@ class UIShell extends Component {
                 </SideNavMenu>
                 <SideNavMenu title="Compliance" >
 
-                  <Link to="/control-mapping">
-                    <SideNavMenuItem>Control Mapping</SideNavMenuItem>
-                  </Link>
-
                   <Link to="/controls">
                     <SideNavMenuItem>Controls</SideNavMenuItem>
                   </Link>
