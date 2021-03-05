@@ -4,6 +4,7 @@ import 'carbon-components/css/carbon-components.min.css';
 import * as _ from 'lodash';
 import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 import SlidingPane from "react-sliding-pane";
+import ServiceModal from './AddServiceModal';
 
 import {
     Link
@@ -33,25 +34,31 @@ class BillofMaterialsView extends Component {
             archid: null,
             data: [],
             headersData: bomHeader,
+            show: false,
+            isUpdate: false,
+            serviceRecord: [],
             architecture: {},
             totalItems: 0,
             firstRowIndex: 0,
             currentPageSize: 10
         };
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
 
     }
     async componentDidMount() {
-        console.log(JSON.stringify(this.props))
-
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
         const jsonData = await this.props.bomService.getBOM(this.props.archId);
         const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
+        let service_list = await this.props.bomService.getServices();
+
 
         this.setState({
             archid: this.props.archId,
             data: bomDetails,
             architecture: arch,
-            totalItems: bomDetails.length
+            totalItems: bomDetails.length,
+            serviceNames: service_list
         });
     }
 
@@ -102,11 +109,6 @@ class BillofMaterialsView extends Component {
     viewDiagram() {
         alert("Download Terraform");
     }
-
-    addService() {
-        alert("Add Service");
-    }
-
     componentWillReceiveProps(nextProps) {
         if (nextProps.data) {
             nextProps.data.getArchitectureDetails().then(data => {
@@ -118,163 +120,207 @@ class BillofMaterialsView extends Component {
         }
     }
 
+    // API issues there So need to work on this function
+    batchActionClick(rows) {
+        console.log(this.state.data);
+        let i = 0;
+        rows.forEach(data => {
+            this.props.bomService.doDeleteBOM(data.id).then(res => {
+                let service_details = this.state.data.filter(details => details.id !== data.id);
+                this.setState({
+                    data: service_details,
+                    totalItems: this.state.data.length
+                });
+                i++;
+            });
+        });
+    }
+
+    /*********Modal From Code Start*****************/
+
+    showModal = () => {
+        this.setState({ show: true });
+    };
+
+    hideModal = () => {
+        this.props.bomService.getBOM(this.props.archId).then(response => {
+            let serviceDetails = JSON.parse(JSON.stringify(response).replace(/\"_id\":/g, "\"id\":"));
+            this.setState({
+                data: serviceDetails,
+                show: false
+            });
+        })
+
+    };
+    doUpdateService(index) {
+        console.log(this.state.data[index]);
+        this.setState({
+            show: true,
+            isUpdate: true,
+            serviceRecord: this.state.data[index]
+        });
+
+    }
+
+    /********Modal Form Code END*******************/
     render() {
 
         const data = this.state.data;
         const headers = this.state.headersData;
         const archid = this.state.archid;
-        console.log(JSON.stringify(archid));
-
         let title = "";
         if (!_.isUndefined(this.state.architecture.name)) {
             title = this.state.architecture.name
         }
+        let showModal = this.state.show;
 
         return (
-            <div className="bx--grid">
-                {this.breadCrumbs(title)}
-                <div className="bx--row">
-                    <div className="bx--col-lg-16">
-                        <br></br>
-                        <h2 className="landing-page__subheading">
-                            Bill Of Materials
-                        </h2>
-                        <br></br>
-                        <p>
-                            List of IBM Cloud services that form the bill of materials for this reference architecture
-                        </p>
-                        <br></br>
+            <><div>
+                {showModal &&
+                    <ServiceModal archId={archid} show={this.state.show} handleClose={this.hideModal} service={this.props.bomService} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} services={this.state.serviceNames} />}
+            </div>
+                <div className="bx--grid">
+                    {this.breadCrumbs(title)}
+                    <div className="bx--row">
+                        <div className="bx--col-lg-16">
+                            <br></br>
+                            <h2 className="landing-page__subheading">
+                                Bill Of Materials
+                            </h2>
+                            <br></br>
+                            <p>
+                                List of IBM Cloud services that form the bill of materials for this reference architecture
+                            </p>
+                            <br></br>
+                        </div>
                     </div>
-                </div>
 
-                <div className="bx--row">
-                    <DataTable rows={data.slice(
-                        this.state.firstRowIndex,
-                        this.state.firstRowIndex + this.state.currentPageSize
-                    )} headers={headers}>
-                        {({
-                            rows,
-                            headers,
-                            getHeaderProps,
-                            getRowProps,
-                            getSelectionProps,
-                            getToolbarProps,
-                            getBatchActionProps,
-                            onInputChange,
-                            selectedRows,
-                            getTableProps,
-                            getTableContainerProps,
-                        }) => (
-                                <TableContainer
-                                    {...getTableContainerProps()}>
-                                    <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
-                                        <TableBatchActions {...getBatchActionProps()}>
-                                            <TableBatchAction
-                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
-                                                renderIcon={Delete}
-                                            >
-                                                Delete
-                                           </TableBatchAction>
-                                            <TableBatchAction
-                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
-                                                renderIcon={Save}
-                                            >
-                                                Save
-                                           </TableBatchAction>
-                                            <TableBatchAction
-                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
-                                                renderIcon={Download}
-                                            >
-                                                Download
-                                           </TableBatchAction>
-                                        </TableBatchActions>
-                                        <TableToolbarContent>
-                                            <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)} >
-                                                <Download /> Terraform
-                                            </TableToolbarAction>
-
-                                        </TableToolbarContent>
-                                        <TableToolbarContent>
-
-                                            <TableToolbarSearch onChange={onInputChange} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
-
-                                            <TableToolbarMenu
-                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}>
+                    <div className="bx--row">
+                        <DataTable rows={data.slice(
+                            this.state.firstRowIndex,
+                            this.state.firstRowIndex + this.state.currentPageSize
+                        )} headers={headers}>
+                            {({
+                                rows,
+                                headers,
+                                getHeaderProps,
+                                getRowProps,
+                                getSelectionProps,
+                                getToolbarProps,
+                                getBatchActionProps,
+                                onInputChange,
+                                selectedRows,
+                                getTableProps,
+                                getTableContainerProps,
+                            }) => (
+                                    <TableContainer
+                                        {...getTableContainerProps()}>
+                                        <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
+                                            <TableBatchActions {...getBatchActionProps()}>
+                                                <TableBatchAction
+                                                    tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                    renderIcon={Delete}
+                                                    onClick={() => this.batchActionClick(selectedRows)}
+                                                >
+                                                    Delete
+                                                </TableBatchAction>
+                                                <TableBatchAction
+                                                    tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                    renderIcon={Save}
+                                                >
+                                                    Save
+                                                </TableBatchAction>
+                                                <TableBatchAction
+                                                    tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                    renderIcon={Download}
+                                                >
+                                                    Download
+                                                </TableBatchAction>
+                                            </TableBatchActions>
+                                            <TableToolbarContent>
                                                 <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)}>
                                                     <Download /> Terraform
-                                               </TableToolbarAction>
-                                                <TableToolbarAction onClick={this.viewDiagram}>
-                                                    <View /> Diagram
                                                 </TableToolbarAction>
-                                            </TableToolbarMenu>
+
+                                            </TableToolbarContent>
+                                            <TableToolbarContent>
+
+                                                <TableToolbarSearch onChange={onInputChange} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
+
+                                                <TableToolbarMenu
+                                                    tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}>
+                                                    <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)}>
+                                                        <Download /> Terraform
+                                                    </TableToolbarAction>
+                                                    <TableToolbarAction onClick={this.viewDiagram}>
+                                                        <View /> Diagram
+                                                    </TableToolbarAction>
+                                                </TableToolbarMenu>
 
 
-                                            <Button
-                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
-                                                size="small"
-                                                kind="primary"
-                                                onClick={this.addService}
-                                            >
-                                                Add Service
-                                            </Button>
-                                        </TableToolbarContent>
-                                    </TableToolbar>
-                                    <Table {...getTableProps()}>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableSelectAll {...getSelectionProps()} />
-                                                {headers.map((header, i) => (
-                                                    <TableHeader key={i} {...getHeaderProps({ header })}>
-                                                        {header.header}
-                                                    </TableHeader>
-                                                ))}
-                                                <TableHeader />
-                                            </TableRow>
-                                        </TableHead>
-
-                                        <TableBody>
-                                            {rows.map((row, i) => (
-                                                <TableRow key={i} {...getRowProps({ row })}>
-                                                    <TableSelectRow {...getSelectionProps({ row })} onClick={() => this.setState({ isPaneOpen: true, row: row })} />
-                                                    {row.cells.map((cell) => (
-                                                        <TableCell key={cell.id}>{cell.value}</TableCell>
+                                                <Button
+                                                    tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
+                                                    size="small"
+                                                    kind="primary"
+                                                    onClick={this.showModal}
+                                                >
+                                                    Add Service
+                                                </Button>
+                                            </TableToolbarContent>
+                                        </TableToolbar>
+                                        <Table {...getTableProps()}>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableSelectAll {...getSelectionProps()} />
+                                                    {headers.map((header, i) => (
+                                                        <TableHeader key={i} {...getHeaderProps({ header })}>
+                                                            {header.header}
+                                                        </TableHeader>
                                                     ))}
-                                                    <TableCell className="bx--table-column-menu">
-                                                        <OverflowMenu light flipped>
-                                                            <OverflowMenuItem>View Mapping</OverflowMenuItem>
-                                                            <OverflowMenuItem>View Service</OverflowMenuItem>
-                                                            <OverflowMenuItem>Delete</OverflowMenuItem>
-                                                        </OverflowMenu>
-                                                    </TableCell>
+                                                    <TableHeader />
                                                 </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            )}
-                    </DataTable>
+                                            </TableHead>
 
-                    <Pagination
-                        totalItems={this.state.totalItems}
-                        backwardText="Previous page"
-                        forwardText="Next page"
-                        pageSize={this.state.currentPageSize}
-                        pageSizes={[5, 10, 15, 25]}
-                        itemsPerPageText="Items per page"
-                        onChange={({ page, pageSize }) => {
-                            if (pageSize !== this.state.currentPageSize) {
+                                            <TableBody>
+                                                {rows.map((row, i) => (
+                                                    <TableRow key={i} {...getRowProps({ row })}>
+                                                        <TableSelectRow {...getSelectionProps({ row })} onClick={() => this.setState({ isPaneOpen: true, row: row })} />
+                                                        {row.cells.map((cell) => (
+                                                            <TableCell key={cell.id}>{cell.value}</TableCell>
+                                                        ))}
+                                                        <TableCell className="bx--table-column-menu">
+                                                            <OverflowMenu light flipped>
+                                                                <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(i)} />
+                                                            </OverflowMenu>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                )}
+                        </DataTable>
+
+                        <Pagination
+                            totalItems={this.state.totalItems}
+                            backwardText="Previous page"
+                            forwardText="Next page"
+                            pageSize={this.state.currentPageSize}
+                            pageSizes={[5, 10, 15, 25]}
+                            itemsPerPageText="Items per page"
+                            onChange={({ page, pageSize }) => {
+                                if (pageSize !== this.state.currentPageSize) {
+                                    this.setState({
+                                        currentPageSize: pageSize
+                                    });
+                                }
                                 this.setState({
-                                    currentPageSize: pageSize
+                                    firstRowIndex: pageSize * (page - 1)
                                 });
-                            }
-                            this.setState({
-                                firstRowIndex: pageSize * (page - 1)
-                            });
-                        }}
-                    />
+                            }} />
 
-                </div>
-            </div>
+                    </div>
+                </div></>
         );
     }
 }

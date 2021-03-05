@@ -52,10 +52,6 @@ class FormModal extends Component {
         this.props.handleClose();
     }
     render() {
-        const fieldsetRadioProps = {
-            legendText: 'FS Ready',
-        };
-
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -137,7 +133,7 @@ class FormModal extends Component {
                                     placeholder="e.g. managed_service,platform"
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <FormGroup {...fieldsetRadioProps}>
+                                <FormGroup legendText="FS Ready">
                                     <RadioButtonGroup
                                         name="fs_ready"
                                         onChange={this.handleChange.bind(this, "fs_ready")}
