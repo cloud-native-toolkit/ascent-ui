@@ -4,52 +4,15 @@ import {
     Pagination
 } from 'carbon-components-react';
 import ControlsTable from './ControlsTable';
+import { ctrlsHeaders } from '../data/data';
 
-export const headers = [
-    {
-        key: 'id',
-        header: 'Control ID',
-    },
-    {
-        key: 'control_family',
-        header: 'Control Family',
-    },
-    {
-        key: 'cf_description',
-        header: 'Control Family Description',
-    },
-    {
-        key: 'base_control',
-        header: 'Base Control',
-    },
-    {
-        key: 'control_name',
-        header: 'Control Name',
-    },
-    {
-        key: 'candidate',
-        header: 'Candidate',
-    },
-    {
-        key: 'inherited',
-        header: 'Inherited',
-    },
-    {
-        key: 'platform_responsibility',
-        header: 'Platform Responsibility',
-    },
-    {
-        key: 'app_responsibility',
-        header: 'App Responsibility',
-    }
-];
 
 class ControlsView extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data: [],
-            headerData: headers,
+            headerData: ctrlsHeaders,
             totalItems: 0,
             firstRowIndex: 0,
             currentPageSize: 10
@@ -70,38 +33,38 @@ class ControlsView extends Component {
         let table;
         if (data.length === 0) {
             table = <DataTableSkeleton
-                        columnCount={headers.length + 1}
-                        rowCount={10}
-                        headers={headers}
-                    />
+                columnCount={headers.length + 1}
+                rowCount={10}
+                headers={headers}
+            />
         } else {
             table = <>
-                        <ControlsTable
-                            headers={headers}
-                            rows={data.slice(
-                            this.state.firstRowIndex,
-                            this.state.firstRowIndex + this.state.currentPageSize
-                            )}
-                        />
-                        <Pagination
-                            totalItems={this.state.totalItems}
-                            backwardText="Previous page"
-                            forwardText="Next page"
-                            pageSize={this.state.currentPageSize}
-                            pageSizes={[5, 10, 15, 25]}
-                            itemsPerPageText="Items per page"
-                            onChange={({ page, pageSize }) => {
-                                if (pageSize !== this.state.currentPageSize) {
-                                    this.setState({
-                                        currentPageSize: pageSize
-                                    });
-                                }
-                                this.setState({
-                                    firstRowIndex: pageSize * (page - 1)
-                                });
-                            }}
-                        />
-                    </>
+                <ControlsTable
+                    headers={headers}
+                    rows={data.slice(
+                        this.state.firstRowIndex,
+                        this.state.firstRowIndex + this.state.currentPageSize
+                    )}
+                />
+                <Pagination
+                    totalItems={this.state.totalItems}
+                    backwardText="Previous page"
+                    forwardText="Next page"
+                    pageSize={this.state.currentPageSize}
+                    pageSizes={[5, 10, 15, 25]}
+                    itemsPerPageText="Items per page"
+                    onChange={({ page, pageSize }) => {
+                        if (pageSize !== this.state.currentPageSize) {
+                            this.setState({
+                                currentPageSize: pageSize
+                            });
+                        }
+                        this.setState({
+                            firstRowIndex: pageSize * (page - 1)
+                        });
+                    }}
+                />
+            </>
         }
         return (
             <div className="bx--grid">
