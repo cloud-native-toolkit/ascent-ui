@@ -1,12 +1,34 @@
 import { BillofMaterialsDataModel } from '../../models/bom/BillofMaterialsDataModel';
+import { ServiceDataModel } from "../../models/services/serviceDataModel";
 import { BillofMaterialsApi } from './billofmaterials.api';
 import * as superagent from 'superagent';
 
 export class BillofMaterialsService implements BillofMaterialsApi {
     baseUrl: string;
-
-    constructor(baseUrl: string) {
+    servicebaseUrl: string;
+    constructor(baseUrl: string, servicebaseUrl: string) {
         this.baseUrl = baseUrl || '/architectures/';
+        this.servicebaseUrl = servicebaseUrl || '/services';
+    }
+
+    async getServices(): Promise<ServiceDataModel[]> {
+        return superagent
+            .get(this.servicebaseUrl)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body || [];
+            });
+
+    }
+    async doPostBOM(archiId: string, bom_details: any): Promise<BillofMaterialsDataModel[]> {
+        return superagent
+            .post(this.baseUrl + archiId + '/boms')
+            .send(bom_details)
+            .set('accept', 'application/json')
+            .then(res => {
+                console.log(res.status);
+                return res.body;
+            });
     }
 
     async getBOM(archiId: string): Promise<BillofMaterialsDataModel[]> {
@@ -25,5 +47,27 @@ export class BillofMaterialsService implements BillofMaterialsApi {
                 return res.body || [];
             });
     }
+
+    async doUpdateBOM(archId: string, service_details: any): Promise<BillofMaterialsDataModel[]> {
+        return superagent
+            .patch(this.baseUrl + archId + '/boms')
+            .send(service_details)
+            .set('accept', 'application/json')
+            .then(res => {
+                console.log(res.status);
+                return res.body;
+            });
+    }
+
+    doDeleteBOM(archiId: string): Promise<BillofMaterialsDataModel[]> {
+        return superagent
+            .delete(this.baseUrl + archiId + '/boms')
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body;
+            });
+    }
+
+
 
 }
