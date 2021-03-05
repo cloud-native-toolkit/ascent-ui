@@ -38,11 +38,7 @@ export const serviceHeader = [
   {
     key: 'cloud_automation_id',
     header: 'CA-ID',
-  },
-  {
-    key: 'hybrid_automation_id',
-    header: 'HA-ID',
-  },
+  }
 ];
 
 export const bomHeader = [

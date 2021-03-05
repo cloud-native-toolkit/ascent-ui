@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, DatePickerInput, Button, ButtonSet, DatePicker, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput } from 'carbon-components-react';
+import { Form, FormGroup, DatePickerInput, Select, SelectItem, Button, ButtonSet, DatePicker, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput } from 'carbon-components-react';
 class FormModal extends Component {
     constructor(props) {
         super(props);
@@ -75,26 +75,39 @@ class FormModal extends Component {
                                     data-modal-primary-focus
                                     id="seviceId"
                                     name="service_id"
+                                    disabled={this.props.isUpdate ? true : false}
+                                    invalidText="Please Enter The Value"
                                     onChange={this.handleChange.bind(this, "service_id")}
                                     value={this.state.fields.service_id}
                                     labelText="Service ID"
                                     placeholder="e.g. appid,atracker,cos"
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <TextInput
-                                    data-modal-primary-focus
-                                    id="group"
-                                    name="grouping"
-                                    value={this.state.fields.grouping}
-                                    onChange={this.handleChange.bind(this, "grouping")}
+                                <Select id="group" name="grouping"
                                     labelText="Grouping"
-                                    placeholder="e.g. databases,compute,network"
-                                    style={{ marginBottom: '1rem' }}
-                                />
+                                    defaultValue={!this.state.fields.grouping ? 'placeholder-item' : this.state.fields.grouping}
+                                    invalidText="A valid value is required"
+                                    onChange={this.handleChange.bind(this, "grouping")}>
+                                    <SelectItem
+                                        disabled
+                                        hidden
+                                        value="placeholder-item"
+                                        text="Choose an option"
+                                    />
+                                    <SelectItem value="Security & Identity" text="Security & Identity" />
+                                    <SelectItem value="Developer Tools" text="Developer Tools" />
+                                    <SelectItem value="Databases" text="Databases" />
+                                    <SelectItem value="Network" text="Network" />
+                                    <SelectItem value="Storage" text="Storage" />
+                                    <SelectItem value="Compute" text="Compute" />
+                                    <SelectItem value="IBM Cloud Platform Services" text="IBM Cloud Platform Services" />
+                                </Select>
                                 <TextInput
                                     data-modal-primary-focus
                                     id="ibmService"
                                     name="ibm_service"
+                                    invalidText="Please Enter The Value"
+
                                     value={this.state.fields.ibm_service}
                                     onChange={this.handleChange.bind(this, "ibm_service")}
                                     labelText="IBM Service"
@@ -116,6 +129,8 @@ class FormModal extends Component {
                                     data-modal-primary-focus
                                     id="dplMethod"
                                     name="deployment_method"
+                                    invalidText="Please Enter The Value"
+
                                     value={this.state.fields.deployment_method}
                                     onChange={this.handleChange.bind(this, "deployment_method")}
                                     labelText="Deployment Method"
@@ -145,6 +160,8 @@ class FormModal extends Component {
                                     data-modal-primary-focus
                                     id="quarter"
                                     name="quarter"
+                                    invalidText="Please Enter The Value"
+
                                     value={this.state.fields.quarter}
                                     onChange={this.handleChange.bind(this, "quarter")}
                                     labelText="Quarter"
@@ -157,42 +174,41 @@ class FormModal extends Component {
                                         labelText="Date"
                                         id="date-time"
                                         name="date"
-                                        pattern="\d{4}\-\d{1,2}\-\d{4}"
+                                        pattern="\d{4}\-\d{2}\-\d{2}"
                                         value={this.state.fields.date}
                                         onFocus={this.handleChange.bind(this, "date")}
 
                                     />
                                 </DatePicker>
-                                <TextInput
-                                    data-modal-primary-focus
-                                    id="provision"
-                                    name="provision"
-                                    value={this.state.fields.provision}
-                                    onChange={this.handleChange.bind(this, "provision")}
+
+                                <Select id="provision" name="provision"
                                     labelText="Provision"
-                                    placeholder="e.g. terraform"
-                                    style={{ marginBottom: '1rem' }}
-                                />
+                                    defaultValue={!this.state.fields.provision ? 'placeholder-item' : this.state.fields.provision}
+                                    invalidText="Please Select The Value"
+                                    onChange={this.handleChange.bind(this, "provision")}>
+                                    <SelectItem
+                                        disabled
+                                        hidden
+                                        value="placeholder-item"
+                                        text="Choose an option"
+                                    />
+                                    <SelectItem value="Terraform" text="Terraform" />
+                                    <SelectItem value="Operator" text="Operator" />
+                                    <SelectItem value="Ansible" text="Ansible" />
+                                </Select>
                                 <TextInput
                                     data-modal-primary-focus
                                     id="caId"
                                     name="cloud_automation_id"
+                                    invalidText="Please Enter The Value"
+
                                     value={this.state.fields.cloud_automation_id}
                                     onChange={this.handleChange.bind(this, "cloud_automation_id")}
                                     labelText="CAID"
                                     placeholder="e.g. ibm-access-group"
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <TextInput
-                                    data-modal-primary-focus
-                                    id="haId"
-                                    name="hybrid_automation_id"
-                                    value={this.state.fields.hybrid_automation_id}
-                                    onChange={this.handleChange.bind(this, "hybrid_automation_id")}
-                                    labelText="HAID"
-                                    placeholder="e.g. github.com"
-                                    style={{ marginBottom: '1rem' }}
-                                />
+
                                 <ButtonSet style={{ margin: '2rem 0 2rem 0' }}>
                                     <Button kind="primary" type="submit" style={{ margin: '0 1rem 0 0' }}>
                                         {!this.props.isUpdate && "Submit"}
