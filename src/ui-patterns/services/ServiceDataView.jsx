@@ -14,7 +14,7 @@ import {
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
-import { headerData } from './headerData';
+import { serviceHeader } from '../data/data';
 import FormModal from './AddDataModal';
 
 
@@ -24,7 +24,7 @@ class ServiceDataView extends Component {
         super(props);
         this.state = {
             data: [],
-            headerData: headerData,
+            headerData: serviceHeader,
             show: false,
             totalItems: 0,
             firstRowIndex: 0,
@@ -126,7 +126,7 @@ class ServiceDataView extends Component {
                         <DataTable rows={data.slice(
                             this.state.firstRowIndex,
                             this.state.firstRowIndex + this.state.currentPageSize
-                            )} headers={headers}>
+                        )} headers={headers}>
                             {({
                                 rows,
                                 headers,

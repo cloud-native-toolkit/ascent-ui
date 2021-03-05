@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Header from "../ui-shell/Header";
 import 'carbon-components/css/carbon-components.min.css';
 import * as _ from 'lodash';
-import { Breadcrumb, BreadcrumbItem }  from 'carbon-components-react'
+import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 import SlidingPane from "react-sliding-pane";
 
 import {
@@ -22,6 +22,7 @@ import {
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
+import { bomHeader } from '../data/data';
 
 class BillofMaterialsView extends Component {
 
@@ -31,68 +32,7 @@ class BillofMaterialsView extends Component {
         this.state = {
             archid: null,
             data: [],
-            headersData: [
-                /*{
-                    key: 'id',
-                    header: 'Id',
-                },*/
-                {
-                    key: 'ibm_service',
-                    header: 'IBM Service',
-                },
-                {
-                    key: 'desc',
-                    header: 'Description',
-                },
-                {
-                    key: 'deployment_method',
-                    header: 'Dep Method',
-                },
-                {
-                    key: 'compatibility',
-                    header: 'Compatibility',
-                },
-                /*{
-                    key: 'catalog_link',
-                    header: 'Catalog View',
-                },
-                {
-                    key: 'documentation',
-                    header: 'Documentation',
-                },
-                {
-                    key: 'hippa_compliance',
-                    header: 'Hippa Compliance',
-                },
-                {
-                    key: 'remarks',
-                    header: 'Remarks',
-                },*/
-                {
-                    key: 'provision',
-                    header: 'Provision',
-                },
-                {
-                    key: 'automation',
-                    header: 'Automation',
-                },
-                {
-                    key: 'hybrid_option',
-                    header: 'Hybrid Option',
-                },
-                {
-                    key: 'arch_id',
-                    header: 'Arch Id',
-                },
-                {
-                    key: 'service_id',
-                    header: 'Service Id',
-                },
-                {
-                    key: 'availibity',
-                    header: 'Availibity',
-                }
-            ],
+            headersData: bomHeader,
             architecture: {},
             totalItems: 0,
             firstRowIndex: 0,
@@ -209,9 +149,9 @@ class BillofMaterialsView extends Component {
 
                 <div className="bx--row">
                     <DataTable rows={data.slice(
-                            this.state.firstRowIndex,
-                            this.state.firstRowIndex + this.state.currentPageSize
-                            )} headers={headers}>
+                        this.state.firstRowIndex,
+                        this.state.firstRowIndex + this.state.currentPageSize
+                    )} headers={headers}>
                         {({
                             rows,
                             headers,
@@ -295,7 +235,7 @@ class BillofMaterialsView extends Component {
                                         <TableBody>
                                             {rows.map((row, i) => (
                                                 <TableRow key={i} {...getRowProps({ row })}>
-                                                    <TableSelectRow {...getSelectionProps({ row })} onClick={() => this.setState({ isPaneOpen: true, row:row })}/>
+                                                    <TableSelectRow {...getSelectionProps({ row })} onClick={() => this.setState({ isPaneOpen: true, row: row })} />
                                                     {row.cells.map((cell) => (
                                                         <TableCell key={cell.id}>{cell.value}</TableCell>
                                                     ))}
@@ -313,26 +253,26 @@ class BillofMaterialsView extends Component {
                                 </TableContainer>
                             )}
                     </DataTable>
-                    <div style={{ width: '800px' }}>
-                        <Pagination
-                            totalItems={this.state.totalItems}
-                            backwardText="Previous page"
-                            forwardText="Next page"
-                            pageSize={this.state.currentPageSize}
-                            pageSizes={[5, 10, 15, 25]}
-                            itemsPerPageText="Items per page"
-                            onChange={({ page, pageSize }) => {
-                                if (pageSize !== this.state.currentPageSize) {
-                                    this.setState({
-                                        currentPageSize: pageSize
-                                    });
-                                }
+
+                    <Pagination
+                        totalItems={this.state.totalItems}
+                        backwardText="Previous page"
+                        forwardText="Next page"
+                        pageSize={this.state.currentPageSize}
+                        pageSizes={[5, 10, 15, 25]}
+                        itemsPerPageText="Items per page"
+                        onChange={({ page, pageSize }) => {
+                            if (pageSize !== this.state.currentPageSize) {
                                 this.setState({
-                                    firstRowIndex: pageSize * (page - 1)
+                                    currentPageSize: pageSize
                                 });
-                            }}
-                        />
-                    </div>
+                            }
+                            this.setState({
+                                firstRowIndex: pageSize * (page - 1)
+                            });
+                        }}
+                    />
+
                 </div>
             </div>
         );
