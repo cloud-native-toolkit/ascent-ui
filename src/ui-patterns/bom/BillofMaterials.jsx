@@ -1,9 +1,11 @@
-import React, { Component } from "react";
+import React, { Component,useState } from "react";
 import Header from "../ui-shell/Header";
 import 'carbon-components/css/carbon-components.min.css';
 import * as _ from 'lodash';
 import { Breadcrumb, BreadcrumbItem }  from 'carbon-components-react'
-import SlidingPane from "react-sliding-pane";
+
+import SlidingPanel, { PanelType } from 'react-sliding-side-panel';
+import 'react-sliding-side-panel/lib/index.css';
 
 import {
     Link
@@ -185,12 +187,23 @@ class BillofMaterialsView extends Component {
         const archid = this.state.archid;
         console.log(JSON.stringify(archid));
 
+        const [openPanel, setOpenPanel] = useState(false);
+        const [panelType, setPanelType] = useState('left');
+        const [panelSize, setPanelSize] = useState(30);
+        const [noBackdrop, setNoBackdrop] = useState(false);
+
+        //const [openPanel, setOpenPanel] = React.useState(false);
+        //const [panelType, setPanelType] = React.useState('left');
+        //const [panelSize, setPanelSize] = React.useState(30);
+        //const [noBackdrop, setNoBackdrop] = React.useState(false);
+
         let title = "";
         if (!_.isUndefined(this.state.architecture.name)) {
             title = this.state.architecture.name
         }
 
         return (
+            <div>
             <div className="bx--grid">
                 {this.breadCrumbs(title)}
                 <div className="bx--row">
@@ -335,6 +348,23 @@ class BillofMaterialsView extends Component {
                     </div>
                 </div>
             </div>
+            <SlidingPanel
+                type={panelType}
+                isOpen={openPanel}
+                backdropClicked={() => setOpenPanel(false)}
+                size={panelSize}
+                panelClassName="additional-class"
+                panelContainerClassName=""
+                noBackdrop={noBackdrop}
+            >
+                <div className="panel-container">
+                    <div>My Panel Content</div>
+                    <button type="button" className="close-button" onClick={() => setOpenPanel(false)}>
+                        close
+                    </button>
+                </div>
+            </SlidingPanel>
+        </div>
         );
     }
 }
