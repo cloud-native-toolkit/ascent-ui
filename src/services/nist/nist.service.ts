@@ -1,17 +1,17 @@
 
-import { ControlsDataApi } from './controls.api';
-import { ControlsDataModel } from "../../models/controls/ControlsDataModel";
+import { NistDataApi } from './nist.api';
+import { NistDataModel } from "../../models/nist/NistDataModel";
 import * as superagent from "superagent";
 
-export class ControlsData implements ControlsDataApi {
+export class NistData implements NistDataApi {
 
     baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl || '/controls/';
+        this.baseUrl = baseUrl || '/nist/';
     }
 
-    async getControls(): Promise<ControlsDataModel[]> {
+    async getNist(): Promise<NistDataModel[]> {
         return superagent
             .get(this.baseUrl)
             .set('accept', 'application/json')
@@ -19,7 +19,7 @@ export class ControlsData implements ControlsDataApi {
                 return res.body || [];
             });
     }
-    async getControlsDetails(controlId: string): Promise<ControlsDataModel> {
+    async getNistDetails(controlId: string): Promise<NistDataModel> {
         return superagent
             .get(this.baseUrl + controlId)
             .set('accept', 'application/json')
@@ -28,5 +28,3 @@ export class ControlsData implements ControlsDataApi {
             });
     }
 }
-
-

@@ -12,6 +12,9 @@ import { ServiceData } from './services/services.service';
 import { ControlsDataApi } from './controls/controls.api';
 import { ControlsData } from './controls/controls.service';
 
+import { NistDataApi } from './nist/nist.api';
+import { NistData } from './nist/nist.service';
+
 export * from './bom/billofmaterials.api';
 export * from './bom/billofmaterials.service';
 
@@ -24,7 +27,11 @@ export * from './services/services.service';
 export * from './controls/controls.api';
 export * from './controls/controls.service';
 
+export * from './nist/nist.api';
+export * from './nist/nist.service';
+
 Container.bind(BillofMaterialsApi).to(BillofMaterialsService);
 Container.bind(ArchitectureDataApi).to(ArchitectureService);
 Container.bind(ServiceDataApi).to(ServiceData);
 Container.bind(ControlsDataApi).to(ControlsData);
+Container.bind(NistDataApi).to(NistData);
