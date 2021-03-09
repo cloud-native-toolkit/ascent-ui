@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import 'carbon-components/css/carbon-components.min.css';
 import * as _ from 'lodash';
-import { Breadcrumb, BreadcrumbItem }  from 'carbon-components-react'
 
-import 'react-sliding-side-panel/lib/index.css';
 import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 import ServiceModal from './AddServiceModal';
 import SlidingPane from "react-sliding-pane";
