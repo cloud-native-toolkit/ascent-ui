@@ -11,7 +11,9 @@ import {
   TableBody,
   TableToolbarContent,
   TableCell,
-  TableToolbarSearch
+  TableToolbarSearch,
+  OverflowMenu,
+  OverflowMenuItem
 } from 'carbon-components-react';
 
 const ControlsTable = ({ rows, headers }) => (
@@ -41,7 +43,7 @@ const ControlsTable = ({ rows, headers }) => (
                   {header.header}
                 </TableHeader>
               ))}
-              <TableHeader>Details</TableHeader>
+              <TableHeader></TableHeader>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -50,7 +52,14 @@ const ControlsTable = ({ rows, headers }) => (
                 {row.cells.map((cell) => (
                   <TableCell key={cell.id}>{cell.value}</TableCell>
                 ))}
-                <TableCell><Link href={"/control/"+row.id.toLowerCase().replace(' ', '_')}>Details</Link></TableCell>
+                <TableCell>
+                  <OverflowMenu light flipped>
+                    <OverflowMenuItem href={"/control/" + row.id.toLowerCase().replace(' ', '_')} itemText="Details" />
+                    {/* <OverflowMenuItem href={encodeURI("/control/" + row.id)} itemText="Details" /> */}
+                    <OverflowMenuItem itemText="Map to service" />
+                    <OverflowMenuItem itemText="Map to architecture" />
+                  </OverflowMenu>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

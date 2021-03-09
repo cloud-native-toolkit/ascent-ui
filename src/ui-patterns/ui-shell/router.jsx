@@ -4,6 +4,7 @@ import BillofMaterialsComponent from "../../components/bom/BillofMaterials";
 import ArchitectureComponent from "../../components/builder/Architecture";
 import ControlsComponent from "../../components/compliance/Controls";
 import ControlDetailsComponent from "../../components/compliance/ControlDetails";
+import NistDetailsComponent from "../../components/compliance/NistDetails";
 import DetailsViewComponent from "../../components/overview/DetailsView";
 import ServiceComponent from "../../components/services/service";
 
@@ -23,9 +24,28 @@ function RenderControl() {
     // We can use the `useParams` hook here to access
     // the dynamic pieces of the URL.
     let { control_id } = useParams();
-
+    if (control_id === control_id.toLowerCase().replace(' ', '_')) {
+        return (
+            <ControlDetailsComponent data={control_id.toUpperCase().replace('_', ' ')}></ControlDetailsComponent>
+        );
+    } 
     return (
-        <ControlDetailsComponent data={control_id.toUpperCase().replace('_', ' ')}></ControlDetailsComponent>
+        <></>
+    );
+}
+
+function RenderNist() {
+
+    // We can use the `useParams` hook here to access
+    // the dynamic pieces of the URL.
+    let { number } = useParams();
+    if (number === number.toLowerCase().replace(' ', '_')) {
+        return (
+            <NistDetailsComponent data={number.toUpperCase().replace('_', ' ')}></NistDetailsComponent>
+        );
+    } 
+    return (
+        <></>
     );
 }
 
@@ -48,6 +68,7 @@ function Routes() {
             <Route path="/architectures" component={ArchitectureComponent} />
             <Route path="/controls" component={ControlsComponent} />
             <Route path="/control/:control_id" children={<RenderControl></RenderControl>} />
+            <Route path="/nist/:number" children={<RenderNist></RenderNist>} />
             <Route path="/services" component={ServiceComponent} />
         </Switch>
     )
