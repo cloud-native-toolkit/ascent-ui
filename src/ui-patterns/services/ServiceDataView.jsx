@@ -9,7 +9,7 @@ import {
     Delete16 as Delete
 } from '@carbon/icons-react';
 import {
-    DataTable, TableContainer, Table,
+    DataTable, DataTableSkeleton, TableContainer, Table,
     TableToolbar, TableToolbarMenu, OverflowMenu, OverflowMenuItem, TableSelectAll, TableSelectRow, TableBatchActions, TableBatchAction, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
@@ -99,30 +99,15 @@ class ServiceDataView extends Component {
         let data = this.state.data;
         let headers = this.state.headerData;
         let showModal = this.state.show;
-        return (
-
-            <><div>
-                {showModal &&
-                    <FormModal show={this.state.show} handleClose={this.hideModal} service={this.props.service} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} />
-                }
-            </div>
-                <div className="bx--grid">
-                    <div className="bx--row">
-                        <div className="bx--col-lg-16">
-                            <br></br>
-                            <h2 className="landing-page__subheading">
-                                Services
-                            </h2>
-                            <br></br>
-                            <p>
-                                List of IBM Cloud services
-                            </p>
-                            <br></br>
-                        </div>
-                    </div>
-
-                    <div className="bx--row">
-
+        let table;
+        if (data.length === 0) {
+            table = <DataTableSkeleton
+                columnCount={headers.length + 1}
+                rowCount={10}
+                headers={headers}
+            />
+        } else {
+            table = <>
                         <DataTable rows={data.slice(
                             this.state.firstRowIndex,
                             this.state.firstRowIndex + this.state.currentPageSize
@@ -221,6 +206,34 @@ class ServiceDataView extends Component {
                                 });
                             }}
                         />
+            </>
+        }
+        return (
+
+            <><div>
+                {showModal &&
+                    <FormModal show={this.state.show} handleClose={this.hideModal} service={this.props.service} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} />
+                }
+            </div>
+                <div className="bx--grid">
+                    <div className="bx--row">
+                        <div className="bx--col-lg-16">
+                            <br></br>
+                            <h2 className="landing-page__subheading">
+                                Services
+                            </h2>
+                            <br></br>
+                            <p>
+                                List of IBM Cloud services
+                            </p>
+                            <br></br>
+                        </div>
+                    </div>
+
+                    <div className="bx--row">
+                        <div className="bx--col-lg-16">
+                            {table}
+                        </div>
                     </div>
                 </div></>
         );
