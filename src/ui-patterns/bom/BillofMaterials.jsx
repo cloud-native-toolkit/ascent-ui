@@ -17,7 +17,7 @@ import {
     ViewFilled16 as View
 } from '@carbon/icons-react';
 import {
-    DataTable, TableContainer, Table, TableSelectAll, TableBatchAction, TableSelectRow,
+    DataTable, DataTableSkeleton, TableContainer, Table, TableSelectAll, TableBatchAction, TableSelectRow,
     TableBatchActions, TableToolbar, TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
     OverflowMenu, OverflowMenuItem
 } from 'carbon-components-react';
@@ -173,29 +173,15 @@ class BillofMaterialsView extends Component {
             title = this.state.architecture.name
         }
         let showModal = this.state.show;
-
-        return (
-            <><div>
-                {showModal &&
-                    <ServiceModal archId={archid} show={this.state.show} handleClose={this.hideModal} service={this.props.bomService} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} services={this.state.serviceNames} />}
-            </div>
-                <div className="bx--grid">
-                    {this.breadCrumbs(title)}
-                    <div className="bx--row">
-                        <div className="bx--col-lg-16">
-                            <br></br>
-                            <h2 className="landing-page__subheading">
-                                Bill Of Materials
-                            </h2>
-                            <br></br>
-                            <p>
-                                List of IBM Cloud services that form the bill of materials for this reference architecture
-                            </p>
-                            <br></br>
-                        </div>
-                    </div>
-
-                    <div className="bx--row">
+        let table;
+        if (data.length === 0) {
+            table = <DataTableSkeleton
+                columnCount={headers.length + 1}
+                rowCount={10}
+                headers={headers}
+            />
+        } else {
+            table = <>
                         <DataTable rows={data.slice(
                             this.state.firstRowIndex,
                             this.state.firstRowIndex + this.state.currentPageSize
@@ -318,7 +304,33 @@ class BillofMaterialsView extends Component {
                                     firstRowIndex: pageSize * (page - 1)
                                 });
                             }} />
+            </>
+        }
+        return (
+            <><div>
+                {showModal &&
+                    <ServiceModal archId={archid} show={this.state.show} handleClose={this.hideModal} service={this.props.bomService} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} services={this.state.serviceNames} />}
+            </div>
+                <div className="bx--grid">
+                    {this.breadCrumbs(title)}
+                    <div className="bx--row">
+                        <div className="bx--col-lg-16">
+                            <br></br>
+                            <h2 className="landing-page__subheading">
+                                Bill Of Materials
+                            </h2>
+                            <br></br>
+                            <p>
+                                List of IBM Cloud services that form the bill of materials for this reference architecture
+                            </p>
+                            <br></br>
+                        </div>
+                    </div>
 
+                    <div className="bx--row">
+                        <div className="bx--col-lg-16">
+                            {table}
+                        </div>
                     </div>
                 </div></>
         );
