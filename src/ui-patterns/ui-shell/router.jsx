@@ -25,7 +25,7 @@ function RenderControl() {
     let { control_id } = useParams();
 
     return (
-        <ControlDetailsComponent data={control_id}></ControlDetailsComponent>
+        <ControlDetailsComponent data={control_id.toUpperCase().replace('_', ' ')}></ControlDetailsComponent>
     );
 }
 

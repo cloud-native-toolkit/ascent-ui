@@ -50,7 +50,7 @@ const ControlsTable = ({ rows, headers }) => (
                 {row.cells.map((cell) => (
                   <TableCell key={cell.id}>{cell.value}</TableCell>
                 ))}
-                <TableCell><Link href={"/control/"+row.id}>Details</Link></TableCell>
+                <TableCell><Link href={"/control/"+row.id.toLowerCase().replace(' ', '_')}>Details</Link></TableCell>
               </TableRow>
             ))}
           </TableBody>
