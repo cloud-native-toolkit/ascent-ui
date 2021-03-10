@@ -123,3 +123,30 @@ export const ctrlsHeaders = [
         header: 'App Responsibility',
     }
 ];
+
+export const nistHeaders = [
+  {
+      key: 'id',
+      header: 'Control ID',
+  },
+  {
+      key: 'title',
+      header: 'Title',
+  },
+    {
+        key: 'family',
+        header: 'Control Family',
+    },
+    {
+        key: 'priority',
+        header: 'Priority',
+    },
+    {
+        key: 'base_control',
+        header: 'Base Control',
+    },
+    {
+        key: 'parent_control',
+        header: 'Parent Control',
+    }
+];

@@ -3,6 +3,7 @@ import { Route, Switch, useParams } from "react-router-dom";
 import BillofMaterialsComponent from "../../components/bom/BillofMaterials";
 import ArchitectureComponent from "../../components/builder/Architecture";
 import ControlsComponent from "../../components/compliance/Controls";
+import NistComponent from "../../components/compliance/Nist";
 import ControlDetailsComponent from "../../components/compliance/ControlDetails";
 import NistDetailsComponent from "../../components/compliance/NistDetails";
 import DetailsViewComponent from "../../components/overview/DetailsView";
@@ -68,6 +69,7 @@ function Routes() {
             <Route path="/architectures" component={ArchitectureComponent} />
             <Route path="/controls" component={ControlsComponent} />
             <Route path="/control/:control_id" children={<RenderControl></RenderControl>} />
+            <Route path="/nist-controls" component={NistComponent} />
             <Route path="/nist/:number" children={<RenderNist></RenderNist>} />
             <Route path="/services" component={ServiceComponent} />
         </Switch>
