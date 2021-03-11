@@ -42,7 +42,7 @@ class NistDetailsView extends Component {
       breadcrumb = <>
         <Breadcrumb>
           <BreadcrumbItem>
-            <a href="#">NIST controls</a>
+            <a href="/nist-controls">NIST controls</a>
           </BreadcrumbItem>
           <BreadcrumbItem href="#">{this.props.number}</BreadcrumbItem>
         </Breadcrumb>
@@ -121,7 +121,7 @@ class NistDetailsView extends Component {
                   </div>
                 </div>;
       }
-      if (nistData.supplemental_guidance.related) {
+      if (nistData.supplemental_guidance && nistData.supplemental_guidance.related) {
         related = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>

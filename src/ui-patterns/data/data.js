@@ -1,48 +1,56 @@
 export const serviceHeader = [
-  {
-    key: 'id',
-    header: 'Service ID',
-  },
-  {
-    key: 'grouping',
-    header: 'Grouping',
-  },
-  {
-    key: 'ibm_service',
-    header: 'IBM Service',
-  },
-  {
-    key: 'desc',
-    header: 'Description',
-  },
-  {
-    key: 'deployment_method',
-    header: 'Deployment Method',
-  },
-  {
-    key: 'fs_ready',
-    header: 'FS Ready',
+    {
+        key: 'id',
+        header: 'Service ID',
     },
-  {
-    key: 'quarter',
-    header: 'Quarter',
-  },
-  {
-    key: 'date',
-    header: 'Date',
+    {
+        key: 'grouping',
+        header: 'Grouping',
     },
-  {
-    key: 'provision',
-    header: 'Provision',
+    {
+        key: 'ibm_catalog_service',
+        header: 'IBM Service',
     },
-  {
-    key: 'cloud_automation_id',
-    header: 'CA-ID',
-  }
+    // {
+    //     key: 'desc',
+    //     header: 'Description',
+    // },
+    {
+        key: 'deployment_method',
+        header: 'Deployment Method',
+    },
+    {
+        key: 'fs_certified',
+        header: 'FS Certified',
+    },
+    {
+        key: 'compliance_status',
+        header: 'Compliance Status',
+    },
+    // {
+    //     key: 'quarter',
+    //     header: 'Quarter',
+    // },
+    // {
+    //     key: 'date',
+    //     header: 'Date',
+    // },
+    {
+        key: 'provision',
+        header: 'Provision',
+    },
+    {
+        key: 'cloud_automation_id',
+        header: 'CA-ID',
+    },
+    {
+        key: 'hybrid_automation_id',
+        header: 'HA-ID',
+    }
 ];
 
 export const bomHeader = [
-   
+
     {
         key: 'ibm_service',
         header: 'IBM Service',
@@ -125,14 +133,14 @@ export const ctrlsHeaders = [
 ];
 
 export const nistHeaders = [
-  {
-      key: 'id',
-      header: 'Control ID',
-  },
-  {
-      key: 'title',
-      header: 'Title',
-  },
+    {
+        key: 'id',
+        header: 'Control ID',
+    },
+    {
+        key: 'title',
+        header: 'Title',
+    },
     {
         key: 'family',
         header: 'Control Family',

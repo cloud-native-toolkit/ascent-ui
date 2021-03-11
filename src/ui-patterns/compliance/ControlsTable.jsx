@@ -56,8 +56,6 @@ const ControlsTable = ({ rows, headers }) => (
                   <OverflowMenu light flipped>
                     <OverflowMenuItem href={"/control/" + row.id.toLowerCase().replace(' ', '_')} itemText="Details" />
                     {/* <OverflowMenuItem href={encodeURI("/control/" + row.id)} itemText="Details" /> */}
-                    <OverflowMenuItem itemText="Map to service" />
-                    <OverflowMenuItem itemText="Map to architecture" />
                   </OverflowMenu>
                 </TableCell>
               </TableRow>
