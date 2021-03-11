@@ -74,11 +74,11 @@ class ControlDetailsView extends Component {
                     {data.control_id}
                   </h2>
                   <br></br>
-                  {data.control_description}
+                  <p>{data.control_description}</p>
                   <br></br>
                 </div>
               </div>;
-      if (data.guidance) {
+      if (data.guidance && data.guidance !== "None") {
         guidance = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>
@@ -149,12 +149,12 @@ class ControlDetailsView extends Component {
                 <br></br>
                 <h4 className="landing-page__subheading">{nistData.title.toLowerCase()}</h4>
                 <br></br>
-                {nistData.statement.description}
+                <p>{nistData.statement.description}</p>
                 {nistData.statement.statement ? <>
                       <UnorderedList>
                         {nistData.statement.statement.map((statement) => (
                           <ListItem>
-                            {statement.description}
+                            <p>{statement.description}</p>
                           </ListItem>
                         ))}
                       </UnorderedList>

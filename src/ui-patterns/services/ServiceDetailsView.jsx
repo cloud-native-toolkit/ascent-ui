@@ -29,61 +29,49 @@ class ServiceDetailsView extends Component {
     const data = this.state.data;
     const controlsData = this.state.controlsData;
     let breadcrumb;
-    let title;
+    let content;
     let controls = <></>;
     if (!data.service_id) {
       breadcrumb = <BreadcrumbSkeleton />;
-      title = <SearchSkeleton />;
+      content = <SearchSkeleton />;
     } else {
       breadcrumb = <>
         <Breadcrumb>
           <BreadcrumbItem>
             <a href="/services">Services</a>
           </BreadcrumbItem>
-          <BreadcrumbItem href="#">{this.props.serviceId}</BreadcrumbItem>
+          <BreadcrumbItem href="#">{data.desc ? data.desc : data.service_id}</BreadcrumbItem>
         </Breadcrumb>
       </>;
-      title = <div className="bx--row">
-                <div className="bx--col-lg-16">
-                  <br></br>
-                  <h2 className="landing-page__subheading">
-                    {data.ibm_catalog_service ? data.ibm_catalog_service : data.service_id} 
-                    {data.fs_certified ? <><Tag type="green">FS certified: {data.compliance_status}</Tag></> : <></>}
-                    {data.deployment_method ? <><Tag type="blue">{data.deployment_method}</Tag></> : <></>}
-                    {data.provision ? <><Tag type="blue">{data.provision}</Tag></> : <></>}
-                    {data.provision ? <><Tag type="blue">{data.provision}</Tag></> : <></>}
-                  </h2>
-                  <br></br>
-                  {data.desc}
-                  <br></br>
-                </div>
-              </div>;
-      if (controlsData && controlsData.length > 0) {
-        controls = <>
-          <div className="bx--row">
-            <div className="bx--col-lg-16">
-              <br></br>
-              <h3 className="landing-page__subheading">Impacting FS Cloud Controls</h3>
-              <br></br>
-              {controlsData.map((control) => (
-                <Tag type="blue">
-                  <Link href={"/control/" + control.control_id.toLowerCase().replace(' ', '_')} >
-                    {control.control_id}
-                  </Link>
-                </Tag>
-              ))}
-              <br></br>
-            </div>
-          </div>
-        </>
-      }
+      content = <div className="bx--row">
+        <div className="bx--col-lg-16">
+          <br />
+          <h2 className="landing-page__subheading">
+            {data.ibm_catalog_service ? data.ibm_catalog_service : data.service_id}
+          </h2>
+          <br />
+          {data.desc ? <div class="attribute"><p><span class="name">Description: </span> {data.desc}</p></div> : <></>}
+          <div class="attribute"><p><span class="name">FS Cloud Certified: </span> {data.fs_certified ? <><Tag type="green">{data.compliance_status ? data.compliance_status : "true"}</Tag></> : <Tag type="red">false</Tag>}</p></div>
+          {data.grouping ? <div class="attribute"><p><span class="name">Group: </span> <Tag type="blue">{data.grouping}</Tag></p></div> : <></>}
+          {data.deployment_method ? <div class="attribute"><p><span class="name">Deployment Method: </span> <Tag type="blue">{data.deployment_method}</Tag></p></div> : <></>}
+          {data.provision ? <div class="attribute"><p><span class="name">Provision: </span> <Tag type="blue">{data.provision}</Tag></p></div> : <></>}
+          {data.cloud_automation_id ? <div class="attribute"><p><span class="name">Cloud Automation id: </span> <Tag type="blue">{data.cloud_automation_id}</Tag></p></div> : <></>}
+          {data.hybrid_automation_id ? <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{data.hybrid_automation_id}</Tag></p></div> : <></>}
+          {controlsData && controlsData.length > 0 ? <div class="attribute"><p><span class="name">Impacting FS Cloud Controls: </span> {controlsData.map((control) => (
+            <Tag type="blue">
+              <Link href={"/control/" + control.control_id.toLowerCase().replace(' ', '_')} >
+                {control.control_id}
+              </Link>
+            </Tag>
+          ))}</p></div> : <></>}
+        </div>
+      </div>;
     }
     return (
-        <div className="bx--grid">
-          {breadcrumb}
-          {title}
-          {controls}
-        </div >
+      <div className="bx--grid">
+        {breadcrumb}
+        {content}
+      </div >
     );
   }
 }
