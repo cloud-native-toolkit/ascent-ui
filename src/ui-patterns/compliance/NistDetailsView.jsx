@@ -56,12 +56,12 @@ class NistDetailsView extends Component {
                   <br></br>
                   <h3 className="landing-page__subheading">{nistData.title.toLowerCase()}</h3>
                   <br></br>
-                  {nistData.statement.description}
+                  <p>{nistData.statement.description}</p>
                   {nistData.statement.statement ? <>
                         <UnorderedList>
                           {nistData.statement.statement.map((statement) => (
                             <ListItem>
-                              {statement.description}
+                              <p>{statement.description}</p>
                             </ListItem>
                           ))}
                         </UnorderedList>
