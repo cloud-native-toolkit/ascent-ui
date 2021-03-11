@@ -112,7 +112,11 @@ class ControlDetailsView extends Component {
               <h4 className="landing-page__subheading">Impacted services</h4>
               <br></br>
               {servicesData.map((service) => (
-                <Tag type="blue">{service.service_id}</Tag>
+                <Tag type="blue">
+                  <Link href={"/service/" + service.service_id} >
+                    {service.service_id}
+                  </Link>
+                </Tag>
               ))}
               <br></br>
             </div>
@@ -183,7 +187,7 @@ class ControlDetailsView extends Component {
                 </div>
               </div>;
     }
-    if (nistData.supplemental_guidance) {
+    if (nistData.supplemental_guidance && nistData.supplemental_guidance.description) {
       supplemental_guidance = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>

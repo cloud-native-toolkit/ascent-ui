@@ -6,6 +6,7 @@ import ControlsComponent from "../../components/compliance/Controls";
 import NistComponent from "../../components/compliance/Nist";
 import ControlDetailsComponent from "../../components/compliance/ControlDetails";
 import NistDetailsComponent from "../../components/compliance/NistDetails";
+import ServiceDetailsComponent from "../../components/services/ServiceDetails";
 import DetailsViewComponent from "../../components/overview/DetailsView";
 import ServiceComponent from "../../components/services/service";
 
@@ -50,6 +51,17 @@ function RenderNist() {
     );
 }
 
+function RenderService() {
+
+    // We can use the `useParams` hook here to access
+    // the dynamic pieces of the URL.
+    let { service_id } = useParams();
+
+    return (
+        <ServiceDetailsComponent data={service_id}></ServiceDetailsComponent>
+    );
+}
+
 function Child() {
 
     let { id } = useParams();
@@ -72,6 +84,7 @@ function Routes() {
             <Route path="/nist-controls" component={NistComponent} />
             <Route path="/nist/:number" children={<RenderNist></RenderNist>} />
             <Route path="/services" component={ServiceComponent} />
+            <Route path="/service/:service_id" children={<RenderService></RenderService>} />
         </Switch>
     )
 }

@@ -23,10 +23,9 @@ export class ServiceData implements ServiceDataApi {
 
     async getServiceDetails(serviceId: string): Promise<ServiceDataModel> {
         return superagent
-            .get(this.baseUrl + serviceId)
+            .get(this.baseUrl + "/" + serviceId + "?filter=%7B%22include%22%3A%20%5B%22controls%22%5D%7D")
             .set('accept', 'application/json')
             .then(res => {
-
                 return res.body;
             });
     }
