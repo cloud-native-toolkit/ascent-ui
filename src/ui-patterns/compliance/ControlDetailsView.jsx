@@ -114,7 +114,7 @@ class ControlDetailsView extends Component {
               {servicesData.map((service) => (
                 <Tag type="blue">
                   <Link href={"/service/" + service.service_id} >
-                    {service.service_id}
+                    {service.ibm_catalog_service ? service.ibm_catalog_service : service.service_id}
                   </Link>
                 </Tag>
               ))}
