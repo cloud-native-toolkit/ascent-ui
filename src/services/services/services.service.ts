@@ -1,6 +1,7 @@
 
 import { ServiceDataApi } from './service.api';
 import { ServiceDataModel } from "../../models/services/serviceDataModel";
+import { ControlMappingModel } from "../../models/control-mapping/controlMappingModel";
 import * as superagent from "superagent";
 
 export class ServiceData implements ServiceDataApi {
@@ -18,7 +19,6 @@ export class ServiceData implements ServiceDataApi {
             .then(res => {
                 return res.body || [];
             });
-
     }
 
     async getServiceDetails(serviceId: string): Promise<ServiceDataModel> {
@@ -60,6 +60,18 @@ export class ServiceData implements ServiceDataApi {
                 return res.body;
             });
     }
+
+    async doMapControl(mapping_details: any, serviceId: string): Promise<ControlMappingModel> {
+        mapping_details.service_id = serviceId;
+        return superagent
+            .post("/control-mapping")
+            .send(mapping_details)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body;
+            })
+            .catch(err => {
+                return err.response;
+            });
+    }
 }
-
-
