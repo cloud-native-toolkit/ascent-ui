@@ -47,11 +47,11 @@ class ServiceDetailsView extends Component {
         title: res.body.error.code || res.body.error.name || "Error",
         message: res.body.error.message
       }
-    } else {
+    } else if (res && res.service_id && res.control_id) {
       notif = {
         kind: "success",
         title: "Success",
-        message: res.service_id && res.control_id ? `Control ${res.control_id} successfully mapped to service ${res.service_id}` : "Control binding successful!"
+        message: `Control ${res.control_id} successfully mapped to service ${res.service_id}`
       }
     }
     this.setState(
@@ -119,6 +119,8 @@ class ServiceDetailsView extends Component {
         <div className="bx--grid">
           {notif &&
             <InlineNotification
+              id={Date.now()}
+              hideCloseButton lowContrast
               title={notif.title || "Notification title"}
               subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
               kind={notif.kind || "info"}
