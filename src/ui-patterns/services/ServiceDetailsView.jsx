@@ -41,13 +41,7 @@ class ServiceDetailsView extends Component {
   hideModal = (res) => {
     let notif = false;
     console.log(res)
-    if (res && res.body && res.body.error) {
-      notif = {
-        kind: "error",
-        title: res.body.error.code || res.body.error.name || "Error",
-        message: res.body.error.message
-      }
-    } else if (res && res.service_id && res.control_id) {
+    if (res && res.service_id && res.control_id) {
       notif = {
         kind: "success",
         title: "Success",
@@ -80,7 +74,7 @@ class ServiceDetailsView extends Component {
           <BreadcrumbItem>
             <a href="/services">Services</a>
           </BreadcrumbItem>
-          <BreadcrumbItem href="#">{data.desc ? data.desc : data.service_id}</BreadcrumbItem>
+          <BreadcrumbItem href="#">{data.ibm_catalog_service ? data.ibm_catalog_service : data.service_id}</BreadcrumbItem>
         </Breadcrumb>
       </>;
       content = <div className="bx--row">
@@ -113,7 +107,7 @@ class ServiceDetailsView extends Component {
         <div>
           {
             showModal &&
-            <MapControlToServiceModal show={this.state.show} handleClose={this.hideModal} service={this.props.service} serviceId={this.props.serviceId} isUpdate={this.state.isUpdate} data={this.state.mappingRecord} />
+            <MapControlToServiceModal show={this.state.show} handleClose={this.hideModal} service={this.props.service} controls={this.props.controls} serviceId={this.props.serviceId} isUpdate={this.state.isUpdate} data={this.state.mappingRecord} />
           }
         </div >
         <div className="bx--grid">
