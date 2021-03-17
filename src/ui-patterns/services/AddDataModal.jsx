@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, DatePickerInput, Select, SelectItem, Button, ButtonSet, DatePicker, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput } from 'carbon-components-react';
+import { Form, FormGroup, DatePickerInput, InlineNotification, Select, SelectItem, Button, ButtonSet, DatePicker, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput } from 'carbon-components-react';
+
 class FormModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
             show: this.props.show,
             onRequestClose: this.props.handleClose,
+            notif: false,
             fields: {
                 service_id: '',
                 grouping: '',
@@ -42,13 +44,38 @@ class FormModal extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         if (!this.props.isUpdate) {
-            const jsonData = this.props.service.doAddService(this.state.fields);
+            this.props.service.doAddService(this.state.fields).then((res) => {
+                let notif = false;
+                if (res && res.body && res.body.error) {
+                    notif = {
+                        kind: "error",
+                        title: res.body.error.code || res.body.error.name || "Error",
+                        message: res.body.error.message
+                    }
+                } else {
+                    this.props.handleClose(res);
+                }
+                this.setState({ notif: notif });
+            });
         } else {
-            this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id);
+            this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id).then((res) => {
+                let notif = false;
+                if (res && res.body && res.body.error) {
+                    notif = {
+                        kind: "error",
+                        title: res.body.error.code || res.body.error.name || "Error",
+                        message: res.body.error.message
+                    }
+                } else {
+                    this.props.handleClose(res);
+                }
+                this.setState({ notif: notif });
+            });
         }
-        this.props.handleClose();
+        
     }
     render() {
+        let notif = this.state.notif;
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -62,6 +89,16 @@ class FormModal extends Component {
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
+                            {notif &&
+                                <InlineNotification
+                                    id={Date.now()}
+                                    hideCloseButton
+                                    title={notif.title || "Notification title"}
+                                    subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
+                                    kind={notif.kind || "info"}
+                                    caption={notif.caption || "Caption"}
+                                />
+                            }
                             <Form name="serviceform" onSubmit={this.handleSubmit.bind(this)}>
 
                                 <TextInput
