@@ -9,12 +9,11 @@ class FormModal extends Component {
             fields: {
                 service_id: '',
                 grouping: '',
-                ibm_service: '',
+                ibm_catalog_service: '',
                 desc: '',
                 deployment_method: '',
-                fs_ready: false,
-                quarter: '',
-                date: '',
+                fs_certified: "false",
+                compliance_status: '',
                 provision: '',
                 cloud_automation_id: '',
                 hybrid_automation_id: ''
@@ -32,10 +31,8 @@ class FormModal extends Component {
     handleChange(field, e) {
         let fields = this.state.fields;
 
-        if (field === "fs_ready") {
-            fields[field] = Boolean(e);
-        } else if (field === "date") {
-            fields[field] = e.target.value;
+        if (field === "fs_certified") {
+            fields[field] = e === "false" ? false : true;
         } else {
             fields[field] = e.target.value;
         }
@@ -83,7 +80,8 @@ class FormModal extends Component {
                                     labelText="Grouping"
                                     defaultValue={!this.state.fields.grouping ? 'placeholder-item' : this.state.fields.grouping}
                                     invalidText="A valid value is required"
-                                    onChange={this.handleChange.bind(this, "grouping")}>
+                                    onChange={this.handleChange.bind(this, "grouping")}
+                                    style={{ marginBottom: '1rem' }}>
                                     <SelectItem
                                         disabled
                                         hidden
@@ -101,11 +99,11 @@ class FormModal extends Component {
                                 <TextInput
                                     data-modal-primary-focus
                                     id="ibmService"
-                                    name="ibm_service"
+                                    name="ibm_catalog_service"
                                     invalidText="Please Enter The Value"
 
-                                    value={this.state.fields.ibm_service}
-                                    onChange={this.handleChange.bind(this, "ibm_service")}
+                                    value={this.state.fields.ibm_catalog_service}
+                                    onChange={this.handleChange.bind(this, "ibm_catalog_service")}
                                     labelText="IBM Service"
                                     placeholder="e.g. App ID,Databases for Redis ect..."
                                     style={{ marginBottom: '1rem' }}
@@ -120,6 +118,7 @@ class FormModal extends Component {
                                     labelText="Description"
                                     placeholder="Service description"
                                     rows={4}
+                                    style={{ marginBottom: '1rem' }}
                                 />
                                 <TextInput
                                     data-modal-primary-focus
@@ -135,53 +134,42 @@ class FormModal extends Component {
                                 />
                                 <FormGroup legendText="FS Ready">
                                     <RadioButtonGroup
-                                        name="fs_ready"
-                                        onChange={this.handleChange.bind(this, "fs_ready")}
-                                        defaultSelected={this.state.fields.fs_ready}>
+                                        name="fs_certified"
+                                        onChange={this.handleChange.bind(this, "fs_certified")}
+                                        defaultSelected={this.state.fields.fs_certified}>
                                         <RadioButton
                                             value="true"
                                             id="radio-1"
-                                            name="fs_ready"
+                                            name="fs_certified"
                                             labelText="True"
                                         />
                                         <RadioButton
                                             value="false"
                                             labelText="False"
-                                            name="fs_ready"
+                                            name="fs_certified"
                                             id="radio-2"
                                         />
                                     </RadioButtonGroup>
                                 </FormGroup>
+
                                 <TextInput
                                     data-modal-primary-focus
-                                    id="quarter"
-                                    name="quarter"
+                                    id="complianceStatus"
+                                    name="compliance_status"
                                     invalidText="Please Enter The Value"
 
-                                    value={this.state.fields.quarter}
-                                    onChange={this.handleChange.bind(this, "quarter")}
-                                    labelText="Quarter"
-                                    placeholder="e.g. github.com"
+                                    value={this.state.fields.compliance_status}
+                                    onChange={this.handleChange.bind(this, "compliance_status")}
+                                    labelText="Compliance Status"
+                                    placeholder="e.g. 2Q2021,2H2021"
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <DatePicker datePickerType="single" dateFormat='Y-m-d' >
-                                    <DatePickerInput
-                                        placeholder="Y-m-d"
-                                        labelText="Date"
-                                        id="date-time"
-                                        name="date"
-                                        pattern="\d{4}\-\d{2}\-\d{2}"
-                                        value={this.state.fields.date}
-                                        onFocus={this.handleChange.bind(this, "date")}
-
-                                    />
-                                </DatePicker>
-
                                 <Select id="provision" name="provision"
                                     labelText="Provision"
                                     defaultValue={!this.state.fields.provision ? 'placeholder-item' : this.state.fields.provision}
                                     invalidText="Please Select The Value"
-                                    onChange={this.handleChange.bind(this, "provision")}>
+                                    onChange={this.handleChange.bind(this, "provision")}
+                                    style={{ marginBottom: '1rem' }}>
                                     <SelectItem
                                         disabled
                                         hidden

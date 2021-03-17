@@ -38,8 +38,6 @@ export class ServiceData implements ServiceDataApi {
             });
     }
     async doAddService(service_details: any): Promise<ServiceDataModel> {
-
-        service_details.date = service_details.date + "T00:00:00.000Z";
         return superagent
             .post(this.baseUrl)
             .send(service_details)
@@ -50,7 +48,6 @@ export class ServiceData implements ServiceDataApi {
             });
     }
     async doUpdateService(service_details: any, serviceId: string): Promise<ServiceDataModel> {
-        service_details.date = service_details.date + "T00:00:00.000Z";
         return superagent
             .patch(this.baseUrl + "/" + serviceId)
             .send(service_details)

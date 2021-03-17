@@ -154,6 +154,7 @@ class MapControlToServiceModal extends Component {
                                     labelText="Configuration"
                                     placeholder="e.g. IAM roles enabled, Responsibility of COS, etc."
                                     rows={1}
+                                    style={{ marginBottom: '1rem' }}
                                 />
                                 <TextInput
                                     required
@@ -166,6 +167,7 @@ class MapControlToServiceModal extends Component {
                                     labelText="Evidence"
                                     placeholder="e.g. COS FS-Ready validation, SCC Scan / Resource groups, etc."
                                     rows={1}
+                                    style={{ marginBottom: '1rem' }}
                                 />
                                 <TextInput
                                     cols={50}
@@ -174,9 +176,10 @@ class MapControlToServiceModal extends Component {
                                     value={this.state.fields.scc_goal}
                                     onChange={this.handleChange.bind(this, "scc_goal")}
                                     invalidText="A valid value is required"
-                                    labelText="Evidence"
+                                    labelText="SCC Goal"
                                     placeholder="e.g. 3000106, 3000114, etc."
                                     rows={1}
+                                    style={{ marginBottom: '1rem' }}
                                 />
                                 <TextArea
                                     required
@@ -189,6 +192,7 @@ class MapControlToServiceModal extends Component {
                                     labelText="Description"
                                     placeholder="Service description"
                                     rows={4}
+                                    style={{ marginBottom: '1rem' }}
                                 />
                                 <TextArea
                                     cols={50}
@@ -199,6 +203,7 @@ class MapControlToServiceModal extends Component {
                                     labelText="Comment"
                                     placeholder="Optionnal comment"
                                     rows={4}
+                                    style={{ marginBottom: '1rem' }}
                                 />
 
                                 <ButtonSet style={{ margin: '2rem 0 2rem 0' }}>
