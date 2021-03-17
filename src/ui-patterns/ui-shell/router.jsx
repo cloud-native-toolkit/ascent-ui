@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, useParams } from "react-router-dom";
+import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
 import BillofMaterialsComponent from "../../components/bom/BillofMaterials";
 import ArchitectureComponent from "../../components/builder/Architecture";
 import ControlsComponent from "../../components/compliance/Controls";
@@ -18,21 +18,6 @@ function RenderBOM() {
 
     return (
         <BillofMaterialsComponent data={bomid}></BillofMaterialsComponent>
-    );
-}
-
-function RenderControl() {
-
-    // We can use the `useParams` hook here to access
-    // the dynamic pieces of the URL.
-    let { control_id } = useParams();
-    if (control_id === control_id.toLowerCase().replace(' ', '_')) {
-        return (
-            <ControlDetailsComponent data={control_id.toUpperCase().replace('_', ' ')}></ControlDetailsComponent>
-        );
-    } 
-    return (
-        <></>
     );
 }
 
@@ -62,6 +47,36 @@ function RenderService() {
     );
 }
 
+/**
+ * Controls
+ */
+function ControlDetails() {
+    // We can use the `useParams` hook here to access
+    // the dynamic pieces of the URL.
+    let { controlId } = useParams();
+    if (controlId === controlId.toLowerCase().replace(' ', '_')) {
+        return (
+            <ControlDetailsComponent data={controlId.toUpperCase().replace('_', ' ')}></ControlDetailsComponent>
+        );
+    } 
+    return (
+        <></>
+    );
+}
+function Controls() {
+    let { path, url } = useRouteMatch();
+    return (
+        <Switch>
+            <Route exact path={path}>
+                <ControlsComponent />
+            </Route>
+            <Route path={`${path}/:controlId`}>
+                <ControlDetails />
+            </Route>
+        </Switch>
+    )
+}
+
 function Child() {
 
     let { id } = useParams();
@@ -79,8 +94,7 @@ function Routes() {
             <Route path="/" exact component={DetailsViewComponent} />
             <Route path="/bom/:bomid" children={<RenderBOM></RenderBOM>}></Route>
             <Route path="/architectures" component={ArchitectureComponent} />
-            <Route path="/controls" component={ControlsComponent} />
-            <Route path="/control/:control_id" children={<RenderControl></RenderControl>} />
+            <Route path="/controls" component={Controls} />
             <Route path="/nist-controls" component={NistComponent} />
             <Route path="/nist/:number" children={<RenderNist></RenderNist>} />
             <Route path="/services" component={ServiceComponent} />

@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Link,
   DataTable,
   TableContainer,
   Table,
@@ -15,6 +14,9 @@ import {
   OverflowMenu,
   OverflowMenuItem
 } from 'carbon-components-react';
+import {
+  Link
+} from "react-router-dom";
 
 const ControlsTable = ({ rows, headers }) => (
   <DataTable rows={rows} headers={headers}>
@@ -53,9 +55,12 @@ const ControlsTable = ({ rows, headers }) => (
                   <TableCell key={cell.id}>{cell.value}</TableCell>
                 ))}
                 <TableCell>
-                  <OverflowMenu light flipped>
-                    <OverflowMenuItem href={"/control/" + row.id.toLowerCase().replace(' ', '_')} itemText="Details" />
-                    {/* <OverflowMenuItem href={encodeURI("/control/" + row.id)} itemText="Details" /> */}
+                  
+                  <OverflowMenu light flipped style={{flex:1}}>
+                    <Link class="bx--overflow-menu-options__option" to={"/controls/" + row.id.toLowerCase().replace(' ', '_')}>
+                      <OverflowMenuItem itemText="Details" />
+                    </Link>
+                    <OverflowMenuItem itemText="Test" />
                   </OverflowMenu>
                 </TableCell>
               </TableRow>

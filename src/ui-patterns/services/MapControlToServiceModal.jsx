@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, Button, ButtonSet, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput } from 'carbon-components-react';
+import { Form, FormGroup, Button, ButtonSet, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput, TextInputSkeleton, InlineNotification } from 'carbon-components-react';
 
 class MapControlToServiceModal extends Component {
     constructor(props) {
@@ -7,6 +7,8 @@ class MapControlToServiceModal extends Component {
         this.state = {
             show: this.props.show,
             onRequestClose: this.props.handleClose,
+            notif: false,
+            controlsData: [],
             fields: {
                 control_id: '',
                 compliant: 'UNKNOWN',
@@ -26,6 +28,12 @@ class MapControlToServiceModal extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
+    async componentDidMount() {
+        const controlsData = await this.props.controls.getControls();
+        this.setState({
+            controlsData: controlsData
+        });
+    }
     handleChange(field, e) {
         let fields = this.state.fields;
         if (field === "compliant") {
@@ -40,7 +48,17 @@ class MapControlToServiceModal extends Component {
         event.preventDefault();
         if (!this.props.isUpdate) {
             this.props.service.doMapControl(this.state.fields, this.props.serviceId).then((res) => {
-                this.props.handleClose(res);
+                let notif = false;
+                if (res && res.body && res.body.error) {
+                    notif = {
+                        kind: "error",
+                        title: res.body.error.code || res.body.error.name || "Error",
+                        message: res.body.error.message
+                    }
+                } else {
+                    this.props.handleClose(res);
+                }
+                this.setState({ notif: notif });
             });
         } else {
             //this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id);
@@ -48,6 +66,8 @@ class MapControlToServiceModal extends Component {
         }
     }
     render() {
+        let controlsData = this.state.controlsData;
+        let notif = this.state.notif;
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -61,21 +81,42 @@ class MapControlToServiceModal extends Component {
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
+                            {notif &&
+                                <InlineNotification
+                                    id={Date.now()}
+                                    hideCloseButton
+                                    title={notif.title || "Notification title"}
+                                    subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
+                                    kind={notif.kind || "info"}
+                                    caption={notif.caption || "Caption"}
+                                />
+                            }
                             <Form name="serviceform" onSubmit={this.handleSubmit.bind(this)}>
 
-                                <TextInput
-                                    required
-                                    data-modal-primary-focus
-                                    id="control_id"
-                                    name="control_id"
-                                    disabled={this.props.isUpdate ? true : false}
-                                    invalidText="Please Enter The Value"
-                                    onChange={this.handleChange.bind(this, "control_id")}
-                                    value={this.state.fields.control_id}
-                                    labelText="Control ID"
-                                    placeholder="e.g. AC-2 (4), SC-12, SI-11, etc."
-                                    style={{ marginBottom: '1rem' }}
-                                />
+                                {
+                                    controlsData && controlsData.length > 0 ?
+                                    <>
+                                        <datalist id="control_ids">
+                                            {controlsData.map((control) => (
+                                                <option value={control.control_id} />
+                                            ))}
+                                        </datalist>
+                                        <TextInput
+                                            list="control_ids"
+                                            required
+                                            data-modal-primary-focus
+                                            id="control_id"
+                                            name="control_id"
+                                            disabled={this.props.isUpdate ? true : false}
+                                            invalidText="Please Enter The Value"
+                                            onChange={this.handleChange.bind(this, "control_id")}
+                                            value={this.state.fields.control_id}
+                                            labelText="Control ID"
+                                            placeholder="e.g. AC-2 (4), SC-12, SI-11, etc."
+                                            style={{ marginBottom: '1rem' }}
+                                        /> 
+                                    </> : <TextInputSkeleton />
+                                }
                                 <FormGroup legendText="Compliant">
                                     <RadioButtonGroup
                                         required
