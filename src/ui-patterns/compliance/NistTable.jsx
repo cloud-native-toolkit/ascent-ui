@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Link,
   DataTable,
   TableContainer,
   Table,
@@ -15,6 +14,9 @@ import {
   OverflowMenu,
   OverflowMenuItem
 } from 'carbon-components-react';
+import {
+  Link
+} from "react-router-dom";
 
 const NistTable = ({ rows, headers }) => (
   <DataTable rows={rows} headers={headers}>
@@ -54,7 +56,9 @@ const NistTable = ({ rows, headers }) => (
                 ))}
                 <TableCell>
                   <OverflowMenu light flipped>
-                    <OverflowMenuItem href={"/nist/" + row.id.toLowerCase().replace(' ', '_')} itemText="Details" />
+                    <Link class="bx--overflow-menu-options__option" to={"/nist/" + row.id.toLowerCase().replace(' ', '_')}>
+                      <OverflowMenuItem itemText="Details" />
+                    </Link>
                   </OverflowMenu>
                 </TableCell>
               </TableRow>

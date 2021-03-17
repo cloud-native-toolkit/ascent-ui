@@ -6,9 +6,11 @@ import {
   Tag,
   UnorderedList,
   ListItem,
-  SearchSkeleton,
-  Link
+  SearchSkeleton
 } from 'carbon-components-react';
+import {
+  Link
+} from "react-router-dom";
 
 class ControlDetailsView extends Component {
   constructor(props) {
@@ -62,7 +64,7 @@ class ControlDetailsView extends Component {
       breadcrumb = <>
         <Breadcrumb>
           <BreadcrumbItem>
-            <a href="/controls">Controls</a>
+            <Link to="/controls">Controls</Link>
           </BreadcrumbItem>
           <BreadcrumbItem href="#">{this.props.controlId}</BreadcrumbItem>
         </Breadcrumb>
@@ -113,7 +115,7 @@ class ControlDetailsView extends Component {
               <br></br>
               {servicesData.map((service) => (
                 <Tag type="blue">
-                  <Link href={"/service/" + service.service_id} >
+                  <Link to={"/service/" + service.service_id} >
                     {service.ibm_catalog_service ? service.ibm_catalog_service : service.service_id}
                   </Link>
                 </Tag>
@@ -207,7 +209,7 @@ class ControlDetailsView extends Component {
                   <h4 className="landing-page__subheading">Parent Control</h4>
                   <br></br>
                     <Tag type="blue">
-                      <Link href={"/nist/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
+                      <Link to={"/nist/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
                         {nistData.parent_control}
                       </Link>
                     </Tag>
@@ -223,7 +225,7 @@ class ControlDetailsView extends Component {
                   <br></br>
                   {nistData.supplemental_guidance.related.map((related) => (
                     <Tag type="blue">
-                      <Link href={"/nist/" + related.toLowerCase().replace(' ', '_')} >
+                      <Link to={"/nist/" + related.toLowerCase().replace(' ', '_')} >
                         {related}
                       </Link>
                     </Tag>
@@ -254,9 +256,9 @@ class ControlDetailsView extends Component {
                   <UnorderedList>
                   {nistData.references.reference.map((ref) => (
                     <ListItem>
-                      <Link href={ref.item["@href"]}>
+                      <a href={ref.item["@href"]} target="_blank">
                         {ref.item["#text"]}
-                      </Link>
+                      </a>
                     </ListItem>
                   ))}
                   </UnorderedList>

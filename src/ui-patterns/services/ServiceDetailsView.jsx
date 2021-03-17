@@ -6,11 +6,13 @@ import {
   BreadcrumbSkeleton,
   Tag,
   SearchSkeleton,
-  InlineNotification,
-  Link
+  InlineNotification
 } from 'carbon-components-react';
 import MapControlToServiceModal from './MapControlToServiceModal';
 import { Add16 } from '@carbon/icons-react';
+import {
+  Link
+} from "react-router-dom";
 
 class ServiceDetailsView extends Component {
   constructor(props) {
@@ -72,7 +74,7 @@ class ServiceDetailsView extends Component {
       breadcrumb = <>
         <Breadcrumb>
           <BreadcrumbItem>
-            <a href="/services">Services</a>
+            <Link to="/services">Services</Link>
           </BreadcrumbItem>
           <BreadcrumbItem href="#">{data.ibm_catalog_service ? data.ibm_catalog_service : data.service_id}</BreadcrumbItem>
         </Breadcrumb>
@@ -94,7 +96,7 @@ class ServiceDetailsView extends Component {
           {data.hybrid_automation_id ? <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{data.hybrid_automation_id}</Tag></p></div> : <></>}
           {controlsData && controlsData.length > 0 ? <div class="attribute"><p><span class="name">Impacting FS Cloud Controls: </span> {controlsData.map((control) => (
             <Tag type="blue">
-              <Link href={"/control/" + control.control_id.toLowerCase().replace(' ', '_')} >
+              <Link to={"/controls/" + control.control_id.toLowerCase().replace(' ', '_')} >
                 {control.control_id}
               </Link>
             </Tag>
