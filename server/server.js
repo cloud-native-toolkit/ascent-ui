@@ -18,16 +18,42 @@ const appName = require("./../package").name;
 const http = require("http");
 const express = require("express");
 const log4js = require("log4js");
-const localConfig = require("./config/local.json");
+//const localConfig = require("./config/local.json");
 const path = require("path");
 var cookieParser = require("cookie-parser");
-
+const session = require('express-session')
+const passport = require('passport');
+const WebAppStrategy = require("ibmcloud-appid").WebAppStrategy;
+const CALLBACK_URL = "/ibm/cloud/appid/callback";
+const appidConfig = require("./config/mappings.json");
 const logger = log4js.getLogger(appName);
 const app = express();
-
+app.use(session({
+  secret: appidConfig.secret,
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+var appidcfg=JSON.parse(appidConfig.APPID_CONFIG);
+passport.use(new WebAppStrategy({
+tenantId: appidcfg.tenantId,
+clientId: appidConfig.client_id,
+secret: appidConfig.secret,
+oauthServerUrl: appidcfg.oauthServerUrl,
+redirectUri: appidConfig.application_url+CALLBACK_URL
+}));
+passport.serializeUser(function(user, cb) {
+  cb(null, user);
+  });
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj);
+  });
+app.get(CALLBACK_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME));
+app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
 app.use(express.static(path.join(__dirname, "../build")));
 
 const server = http.createServer(app);
@@ -41,7 +67,7 @@ require("./routers/index")(app, server);
 
 // Add your code here
 
-const port = process.env.PORT || localConfig.port;
+const port = process.env.PORT || appidConfig.port;
 server.listen(port, function() {
   logger.info(`Server listening on http://localhost:${port}`);
   console.log(`Server listening on http://localhost:${port}`);
