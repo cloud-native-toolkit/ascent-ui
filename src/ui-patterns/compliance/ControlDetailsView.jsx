@@ -115,7 +115,7 @@ class ControlDetailsView extends Component {
               <br></br>
               {servicesData.map((service) => (
                 <Tag type="blue">
-                  <Link to={"/service/" + service.service_id} >
+                  <Link to={"/services/" + service.service_id} >
                     {service.ibm_catalog_service ? service.ibm_catalog_service : service.service_id}
                   </Link>
                 </Tag>
@@ -209,7 +209,7 @@ class ControlDetailsView extends Component {
                   <h4 className="landing-page__subheading">Parent Control</h4>
                   <br></br>
                     <Tag type="blue">
-                      <Link to={"/nist/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
+                      <Link to={"/nists/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
                         {nistData.parent_control}
                       </Link>
                     </Tag>
@@ -225,7 +225,7 @@ class ControlDetailsView extends Component {
                   <br></br>
                   {nistData.supplemental_guidance.related.map((related) => (
                     <Tag type="blue">
-                      <Link to={"/nist/" + related.toLowerCase().replace(' ', '_')} >
+                      <Link to={"/nists/" + related.toLowerCase().replace(' ', '_')} >
                         {related}
                       </Link>
                     </Tag>
