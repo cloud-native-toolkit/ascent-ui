@@ -17,9 +17,10 @@ class MappingView extends Component {
       firstRowIndex: 0,
       currentPageSize: 10
     };
+    this.loadTable = this.loadTable.bind(this);
   }
 
-  async componentDidMount() {
+  async loadTable() {
     const mappingDetails = await this.props.mapping.getMappings();
     //const mappingDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"control_id\":/g, "\"id\":"));
     this.setState({
@@ -27,6 +28,10 @@ class MappingView extends Component {
       totalItems: mappingDetails.length
     });
   }
+  async componentDidMount() {
+    this.loadTable();
+  }
+
   render() {
     const data = this.state.data;
     const headers = this.state.headerData;
@@ -61,6 +66,7 @@ class MappingView extends Component {
                     this.state.firstRowIndex,
                     this.state.firstRowIndex + this.state.currentPageSize
                   )}
+                  handleReload={this.loadTable}
                   mapping={this.props.mapping}
                   controls={this.props.controls}
                   services={this.props.services}

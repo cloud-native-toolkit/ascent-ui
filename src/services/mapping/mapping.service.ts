@@ -47,4 +47,16 @@ export class MappingData implements MappingDataApi {
                 return err.response;
             });
     }
+    async deleteMapping(mapping: any): Promise<any> {
+        return superagent
+            .delete(this.baseUrl)
+            .send(mapping)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body;
+            })
+            .catch(err => {
+                return err.response;
+            });
+    }
 }
