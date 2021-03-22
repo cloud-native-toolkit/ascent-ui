@@ -56,7 +56,7 @@ const NistTable = ({ rows, headers }) => (
                 ))}
                 <TableCell>
                   <OverflowMenu light flipped>
-                    <Link class="bx--overflow-menu-options__option" to={"/nist/" + row.id.toLowerCase().replace(' ', '_')}>
+                    <Link class="bx--overflow-menu-options__option" to={"/nists/" + row.id.toLowerCase().replace(' ', '_')}>
                       <OverflowMenuItem itemText="Details" />
                     </Link>
                   </OverflowMenu>

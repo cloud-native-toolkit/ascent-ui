@@ -50,7 +50,7 @@ class NistDetailsView extends Component {
       breadcrumb = <>
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to="/nist-controls">NIST controls</Link>
+            <Link to="/nists">NIST controls</Link>
           </BreadcrumbItem>
           <BreadcrumbItem href="#">{this.props.number}</BreadcrumbItem>
         </Breadcrumb>
@@ -121,7 +121,7 @@ class NistDetailsView extends Component {
                     <h3 className="landing-page__subheading">Parent Control</h3>
                     <br></br>
                       <Tag type="blue">
-                        <Link to={"/nist/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
+                        <Link to={"/nists/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
                           {nistData.parent_control}
                         </Link>
                       </Tag>
@@ -137,7 +137,7 @@ class NistDetailsView extends Component {
                     <br></br>
                     {nistData.supplemental_guidance.related.map((related) => (
                       <Tag type="blue">
-                        <Link to={"/nist/" + related.toLowerCase().replace(' ', '_')} >
+                        <Link to={"/nists/" + related.toLowerCase().replace(' ', '_')} >
                           {related}
                         </Link>
                       </Tag>

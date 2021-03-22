@@ -178,7 +178,7 @@ class ServiceDataView extends Component {
                                                         ))}
                                                         <TableCell className="bx--table-column-menu">
                                                             <OverflowMenu light flipped>
-                                                                <Link class="bx--overflow-menu-options__option" to={"/service/" + row.id}>
+                                                                <Link class="bx--overflow-menu-options__option" to={"/services/" + row.id}>
                                                                     <OverflowMenuItem itemText="Details" />
                                                                 </Link>
                                                                 <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(i)} />

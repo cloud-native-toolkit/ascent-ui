@@ -15,6 +15,9 @@ import { ControlsData } from './controls/controls.service';
 import { NistDataApi } from './nist/nist.api';
 import { NistData } from './nist/nist.service';
 
+import { MappingDataApi } from './mapping/mapping.api';
+import { MappingData } from './mapping/mapping.service';
+
 export * from './bom/billofmaterials.api';
 export * from './bom/billofmaterials.service';
 
@@ -30,8 +33,12 @@ export * from './controls/controls.service';
 export * from './nist/nist.api';
 export * from './nist/nist.service';
 
+export * from './mapping/mapping.api';
+export * from './mapping/mapping.service';
+
 Container.bind(BillofMaterialsApi).to(BillofMaterialsService);
 Container.bind(ArchitectureDataApi).to(ArchitectureService);
 Container.bind(ServiceDataApi).to(ServiceData);
 Container.bind(ControlsDataApi).to(ControlsData);
 Container.bind(NistDataApi).to(NistData);
+Container.bind(MappingDataApi).to(MappingData);

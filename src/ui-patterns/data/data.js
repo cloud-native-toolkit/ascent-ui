@@ -158,3 +158,26 @@ export const nistHeaders = [
         header: 'Parent Control',
     }
 ];
+
+export const mappingHeaders = [
+    {
+        key: 'control_id',
+        header: 'Control ID',
+    },
+    {
+        key: 'component_id',
+        header: 'Component ID',
+    },
+    {
+        key: 'compliant',
+        header: 'Compliant',
+    },
+    {
+        key: 'evidence',
+        header: 'Evidence',
+    },
+    {
+        key: 'scc_goal',
+        header: 'SCC Goal',
+    }
+];

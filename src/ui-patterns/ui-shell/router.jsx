@@ -9,50 +9,42 @@ import NistDetailsComponent from "../../components/compliance/NistDetails";
 import ServiceDetailsComponent from "../../components/services/ServiceDetails";
 import DetailsViewComponent from "../../components/overview/DetailsView";
 import ServiceComponent from "../../components/services/service";
+import MappingComponent from "../../components/mapping/Mapping";
 
 function RenderBOM() {
-
-    // We can use the `useParams` hook here to access
-    // the dynamic pieces of the URL.
     let { bomid } = useParams();
-
     return (
         <BillofMaterialsComponent data={bomid}></BillofMaterialsComponent>
     );
 }
 
-function RenderNist() {
-
-    // We can use the `useParams` hook here to access
-    // the dynamic pieces of the URL.
-    let { number } = useParams();
-    if (number === number.toLowerCase().replace(' ', '_')) {
-        return (
-            <NistDetailsComponent data={number.toUpperCase().replace('_', ' ')}></NistDetailsComponent>
-        );
-    } 
+/**
+ * Services
+ */
+function ServiceDetails() {
+    let { serviceId } = useParams();
     return (
-        <></>
+        <ServiceDetailsComponent data={serviceId}></ServiceDetailsComponent>
     );
 }
-
-function RenderService() {
-
-    // We can use the `useParams` hook here to access
-    // the dynamic pieces of the URL.
-    let { service_id } = useParams();
-
+function Services() {
+    let { path, url } = useRouteMatch();
     return (
-        <ServiceDetailsComponent data={service_id}></ServiceDetailsComponent>
-    );
+        <Switch>
+            <Route exact path={path}>
+                <ServiceComponent />
+            </Route>
+            <Route path={`${path}/:serviceId`}>
+                <ServiceDetails />
+            </Route>
+        </Switch>
+    )
 }
 
 /**
  * Controls
  */
 function ControlDetails() {
-    // We can use the `useParams` hook here to access
-    // the dynamic pieces of the URL.
     let { controlId } = useParams();
     if (controlId === controlId.toLowerCase().replace(' ', '_')) {
         return (
@@ -77,16 +69,34 @@ function Controls() {
     )
 }
 
-function Child() {
-
-    let { id } = useParams();
-
+/**
+ * Nist
+ */
+ function NistDetails() {
+    let { number } = useParams();
+    if (number === number.toLowerCase().replace(' ', '_')) {
+        return (
+            <NistDetailsComponent data={number.toUpperCase().replace('_', ' ')}></NistDetailsComponent>
+        );
+    } 
     return (
-        <div>
-            <h3>ID: {id}</h3>
-        </div>
+        <></>
     );
 }
+function Nists() {
+    let { path, url } = useRouteMatch();
+    return (
+        <Switch>
+            <Route exact path={path}>
+                <NistComponent />
+            </Route>
+            <Route path={`${path}/:number`}>
+                <NistDetails />
+            </Route>
+        </Switch>
+    )
+}
+
 
 function Routes() {
     return (
@@ -94,11 +104,10 @@ function Routes() {
             <Route path="/" exact component={DetailsViewComponent} />
             <Route path="/bom/:bomid" children={<RenderBOM></RenderBOM>}></Route>
             <Route path="/architectures" component={ArchitectureComponent} />
+            <Route path="/mapping" component={MappingComponent} />
             <Route path="/controls" component={Controls} />
-            <Route path="/nist-controls" component={NistComponent} />
-            <Route path="/nist/:number" children={<RenderNist></RenderNist>} />
-            <Route path="/services" component={ServiceComponent} />
-            <Route path="/service/:service_id" children={<RenderService></RenderService>} />
+            <Route path="/nists" component={Nists} />
+            <Route path="/services" component={Services} />
         </Switch>
     )
 }

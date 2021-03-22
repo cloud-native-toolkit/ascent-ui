@@ -45,6 +45,9 @@ export class ServiceData implements ServiceDataApi {
             .then(res => {
                 console.log(res.status);
                 return res.body;
+            })
+            .catch(err => {
+                return err.response;
             });
     }
     async doUpdateService(service_details: any, serviceId: string): Promise<ServiceDataModel> {
@@ -55,6 +58,9 @@ export class ServiceData implements ServiceDataApi {
             .then(res => {
                 console.log(res.status);
                 return res.body;
+            })
+            .catch(err => {
+                return err.response;
             });
     }
 

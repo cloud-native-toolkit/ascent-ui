@@ -127,12 +127,16 @@ class UIShell extends Component {
                 </SideNavMenu>
                 <SideNavMenu title="Compliance" >
 
-                  <Link to="/nist-controls">
+                  <Link to="/nists">
                     <SideNavMenuItem>NIST 800-53</SideNavMenuItem>
                   </Link>
 
                   <Link to="/controls">
                     <SideNavMenuItem>Controls</SideNavMenuItem>
+                  </Link>
+
+                  <Link to="/mapping">
+                    <SideNavMenuItem>Mapping</SideNavMenuItem>
                   </Link>
 
                 </SideNavMenu>
