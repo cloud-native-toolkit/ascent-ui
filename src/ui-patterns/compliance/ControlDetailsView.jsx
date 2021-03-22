@@ -272,7 +272,7 @@ class ControlDetailsView extends Component {
             {comment}
             <div className="bx--row">
               <div className="bx--col-lg-16">
-                {mappingData.length > 0 &&
+                {data.control_id &&
                   <>
                     <br />
                     <h3>Impacted Components</h3>

@@ -79,7 +79,7 @@ class ServiceDetailsView extends Component {
           {data.hybrid_automation_id ? <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{data.hybrid_automation_id}</Tag></p></div> : <></>}
           <div className="bx--row">
             <div className="bx--col-lg-16">
-              {mappingData.length === 0 ?
+              {data.control_id ?
                 <></>
                 :
                 <>
