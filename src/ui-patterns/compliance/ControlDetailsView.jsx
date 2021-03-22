@@ -6,11 +6,16 @@ import {
   Tag,
   UnorderedList,
   ListItem,
-  SearchSkeleton
+  SearchSkeleton,
+  ContentSwitcher,
+  Switch,
+  Pagination
 } from 'carbon-components-react';
 import {
   Link
 } from "react-router-dom";
+import MappingTable from "../mapping/MappingTable"
+import { mappingHeaders as headers } from '../data/data';
 
 class ControlDetailsView extends Component {
   constructor(props) {
@@ -18,35 +23,41 @@ class ControlDetailsView extends Component {
     this.state = {
       data: {},
       nistData: {},
-      servicesData: {},
-      architecturesData: {},
+      show: "fs-cloud-desc",
+      mappingData: [],
+      totalItems: 0,
+      firstRowIndex: 0,
+      currentPageSize: 10
     };
+    this.loadTable = this.loadTable.bind(this);
+  }
+
+  async loadTable() {
+    const mappingData = await this.props.mapping.getMappings({ where : {control_id: this.props.controlId}});
+    this.setState({
+      mappingData: mappingData,
+      totalItems: mappingData.length
+    });
   }
 
   async componentDidMount() {
     const controlData = await this.props.controls.getControlsDetails(this.props.controlId);
     const nistData = controlData.nist;
-    const servicesData = controlData.services;
-    const architecturesData = controlData.architectures;
     this.setState({
       data: controlData,
-      nistData: nistData,
-      servicesData: servicesData,
-      architecturesData: architecturesData
+      nistData: nistData
     });
+    this.loadTable();
   }
   render() {
     const data = this.state.data;
     const nistData = this.state.nistData;
-    const servicesData = this.state.servicesData;
-    const architecturesData = this.state.architecturesData;
+    const mappingData = this.state.mappingData;
     console.log(nistData);
     let breadcrumb;
     let title;
     let guidance = <></>;
     let comment = <></>;
-    let services = <></>;
-    let architectures = <></>;
 
     // NIST controls details
     let nist = <></>;
@@ -76,8 +87,6 @@ class ControlDetailsView extends Component {
                     {data.control_id}
                   </h2>
                   <br></br>
-                  <p>{data.control_description}</p>
-                  <br></br>
                 </div>
               </div>;
       if (data.guidance && data.guidance !== "None") {
@@ -105,40 +114,6 @@ class ControlDetailsView extends Component {
                       <br></br>
                     </div>
                   </div>;
-      }
-      if (servicesData.length > 0) {
-        services = <>
-          <div className="bx--row">
-            <div className="bx--col-lg-16">
-              <br></br>
-              <h4 className="landing-page__subheading">Impacted services</h4>
-              <br></br>
-              {servicesData.map((service) => (
-                <Tag type="blue">
-                  <Link to={"/services/" + service.service_id} >
-                    {service.ibm_catalog_service ? service.ibm_catalog_service : service.service_id}
-                  </Link>
-                </Tag>
-              ))}
-              <br></br>
-            </div>
-          </div>
-        </>
-      }
-      if (architecturesData.length > 0) {
-        architectures = <>
-          <div className="bx--row">
-            <div className="bx--col-lg-16">
-              <br></br>
-              <h4 className="landing-page__subheading">Impacted reference architectures</h4>
-              <br></br>
-              {architecturesData.map((arch) => (
-                <Tag type="blue">{arch.arch_id}</Tag>
-              ))}
-              <br></br>
-            </div>
-          </div>
-        </>
       }
     }
     if (nistData.number) {
@@ -270,18 +245,86 @@ class ControlDetailsView extends Component {
         <div className="bx--grid">
           {breadcrumb}
           {title}
-          {guidance}
-          {comment}
-          {services}
-          {architectures}
-          {nist}
-          {family}
-          {priority}
-          {supplemental_guidance}
-          {parent_control}
-          {related}
-          {baseline_impact}
-          {references}
+
+          {data.control_id && 
+            <ContentSwitcher 
+              light
+              size='xl'
+              onChange={(e) => {this.setState({show:e.name})}} >
+              <Switch name="fs-cloud-desc" text="Description" />
+              <Switch name="nist-desc" text="Additional NIST Information" />
+            </ContentSwitcher>
+          }
+          
+
+          {this.state.show === "fs-cloud-desc" && <div>
+            {data.control_id && 
+              <>
+                <br />
+                <h3>Description</h3>
+                <br />
+                <p>{data.control_description}</p>
+                <br />
+              </>
+            }
+            
+            {guidance}
+            {comment}
+            <div className="bx--row">
+              <div className="bx--col-lg-16">
+                {mappingData.length > 0 &&
+                  <>
+                    <br />
+                    <h3>Impacted Components</h3>
+                    <br />
+                    <MappingTable
+                      headers={headers}
+                      rows={mappingData.slice(
+                        this.state.firstRowIndex,
+                        this.state.firstRowIndex + this.state.currentPageSize
+                      )}
+                      handleReload={this.loadTable}
+                      mapping={this.props.mapping}
+                      controls={this.props.controls}
+                      services={this.props.service}
+                      arch={this.props.arch}
+                      controlId={this.props.controlId}
+                    />
+                    <Pagination
+                      totalItems={this.state.totalItems}
+                      backwardText="Previous page"
+                      forwardText="Next page"
+                      pageSize={this.state.currentPageSize}
+                      pageSizes={[5, 10, 15, 25]}
+                      itemsPerPageText="Items per page"
+                      onChange={({ page, pageSize }) => {
+                        if (pageSize !== this.state.currentPageSize) {
+                          this.setState({
+                            currentPageSize: pageSize
+                          });
+                        }
+                        this.setState({
+                          firstRowIndex: pageSize * (page - 1)
+                        });
+                      }}
+                    />
+                  </>
+                }
+              </div>
+            </div>
+          </div>}
+          
+          {this.state.show === "nist-desc" && <div>
+            {nist}
+            {family}
+            {priority}
+            {supplemental_guidance}
+            {parent_control}
+            {related}
+            {baseline_impact}
+            {references}
+          </div>}
+          
         </div >
     );
   }

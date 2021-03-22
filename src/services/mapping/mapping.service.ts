@@ -8,12 +8,17 @@ export class MappingData implements MappingDataApi {
     baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl || '/control-mapping/';
+        this.baseUrl = baseUrl || '/control-mapping';
     }
 
-    async getMappings(): Promise<ControlMappingModel[]> {
+    async getMappings(filter: any): Promise<ControlMappingModel[]> {
+        let url = this.baseUrl;
+        if (filter) {
+            url = url + "?filter=" + encodeURIComponent(JSON.stringify(filter));
+        }
+        console.log(filter, url);
         return superagent
-            .get(this.baseUrl)
+            .get(url)
             .set('accept', 'application/json')
             .then(res => {
                 return res.body || [];
@@ -21,7 +26,7 @@ export class MappingData implements MappingDataApi {
     }
     async getServiceMappings(serviceId: string): Promise<ControlMappingModel> {
         return superagent
-            .get(this.baseUrl + "service/" + serviceId)
+            .get(this.baseUrl + "/service/" + serviceId)
             .set('accept', 'application/json')
             .then(res => {
                 return res.body || [];
@@ -29,7 +34,7 @@ export class MappingData implements MappingDataApi {
     }
     async getArchMappings(archId: string): Promise<ControlMappingModel> {
         return superagent
-            .get(this.baseUrl + "architecture/" + archId)
+            .get(this.baseUrl + "/architecture/" + archId)
             .set('accept', 'application/json')
             .then(res => {
                 return res.body || [];

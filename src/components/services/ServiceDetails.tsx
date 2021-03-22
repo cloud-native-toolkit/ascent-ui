@@ -1,29 +1,39 @@
 import React, { Component } from "react";
 import ServiceDetailsView from "../../ui-patterns/services/ServiceDetailsView";
 
-import { ServiceDataApi, ControlsDataApi } from '../../services';
+import { ServiceDataApi, ControlsDataApi, MappingDataApi, ArchitectureDataApi } from '../../services';
 
 import { Container } from "typescript-ioc";
 class ServiceDetailsComponent extends Component<any, any> {
 
+    mappingDataAPI: MappingDataApi;
     controlsDataAPI: ControlsDataApi;
-    serviceDataAPI: ServiceDataApi;
+    servicesDataAPI: ServiceDataApi;
+    archDataAPI: ArchitectureDataApi;
     constructor(props: any) {
         super(props);
-        this.controlsDataAPI = this.getControlService();
-        this.serviceDataAPI = this.doGetService();
+        this.mappingDataAPI = this.getMappingService();
+        this.controlsDataAPI = this.getControlsService();
+        this.servicesDataAPI = this.getServicesService();
+        this.archDataAPI = this.getArchService();
     }
-    doGetService(): ServiceDataApi {
+    getMappingService(): MappingDataApi {
+        return Container.get(MappingDataApi);
+    }
+    getControlsService(): ControlsDataApi {
+        return Container.get(ControlsDataApi);
+    }
+    getServicesService(): ServiceDataApi {
         return Container.get(ServiceDataApi);
     }
-    getControlService(): ControlsDataApi {
-        return Container.get(ControlsDataApi);
+    getArchService(): ArchitectureDataApi {
+        return Container.get(ArchitectureDataApi);
     }
 
     render() {
         return (
             <div className="pattern-container">
-                <ServiceDetailsView service={this.serviceDataAPI} controls={this.controlsDataAPI} serviceId={this.props.data} />
+                <ServiceDetailsView mapping={this.mappingDataAPI} arch={this.archDataAPI} service={this.servicesDataAPI} controls={this.controlsDataAPI} serviceId={this.props.data} />
             </div>
         );
     }
