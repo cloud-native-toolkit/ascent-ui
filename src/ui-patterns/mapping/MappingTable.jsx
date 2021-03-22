@@ -28,7 +28,8 @@ import {
   Link
 } from "react-router-dom";
 import {
-  Delete16 as Delete
+  Delete16 as Delete,
+  Add16
 } from '@carbon/icons-react';
 import MappingModal from "./MappingModal"
 import ValidateModal from "../ValidateModal"
@@ -174,7 +175,9 @@ class MappingTable extends Component {
               mapping={this.props.mapping}
               controls={this.props.controls}
               services={this.props.services}
-              arch={this.props.arch} />
+              arch={this.props.arch}
+              serviceId={this.props.serviceId} 
+              controlId={this.props.controlId} />
           }
         </div>
         <div>
@@ -216,6 +219,7 @@ class MappingTable extends Component {
                   <Button
                     size="small"
                     kind="primary"
+                    renderIcon={Add16} 
                     onClick={this.showModal}>Add
                 </Button>
                 </TableToolbarContent>

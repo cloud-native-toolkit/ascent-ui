@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 import {
-  Button,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbSkeleton,
   Tag,
   SearchSkeleton,
-  InlineNotification
+  InlineNotification,
+  Pagination
 } from 'carbon-components-react';
-import MapControlToServiceModal from './MapControlToServiceModal';
-import { Add16 } from '@carbon/icons-react';
 import {
   Link
 } from "react-router-dom";
+import MappingTable from "../mapping/MappingTable"
+import { mappingHeaders as headers } from '../data/data';
 
 class ServiceDetailsView extends Component {
   constructor(props) {
@@ -21,52 +21,36 @@ class ServiceDetailsView extends Component {
       data: {},
       show: false,
       notif: false,
-      controlsData: {}
+      mappingData: [],
+      totalItems: 0,
+      firstRowIndex: 0,
+      currentPageSize: 10
     };
-    this.showModal = this.showModal.bind(this);
-    this.hideModal = this.hideModal.bind(this);
+    this.loadTable = this.loadTable.bind(this);
   }
 
-  async componentDidMount() {
-    const serviceData = await this.props.service.getServiceDetails(this.props.serviceId);
-    const controlsData = serviceData.controls;
+  async loadTable() {
+    const mappingData = await this.props.mapping.getMappings({ where : {service_id: this.props.serviceId}});
     this.setState({
-      data: serviceData,
-      controlsData: controlsData
+      mappingData: mappingData,
+      totalItems: mappingData.length
     });
   }
-
-  showModal = () => {
-    this.setState({ show: true });
-  };
-
-  hideModal = (res) => {
-    let notif = false;
-    console.log(res)
-    if (res && res.service_id && res.control_id) {
-      notif = {
-        kind: "success",
-        title: "Success",
-        message: `Control ${res.control_id} successfully mapped to service ${res.service_id}`
-      }
-    }
-    this.setState(
-      { 
-        show: false,
-        notif: notif
-      }
-    );
-    this.componentDidMount();
-  };
+  
+  async componentDidMount() {
+    const serviceData = await this.props.service.getServiceDetails(this.props.serviceId);
+    this.setState({
+      data: serviceData
+    });
+    this.loadTable();
+  }
 
   render() {
     const data = this.state.data;
-    const controlsData = this.state.controlsData;
+    const mappingData = this.state.mappingData;
     let breadcrumb;
     let content;
-    let showModal = this.state.show;
     let notif = this.state.notif;
-    let controls = <></>;
     if (!data.service_id) {
       breadcrumb = <BreadcrumbSkeleton />;
       content = <SearchSkeleton />;
@@ -84,7 +68,6 @@ class ServiceDetailsView extends Component {
           <br />
           <h2 className="landing-page__subheading" style={{ display: "flex" }}>
             {data.ibm_catalog_service ? data.ibm_catalog_service : data.service_id}
-            <Button class="right" renderIcon={Add16} iconDescription="Add" onClick={this.showModal} style={{ marginLeft: "auto" }}>Add Impacting Control</Button>
           </h2>
           <br />
           {data.desc ? <div class="attribute"><p><span class="name">Description: </span> {data.desc}</p></div> : <></>}
@@ -94,39 +77,68 @@ class ServiceDetailsView extends Component {
           {data.provision ? <div class="attribute"><p><span class="name">Provision: </span> <Tag type="blue">{data.provision}</Tag></p></div> : <></>}
           {data.cloud_automation_id ? <div class="attribute"><p><span class="name">Cloud Automation id: </span> <Tag type="blue">{data.cloud_automation_id}</Tag></p></div> : <></>}
           {data.hybrid_automation_id ? <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{data.hybrid_automation_id}</Tag></p></div> : <></>}
-          {controlsData && controlsData.length > 0 ? <div class="attribute"><p><span class="name">Impacting FS Cloud Controls: </span> {controlsData.map((control) => (
-            <Tag type="blue">
-              <Link to={"/controls/" + control.control_id.toLowerCase().replace(' ', '_')} >
-                {control.control_id}
-              </Link>
-            </Tag>
-          ))}</p></div> : <></>}
+          <div className="bx--row">
+            <div className="bx--col-lg-16">
+              {mappingData.length === 0 ?
+                <></>
+                :
+                <>
+                  <br />
+                  <h3>Impacting Controls</h3>
+                  <br />
+                  <MappingTable
+                    headers={headers}
+                    rows={mappingData.slice(
+                      this.state.firstRowIndex,
+                      this.state.firstRowIndex + this.state.currentPageSize
+                    )}
+                    handleReload={this.loadTable}
+                    mapping={this.props.mapping}
+                    controls={this.props.controls}
+                    services={this.props.service}
+                    arch={this.props.arch}
+                    serviceId={this.props.serviceId}
+                  />
+                  <Pagination
+                    totalItems={this.state.totalItems}
+                    backwardText="Previous page"
+                    forwardText="Next page"
+                    pageSize={this.state.currentPageSize}
+                    pageSizes={[5, 10, 15, 25]}
+                    itemsPerPageText="Items per page"
+                    onChange={({ page, pageSize }) => {
+                      if (pageSize !== this.state.currentPageSize) {
+                        this.setState({
+                          currentPageSize: pageSize
+                        });
+                      }
+                      this.setState({
+                        firstRowIndex: pageSize * (page - 1)
+                      });
+                    }}
+                  />
+                </>
+              }
+            </div>
+          </div>
         </div>
       </div>;
     }
     return (
-      <>
-        <div>
-          {
-            showModal &&
-            <MapControlToServiceModal show={this.state.show} handleClose={this.hideModal} service={this.props.service} controls={this.props.controls} serviceId={this.props.serviceId} isUpdate={this.state.isUpdate} data={this.state.mappingRecord} />
-          }
-        </div >
-        <div className="bx--grid">
-          {notif &&
-            <InlineNotification
-              id={Date.now()}
-              hideCloseButton lowContrast
-              title={notif.title || "Notification title"}
-              subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
-              kind={notif.kind || "info"}
-              caption={notif.caption || "Caption"}
-            />
-          }
-          {breadcrumb}
-          {content}
-        </div >
-      </>
+      <div className="bx--grid">
+        {notif &&
+          <InlineNotification
+            id={Date.now()}
+            hideCloseButton lowContrast
+            title={notif.title || "Notification title"}
+            subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
+            kind={notif.kind || "info"}
+            caption={notif.caption || "Caption"}
+          />
+        }
+        {breadcrumb}
+        {content}
+      </div >
     );
   }
 }

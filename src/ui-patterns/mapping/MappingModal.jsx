@@ -10,8 +10,8 @@ class MappingModal extends Component {
             notif: false,
             controlsData: [],
             fields: {
-                control_id: '',
-                service_id: '',
+                control_id: this.props.controlId || '',
+                service_id: this.props.serviceId || '',
                 arch_id: '',
                 compliant: 'UNKNOWN',
                 configuration: '',
@@ -124,7 +124,7 @@ class MappingModal extends Component {
                                                 data-modal-primary-focus
                                                 id="control_id"
                                                 name="control_id"
-                                                disabled={this.props.isUpdate ? true : false}
+                                                disabled={this.props.isUpdate || this.props.controlId ? true : false}
                                                 invalidText="Please Enter The Value"
                                                 onChange={this.handleChange.bind(this, "control_id")}
                                                 value={this.state.fields.control_id}
@@ -147,7 +147,7 @@ class MappingModal extends Component {
                                                 data-modal-primary-focus
                                                 id="service_id"
                                                 name="service_id"
-                                                disabled={this.state.fields.arch_id ? true : false}
+                                                disabled={this.state.fields.arch_id || this.props.serviceId ? true : false}
                                                 invalidText="Please Enter The Value"
                                                 onChange={this.handleChange.bind(this, "service_id")}
                                                 value={this.state.fields.service_id}
