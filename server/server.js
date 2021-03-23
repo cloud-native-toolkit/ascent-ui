@@ -25,9 +25,17 @@ const session = require('express-session')
 const passport = require('passport');
 const WebAppStrategy = require("ibmcloud-appid").WebAppStrategy;
 const CALLBACK_URL = "/ibm/cloud/appid/callback";
-const appidConfig = require("./config/mappings.json");
 const LOGOUT_URL = "/ibm/cloud/appid/logout";
 const logger = log4js.getLogger(appName);
+
+const appidConfig = {
+  client_id: process.env.APPID_CLIENT_ID,
+  secret: process.env.APPID_SECRET,
+  application_url: "http://localhost:3000",
+  APPID_CONFIG: process.env.APPID_CONFIG,
+  port: 3000
+}
+
 const app = express();
 app.use(session({
   secret: appidConfig.secret,
@@ -41,11 +49,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 var appidcfg=JSON.parse(appidConfig.APPID_CONFIG);
 passport.use(new WebAppStrategy({
-tenantId: appidcfg.tenantId,
-clientId: appidConfig.client_id,
-secret: appidConfig.secret,
-oauthServerUrl: appidcfg.oauthServerUrl,
-redirectUri: appidConfig.application_url+CALLBACK_URL
+  tenantId: appidcfg.tenantId,
+  clientId: appidConfig.client_id,
+  secret: appidConfig.secret,
+  oauthServerUrl: appidcfg.oauthServerUrl,
+  redirectUri: appidConfig.application_url+CALLBACK_URL
 }));
 passport.serializeUser(function(user, cb) {
   cb(null, user);
