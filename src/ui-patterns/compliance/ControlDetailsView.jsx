@@ -124,10 +124,10 @@ class ControlDetailsView extends Component {
                   Official NIST description
                 </h3>
                 <br></br>
-                <h4 className="landing-page__subheading">{nistData.title.toLowerCase()}</h4>
+                <h4 className="landing-page__subheading">{nistData.title && nistData.title.toLowerCase()}</h4>
                 <br></br>
-                <p>{nistData.statement.description}</p>
-                {nistData.statement.statement ? <>
+                <p>{nistData.statement && nistData.statement.description}</p>
+                {nistData.statement && nistData.statement.statement ? <>
                       <UnorderedList>
                         {nistData.statement.statement.map((statement) => (
                           <ListItem>
@@ -222,7 +222,7 @@ class ControlDetailsView extends Component {
                 </div>
               </div>;
     }
-    if (nistData.references) {
+    if (nistData.references && nistData.references.reference) {
       references = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
@@ -247,8 +247,7 @@ class ControlDetailsView extends Component {
           {title}
 
           {data.control_id && 
-            <ContentSwitcher 
-              light
+            <ContentSwitcher
               size='xl'
               onChange={(e) => {this.setState({show:e.name})}} >
               <Switch name="fs-cloud-desc" text="Description" />

@@ -62,10 +62,10 @@ class NistDetailsView extends Component {
                     {nistData.number}
                   </h2>
                   <br></br>
-                  <h3 className="landing-page__subheading">{nistData.title.toLowerCase()}</h3>
+                  <h3 className="landing-page__subheading">{nistData.title && nistData.title.toLowerCase()}</h3>
                   <br></br>
-                  <p>{nistData.statement.description}</p>
-                  {nistData.statement.statement ? <>
+                  <p>{nistData.statement && nistData.statement.description}</p>
+                  {nistData.statement && nistData.statement.statement ? <>
                         <UnorderedList>
                           {nistData.statement.statement.map((statement) => (
                             <ListItem>
@@ -159,7 +159,7 @@ class NistDetailsView extends Component {
                   </div>
                 </div>;
       }
-      if (nistData.references) {
+      if (nistData.references && nistData.references.reference) {
         references = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>

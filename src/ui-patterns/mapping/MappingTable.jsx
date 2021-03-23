@@ -58,17 +58,19 @@ class MappingTable extends Component {
       let control_id = "";
       let service_id = "";
       let arch_id = "";
-      row.cells.forEach((cell) => {
-        if (cell.info.header === "control_id") {
-          control_id = cell.value;
-        } else if (cell.info.header === "component_id") {
-          if (cell.value.arch) {
-            arch_id = cell.value.val;
-          } else {
-            service_id = cell.value.val;
+      if (row.cells && row.cells.length) {
+        row.cells.forEach((cell) => {
+          if (cell.info && cell.info.header === "control_id") {
+            control_id = cell.value;
+          } else if (cell.info && cell.info.header === "component_id") {
+            if (cell.value && cell.value.arch) {
+              arch_id = cell.value.val;
+            } else {
+              service_id = cell.value.val;
+            }
           }
-        }
-      });
+        });
+      }
       
       if (service_id) {
         body = {
@@ -245,28 +247,28 @@ class MappingTable extends Component {
                         {row.cells.map((cell) => (
                           <TableCell key={cell.id}>
                             {
-                              cell.info.header === "control_id" ?
+                              cell.info && cell.info.header === "control_id" ?
                                 <Tag type="blue">
                                   <Link to={"/controls/" + cell.value.toLowerCase().replace(' ', '_')} >
                                     {cell.value}
                                   </Link>
                                 </Tag>
                                 :
-                                cell.info.header === "component_id" && cell.value.service ?
+                                cell.info && cell.info.header === "component_id" && cell.value && cell.value.service ?
                                   <Tag type="blue">
                                     <Link to={"/services/" + cell.value.val} >
                                       {cell.value.val}
                                     </Link>
                                   </Tag>
                                   :
-                                  cell.info.header === "component_id" && cell.value.arch ?
+                                  cell.info && cell.info.header === "component_id" && cell.value && cell.value.arch ?
                                     <Tag type="blue">
                                       <Link to={"/bom/" + cell.value.val} >
                                         {cell.value.val}
                                       </Link>
                                     </Tag>
                                     :
-                                    cell.info.header === "scc_goal" ?
+                                    cell.info && cell.info.header === "scc_goal" && cell.value ?
                                       cell.value.split('/').map((goalId) => (
                                         goalId.match(/^\d{7}$/) ?
                                           <>
@@ -293,12 +295,12 @@ class MappingTable extends Component {
                       <TableExpandedRow
                         colSpan={headers.length + 3}
                         className="demo-expanded-td">
-                        {row.cells.map((cell) => (
-                          cell.info.header === "component_id" && cell.value.details.desc ?
+                        {row.cells && row.cells.length && row.cells.map((cell) => (
+                          cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.desc ?
                             <><h6>Description</h6><div>{cell.value.details.desc}</div></>
-                            : cell.info.header === "component_id" && cell.value.details.configuration ?
+                            : cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.configuration ?
                               <><h6>Configuration</h6><div>{cell.value.details.configuration}</div></>
-                              : cell.info.header === "component_id" && cell.value.details.comment ?
+                              : cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.comment ?
                                 <><h6>Comment</h6><div>{cell.value.details.comment}</div></>
                                 :
                                 <></>
