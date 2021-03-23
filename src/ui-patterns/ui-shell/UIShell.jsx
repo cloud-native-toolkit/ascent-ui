@@ -8,12 +8,14 @@ import {
   HeaderName,
   HeaderNavigation,
   HeaderGlobalBar,
+  HeaderMenuItem,
   SkipToContent,
   SideNav,
   SideNavItems,
   SideNavMenu,
   SideNavMenuItem,
-  HeaderContainer
+  HeaderContainer,
+  Link as LinkComponent
 } from 'carbon-components-react/lib/components/UIShell/';
 
 import {
@@ -75,6 +77,7 @@ class UIShell extends Component {
                 <HeaderNavigation aria-label="IBM FS Cloud Architectures">
                 </HeaderNavigation>
                 <HeaderGlobalBar>
+                  <HeaderMenuItem href="/ibm/cloud/appid/logout"><strong>Logout</strong></HeaderMenuItem>
                 </HeaderGlobalBar>
                 <SideNav aria-label="Side navigation" expanded={isSideNavExpanded}>
 
