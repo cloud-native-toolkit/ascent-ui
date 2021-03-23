@@ -9,7 +9,7 @@ export class ServiceData implements ServiceDataApi {
     baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl || '/services';
+        this.baseUrl = baseUrl || '/api/services';
     }
 
     async getServices(): Promise<ServiceDataModel[]> {
