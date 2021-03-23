@@ -29,7 +29,7 @@ const LOGOUT_URL = "/ibm/cloud/appid/logout";
 const logger = log4js.getLogger(appName);
 
 const conf = {
-  application_url: "http://localhost:3000",
+  application_url: process.env.APP_URI,
   appidConfig: JSON.parse(process.env.APPID_CONFIG),
   port: 3000
 }
@@ -82,7 +82,6 @@ require("./routers/index")(app, server);
 const port = process.env.PORT || conf.port;
 server.listen(port, function() {
   logger.info(`Server listening on http://localhost:${port}`);
-  console.log(`Server listening on http://localhost:${port}`);
 });
 
 app.use(function(req, res, next) {
