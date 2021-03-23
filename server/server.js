@@ -28,17 +28,15 @@ const CALLBACK_URL = "/ibm/cloud/appid/callback";
 const LOGOUT_URL = "/ibm/cloud/appid/logout";
 const logger = log4js.getLogger(appName);
 
-const appidConfig = {
-  client_id: process.env.APPID_CLIENT_ID,
-  secret: process.env.APPID_SECRET,
+const conf = {
   application_url: "http://localhost:3000",
-  APPID_CONFIG: process.env.APPID_CONFIG,
+  appidConfig: JSON.parse(process.env.APPID_CONFIG),
   port: 3000
 }
 
 const app = express();
 app.use(session({
-  secret: appidConfig.secret,
+  secret: conf.appidConfig.secret,
   resave: true,
   saveUninitialized: true
 }));
@@ -47,13 +45,12 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-var appidcfg=JSON.parse(appidConfig.APPID_CONFIG);
 passport.use(new WebAppStrategy({
-  tenantId: appidcfg.tenantId,
-  clientId: appidConfig.client_id,
-  secret: appidConfig.secret,
-  oauthServerUrl: appidcfg.oauthServerUrl,
-  redirectUri: appidConfig.application_url+CALLBACK_URL
+  tenantId: conf.appidConfig.tenantId,
+  clientId: conf.appidConfig.clientId,
+  secret: conf.appidConfig.secret,
+  oauthServerUrl: conf.appidConfig.oauthServerUrl,
+  redirectUri: conf.application_url+CALLBACK_URL
 }));
 passport.serializeUser(function(user, cb) {
   cb(null, user);
@@ -82,7 +79,7 @@ require("./routers/index")(app, server);
 
 // Add your code here
 
-const port = process.env.PORT || appidConfig.port;
+const port = process.env.PORT || conf.port;
 server.listen(port, function() {
   logger.info(`Server listening on http://localhost:${port}`);
   console.log(`Server listening on http://localhost:${port}`);

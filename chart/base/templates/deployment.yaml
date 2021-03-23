@@ -57,6 +57,11 @@ spec:
           env:
             - name: INGRESS_HOST
               value: ""
+            - name: APPID_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: binding-front-office-authentication-dev
+                  key: binding
             - name: PROTOCOLS
               value: ""
             - name: LOG_LEVEL
