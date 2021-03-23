@@ -72,7 +72,7 @@ class NistView extends Component {
                     <div className="bx--col-lg-16">
                         <br></br>
                         <h2 className="landing-page__subheading">
-                            Nist
+                            NIST
                         </h2>
                         <br></br>
                         <p>
