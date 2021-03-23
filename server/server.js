@@ -25,11 +25,18 @@ const session = require('express-session')
 const passport = require('passport');
 const WebAppStrategy = require("ibmcloud-appid").WebAppStrategy;
 const CALLBACK_URL = "/ibm/cloud/appid/callback";
-const appidConfig = require("./config/mappings.json");
+const LOGOUT_URL = "/ibm/cloud/appid/logout";
 const logger = log4js.getLogger(appName);
+
+const conf = {
+  application_url: process.env.APP_URI,
+  appidConfig: JSON.parse(process.env.APPID_CONFIG),
+  port: 3000
+}
+
 const app = express();
 app.use(session({
-  secret: appidConfig.secret,
+  secret: conf.appidConfig.secret,
   resave: true,
   saveUninitialized: true
 }));
@@ -38,13 +45,12 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-var appidcfg=JSON.parse(appidConfig.APPID_CONFIG);
 passport.use(new WebAppStrategy({
-tenantId: appidcfg.tenantId,
-clientId: appidConfig.client_id,
-secret: appidConfig.secret,
-oauthServerUrl: appidcfg.oauthServerUrl,
-redirectUri: appidConfig.application_url+CALLBACK_URL
+  tenantId: conf.appidConfig.tenantId,
+  clientId: conf.appidConfig.clientId,
+  secret: conf.appidConfig.secret,
+  oauthServerUrl: conf.appidConfig.oauthServerUrl,
+  redirectUri: conf.application_url+CALLBACK_URL
 }));
 passport.serializeUser(function(user, cb) {
   cb(null, user);
@@ -53,6 +59,12 @@ passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
   });
 app.get(CALLBACK_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME));
+app.get(LOGOUT_URL, function(req, res, next) {
+  WebAppStrategy.logout(req);
+  // If you chose to store your refresh-token, don't forgot to clear it also in logout:
+  res.clearCookie("refreshToken");
+  res.redirect("/");
+});
 app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
 app.use(express.static(path.join(__dirname, "../build")));
 
@@ -67,10 +79,9 @@ require("./routers/index")(app, server);
 
 // Add your code here
 
-const port = process.env.PORT || appidConfig.port;
+const port = process.env.PORT || conf.port;
 server.listen(port, function() {
   logger.info(`Server listening on http://localhost:${port}`);
-  console.log(`Server listening on http://localhost:${port}`);
 });
 
 app.use(function(req, res, next) {

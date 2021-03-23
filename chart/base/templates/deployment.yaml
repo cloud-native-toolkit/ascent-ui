@@ -57,6 +57,16 @@ spec:
           env:
             - name: INGRESS_HOST
               value: ""
+            - name: APPID_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: binding-dev-mapper
+                  key: binding
+            - name: APP_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: dev-mapper-ui
+                  key: route
             - name: PROTOCOLS
               value: ""
             - name: LOG_LEVEL
