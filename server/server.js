@@ -26,6 +26,7 @@ const passport = require('passport');
 const WebAppStrategy = require("ibmcloud-appid").WebAppStrategy;
 const CALLBACK_URL = "/ibm/cloud/appid/callback";
 const appidConfig = require("./config/mappings.json");
+const LOGOUT_URL = "/ibm/cloud/appid/logout";
 const logger = log4js.getLogger(appName);
 const app = express();
 app.use(session({
@@ -53,6 +54,12 @@ passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
   });
 app.get(CALLBACK_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME));
+app.get(LOGOUT_URL, function(req, res, next) {
+  WebAppStrategy.logout(req);
+  // If you chose to store your refresh-token, don't forgot to clear it also in logout:
+  res.clearCookie("refreshToken");
+  res.redirect("/");
+});
 app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
 app.use(express.static(path.join(__dirname, "../build")));
 
