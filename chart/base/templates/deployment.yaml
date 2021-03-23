@@ -60,7 +60,7 @@ spec:
             - name: APPID_CONFIG
               valueFrom:
                 secretKeyRef:
-                  name: binding-front-office-authentication-dev
+                  name: binding-dev-mapper
                   key: binding
             - name: PROTOCOLS
               value: ""
