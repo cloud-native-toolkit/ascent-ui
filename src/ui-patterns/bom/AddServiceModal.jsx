@@ -41,7 +41,6 @@ class ServiceModal extends Component {
             fields[field] = e.target.value;
         }
         this.setState({ fields });
-
     }
     handleSubmit = (event) => {
         event.preventDefault();
