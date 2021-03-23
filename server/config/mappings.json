@@ -1,1 +1,7 @@
-{}
+{
+    "client_id": "29ea7438-8929-4b4d-a294-4b9d5714a8fc",
+    "secret": "YmFlNTRiMzItZDBiYy00YmMzLTljYTMtMzk0ZTU3ZTJjMzEw",
+    "application_url":"http://localhost:3000",
+    "APPID_CONFIG": "{\"tenantId\":\"f36a5009-fd2a-43dd-beae-f6e9357b4af7\",\"oauthServerUrl\":\"https://eu-de.appid.cloud.ibm.com/oauth/v4/f36a5009-fd2a-43dd-beae-f6e9357b4af7\"}",
+    "port": 3000
+}
