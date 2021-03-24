@@ -48,7 +48,7 @@ oc pipeline
 
 Ensure you have the Cloud-Native Toolkit installed in your cluster to make this method of pipeline registry quick and easy [Cloud-Native Toolkit](https://cloudnativetoolkit.dev/)
 
-#### Native Application Development
+### Native Application Development
 
 Install the latest [Node.js](https://nodejs.org/en/download/) 6+ LTS version.
 
@@ -56,8 +56,6 @@ Once the Node toolchain has been installed, you can download the project depende
 
 ```bash
 npm install
-npm run build
-npm run start
 ```
 
 Modern web applications require a compilation step to prepare your ES2015 JavaScript or Sass stylesheets into compressed Javascript ready for a browser. Webpack is used for bundling your JavaScript sources and styles into a `bundle.js` file that your `index.html` file can import. 
@@ -75,11 +73,23 @@ Gulp is a task runner for JavaScript. You can run the above Webpack commands in 
 gulp
 ```
 
+### Run the application locally
+
+***Production like build***
+
+First you need to specify the configuration environment variables for AppId:
+```bash
+export APPID_CONFIG='{"apikey":...,"version":4}'
+export APP_URI="http://localhost:3000"
+```
+
 To run your application locally:
 ```bash
+npm run build
 npm run start
 ```
 
+***Local development***
 
 To run your application dev mode:
 ```bash
