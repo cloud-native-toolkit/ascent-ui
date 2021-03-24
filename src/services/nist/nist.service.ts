@@ -8,7 +8,7 @@ export class NistData implements NistDataApi {
     baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl || '/api/nist/';
+        this.baseUrl = baseUrl || '/nist/';
     }
 
     async getNist(): Promise<NistDataModel[]> {

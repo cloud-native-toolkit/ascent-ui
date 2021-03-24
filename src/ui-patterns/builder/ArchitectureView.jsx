@@ -26,7 +26,7 @@ class ArchitectureView extends Component {
     // Load the Data into the Project
     componentDidMount() {
 
-        fetch("/api/architectures")
+        fetch("/architectures")
             .then(response => response.json())
             .then(data => {
                 console.log('architectures', data);
@@ -41,7 +41,7 @@ class ArchitectureView extends Component {
 
     getImage(folder, image) {
 
-        const refArchLink  =  "/api/images/"
+        const refArchLink  =  "/images/"
         return refArchLink+folder +"/"+ image;
     }
 
