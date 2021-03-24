@@ -14,9 +14,11 @@ import {
     Delete16 as Delete,
     Save16 as Save,
     Download16 as Download,
-    ViewFilled16 as View
+    ViewFilled16 as View,
+    Add16
 } from '@carbon/icons-react';
 import {
+    ComposedModal, ModalHeader, ModalBody,
     DataTable, DataTableSkeleton, TableContainer, Table, TableSelectAll, TableBatchAction, TableSelectRow,
     TableBatchActions, TableToolbar, TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
     OverflowMenu, OverflowMenuItem
@@ -35,6 +37,7 @@ class BillofMaterialsView extends Component {
             data: [],
             headersData: bomHeader,
             show: false,
+            showDiagram: false,
             isUpdate: false,
             serviceRecord: [],
             architecture: {},
@@ -44,6 +47,8 @@ class BillofMaterialsView extends Component {
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
+        this.showDiagram = this.showDiagram.bind(this);
+        this.hideDiagram = this.hideDiagram.bind(this);
 
     }
     async componentDidMount() {
@@ -163,6 +168,16 @@ class BillofMaterialsView extends Component {
     }
 
     /********Modal Form Code END*******************/
+
+    /*********Modal From Code Start*****************/
+
+    showDiagram = () => {
+        this.setState({ showDiagram: true });
+    };
+
+    hideDiagram = () => {
+        this.setState({ showDiagram: false });
+    };
     render() {
 
         const data = this.state.data;
@@ -173,6 +188,7 @@ class BillofMaterialsView extends Component {
             title = this.state.architecture.name
         }
         let showModal = this.state.show;
+        let showDiagram = this.state.showDiagram;
         let table;
         if (data.length === 0) {
             table = <DataTableSkeleton
@@ -233,13 +249,14 @@ class BillofMaterialsView extends Component {
 
                                                 <TableToolbarSearch onChange={onInputChange} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
 
-                                                <TableToolbarMenu
-                                                    tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}>
-                                                    <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)}>
-                                                        <Download /> Terraform
+                                                <TableToolbarMenu>
+                                                    <TableToolbarAction style={{display: 'flex'}} onClick={this.showDiagram}>
+                                                        <div>Diagram</div>
+                                                        <View style={{ marginLeft: "auto" }}/>
                                                     </TableToolbarAction>
-                                                    <TableToolbarAction onClick={this.viewDiagram}>
-                                                        <View /> Diagram
+                                                    <TableToolbarAction style={{display: 'flex'}} href={'/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_drawio} download>
+                                                        <div style={{flex: 'left'}}>Diagram .drawio</div>
+                                                        <Download style={{ marginLeft: "auto" }}/>
                                                     </TableToolbarAction>
                                                 </TableToolbarMenu>
 
@@ -248,6 +265,7 @@ class BillofMaterialsView extends Component {
                                                     tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
                                                     size="small"
                                                     kind="primary"
+                                                    renderIcon={Add16} 
                                                     onClick={this.showModal}
                                                 >
                                                     Add Service
@@ -310,6 +328,13 @@ class BillofMaterialsView extends Component {
             <><div>
                 {showModal &&
                     <ServiceModal archId={archid} show={this.state.show} handleClose={this.hideModal} service={this.props.bomService} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} services={this.state.serviceNames} />}
+                {showDiagram && 
+                    <ComposedModal
+                        open={showDiagram}
+                        onClose={this.hideDiagram}>
+                        <ModalHeader title={this.state.architecture.name} />
+                        <ModalBody><img src={'/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram"/></ModalBody>
+                    </ComposedModal>}
             </div>
                 <div className="bx--grid">
                     {this.breadCrumbs(title)}
