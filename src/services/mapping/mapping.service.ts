@@ -8,7 +8,7 @@ export class MappingData implements MappingDataApi {
     baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl || '/api/control-mapping';
+        this.baseUrl = baseUrl || '/control-mapping';
     }
 
     async getMappings(filter: any): Promise<ControlMappingModel[]> {

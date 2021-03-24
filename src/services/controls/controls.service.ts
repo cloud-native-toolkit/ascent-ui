@@ -8,7 +8,7 @@ export class ControlsData implements ControlsDataApi {
     baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl || '/api/controls/';
+        this.baseUrl = baseUrl || '/controls/';
     }
 
     async getControls(): Promise<ControlsDataModel[]> {

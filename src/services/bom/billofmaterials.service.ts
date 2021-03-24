@@ -7,8 +7,8 @@ export class BillofMaterialsService implements BillofMaterialsApi {
     baseUrl: string;
     servicebaseUrl: string;
     constructor(baseUrl: string, servicebaseUrl: string) {
-        this.baseUrl = baseUrl || '/api/architectures/';
-        this.servicebaseUrl = servicebaseUrl || '/api/services';
+        this.baseUrl = baseUrl || '/architectures/';
+        this.servicebaseUrl = servicebaseUrl || '/services';
     }
 
     async getServices(): Promise<ServiceDataModel[]> {
@@ -67,5 +67,7 @@ export class BillofMaterialsService implements BillofMaterialsApi {
                 return res.body;
             });
     }
+
+
 
 }

@@ -8,7 +8,7 @@ export class ArchitectureService implements ArchitectureDataApi {
     baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl || '/api/architectures/';
+        this.baseUrl = baseUrl || '/architectures/';
     }
 
     async getArchitectures(): Promise<ArchiectureDataModel[]> {
