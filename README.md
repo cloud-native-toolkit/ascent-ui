@@ -73,7 +73,9 @@ Gulp is a task runner for JavaScript. You can run the above Webpack commands in 
 gulp
 ```
 
-### Run the application
+### Run the application locally
+
+***Production like build***
 
 First you need to specify the configuration environment variables for AppId:
 ```bash
@@ -86,6 +88,8 @@ To run your application locally:
 npm run build
 npm run start
 ```
+
+***Local development***
 
 To run your application dev mode:
 ```bash
