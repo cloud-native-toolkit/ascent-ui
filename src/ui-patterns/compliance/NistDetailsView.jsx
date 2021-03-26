@@ -9,6 +9,9 @@ import {
   SearchSkeleton
 } from 'carbon-components-react';
 import {
+  Launch16
+} from '@carbon/icons-react';
+import {
   Link
 } from "react-router-dom";
 
@@ -170,6 +173,7 @@ class NistDetailsView extends Component {
                       <ListItem>
                         <a href={ref.item["@href"]} target="_blank">
                           {ref.item["#text"]}
+                          <Launch16 style={{"margin-left": "5px"}}/>
                         </a>
                       </ListItem>
                     ))}

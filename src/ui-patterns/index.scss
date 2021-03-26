@@ -6,3 +6,13 @@ div.attribute {
   padding-top: 4px;
   padding-bottom: 4px;
 }
+
+// Sliding pane below header
+.sliding-pane {
+  padding-top: 48px;
+}
+
+// Table rows clickable on hover -> pointer cursor
+tr td.clickable:hover {
+  cursor: pointer;
+}

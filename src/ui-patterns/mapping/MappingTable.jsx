@@ -29,7 +29,8 @@ import {
 } from "react-router-dom";
 import {
   Delete16 as Delete,
-  Add16
+  Add16,
+  Launch16
 } from '@carbon/icons-react';
 import MappingModal from "./MappingModal"
 import ValidateModal from "../ValidateModal"
@@ -272,9 +273,10 @@ class MappingTable extends Component {
                                       cell.value.split('/').map((goalId) => (
                                         goalId.match(/^\d{7}$/) ?
                                           <>
-                                            <Tag type="blue">
+                                            <Tag type="blue" renderIcon={Launch16}>
                                               <a href={"https://cloud.ibm.com/security-compliance/goals/" + goalId} target="_blank" >
                                                 {goalId}
+                                                <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
                                               </a>
                                             </Tag>
                                           </>

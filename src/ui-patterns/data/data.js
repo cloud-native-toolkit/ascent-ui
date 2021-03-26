@@ -60,37 +60,45 @@ export const bomHeader = [
         header: 'Description',
     },
     {
-        key: 'deployment_method',
-        header: 'Dep Method',
-    },
-    {
-        key: 'compatibility',
-        header: 'Compatibility',
+        key: 'grouping',
+        header: 'Grouping',
     },
     {
         key: 'provision',
         header: 'Provision',
     },
     {
-        key: 'automation',
-        header: 'Automation',
+        key: 'automation_id',
+        header: 'Automation ID',
     },
-    {
-        key: 'hybrid_option',
-        header: 'Hybrid Option',
-    },
-    {
-        key: 'arch_id',
-        header: 'Arch Id',
-    },
-    {
-        key: 'service_id',
-        header: 'Service Id',
-    },
-    {
-        key: 'availibity',
-        header: 'Availibity',
-    }
+    // {
+    //     key: 'deployment_method',
+    //     header: 'Dep Method',
+    // },
+    // {
+    //     key: 'compatibility',
+    //     header: 'Compatibility',
+    // },
+    // {
+    //     key: 'provision',
+    //     header: 'Provision',
+    // },
+    // {
+    //     key: 'automation',
+    //     header: 'Automation',
+    // },
+    // {
+    //     key: 'hybrid_option',
+    //     header: 'Hybrid Option',
+    // },
+    // {
+    //     key: 'arch_id',
+    //     header: 'Arch Id',
+    // },
+    // {
+    //     key: 'availibity',
+    //     header: 'Availibity',
+    // }
 ];
 
 export const ctrlsHeaders = [

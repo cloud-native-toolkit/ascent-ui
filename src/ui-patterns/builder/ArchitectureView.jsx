@@ -57,7 +57,6 @@ class ArchitectureView extends Component {
 
             var link = "/bom/"+arch.arch_id;
 
-            console.log(link)
             archTiles.push(
                 <div className="bx--col-md-4 bx--col-lg-4" key={arch.arch_id}>
                     <ArticleCard
@@ -68,7 +67,6 @@ class ArchitectureView extends Component {
                         readTime="Terraform | FS Ready | Cloud-Native"
                         color="dark">
 
-                        {console.log(link)}
                         <Link to={link}>
 
                         <img

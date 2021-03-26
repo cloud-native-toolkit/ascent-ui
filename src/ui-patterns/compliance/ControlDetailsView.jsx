@@ -14,6 +14,9 @@ import {
 import {
   Link
 } from "react-router-dom";
+import {
+  Launch16
+} from '@carbon/icons-react';
 import MappingTable from "../mapping/MappingTable"
 import { mappingHeaders as headers } from '../data/data';
 
@@ -233,6 +236,7 @@ class ControlDetailsView extends Component {
                     <ListItem>
                       <a href={ref.item["@href"]} target="_blank">
                         {ref.item["#text"]}
+                        <Launch16 style={{"margin-left": "5px"}}/>
                       </a>
                     </ListItem>
                   ))}
