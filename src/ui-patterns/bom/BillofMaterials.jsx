@@ -134,6 +134,7 @@ class BillofMaterialsView extends Component {
         var filename = archname.replace(/[^a-z0-9_\-]/gi, '-').replace(/_{2,}/g, '_').toLowerCase()
         var url = "/automation/" + archid;
         filename = filename + "-automation.zip";
+        console.log(url, filename)
         fetch(url)
             .then(response => {
                 response.blob().then(blob => {
@@ -452,28 +453,24 @@ class BillofMaterialsView extends Component {
                                                     <Tag type="blue">{this.state.dataDetails.catalog.provider.name}</Tag>
                                                 </p>
                                             </div>
+                                            <br />
                                         </>
                                     }
-                                    <br />
                                     {this.state.dataDetails.service &&
                                         <>
-                                            {this.state.dataDetails.service.grouping ? <div><p><strong>Group: </strong> <Tag type="blue">{this.state.dataDetails.service.grouping}</Tag></p></div> : <></>}
-                                            <br />
-                                            {this.state.dataDetails.service.deployment_method ? <div><p><strong>Deployment Method: </strong> <Tag type="blue">{this.state.dataDetails.service.deployment_method}</Tag></p></div> : <></>}
-                                            <br />
-                                            {this.state.dataDetails.service.provision ? <div><p><strong>Provision: </strong> <Tag type="blue">{this.state.dataDetails.service.provision}</Tag></p></div> : <></>}
-                                            <br />
+                                            {this.state.dataDetails.service.grouping ? <div><p><strong>Group: </strong> <Tag type="blue">{this.state.dataDetails.service.grouping}</Tag></p><br /></div> : <></>}
+                                            {this.state.dataDetails.service.deployment_method ? <div><p><strong>Deployment Method: </strong> <Tag type="blue">{this.state.dataDetails.service.deployment_method}</Tag></p><br /></div> : <></>}
+                                            {this.state.dataDetails.service.provision ? <div><p><strong>Provision: </strong> <Tag type="blue">{this.state.dataDetails.service.provision}</Tag></p><br /></div> : <></>}
                                             {
                                                 this.state.dataDetails.service.cloud_automation_id ? 
-                                                    <div><p><strong>Cloud Automation id: </strong> <Tag type="blue">{this.state.dataDetails.service.cloud_automation_id}</Tag></p></div>
+                                                    <div><p><strong>Cloud Automation id: </strong> <Tag type="blue">{this.state.dataDetails.service.cloud_automation_id}</Tag></p><br /></div>
                                                 : this.state.dataDetails.service.hybrid_automation_id ?
-                                                    <div><p><strong>Hybrid Automation id: </strong> <Tag type="blue">{this.state.dataDetails.service.hybrid_automation_id}</Tag></p></div>
+                                                    <div><p><strong>Hybrid Automation id: </strong> <Tag type="blue">{this.state.dataDetails.service.hybrid_automation_id}</Tag></p><br /></div>
                                                 :
-                                                    <div><p><strong>Automation id: </strong> <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag></p></div>
+                                                    <div><p><strong>Automation id: </strong> <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag></p><br /></div>
                                             }
                                         </>
                                     }
-                                    <br />
                                     {this.state.dataDetails.catalog && this.state.dataDetails.catalog.geo_tags && this.state.dataDetails.catalog.geo_tags.length > 0 &&
                                         <>
                                             <div>
@@ -483,10 +480,10 @@ class BillofMaterialsView extends Component {
                                                         <Tag type="blue">{geo}</Tag>
                                                     ))}
                                                 </p>
+                                                <br />
                                             </div>
                                         </>
                                     }
-                                    <br />
                                     {this.state.dataDetails.service && this.state.dataDetails.service.controls && this.state.dataDetails.service.controls.length > 0 &&
                                         <>
                                             <div>
@@ -500,10 +497,10 @@ class BillofMaterialsView extends Component {
                                                         </Tag>
                                                     ))}
                                                 </p>
+                                                <br />
                                             </div>
                                         </>
                                     }
-                                    <br />
                                     {this.state.dataDetails.catalog && this.state.dataDetails.catalog.metadata && this.state.dataDetails.catalog.metadata.ui && this.state.dataDetails.catalog.metadata.ui.urls &&
                                         <>
                                             <div>
