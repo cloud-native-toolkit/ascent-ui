@@ -76,20 +76,21 @@ class BillofMaterialsView extends Component {
 
     openPane = async (bomId) => {
         if (bomId) {
+            this.setState({
+                isPaneOpen: true,
+                dataDetails: false
+            });
             this.props.bomService.getBomDetails(bomId).then((jsonData) => {
                 console.log(jsonData);
                 this.setState({
                     dataDetails: jsonData
                 });
             });
-            this.setState({
-                isPaneOpen: true
-            });
         }
     };
 
     hidePane = () => {
-        this.setState({ isPaneOpen: false, dataDetails: false });
+        this.setState({ isPaneOpen: false });
     };
 
     bcprops = () => ({
@@ -438,7 +439,7 @@ class BillofMaterialsView extends Component {
                                     <br />
                                     {this.state.dataDetails.catalog && this.state.dataDetails.catalog.provider &&
                                         <>
-                                            <div class="attribute">
+                                            <div >
                                                 <p>
                                                     <strong>Provider: </strong>
                                                     <Tag type="blue">{this.state.dataDetails.catalog.provider.name}</Tag>
@@ -446,24 +447,29 @@ class BillofMaterialsView extends Component {
                                             </div>
                                         </>
                                     }
+                                    <br />
                                     {this.state.dataDetails.service &&
                                         <>
-                                            {this.state.dataDetails.service.grouping ? <div class="attribute"><p><span class="name">Group: </span> <Tag type="blue">{this.state.dataDetails.service.grouping}</Tag></p></div> : <></>}
-                                            {this.state.dataDetails.service.deployment_method ? <div class="attribute"><p><span class="name">Deployment Method: </span> <Tag type="blue">{this.state.dataDetails.service.deployment_method}</Tag></p></div> : <></>}
-                                            {this.state.dataDetails.service.provision ? <div class="attribute"><p><span class="name">Provision: </span> <Tag type="blue">{this.state.dataDetails.service.provision}</Tag></p></div> : <></>}
+                                            {this.state.dataDetails.service.grouping ? <div><p><strong>Group: </strong> <Tag type="blue">{this.state.dataDetails.service.grouping}</Tag></p></div> : <></>}
+                                            <br />
+                                            {this.state.dataDetails.service.deployment_method ? <div><p><strong>Deployment Method: </strong> <Tag type="blue">{this.state.dataDetails.service.deployment_method}</Tag></p></div> : <></>}
+                                            <br />
+                                            {this.state.dataDetails.service.provision ? <div><p><strong>Provision: </strong> <Tag type="blue">{this.state.dataDetails.service.provision}</Tag></p></div> : <></>}
+                                            <br />
                                             {
                                                 this.state.dataDetails.service.cloud_automation_id ? 
-                                                    <div class="attribute"><p><span class="name">Cloud Automation id: </span> <Tag type="blue">{this.state.dataDetails.service.cloud_automation_id}</Tag></p></div>
+                                                    <div><p><strong>Cloud Automation id: </strong> <Tag type="blue">{this.state.dataDetails.service.cloud_automation_id}</Tag></p></div>
                                                 : this.state.dataDetails.service.hybrid_automation_id ?
-                                                    <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{this.state.dataDetails.service.hybrid_automation_id}</Tag></p></div>
+                                                    <div><p><strong>Hybrid Automation id: </strong> <Tag type="blue">{this.state.dataDetails.service.hybrid_automation_id}</Tag></p></div>
                                                 :
-                                                    <div class="attribute"><p><span class="name">Automation id: </span> <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag></p></div>
+                                                    <div><p><strong>Automation id: </strong> <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag></p></div>
                                             }
                                         </>
                                     }
+                                    <br />
                                     {this.state.dataDetails.catalog && this.state.dataDetails.catalog.geo_tags && this.state.dataDetails.catalog.geo_tags.length > 0 &&
                                         <>
-                                            <div class="attribute">
+                                            <div>
                                                 <p>
                                                     <strong>Geos: </strong>
                                                     {this.state.dataDetails.catalog.geo_tags.map((geo) => (
@@ -473,21 +479,27 @@ class BillofMaterialsView extends Component {
                                             </div>
                                         </>
                                     }
+                                    <br />
                                     {this.state.dataDetails.service && this.state.dataDetails.service.controls && this.state.dataDetails.service.controls.length > 0 &&
                                         <>
-                                            <div class="attribute">
+                                            <div>
                                                 <p>
                                                     <strong>Impacting controls: </strong>
                                                     {this.state.dataDetails.service.controls.map((control) => (
-                                                        <Tag type="blue">{control.control_id}</Tag>
+                                                        <Tag type="blue">
+                                                            <Link to={"/controls/" + control.control_id.toLowerCase().replace(' ', '_')} >
+                                                                {control.control_id}
+                                                            </Link>
+                                                        </Tag>
                                                     ))}
                                                 </p>
                                             </div>
                                         </>
                                     }
+                                    <br />
                                     {this.state.dataDetails.catalog && this.state.dataDetails.catalog.metadata && this.state.dataDetails.catalog.metadata.ui && this.state.dataDetails.catalog.metadata.ui.urls &&
                                         <>
-                                            <div class="attribute">
+                                            <div>
                                                 <p>
                                                     <strong>Links: </strong>
                                                     <UnorderedList nested>
