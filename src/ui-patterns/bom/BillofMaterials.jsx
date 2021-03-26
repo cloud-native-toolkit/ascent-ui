@@ -60,11 +60,20 @@ class BillofMaterialsView extends Component {
     }
     async componentDidMount() {
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
-        const jsonData = await this.props.bomService.getBOM(this.props.archId);
+        const jsonData = await this.props.bomService.getBOM(this.props.archId, {"include":["service"]});
+        // Reformat data to augment BOM details with service details
+        for (let index = 0; index < jsonData.length; index++) {
+            let row = jsonData[index];
+            row.ibm_service = {
+                ibm_service: row.ibm_service || row.service_id,
+                service_id: row.service_id
+            };
+            row.automation_id = (row.service && row.service.cloud_automation_id) || '';
+            row.provision = (row.service && row.service.provision) || '';
+            row.grouping = (row.service && row.service.grouping) || '';
+        }
         const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
         let service_list = await this.props.bomService.getServices();
-
-
         this.setState({
             archid: this.props.archId,
             data: bomDetails,
@@ -206,10 +215,6 @@ class BillofMaterialsView extends Component {
     };
     render() {
         let data = this.state.data;
-        for (let index = 0; index < data.length; index++) {
-            let row = data[index];
-            row.ibm_service = row.ibm_service || row.service_id;
-        }
         const headers = this.state.headersData;
         const archid = this.state.archid;
         let title = "";
@@ -322,14 +327,16 @@ class BillofMaterialsView extends Component {
                                                 {row.cells.map((cell) => (
                                                     <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
                                                         {
-                                                            cell.info && cell.info.header === "service_id"?
-                                                            <Tag type="blue">
-                                                                <Link to={"/services/" + cell.value} >
-                                                                {cell.value}
-                                                                </Link>
-                                                            </Tag> 
+                                                            cell.info && cell.info.header === "ibm_service"?
+                                                                <Tag type="blue">
+                                                                    <Link to={"/services/" + cell.value.service_id} >
+                                                                    {cell.value.ibm_service}
+                                                                    </Link>
+                                                                </Tag> 
+                                                            : cell.info && cell.info.header === "automation_id" && !cell.value?
+                                                                <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag>
                                                             :
-                                                            cell.value
+                                                                cell.value
                                                         }
                                                     </TableCell>
                                                 ))}

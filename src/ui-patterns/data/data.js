@@ -56,12 +56,20 @@ export const bomHeader = [
         header: 'IBM Service',
     },
     {
-        key: 'service_id',
-        header: 'Service Id',
-    },
-    {
         key: 'desc',
         header: 'Description',
+    },
+    {
+        key: 'grouping',
+        header: 'Grouping',
+    },
+    {
+        key: 'provision',
+        header: 'Provision',
+    },
+    {
+        key: 'automation_id',
+        header: 'Automation ID',
     },
     // {
     //     key: 'deployment_method',
