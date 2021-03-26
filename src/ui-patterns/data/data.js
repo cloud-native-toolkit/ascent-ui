@@ -56,41 +56,41 @@ export const bomHeader = [
         header: 'IBM Service',
     },
     {
-        key: 'desc',
-        header: 'Description',
-    },
-    {
-        key: 'deployment_method',
-        header: 'Dep Method',
-    },
-    {
-        key: 'compatibility',
-        header: 'Compatibility',
-    },
-    {
-        key: 'provision',
-        header: 'Provision',
-    },
-    {
-        key: 'automation',
-        header: 'Automation',
-    },
-    {
-        key: 'hybrid_option',
-        header: 'Hybrid Option',
-    },
-    {
-        key: 'arch_id',
-        header: 'Arch Id',
-    },
-    {
         key: 'service_id',
         header: 'Service Id',
     },
     {
-        key: 'availibity',
-        header: 'Availibity',
-    }
+        key: 'desc',
+        header: 'Description',
+    },
+    // {
+    //     key: 'deployment_method',
+    //     header: 'Dep Method',
+    // },
+    // {
+    //     key: 'compatibility',
+    //     header: 'Compatibility',
+    // },
+    // {
+    //     key: 'provision',
+    //     header: 'Provision',
+    // },
+    // {
+    //     key: 'automation',
+    //     header: 'Automation',
+    // },
+    // {
+    //     key: 'hybrid_option',
+    //     header: 'Hybrid Option',
+    // },
+    // {
+    //     key: 'arch_id',
+    //     header: 'Arch Id',
+    // },
+    // {
+    //     key: 'availibity',
+    //     header: 'Availibity',
+    // }
 ];
 
 export const ctrlsHeaders = [

@@ -48,6 +48,24 @@ export class BillofMaterialsService implements BillofMaterialsApi {
             });
     }
 
+    async getBomComposite(archiId: string): Promise<BillofMaterialsDataModel[]> {
+        return superagent
+            .get('/boms/services/' + archiId)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body || [];
+            });
+    }
+
+    async getBomDetails(bomId: string): Promise<BillofMaterialsDataModel> {
+        return superagent
+            .get(`/boms/${bomId}/composite`)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body || {};
+            });
+    }
+
     async doUpdateBOM(archId: string, service_details: any): Promise<BillofMaterialsDataModel[]> {
         return superagent
             .patch(this.baseUrl + archId + '/boms')
