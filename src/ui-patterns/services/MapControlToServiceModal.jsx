@@ -177,7 +177,7 @@ class MapControlToServiceModal extends Component {
                                     onChange={this.handleChange.bind(this, "scc_goal")}
                                     invalidText="A valid value is required"
                                     labelText="SCC Goal"
-                                    placeholder="e.g. 3000106, 3000114, etc."
+                                    placeholder="e.g. 3000106,3000114,etc."
                                     rows={1}
                                     style={{ marginBottom: '1rem' }}
                                 />

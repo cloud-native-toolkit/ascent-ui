@@ -58,7 +58,7 @@ class BillofMaterialsView extends Component {
         this.openPane = this.openPane.bind(this);
         this.hidePane = this.hidePane.bind(this);
     }
-    async componentDidMount() {
+    async loadTable() {
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
         const jsonData = await this.props.bomService.getBOM(this.props.archId, {"include":["service"]});
         // Reformat data to augment BOM details with service details
@@ -82,6 +82,9 @@ class BillofMaterialsView extends Component {
             serviceNames: service_list
         });
     }
+    async componentDidMount() {
+        await this.loadTable();
+    }
 
     openPane = async (bomId) => {
         if (bomId) {
@@ -90,7 +93,6 @@ class BillofMaterialsView extends Component {
                 dataDetails: false
             });
             this.props.bomService.getBomDetails(bomId).then((jsonData) => {
-                console.log(jsonData);
                 this.setState({
                     dataDetails: jsonData
                 });
@@ -184,14 +186,10 @@ class BillofMaterialsView extends Component {
     };
 
     hideModal = () => {
-        this.props.bomService.getBOM(this.props.archId).then(response => {
-            let serviceDetails = JSON.parse(JSON.stringify(response).replace(/\"_id\":/g, "\"id\":"));
-            this.setState({
-                data: serviceDetails,
-                show: false
-            });
-        })
-
+        this.setState({
+            show: false
+        });
+        this.loadTable();
     };
     doUpdateService(index) {
         console.log(this.state.data[index]);

@@ -8,13 +8,13 @@ class ValidateModal extends Component {
             <div className="bx--grid">
                 <div className="bx--row">
 
-                <Modal 
+                <Modal
+                    danger={this.props.danger || false}
                     open={this.props.show}
                     modalHeading={this.props.heading || "Validate"}
-                    modalLabel={this.props.label || "Validate"}
-                    primaryButtonText="Yes"
+                    primaryButtonText={this.props.submitText || "Yes"}
                     secondaryButtonText="Cancel"
-                    onClose={this.props.onClose}
+                    onRequestClose={this.props.onClose}
                     onRequestSubmit={this.props.onRequestSubmit}
                     onSecondarySubmit={this.props.onSecondarySubmit}>
                     <p style={{ marginBottom: '1rem' }}>

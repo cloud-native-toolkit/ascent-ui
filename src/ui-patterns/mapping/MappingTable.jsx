@@ -45,6 +45,8 @@ class MappingTable extends Component {
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
+    this.validateCancel = this.validateCancel.bind(this);
+    this.validateSubmit = this.validateSubmit.bind(this);
   }
 
   showModal = () => {
@@ -186,6 +188,10 @@ class MappingTable extends Component {
         <div>
           {showValidateModal &&
             <ValidateModal
+              danger
+              submitText="Delete"
+              heading="Delete Mappings"
+              message="You are about to delete some control mappings, i.e. unlink some FS controls from specific components (services, ref. architectures). This action cannot be undone, are you sure you want to proceed?"
               show={this.state.showValidate}
               onClose={this.validateCancel} 
               onRequestSubmit={this.validateSubmit} 
@@ -270,7 +276,7 @@ class MappingTable extends Component {
                                     </Tag>
                                     :
                                     cell.info && cell.info.header === "scc_goal" && cell.value ?
-                                      cell.value.split('/').map((goalId) => (
+                                      cell.value.split(new RegExp([' ', '-', '/', ':', ','].join('|'), 'g')).map((goalId) => (
                                         goalId.match(/^\d{7}$/) ?
                                           <>
                                             <Tag type="blue" renderIcon={Launch16}>
