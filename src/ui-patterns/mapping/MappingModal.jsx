@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, Button, ButtonSet, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput, TextInputSkeleton, InlineNotification } from 'carbon-components-react';
+import {
+    Form, FormGroup, Button, ButtonSet, ComposedModal, ModalBody, ModalFooter,
+    ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput, 
+    TextInputSkeleton
+} from 'carbon-components-react';
 
 
 class MappingModal extends Component {
@@ -86,8 +90,7 @@ class MappingModal extends Component {
                         open={this.props.show}
                         onClose={this.props.handleClose}>
                         <ModalHeader >
-                            <h2 className="bx--modal-header__label">Service resource</h2>
-                            <h3 className="bx--modal-header__heading">Add a impacting control</h3>
+                            <h3 className="bx--modal-header__heading">Add Mapping</h3>
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
@@ -108,14 +111,15 @@ class MappingModal extends Component {
                                                 id="control_id"
                                                 name="control_id"
                                                 disabled={this.props.isUpdate || this.props.controlId ? true : false}
+                                                hidden={this.props.controlId ? true : false}
                                                 invalidText="Please Enter The Value"
                                                 onChange={this.handleChange.bind(this, "control_id")}
                                                 value={this.state.fields.control_id}
-                                                labelText="Control ID"
+                                                labelText={this.props.controlId ? "" : "Control ID"}
                                                 placeholder="e.g. AC-2 (4), SC-12, SI-11, etc."
                                                 style={{ marginBottom: '1rem' }}
                                             />
-                                        </> : <TextInputSkeleton />
+                                        </> :!(this.props.controlId) &&  <TextInputSkeleton />
                                 }
                                 {
                                     servicesData && servicesData.length > 0 ?
@@ -131,14 +135,16 @@ class MappingModal extends Component {
                                                 id="service_id"
                                                 name="service_id"
                                                 disabled={this.state.fields.arch_id || this.props.serviceId ? true : false}
+                                                hidden={this.props.serviceId ? true : false}
                                                 invalidText="Please Enter The Value"
                                                 onChange={this.handleChange.bind(this, "service_id")}
                                                 value={this.state.fields.service_id}
-                                                labelText="Service ID"
+                                                labelText={this.props.serviceId ? "" : "Service ID"}
                                                 placeholder="e.g. cloud-object-storage, appid"
                                                 style={{ marginBottom: '1rem' }}
                                             />
-                                        </> : <TextInputSkeleton />
+                                        </> 
+                                    : !(this.props.serviceId) && <TextInputSkeleton />
                                 }
                                 {
                                     archData && archData.length > 0 ?
@@ -154,14 +160,15 @@ class MappingModal extends Component {
                                                 id="arch_id"
                                                 name="arch_id"
                                                 disabled={this.state.fields.service_id ? true : false}
+                                                hidden={this.props.serviceId ? true : false}
                                                 invalidText="Please Enter The Value"
                                                 onChange={this.handleChange.bind(this, "arch_id")}
                                                 value={this.state.fields.arch_id}
-                                                labelText="Ref. Architecture ID"
+                                                labelText={this.props.serviceId ? "" : "Ref. Architecture ID"}
                                                 placeholder="e.g. simple, dev-env"
                                                 style={{ marginBottom: '1rem' }}
                                             />
-                                        </> : <TextInputSkeleton />
+                                        </> : !(this.props.serviceId) && <TextInputSkeleton />
                                 }
                                 <FormGroup legendText="Compliant">
                                     <RadioButtonGroup
@@ -251,15 +258,18 @@ class MappingModal extends Component {
                                     rows={4}
                                     style={{ marginBottom: '1rem' }}
                                 />
-
                                 <ButtonSet style={{ margin: '2rem 0 2rem 0' }}>
-                                    <Button kind="primary" type="submit" style={{ margin: '0 1rem 0 0' }}>
-                                        {!this.props.isUpdate && "Submit"}
-                                        {this.props.isUpdate && "Update"}
-                                    </Button>
-                                </ButtonSet>
+                                        <Button kind="secondary" type="cancel" style={{ margin: '0 1rem 0 0' }}>
+                                            Cancel
+                                        </Button>
+                                        <Button kind="primary" type="submit" style={{ margin: '0 1rem 0 0' }}>
+                                            {!this.props.isUpdate && "Add"}
+                                            {this.props.isUpdate && "Update"}
+                                        </Button>
+                                    </ButtonSet>
                             </Form>
                         </ModalBody>
+                        {/* <ModalFooter inputref="mappingform" primaryButtonText={this.props.isUpdate ? "Update" : "Submit"} secondaryButtonText="Cancel" /> */}
                     </ComposedModal>
 
                 </div>
