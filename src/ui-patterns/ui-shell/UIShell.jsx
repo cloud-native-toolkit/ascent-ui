@@ -23,7 +23,7 @@ import {
   Link,
 } from "react-router-dom";
 import Routes from "./router";
-
+import { ToastContainer } from 'react-toastify';
 
 class UIShell extends Component {
   header = "Architecture Builder";
@@ -119,6 +119,19 @@ class UIShell extends Component {
             )}
           />
           <Content>
+
+
+            <ToastContainer 
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              />
 
             <Routes />
 

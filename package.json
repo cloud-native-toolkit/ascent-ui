@@ -73,6 +73,7 @@
     "react-scripts": "^3.4.3",
     "react-sliding-pane": "^7.0.0",
     "react-through": "^1.1.4",
+    "react-toastify": "^7.0.3",
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
     "style-loader": "0.23.0",

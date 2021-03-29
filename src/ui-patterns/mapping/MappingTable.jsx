@@ -18,7 +18,6 @@ import {
   TableToolbarSearch,
   OverflowMenu,
   OverflowMenuItem,
-  InlineNotification,
   TableSelectAll,
   TableSelectRow,
   TableBatchActions,
@@ -34,6 +33,9 @@ import {
 } from '@carbon/icons-react';
 import MappingModal from "./MappingModal"
 import ValidateModal from "../ValidateModal"
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class MappingTable extends Component {
   constructor(props) {
@@ -88,22 +90,12 @@ class MappingTable extends Component {
       }
       this.props.mapping.deleteMapping(body).then((res) => {
         console.log(res);
-        let notif = false;
-          if (res && res.body && res.body.error) {
-            notif = {
-              kind: "error",
-              title: res.body.error.code || res.body.error.name || "Error",
-              message: res.body.error.message
-            }
-          } else {
-            notif = {
-              kind: "success",
-              title: "Success",
-              message: `Mappings successfully deleted.`
-            }
-          }
-          this.props.handleReload();
-          this.setState({ notif: notif });
+        if (res && res.body && res.body.error) {
+          toast.error(res.body.error.message);
+        } else {
+          toast.success("Mappings successfully deleted.");
+        }
+        this.props.handleReload();
       });
     });
   }
@@ -123,19 +115,13 @@ class MappingTable extends Component {
   }
 
   hideModal = (res) => {
-    let notif = false;
     console.log(res)
     if (res && res.service_id && res.control_id) {
-      notif = {
-        kind: "success",
-        title: "Success",
-        message: `Control ${res.control_id} successfully mapped to component ${res.service_id || res.arch_id}`
-      }
+      toast.success(`Control ${res.control_id} successfully mapped to component ${res.service_id || res.arch_id}`);
     }
     this.setState(
       {
-        show: false,
-        notif: notif
+        show: false
       }
     );
     this.props.handleReload();
@@ -158,19 +144,8 @@ class MappingTable extends Component {
         }
       }
     }
-    let notif = this.state.notif;
     return (
       <>
-        {notif &&
-          <InlineNotification
-            id={Date.now()}
-            hideCloseButton lowContrast
-            title={notif.title || "Notification title"}
-            subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
-            kind={notif.kind || "info"}
-            caption={notif.caption || "Caption"}
-          />
-        }
         <div>
           {showModal &&
             <MappingModal
@@ -304,14 +279,14 @@ class MappingTable extends Component {
                         colSpan={headers.length + 3}
                         className="demo-expanded-td">
                         {row.cells && row.cells.length && row.cells.map((cell) => (
-                          cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.desc ?
-                            <><h6>Description</h6><div>{cell.value.details.desc}</div></>
-                            : cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.configuration ?
-                              <><h6>Configuration</h6><div>{cell.value.details.configuration}</div></>
-                              : cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.comment ?
-                                <><h6>Comment</h6><div>{cell.value.details.comment}</div></>
-                                :
-                                <></>
+                          <>
+                            {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.desc &&
+                              <><h6>Description</h6><div>{cell.value.details.desc}</div></>}
+                            {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.configuration &&
+                              <><h6>Configuration</h6><div>{cell.value.details.configuration}</div></>}
+                            {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.comment &&
+                              <><h6>Comment</h6><div>{cell.value.details.comment}</div></>}
+                          </>
                         ))}
                       </TableExpandedRow>
                     </>

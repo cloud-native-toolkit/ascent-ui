@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Button, ButtonSet, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput, TextInputSkeleton, InlineNotification } from 'carbon-components-react';
+import { toast } from 'react-toastify';
 
 class MappingModal extends Component {
     constructor(props) {
@@ -7,7 +8,6 @@ class MappingModal extends Component {
         this.state = {
             show: this.props.show,
             onRequestClose: this.props.handleClose,
-            notif: false,
             controlsData: [],
             fields: {
                 control_id: this.props.controlId || '',
@@ -63,17 +63,11 @@ class MappingModal extends Component {
         event.preventDefault();
         if (!this.props.isUpdate) {
             this.props.mapping.addMapping(this.state.fields).then((res) => {
-                let notif = false;
                 if (res && res.body && res.body.error) {
-                    notif = {
-                        kind: "error",
-                        title: res.body.error.code || res.body.error.name || "Error",
-                        message: res.body.error.message
-                    }
+                    toast.error(res.body.error.message);
                 } else {
                     this.props.handleClose(res);
                 }
-                this.setState({ notif: notif });
             });
         } else {
             //this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id);
@@ -84,7 +78,6 @@ class MappingModal extends Component {
         let controlsData = this.state.controlsData;
         let servicesData = this.state.servicesData;
         let archData = this.state.archData;
-        let notif = this.state.notif;
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -98,16 +91,6 @@ class MappingModal extends Component {
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
-                            {notif &&
-                                <InlineNotification
-                                    id={Date.now()}
-                                    hideCloseButton
-                                    title={notif.title || "Notification title"}
-                                    subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
-                                    kind={notif.kind || "info"}
-                                    caption={notif.caption || "Caption"}
-                                />
-                            }
                             <Form name="serviceform" onSubmit={this.handleSubmit.bind(this)}>
 
                                 {
