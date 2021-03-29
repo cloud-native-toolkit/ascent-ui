@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Button, ButtonSet, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput, TextInputSkeleton, InlineNotification } from 'carbon-components-react';
-import { toast } from 'react-toastify';
+
 
 class MappingModal extends Component {
     constructor(props) {
@@ -64,7 +64,7 @@ class MappingModal extends Component {
         if (!this.props.isUpdate) {
             this.props.mapping.addMapping(this.state.fields).then((res) => {
                 if (res && res.body && res.body.error) {
-                    toast.error(res.body.error.message);
+                    this.props.toast("error", "Error", res.body.error.message);
                 } else {
                     this.props.handleClose(res);
                 }

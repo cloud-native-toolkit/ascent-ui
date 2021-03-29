@@ -16,3 +16,11 @@ div.attribute {
 tr td.clickable:hover {
   cursor: pointer;
 }
+
+// Notifications
+div.notif {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  z-index: 10000;
+}

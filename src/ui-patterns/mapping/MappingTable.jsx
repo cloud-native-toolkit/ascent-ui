@@ -34,8 +34,7 @@ import {
 import MappingModal from "./MappingModal"
 import ValidateModal from "../ValidateModal"
 
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastNotification } from "carbon-components-react";
 
 class MappingTable extends Component {
   constructor(props) {
@@ -43,12 +42,14 @@ class MappingTable extends Component {
     this.state = {
       show: false,
       showValidate: false,
-      selectedRows: []
+      selectedRows: [],
+      notifications: []
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.validateCancel = this.validateCancel.bind(this);
     this.validateSubmit = this.validateSubmit.bind(this);
+    this.addNotification = this.addNotification.bind(this);
   }
 
   showModal = () => {
@@ -59,6 +60,9 @@ class MappingTable extends Component {
     this.setState({ showValidate: false });
     const rows = this.state.selectedRows;
     let body = {};
+    let count = 0;
+    let total_count = rows.length;
+    let count_success = 0;
     rows.forEach((row) => {
       let control_id = "";
       let service_id = "";
@@ -89,13 +93,17 @@ class MappingTable extends Component {
         }
       }
       this.props.mapping.deleteMapping(body).then((res) => {
-        console.log(res);
-        if (res && res.body && res.body.error) {
-          toast.error(res.body.error.message);
-        } else {
-          toast.success("Mappings successfully deleted!");
+        count = count + 1;
+        if (res.statusCode === 200) {
+          count_success = count_success + 1;
         }
-        this.props.handleReload();
+        if (count === total_count && count === count_success) {
+          this.addNotification('success', 'Success', `${count_success} mapping(s) successfully deleted!`)
+          this.props.handleReload();
+        } else if (count === total_count) {
+          this.addNotification('error', 'Error', `${count_success} mapping(s) successfully deleted, ${count - count_success} error(s)!`)
+          this.props.handleReload();
+        }
       });
     });
   }
@@ -117,7 +125,7 @@ class MappingTable extends Component {
   hideModal = (res) => {
     console.log(res)
     if (res && res.service_id && res.control_id) {
-      toast.success(`Control ${res.control_id} successfully mapped to component ${res.service_id || res.arch_id}!`);
+      this.addNotification("success", "Success", `Control ${res.control_id} successfully mapped to component ${res.service_id || res.arch_id}!`);
     }
     this.setState(
       {
@@ -127,6 +135,36 @@ class MappingTable extends Component {
     this.props.handleReload();
   };
 
+  /** Notifications */
+
+  addNotification(type, message, detail) {
+    this.setState(prevState => ({
+      notifications: [
+        ...prevState.notifications,
+        {
+          message: message || "Notification",
+          detail: detail || "Notification text",
+          severity: type || "info"
+        }
+      ]
+    }));
+  }
+
+  renderNotifications() {
+  return this.state.notifications.map(notification => {
+    return (
+    <ToastNotification
+      title={notification.message}
+      subtitle={notification.detail}
+      kind={notification.severity}
+      timeout={5000}
+      caption={false}
+    />
+    );
+  });
+  }
+
+/** Notifications END */
 
   render() {
     const showModal = this.state.show;
@@ -146,9 +184,13 @@ class MappingTable extends Component {
     }
     return (
       <>
+        <div class='notif'>
+          {this.state.notifications.length !== 0 && this.renderNotifications()}
+        </div>
         <div>
           {showModal &&
             <MappingModal
+              toast={this.addNotification}
               show={this.state.show}
               handleClose={this.hideModal}
               isUpdate={this.state.isUpdate}
@@ -190,7 +232,7 @@ class MappingTable extends Component {
             <TableContainer
               {...getTableContainerProps()}>
               <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
-                <TableBatchActions {...getBatchActionProps()}>
+                <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
                     <TableBatchAction
                         tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                         renderIcon={Delete}

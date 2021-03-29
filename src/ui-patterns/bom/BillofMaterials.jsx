@@ -32,8 +32,7 @@ import { Pagination } from 'carbon-components-react';
 import { bomHeader } from '../data/data';
 import ValidateModal from "../ValidateModal"
 
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastNotification } from "carbon-components-react";
 
 class BillofMaterialsView extends Component {
 
@@ -55,7 +54,8 @@ class BillofMaterialsView extends Component {
             firstRowIndex: 0,
             currentPageSize: 10,
             isPaneOpen: false,
-            dataDetails: false
+            dataDetails: false,
+            notifications: []
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -65,6 +65,7 @@ class BillofMaterialsView extends Component {
         this.hidePane = this.hidePane.bind(this);
         this.validateCancel = this.validateCancel.bind(this);
         this.validateSubmit = this.validateSubmit.bind(this);
+        this.addNotification = this.addNotification.bind(this);
     }
     async loadTable() {
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
@@ -191,14 +192,14 @@ class BillofMaterialsView extends Component {
                     count_success = count_success + 1;
                 }
                 if (count === total_count && count === count_success) {
-                    toast.success(`${count_success} service(s) successfully deleted!`)
+                    this.addNotification('success', 'Success', `${count_success} service(s) successfully deleted!`)
                     this.setState({
                         showValidate: false ,
                         selectedRows: []
                     });
                     this.loadTable();
                 } else if (count === total_count) {
-                    toast.error(`${count_success} service(s) successfully deleted, ${count - count_success} error(s)!`)
+                    this.addNotification('error', 'Error', `${count_success} service(s) successfully deleted, ${count - count_success} error(s)!`)
                     this.setState({
                         showValidate: false ,
                         selectedRows: []
@@ -224,16 +225,16 @@ class BillofMaterialsView extends Component {
 
     hideModal = () => {
         this.setState({
+            isUpdate: false,
             show: false
         });
         this.loadTable();
     };
-    doUpdateService(index) {
-        console.log(this.state.data[index]);
+    doUpdateService(bomId) {
         this.setState({
             show: true,
             isUpdate: true,
-            serviceRecord: this.state.data[index]
+            serviceRecord: this.state.data.find(element => element.id === bomId )
         });
 
     }
@@ -249,6 +250,39 @@ class BillofMaterialsView extends Component {
     hideDiagram = () => {
         this.setState({ showDiagram: false });
     };
+
+
+    /** Notifications */
+
+    addNotification(type, message, detail) {
+        this.setState(prevState => ({
+          notifications: [
+            ...prevState.notifications,
+            {
+              message: message || "Notification",
+              detail: detail || "Notification text",
+              severity: type || "info"
+            }
+          ]
+        }));
+    }
+
+    renderNotifications() {
+        return this.state.notifications.map(notification => {
+            return (
+            <ToastNotification
+                title={notification.message}
+                subtitle={notification.detail}
+                kind={notification.severity}
+                timeout={5000}
+                caption={false}
+            />
+            );
+        });
+    }
+
+    /** Notifications END */
+
     render() {
         let data = this.state.data;
         const headers = this.state.headersData;
@@ -288,7 +322,7 @@ class BillofMaterialsView extends Component {
                         <TableContainer
                             {...getTableContainerProps()}>
                             <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
-                                <TableBatchActions {...getBatchActionProps()}>
+                                <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
                                     <TableBatchAction
                                         tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                                         renderIcon={Delete}
@@ -366,7 +400,7 @@ class BillofMaterialsView extends Component {
                                                 ))}
                                                 <TableCell className="bx--table-column-menu">
                                                     <OverflowMenu light flipped>
-                                                        <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(i)} />
+                                                        <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(row.id)} />
                                                     </OverflowMenu>
                                                 </TableCell>
                                             </TableRow>
@@ -400,9 +434,12 @@ class BillofMaterialsView extends Component {
         const showValidateModal = this.state.showValidate;
         return (
             <>
+                <div class='notif'>
+                    {this.state.notifications.length !== 0 && this.renderNotifications()}
+                </div>
                 <div>
                     {showModal &&
-                        <ServiceModal archId={archid} show={this.state.show} handleClose={this.hideModal} service={this.props.bomService} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} services={this.state.serviceNames} />}
+                        <ServiceModal toast={this.addNotification} archId={archid} show={this.state.show} handleClose={this.hideModal} service={this.props.bomService} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} services={this.state.serviceNames} />}
                     {showDiagram &&
                         <ComposedModal
                             open={showDiagram}

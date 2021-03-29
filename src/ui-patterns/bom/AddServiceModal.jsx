@@ -41,20 +41,29 @@ class ServiceModal extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         if (!this.props.isUpdate) {
-            this.props.service.doPostBOM(this.props.archId, this.state.fields).then(response => {
-                console.log(response);
-                this.props.handleClose();
+            this.props.service.doPostBOM(this.props.archId, this.state.fields).then(res => {
+                console.log(res);
+                if (res && res.body && res.body.error) {
+                    this.props.toast("error", "Error", res.body.error.message);
+                } else {
+                    this.props.toast("success", "Success", `Service ${res.service_id} successfully added to ref. architecture ${res.arch_id}!`);
+                    this.props.handleClose();
+                }
             });
         } else {
-            this.props.service.doUpdateBOM(this.props.archId, this.state.fields).then(response => {
-                console.log(response);
-                this.props.handleClose();
+            this.props.service.doUpdateBOM(this.props.data.id, {desc: this.state.fields.desc}).then(res => {
+                console.log(res);
+                if (res && res.body && res.body.error) {
+                    this.props.toast("error", "Error", res.body.error.message);
+                } else {
+                    this.props.toast("success", "Success", `Service ${res.service_id} successfully updated!`);
+                    this.props.handleClose();
+                }
             });
         }
 
     }
     render() {
-        console.log(this.props.services);
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -72,6 +81,7 @@ class ServiceModal extends Component {
                                 <Select id="service_id" name="service_id"
                                     labelText="Service ID"
                                     required
+                                    disabled={this.props.isUpdate}
                                     defaultValue={!this.state.fields.service_id ? 'placeholder-item' : this.state.fields.service_id}
                                     invalidText="A valid value is required"
                                     onChange={this.handleChange.bind(this, "service_id")}>

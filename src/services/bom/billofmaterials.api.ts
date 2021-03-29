@@ -6,7 +6,7 @@ export abstract class BillofMaterialsApi {
     abstract async getBomComposite(archiId: string): Promise<BillofMaterialsDataModel[]>;
     abstract async getBomDetails(bomId: string): Promise<BillofMaterialsDataModel>;
     abstract async doPostBOM(archiId: string, bom_details: any): Promise<BillofMaterialsDataModel[]>;
-    abstract async doUpdateBOM(archiId: string, bom_details: any): Promise<BillofMaterialsDataModel[]>;
+    abstract async doUpdateBOM(bomId: string, bomDetails: any): Promise<any>;
     abstract async doDeleteBOM(bomId: string): Promise<any>;
     abstract async getServices(): Promise<ServiceDataModel[]>;
 }

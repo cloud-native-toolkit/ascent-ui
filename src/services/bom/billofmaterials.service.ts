@@ -28,6 +28,9 @@ export class BillofMaterialsService implements BillofMaterialsApi {
             .then(res => {
                 console.log(res.status);
                 return res.body;
+            })
+            .catch(err => {
+                return err.response;
             });
     }
 
@@ -62,14 +65,16 @@ export class BillofMaterialsService implements BillofMaterialsApi {
             });
     }
 
-    async doUpdateBOM(archId: string, service_details: any): Promise<BillofMaterialsDataModel[]> {
+    async doUpdateBOM(bomId: string, bomDetails: any): Promise<any> {
         return superagent
-            .patch(this.baseUrl + archId + '/boms')
-            .send(service_details)
+            .patch(`/boms/${bomId}`)
+            .send(bomDetails)
             .set('accept', 'application/json')
             .then(res => {
-                console.log(res.status);
                 return res.body;
+            })
+            .catch(err => {
+                return err.response;
             });
     }
 
@@ -80,9 +85,10 @@ export class BillofMaterialsService implements BillofMaterialsApi {
             .set('accept', 'application/json')
             .then(res => {
                 return res;
+            })
+            .catch(err => {
+                return err.response;
             });
     }
-
-
 
 }
