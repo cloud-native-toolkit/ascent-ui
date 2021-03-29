@@ -93,7 +93,7 @@ class MappingTable extends Component {
         if (res && res.body && res.body.error) {
           toast.error(res.body.error.message);
         } else {
-          toast.success("Mappings successfully deleted.");
+          toast.success("Mappings successfully deleted!");
         }
         this.props.handleReload();
       });
@@ -117,7 +117,7 @@ class MappingTable extends Component {
   hideModal = (res) => {
     console.log(res)
     if (res && res.service_id && res.control_id) {
-      toast.success(`Control ${res.control_id} successfully mapped to component ${res.service_id || res.arch_id}`);
+      toast.success(`Control ${res.control_id} successfully mapped to component ${res.service_id || res.arch_id}!`);
     }
     this.setState(
       {

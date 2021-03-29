@@ -30,6 +30,10 @@ import {
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
 import { bomHeader } from '../data/data';
+import ValidateModal from "../ValidateModal"
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class BillofMaterialsView extends Component {
 
@@ -41,6 +45,8 @@ class BillofMaterialsView extends Component {
             data: [],
             headersData: bomHeader,
             show: false,
+            showValidate: false,
+            selectedRows: [],
             showDiagram: false,
             isUpdate: false,
             serviceRecord: [],
@@ -57,6 +63,8 @@ class BillofMaterialsView extends Component {
         this.hideDiagram = this.hideDiagram.bind(this);
         this.openPane = this.openPane.bind(this);
         this.hidePane = this.hidePane.bind(this);
+        this.validateCancel = this.validateCancel.bind(this);
+        this.validateSubmit = this.validateSubmit.bind(this);
     }
     async loadTable() {
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
@@ -163,19 +171,48 @@ class BillofMaterialsView extends Component {
         }
     }
 
+    deleteBOMs(rows) {
+        this.setState({
+          showValidate: true,
+          selectedRows: rows
+        })
+    }
+
     // API issues there So need to work on this function
-    batchActionClick(rows) {
-        console.log(this.state.data);
-        let i = 0;
+    validateSubmit() {
+        const rows = this.state.selectedRows;
+        let count = 0;
+        let total_count = rows.length;
+        let count_success = 0;
         rows.forEach(data => {
             this.props.bomService.doDeleteBOM(data.id).then(res => {
-                let service_details = this.state.data.filter(details => details.id !== data.id);
-                this.setState({
-                    data: service_details,
-                    totalItems: this.state.data.length
-                });
-                i++;
+                count = count + 1;
+                if (res.statusCode === 204) {
+                    count_success = count_success + 1;
+                }
+                if (count === total_count && count === count_success) {
+                    toast.success(`${count_success} service(s) successfully deleted!`)
+                    this.setState({
+                        showValidate: false ,
+                        selectedRows: []
+                    });
+                    this.loadTable();
+                } else if (count === total_count) {
+                    toast.error(`${count_success} service(s) successfully deleted, ${count - count_success} error(s)!`)
+                    this.setState({
+                        showValidate: false ,
+                        selectedRows: []
+                    });
+                    this.loadTable();
+                }
             });
+        });
+    }
+
+    validateCancel = () => {
+        this.setState({
+            showValidate: false ,
+            selectedRows: []
         });
     }
 
@@ -255,22 +292,10 @@ class BillofMaterialsView extends Component {
                                     <TableBatchAction
                                         tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                                         renderIcon={Delete}
-                                        onClick={() => this.batchActionClick(selectedRows)}
+                                        onClick={() => this.deleteBOMs(selectedRows)}
                                     >
                                         Delete
-                                                </TableBatchAction>
-                                    <TableBatchAction
-                                        tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
-                                        renderIcon={Save}
-                                    >
-                                        Save
-                                                </TableBatchAction>
-                                    <TableBatchAction
-                                        tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
-                                        renderIcon={Download}
-                                    >
-                                        Download
-                                                </TableBatchAction>
+                                    </TableBatchAction>
                                 </TableBatchActions>
                                 <TableToolbarContent>
                                     <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)}>
@@ -372,7 +397,7 @@ class BillofMaterialsView extends Component {
                     }} />
             </>
         }
-
+        const showValidateModal = this.state.showValidate;
         return (
             <>
                 <div>
@@ -385,6 +410,19 @@ class BillofMaterialsView extends Component {
                             <ModalHeader title={this.state.architecture.name} />
                             <ModalBody><img src={'/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" /></ModalBody>
                         </ComposedModal>}
+                </div>
+                <div>
+                    {showValidateModal &&
+                        <ValidateModal
+                            danger
+                            submitText="Delete"
+                            heading="Delete Services"
+                            message="You are about to remove services from this Bill Of Materials. This action cannot be undone, are you sure you want to proceed?"
+                            show={this.state.showValidate}
+                            onClose={this.validateCancel} 
+                            onRequestSubmit={this.validateSubmit} 
+                            onSecondarySubmit={this.validateCancel} />
+                    }
                 </div>
                 <div className="bx--grid">
                     {this.breadCrumbs(title)}
@@ -412,7 +450,7 @@ class BillofMaterialsView extends Component {
                     <SlidingPane
                         className="sliding-pane"
                         isOpen={this.state.isPaneOpen}
-                        width="500px"
+                        width="600px"
                         onRequestClose={this.hidePane}
                         hideHeader
                     >

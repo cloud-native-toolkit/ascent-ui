@@ -73,12 +73,13 @@ export class BillofMaterialsService implements BillofMaterialsApi {
             });
     }
 
-    doDeleteBOM(archiId: string): Promise<BillofMaterialsDataModel[]> {
+    async doDeleteBOM(bomId: string): Promise<any> {
+        console.log(bomId);
         return superagent
-            .delete(this.baseUrl + archiId + '/boms')
+            .delete(`/boms/${bomId}`)
             .set('accept', 'application/json')
             .then(res => {
-                return res.body;
+                return res;
             });
     }
 

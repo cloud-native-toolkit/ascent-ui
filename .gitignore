@@ -45,3 +45,4 @@ pipeline-build-config.json
 env-config
 
 .vscode
+*.ignore.*
