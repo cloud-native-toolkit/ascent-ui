@@ -24,7 +24,15 @@ class FormModal extends Component {
         if (this.props.isUpdate) {
             let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/\"id\":/g, "\"service_id\":"));
             this.state = {
-                fields: jsonObject
+                fields: {
+                    service_id: jsonObject.service_id,
+                    ibm_catalog_service: jsonObject.ibm_catalog_service,
+                    grouping: jsonObject.grouping,
+                    deployment_method: jsonObject.deployment_method,
+                    provision: jsonObject.provision,
+                    cloud_automation_id: jsonObject.cloud_automation_id,
+                    desc: jsonObject.desc
+                }
             }
         }
         this.handleChange = this.handleChange.bind(this)
@@ -32,14 +40,12 @@ class FormModal extends Component {
     }
     handleChange(field, e) {
         let fields = this.state.fields;
-
         if (field === "fs_certified") {
             fields[field] = e === "false" ? false : true;
         } else {
             fields[field] = e.target.value;
         }
         this.setState({ fields });
-
     }
 
     validateForm() {
