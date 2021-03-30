@@ -8,6 +8,7 @@ import ControlDetailsComponent from "../../components/compliance/ControlDetails"
 import NistDetailsComponent from "../../components/compliance/NistDetails";
 import ServiceDetailsComponent from "../../components/services/ServiceDetails";
 import DetailsViewComponent from "../../components/overview/DetailsView";
+import LandingPage from "../LandingPage";
 import ServiceComponent from "../../components/services/service";
 import MappingComponent from "../../components/mapping/Mapping";
 
@@ -50,7 +51,7 @@ function ControlDetails() {
         return (
             <ControlDetailsComponent data={controlId.toUpperCase().replace('_', ' ')}></ControlDetailsComponent>
         );
-    } 
+    }
     return (
         <></>
     );
@@ -78,7 +79,7 @@ function Controls() {
         return (
             <NistDetailsComponent data={number.toUpperCase().replace('_', ' ')}></NistDetailsComponent>
         );
-    } 
+    }
     return (
         <></>
     );
@@ -101,6 +102,7 @@ function Nists() {
 function Routes() {
     return (
         <Switch>
+            <Route path="/" exact component={LandingPage} />
             <Route path="/" exact component={DetailsViewComponent} />
             <Route path="/bom/:bomid" children={<RenderBOM></RenderBOM>}></Route>
             <Route path="/architectures" component={ArchitectureComponent} />
@@ -108,6 +110,7 @@ function Routes() {
             <Route path="/controls" component={Controls} />
             <Route path="/nists" component={Nists} />
             <Route path="/services" component={Services} />
+            <Route path="/docs" exact component={DetailsViewComponent} />
         </Switch>
     )
 }

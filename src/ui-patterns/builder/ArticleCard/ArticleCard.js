@@ -131,11 +131,7 @@ export default class ArticleCard extends React.Component {
                 </h5>
             ) : null}
 
-            {desc ? (
-                <h5 className={`${prefix}--article-card__description`}>
-                  {desc}
-                </h5>
-            ) : null}
+
 
 
             <div className={`${prefix}--article-card__info`}>
