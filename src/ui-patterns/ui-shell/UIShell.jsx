@@ -59,9 +59,18 @@ class UIShell extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
       patternName: "Overview",
       profileExpanded: false
     };
+  }
+
+  async componentDidMount() {
+    fetch('/userDetails')
+    .then(res => res.json())
+    .then(user => {
+      this.setState({ user: user })
+    })
   }
 
   render() {
@@ -98,12 +107,13 @@ class UIShell extends Component {
                   </HeaderGlobalAction>
                 </HeaderGlobalBar>
                 <HeaderPanel aria-label="Header Panel" expanded={this.state.profileExpanded} style={{'bottom': 'auto', 'padding-bottom': '1rem'}}>
-                  <strong style={{padding: '0.375rem 1rem'}}>Username</strong>
+                  <li class="bx--switcher__item"><strong style={{'margin': '0 1rem', 'font-size': '1.3rem'}}>{(this.state.user && this.state.user.name) || "Username"}</strong></li>
+                  <li class="bx--switcher__item"><strong style={{'margin': '0 1rem'}}>{(this.state.user && this.state.user.email) || "example@ibm.com"}</strong></li>
                   <Switcher aria-label="Switcher Container">
                       <SwitcherDivider />
-                      <SwitcherItem aria-label="Logout" href="/ibm/cloud/appid/logout">
+                      <SwitcherItem aria-label="Logout" href="/ibm/cloud/appid/logout" style={{display: 'flex'}}>
                         <span>Logout</span>
-                        <ArrowRight style={{'margin-left': '10px'}}/>
+                        <ArrowRight style={{'margin-left': 'auto'}}/>
                       </SwitcherItem>
                     </Switcher>
                 </HeaderPanel>
