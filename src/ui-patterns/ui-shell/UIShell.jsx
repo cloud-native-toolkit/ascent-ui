@@ -106,7 +106,7 @@ class UIShell extends Component {
                     <UserAvatar20 />
                   </HeaderGlobalAction>
                 </HeaderGlobalBar>
-                <HeaderPanel aria-label="Header Panel" expanded={this.state.profileExpanded} style={{'bottom': 'auto', 'padding-bottom': '1rem'}}>
+                <HeaderPanel aria-label="Header Panel" expanded={this.state.profileExpanded} style={{'bottom': 'auto', 'padding-bottom': '1rem', 'list-style-type': 'none'}}>
                   <li class="bx--switcher__item"><strong style={{'margin': '0 1rem', 'font-size': '1.3rem'}}>{(this.state.user && this.state.user.name) || "Username"}</strong></li>
                   <li class="bx--switcher__item"><strong style={{'margin': '0 1rem'}}>{(this.state.user && this.state.user.email) || "example@ibm.com"}</strong></li>
                   <Switcher aria-label="Switcher Container">
