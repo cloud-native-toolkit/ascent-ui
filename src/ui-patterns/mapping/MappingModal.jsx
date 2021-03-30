@@ -65,7 +65,7 @@ class MappingModal extends Component {
     }
     handleSubmit = (event) => {
         event.preventDefault();
-        if (!this.props.isUpdate) {
+        if (this.state.fields.control_id && (this.state.fields.service_id || this.state.fields.arch_id) && !this.props.isUpdate) {
             this.props.mapping.addMapping(this.state.fields).then((res) => {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", "Error", res.body.error.message);
@@ -73,6 +73,10 @@ class MappingModal extends Component {
                     this.props.handleClose(res);
                 }
             });
+        } else if (!this.state.fields.control_id) {
+            this.props.toast("error", "Error", "You must set a control ID.");
+        } else if (!(this.state.fields.service_id || this.state.fields.arch_id)) {
+            this.props.toast("error", "Error", "You must set a component ID (either a service or a ref. architecture).");
         } else {
             //this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id);
             this.props.handleClose();
@@ -94,7 +98,7 @@ class MappingModal extends Component {
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
-                            <Form name="serviceform" onSubmit={this.handleSubmit.bind(this)}>
+                            <Form name="serviceform">
 
                                 {
                                     controlsData && controlsData.length > 0 ?
@@ -258,18 +262,9 @@ class MappingModal extends Component {
                                     rows={4}
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <ButtonSet style={{ margin: '2rem 0 2rem 0' }}>
-                                        <Button kind="secondary" type="cancel" style={{ margin: '0 1rem 0 0' }}>
-                                            Cancel
-                                        </Button>
-                                        <Button kind="primary" type="submit" style={{ margin: '0 1rem 0 0' }}>
-                                            {!this.props.isUpdate && "Add"}
-                                            {this.props.isUpdate && "Update"}
-                                        </Button>
-                                    </ButtonSet>
                             </Form>
                         </ModalBody>
-                        {/* <ModalFooter inputref="mappingform" primaryButtonText={this.props.isUpdate ? "Update" : "Submit"} secondaryButtonText="Cancel" /> */}
+                        <ModalFooter onRequestSubmit={this.handleSubmit} primaryButtonText={this.props.isUpdate ? "Update" : "Submit"} secondaryButtonText="Cancel" />
                     </ComposedModal>
 
                 </div>

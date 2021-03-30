@@ -40,7 +40,7 @@ class ServiceModal extends Component {
     }
     handleSubmit = (event) => {
         event.preventDefault();
-        if (!this.props.isUpdate) {
+        if (this.state.fields.service_id && !this.props.isUpdate) {
             this.props.service.doPostBOM(this.props.archId, this.state.fields).then(res => {
                 console.log(res);
                 if (res && res.body && res.body.error) {
@@ -50,7 +50,7 @@ class ServiceModal extends Component {
                     this.props.handleClose();
                 }
             });
-        } else {
+        } else if(this.state.fields.service_id) {
             this.props.service.doUpdateBOM(this.props.data.id, {desc: this.state.fields.desc}).then(res => {
                 console.log(res);
                 if (res && res.body && res.body.error) {
@@ -60,6 +60,8 @@ class ServiceModal extends Component {
                     this.props.handleClose();
                 }
             });
+        } else {
+            this.props.toast("error", "Error", "You must set a service ID.");
         }
 
     }
