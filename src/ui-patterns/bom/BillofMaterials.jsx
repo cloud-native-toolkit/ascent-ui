@@ -4,8 +4,7 @@ import * as _ from 'lodash';
 
 import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 import ServiceModal from './AddServiceModal';
-import SlidingPane from "react-sliding-pane";
-import "react-sliding-pane/dist/react-sliding-pane.css";
+import ServiceDetailsPane from '../services/ServiceDetailsPane';
 
 import {
     Link
@@ -17,12 +16,9 @@ import {
     Download16 as Download,
     ViewFilled16 as View,
     Add16,
-    WarningAlt16,
-    Launch16
+    WarningAlt16
 } from '@carbon/icons-react';
 import {
-    UnorderedList, ListItem,
-    BreadcrumbSkeleton, SearchSkeleton,
     ComposedModal, ModalHeader, ModalBody, Tag,
     DataTable, DataTableSkeleton, TableContainer, Table, TableSelectAll, TableBatchAction, TableSelectRow,
     TableBatchActions, TableToolbar, TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
@@ -75,10 +71,11 @@ class BillofMaterialsView extends Component {
         for (let index = 0; index < jsonData.length; index++) {
             let row = jsonData[index];
             row.ibm_service = {
-                ibm_service: row.ibm_service || row.service_id,
+                ibm_service: (row.service && row.service.ibm_catalog_service) || row.service_id,
                 service_id: row.service_id
             };
             row.automation_id = (row.service && row.service.cloud_automation_id) || '';
+            row.deployment_method = (row.service && row.service.deployment_method) || '';
             row.provision = (row.service && row.service.provision) || '';
             row.grouping = (row.service && row.service.grouping) || '';
         }
@@ -288,7 +285,6 @@ class BillofMaterialsView extends Component {
         let data = this.state.data;
         const headers = this.state.headersData;
         const archid = this.state.archid;
-        console.log(JSON.stringify(archid));
 
         let title = "";
         if (!_.isUndefined(this.state.architecture.name)) {
@@ -442,7 +438,17 @@ class BillofMaterialsView extends Component {
                 </div>
                 <div>
                     {showModal &&
-                        <ServiceModal toast={this.addNotification} archId={archid} show={this.state.show} handleClose={this.hideModal} service={this.props.bomService} isUpdate={this.state.isUpdate} data={this.state.serviceRecord} services={this.state.serviceNames} />}
+                        <ServiceModal
+                            toast={this.addNotification}
+                            archId={archid}
+                            show={this.state.show}
+                            handleClose={this.hideModal}
+                            service={this.props.bomService}
+                            isUpdate={this.state.isUpdate}
+                            data={this.state.serviceRecord}
+                            services={this.state.serviceNames}
+                        />
+                    }
                     {showDiagram &&
                         <ComposedModal
                             open={showDiagram}
@@ -487,155 +493,7 @@ class BillofMaterialsView extends Component {
                     </div>
                 </div>
                 <div>
-                    <SlidingPane
-                        className="sliding-pane"
-                        isOpen={this.state.isPaneOpen}
-                        width="600px"
-                        onRequestClose={this.hidePane}
-                        hideHeader
-                    >
-                        {
-                            this.state.dataDetails ?
-                                <div>
-                                    <h3 style={{ display: 'flex' }}>
-                                        {
-                                            this.state.dataDetails.catalog && this.state.dataDetails.catalog.overview_ui && this.state.dataDetails.catalog.overview_ui.en ?
-                                                this.state.dataDetails.catalog.overview_ui.en.display_name
-                                            : this.state.dataDetails.service ?
-                                                this.state.dataDetails.service.ibm_catalog_service || this.state.dataDetails.service.service_id
-                                            :
-                                                this.state.dataDetails.ibm_service || this.state.dataDetails.service_id
-                                        }
-                                        {this.state.dataDetails.catalog && this.state.dataDetails.catalog.tags && this.state.dataDetails.catalog.tags.length > 0 && this.state.dataDetails.catalog.tags.includes("fs_ready") && <Tag type="green" style={{ marginLeft: "auto" }}>FS Ready</Tag>}
-                                    </h3>
-                                    <br />
-                                    <p>
-                                        <strong>Description: </strong>
-                                        {
-                                            this.state.dataDetails.catalog && this.state.dataDetails.catalog.overview_ui && this.state.dataDetails.catalog.overview_ui.en ?
-                                                this.state.dataDetails.catalog.overview_ui.en.long_description || this.state.dataDetails.catalog.overview_ui.en.description
-                                            : this.state.dataDetails.service ?
-                                                this.state.dataDetails.service.desc
-                                            :
-                                                this.state.dataDetails.desc
-                                        }
-                                    </p>
-                                    <br />
-                                    {this.state.dataDetails.catalog && this.state.dataDetails.catalog.provider &&
-                                        <>
-                                            <div >
-                                                <p>
-                                                    <strong>Provider: </strong>
-                                                    <Tag type="blue">{this.state.dataDetails.catalog.provider.name}</Tag>
-                                                </p>
-                                            </div>
-                                            <br />
-                                        </>
-                                    }
-                                    {this.state.dataDetails.service &&
-                                        <>
-                                            {this.state.dataDetails.service.grouping ? <div><p><strong>Group: </strong> <Tag type="blue">{this.state.dataDetails.service.grouping}</Tag></p><br /></div> : <></>}
-                                            {this.state.dataDetails.service.deployment_method ? <div><p><strong>Deployment Method: </strong> <Tag type="blue">{this.state.dataDetails.service.deployment_method}</Tag></p><br /></div> : <></>}
-                                            {this.state.dataDetails.service.provision ? <div><p><strong>Provision: </strong> <Tag type="blue">{this.state.dataDetails.service.provision}</Tag></p><br /></div> : <></>}
-                                            {
-                                                this.state.dataDetails.service.cloud_automation_id ? 
-                                                    <div><p><strong>Cloud Automation id: </strong> <Tag type="blue">{this.state.dataDetails.service.cloud_automation_id}</Tag></p><br /></div>
-                                                : this.state.dataDetails.service.hybrid_automation_id ?
-                                                    <div><p><strong>Hybrid Automation id: </strong> <Tag type="blue">{this.state.dataDetails.service.hybrid_automation_id}</Tag></p><br /></div>
-                                                :
-                                                    <div><p><strong>Automation id: </strong> <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag></p><br /></div>
-                                            }
-                                        </>
-                                    }
-                                    {this.state.dataDetails.catalog && this.state.dataDetails.catalog.geo_tags && this.state.dataDetails.catalog.geo_tags.length > 0 &&
-                                        <>
-                                            <div>
-                                                <p>
-                                                    <strong>Geos: </strong>
-                                                    {this.state.dataDetails.catalog.geo_tags.map((geo) => (
-                                                        <Tag type="blue">{geo}</Tag>
-                                                    ))}
-                                                </p>
-                                                <br />
-                                            </div>
-                                        </>
-                                    }
-                                    {this.state.dataDetails.service && this.state.dataDetails.service.controls && this.state.dataDetails.service.controls.length > 0 &&
-                                        <>
-                                            <div>
-                                                <p>
-                                                    <strong>Impacting controls: </strong>
-                                                    {this.state.dataDetails.service.controls.map((control) => (
-                                                        <Tag type="blue">
-                                                            <Link to={"/controls/" + control.control_id.toLowerCase().replace(' ', '_')} >
-                                                                {control.control_id}
-                                                            </Link>
-                                                        </Tag>
-                                                    ))}
-                                                </p>
-                                                <br />
-                                            </div>
-                                        </>
-                                    }
-                                    {this.state.dataDetails.catalog && this.state.dataDetails.catalog.metadata && this.state.dataDetails.catalog.metadata.ui && this.state.dataDetails.catalog.metadata.ui.urls &&
-                                        <>
-                                            <div>
-                                                <p>
-                                                    <strong>Links: </strong>
-                                                    <UnorderedList nested>
-                                                        {this.state.dataDetails.catalog.metadata.ui.urls.catalog_details_url && 
-                                                            <ListItem href={this.state.dataDetails.catalog.metadata.ui.urls.catalog_details_url}>
-                                                                <a href={this.state.dataDetails.catalog.metadata.ui.urls.catalog_details_url} target="_blank">
-                                                                    Catalog
-                                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
-                                                                </a>
-                                                            </ListItem>
-                                                        }
-                                                        {this.state.dataDetails.catalog.metadata.ui.urls.apidocs_url && 
-                                                            <ListItem href={this.state.dataDetails.catalog.metadata.ui.urls.apidocs_url}>
-                                                                <a href={this.state.dataDetails.catalog.metadata.ui.urls.apidocs_url} target="_blank">
-                                                                    API Docs
-                                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
-                                                                </a>
-                                                            </ListItem>
-                                                        }
-                                                        {this.state.dataDetails.catalog.metadata.ui.urls.doc_url && 
-                                                            <ListItem href={this.state.dataDetails.catalog.metadata.ui.urls.doc_url}>
-                                                                <a href={this.state.dataDetails.catalog.metadata.ui.urls.doc_url} target="_blank">
-                                                                    Documentation
-                                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
-                                                                </a>
-                                                            </ListItem>
-                                                        }
-                                                        {this.state.dataDetails.catalog.metadata.ui.urls.instructions_url && 
-                                                            <ListItem >
-                                                                <a href={this.state.dataDetails.catalog.metadata.ui.urls.instructions_url} target="_blank">
-                                                                    Instructions
-                                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
-                                                                </a>
-                                                            </ListItem>
-                                                        }
-                                                        {this.state.dataDetails.catalog.metadata.ui.urls.terms_url && 
-                                                            <ListItem href={this.state.dataDetails.catalog.metadata.ui.urls.terms_url}>
-                                                                <a href={this.state.dataDetails.catalog.metadata.ui.urls.terms_url} target="_blank">
-                                                                    Terms
-                                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
-                                                                </a>
-                                                            </ListItem>
-                                                        }
-                                                    </UnorderedList>
-                                                </p>
-                                            </div>
-                                        </>
-                                    }
-                                </div>
-                            :
-                                <div>
-                                    <BreadcrumbSkeleton />
-                                    <SearchSkeleton />
-                                </div>
-                        }
-                    </SlidingPane>
+                    <ServiceDetailsPane data={this.state.dataDetails} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
                 </div>
             </>
         );

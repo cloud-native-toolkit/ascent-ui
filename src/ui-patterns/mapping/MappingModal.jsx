@@ -74,9 +74,9 @@ class MappingModal extends Component {
                 }
             });
         } else if (!this.state.fields.control_id) {
-            this.props.toast("error", "Error", "You must set a control ID.");
+            this.props.toast("error", "INVALID INPUT", "You must set a control ID.");
         } else if (!(this.state.fields.service_id || this.state.fields.arch_id)) {
-            this.props.toast("error", "Error", "You must set a component ID (either a service or a ref. architecture).");
+            this.props.toast("error", "INVALID INPUT", "You must set a component ID (either a service or a ref. architecture).");
         } else {
             //this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id);
             this.props.handleClose();
@@ -264,7 +264,7 @@ class MappingModal extends Component {
                                 />
                             </Form>
                         </ModalBody>
-                        <ModalFooter onRequestSubmit={this.handleSubmit} primaryButtonText={this.props.isUpdate ? "Update" : "Submit"} secondaryButtonText="Cancel" />
+                        <ModalFooter onRequestSubmit={this.handleSubmit} primaryButtonText={this.props.isUpdate ? "Update" : "Add"} secondaryButtonText="Cancel" />
                     </ComposedModal>
 
                 </div>

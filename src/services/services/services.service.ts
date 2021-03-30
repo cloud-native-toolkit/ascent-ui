@@ -29,12 +29,21 @@ export class ServiceData implements ServiceDataApi {
                 return res.body;
             });
     }
-    async doDeleteService(serviceId: string): Promise<ServiceDataModel> {
+
+    async getServiceCatalog(serviceId: string): Promise<any> {
+        return superagent
+            .get(this.baseUrl + "/catalog/" + serviceId)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body;
+            });
+    }
+    async doDeleteService(serviceId: string): Promise<any> {
         return superagent
             .delete(this.baseUrl + "/" + serviceId)
             .set('accept', 'application/json')
             .then(res => {
-                return res.body;
+                return res;
             });
     }
     async doAddService(service_details: any): Promise<ServiceDataModel> {
