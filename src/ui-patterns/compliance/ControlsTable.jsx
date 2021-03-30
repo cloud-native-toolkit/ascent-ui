@@ -12,7 +12,8 @@ import {
   TableCell,
   TableToolbarSearch,
   OverflowMenu,
-  OverflowMenuItem
+  OverflowMenuItem,
+  Tag
 } from 'carbon-components-react';
 import {
   Link
@@ -52,7 +53,18 @@ const ControlsTable = ({ rows, headers }) => (
             {rows.map((row) => (
               <TableRow key={row.id} {...getRowProps({ row })}>
                 {row.cells.map((cell) => (
-                  <TableCell key={cell.id}>{cell.value}</TableCell>
+                  <TableCell key={cell.id}>
+                    {
+                      cell.info && cell.info.header === "id" ?
+                        <Tag type="blue">
+                          <Link to={"/controls/" + cell.value.toLowerCase().replace(' ', '_')} >
+                            {cell.value}
+                          </Link>
+                        </Tag>
+                      :
+                        cell.value
+                    }
+                  </TableCell>
                 ))}
                 <TableCell>
                   
@@ -60,7 +72,6 @@ const ControlsTable = ({ rows, headers }) => (
                     <Link class="bx--overflow-menu-options__option" to={"/controls/" + row.id.toLowerCase().replace(' ', '_')}>
                       <OverflowMenuItem itemText="Details" />
                     </Link>
-                    <OverflowMenuItem itemText="Test" />
                   </OverflowMenu>
                 </TableCell>
               </TableRow>

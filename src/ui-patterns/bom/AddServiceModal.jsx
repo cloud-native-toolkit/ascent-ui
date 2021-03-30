@@ -61,7 +61,7 @@ class ServiceModal extends Component {
                 }
             });
         } else {
-            this.props.toast("error", "Error", "You must set a service ID.");
+            this.props.toast("error", "INVALID INPUT", "You must set a service ID.");
         }
 
     }

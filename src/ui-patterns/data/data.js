@@ -1,15 +1,15 @@
 export const serviceHeader = [
     {
+        key: 'service',
+        header: 'Service Name',
+    },
+    {
         key: 'id',
         header: 'Service ID',
     },
     {
         key: 'grouping',
         header: 'Grouping',
-    },
-    {
-        key: 'ibm_catalog_service',
-        header: 'IBM Service',
     },
     // {
     //     key: 'desc',
@@ -19,14 +19,14 @@ export const serviceHeader = [
         key: 'deployment_method',
         header: 'Deployment Method',
     },
-    {
-        key: 'fs_certified',
-        header: 'FS Certified',
-    },
-    {
-        key: 'compliance_status',
-        header: 'Compliance Status',
-    },
+    // {
+    //     key: 'fs_certified',
+    //     header: 'FS Certified',
+    // },
+    // {
+    //     key: 'compliance_status',
+    //     header: 'Compliance Status',
+    // },
     // {
     //     key: 'quarter',
     //     header: 'Quarter',
@@ -40,13 +40,17 @@ export const serviceHeader = [
         header: 'Provision',
     },
     {
-        key: 'cloud_automation_id',
-        header: 'CA-ID',
+        key: 'automation_id',
+        header: 'Automation ID',
     },
-    {
-        key: 'hybrid_automation_id',
-        header: 'HA-ID',
-    }
+    // {
+    //     key: 'cloud_automation_id',
+    //     header: 'CA-ID',
+    // },
+    // {
+    //     key: 'hybrid_automation_id',
+    //     header: 'HA-ID',
+    // }
 ];
 
 export const bomHeader = [
@@ -62,6 +66,10 @@ export const bomHeader = [
     {
         key: 'grouping',
         header: 'Grouping',
+    },
+    {
+        key: 'deployment_method',
+        header: 'Deployment Method',
     },
     {
         key: 'provision',
@@ -114,22 +122,22 @@ export const ctrlsHeaders = [
         key: 'cf_description',
         header: 'Control Family Description',
     },
-    {
-        key: 'base_control',
-        header: 'Base Control',
-    },
+    // {
+    //     key: 'base_control',
+    //     header: 'Base Control',
+    // },
     {
         key: 'control_name',
         header: 'Control Name',
     },
-    {
-        key: 'candidate',
-        header: 'Candidate',
-    },
-    {
-        key: 'inherited',
-        header: 'Inherited',
-    },
+    // {
+    //     key: 'candidate',
+    //     header: 'Candidate',
+    // },
+    // {
+    //     key: 'inherited',
+    //     header: 'Inherited',
+    // },
     {
         key: 'platform_responsibility',
         header: 'Platform Responsibility',

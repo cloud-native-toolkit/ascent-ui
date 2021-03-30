@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, DatePickerInput, InlineNotification, Select, SelectItem, Button, ButtonSet, DatePicker, ComposedModal, ModalBody, ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput } from 'carbon-components-react';
+import { Form, FormGroup, InlineNotification, Select, SelectItem, Button, 
+    ButtonSet, ComposedModal, ModalBody, ModalFooter, ModalHeader, 
+    RadioButtonGroup, RadioButton, TextArea, TextInput
+} from 'carbon-components-react';
 
 class FormModal extends Component {
     constructor(props) {
@@ -10,15 +13,12 @@ class FormModal extends Component {
             notif: false,
             fields: {
                 service_id: '',
-                grouping: '',
                 ibm_catalog_service: '',
-                desc: '',
+                grouping: '',
                 deployment_method: '',
-                fs_certified: "false",
-                compliance_status: '',
                 provision: '',
                 cloud_automation_id: '',
-                hybrid_automation_id: ''
+                desc: ''
             }
         };
         if (this.props.isUpdate) {
@@ -41,41 +41,39 @@ class FormModal extends Component {
         this.setState({ fields });
 
     }
+
+    validateForm() {
+        let fields = this.state.fields
+        return fields.service_id && fields.ibm_catalog_service && fields.grouping && fields.deployment_method && fields.provision ? true: false;
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
-        if (!this.props.isUpdate) {
-            this.props.service.doAddService(this.state.fields).then((res) => {
-                let notif = false;
-                if (res && res.body && res.body.error) {
-                    notif = {
-                        kind: "error",
-                        title: res.body.error.code || res.body.error.name || "Error",
-                        message: res.body.error.message
+        if (this.validateForm()) {
+            if (!this.props.isUpdate) {
+                this.props.service.doAddService(this.state.fields).then((res) => {
+                    if (res && res.body && res.body.error) {
+                        this.props.toast("error", "Error", res.body.error.message);
+                    } else {
+                        this.props.toast("success", "Success", `Service ${res.service_id} successfully created!`);
+                        this.props.handleClose();
                     }
-                } else {
-                    this.props.handleClose(res);
-                }
-                this.setState({ notif: notif });
-            });
+                });
+            } else {
+                this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id).then((res) => {
+                    if (res && res.body && res.body.error) {
+                        this.props.toast("error", "Error", res.body.error.message);
+                    } else {
+                        this.props.toast("success", "Success", `Service ${res.service_id} successfully updated!`);
+                        this.props.handleClose();
+                    }
+                });
+            }
         } else {
-            this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id).then((res) => {
-                let notif = false;
-                if (res && res.body && res.body.error) {
-                    notif = {
-                        kind: "error",
-                        title: res.body.error.code || res.body.error.name || "Error",
-                        message: res.body.error.message
-                    }
-                } else {
-                    this.props.handleClose(res);
-                }
-                this.setState({ notif: notif });
-            });
+            this.props.toast("error", "INVALID INPUT", 'You must set a valid service ID, service name, grouping, deployment method and provisionning method.');
         }
-        
     }
     render() {
-        let notif = this.state.notif;
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -84,22 +82,11 @@ class FormModal extends Component {
                         open={this.props.show}
                         onClose={this.props.handleClose}>
                         <ModalHeader >
-                            <h2 className="bx--modal-header__label">Service resource</h2>
                             <h3 className="bx--modal-header__heading">Add a Service</h3>
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
-                            {notif &&
-                                <InlineNotification
-                                    id={Date.now()}
-                                    hideCloseButton
-                                    title={notif.title || "Notification title"}
-                                    subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
-                                    kind={notif.kind || "info"}
-                                    caption={notif.caption || "Caption"}
-                                />
-                            }
-                            <Form name="serviceform" onSubmit={this.handleSubmit.bind(this)}>
+                            <Form name="serviceform">
 
                                 <TextInput
                                     data-modal-primary-focus
@@ -111,6 +98,17 @@ class FormModal extends Component {
                                     value={this.state.fields.service_id}
                                     labelText="Service ID"
                                     placeholder="e.g. appid,atracker,cos"
+                                    style={{ marginBottom: '1rem' }}
+                                />
+                                <TextInput
+                                    id="ibmService"
+                                    name="ibm_catalog_service"
+                                    invalidText="Please Enter The Value"
+
+                                    value={this.state.fields.ibm_catalog_service}
+                                    onChange={this.handleChange.bind(this, "ibm_catalog_service")}
+                                    labelText="Service Name"
+                                    placeholder="e.g. App ID,Databases for Redis ect..."
                                     style={{ marginBottom: '1rem' }}
                                 />
                                 <Select id="group" name="grouping"
@@ -133,16 +131,48 @@ class FormModal extends Component {
                                     <SelectItem value="Compute" text="Compute" />
                                     <SelectItem value="IBM Cloud Platform Services" text="IBM Cloud Platform Services" />
                                 </Select>
+                                <Select id="dplMethod"
+                                    name="deployment_method"
+                                    invalidText="Please Enter The Value"
+                                    labelText="Deployment Method"
+                                    defaultValue={!this.state.fields.deployment_method ? 'placeholder-item' : this.state.fields.deployment_method}
+                                    onChange={this.handleChange.bind(this, "deployment_method")}
+                                    style={{ marginBottom: '1rem' }}>
+                                    <SelectItem
+                                        disabled
+                                        hidden
+                                        value="placeholder-item"
+                                        text="Choose an option"
+                                    />
+                                    <SelectItem value="managed_service" text="Managed Service" />
+                                    <SelectItem value="platform" text="Platform" />
+                                    <SelectItem value="operator" text="Operator" />
+                                </Select>
+                                <Select id="provision" name="provision"
+                                    labelText="Provision"
+                                    defaultValue={!this.state.fields.provision ? 'placeholder-item' : this.state.fields.provision}
+                                    invalidText="Please Select The Value"
+                                    onChange={this.handleChange.bind(this, "provision")}
+                                    style={{ marginBottom: '1rem' }}>
+                                    <SelectItem
+                                        disabled
+                                        hidden
+                                        value="placeholder-item"
+                                        text="Choose an option"
+                                    />
+                                    <SelectItem value="terraform" text="Terraform" />
+                                    <SelectItem value="operator" text="Operator" />
+                                    <SelectItem value="ansible" text="Ansible" />
+                                </Select>
                                 <TextInput
-                                    data-modal-primary-focus
-                                    id="ibmService"
-                                    name="ibm_catalog_service"
+                                    id="caId"
+                                    name="cloud_automation_id"
                                     invalidText="Please Enter The Value"
 
-                                    value={this.state.fields.ibm_catalog_service}
-                                    onChange={this.handleChange.bind(this, "ibm_catalog_service")}
-                                    labelText="IBM Service"
-                                    placeholder="e.g. App ID,Databases for Redis ect..."
+                                    value={this.state.fields.cloud_automation_id}
+                                    onChange={this.handleChange.bind(this, "cloud_automation_id")}
+                                    labelText="Cloud Automation ID"
+                                    placeholder="e.g. ibm-access-group"
                                     style={{ marginBottom: '1rem' }}
                                 />
                                 <TextArea
@@ -157,88 +187,9 @@ class FormModal extends Component {
                                     rows={4}
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <TextInput
-                                    data-modal-primary-focus
-                                    id="dplMethod"
-                                    name="deployment_method"
-                                    invalidText="Please Enter The Value"
-
-                                    value={this.state.fields.deployment_method}
-                                    onChange={this.handleChange.bind(this, "deployment_method")}
-                                    labelText="Deployment Method"
-                                    placeholder="e.g. managed_service,platform"
-                                    style={{ marginBottom: '1rem' }}
-                                />
-                                <FormGroup legendText="FS Ready">
-                                    <RadioButtonGroup
-                                        name="fs_certified"
-                                        onChange={this.handleChange.bind(this, "fs_certified")}
-                                        defaultSelected={this.state.fields.fs_certified}>
-                                        <RadioButton
-                                            value="true"
-                                            id="radio-1"
-                                            name="fs_certified"
-                                            labelText="True"
-                                        />
-                                        <RadioButton
-                                            value="false"
-                                            labelText="False"
-                                            name="fs_certified"
-                                            id="radio-2"
-                                        />
-                                    </RadioButtonGroup>
-                                </FormGroup>
-
-                                <TextInput
-                                    data-modal-primary-focus
-                                    id="complianceStatus"
-                                    name="compliance_status"
-                                    invalidText="Please Enter The Value"
-
-                                    value={this.state.fields.compliance_status}
-                                    onChange={this.handleChange.bind(this, "compliance_status")}
-                                    labelText="Compliance Status"
-                                    placeholder="e.g. 2Q2021,2H2021"
-                                    style={{ marginBottom: '1rem' }}
-                                />
-                                <Select id="provision" name="provision"
-                                    labelText="Provision"
-                                    defaultValue={!this.state.fields.provision ? 'placeholder-item' : this.state.fields.provision}
-                                    invalidText="Please Select The Value"
-                                    onChange={this.handleChange.bind(this, "provision")}
-                                    style={{ marginBottom: '1rem' }}>
-                                    <SelectItem
-                                        disabled
-                                        hidden
-                                        value="placeholder-item"
-                                        text="Choose an option"
-                                    />
-                                    <SelectItem value="Terraform" text="Terraform" />
-                                    <SelectItem value="Operator" text="Operator" />
-                                    <SelectItem value="Ansible" text="Ansible" />
-                                </Select>
-                                <TextInput
-                                    data-modal-primary-focus
-                                    id="caId"
-                                    name="cloud_automation_id"
-                                    invalidText="Please Enter The Value"
-
-                                    value={this.state.fields.cloud_automation_id}
-                                    onChange={this.handleChange.bind(this, "cloud_automation_id")}
-                                    labelText="CAID"
-                                    placeholder="e.g. ibm-access-group"
-                                    style={{ marginBottom: '1rem' }}
-                                />
-
-                                <ButtonSet style={{ margin: '2rem 0 2rem 0' }}>
-                                    <Button kind="primary" type="submit" style={{ margin: '0 1rem 0 0' }}>
-                                        {!this.props.isUpdate && "Submit"}
-                                        {this.props.isUpdate && "Update"}
-                                    </Button>
-                                    <Button kind='secondary' type="reset" style={{ margin: '0 1rem 0 1rem' }}> Reset</Button>
-                                </ButtonSet>
                             </Form>
                         </ModalBody>
+                        <ModalFooter onRequestSubmit={this.handleSubmit} primaryButtonText={this.props.isUpdate ? "Update" : "Add"} secondaryButtonText="Cancel" />
                     </ComposedModal>
 
                 </div>
