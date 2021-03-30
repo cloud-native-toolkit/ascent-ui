@@ -8,6 +8,9 @@ import {
   HeaderName,
   HeaderNavigation,
   HeaderGlobalBar,
+  HeaderMenu,
+  HeaderSideNavItems,
+  HeaderPanel, Switcher, SwitcherItem, SwitcherDivider,
   HeaderMenuItem,
   SkipToContent,
   SideNav,
@@ -25,8 +28,11 @@ import {
 import Routes from "./router";
 import BuilderHeader from "../../components/BuilderHeader/BuilderHeader";
 import {HeaderGlobalAction} from "carbon-components-react/lib/components/UIShell";
-import Notification20 from "@carbon/icons-react/lib/notification/20";
-import UserAvatar20 from "@carbon/icons-react/lib/user--avatar/20";
+import {
+  Fade16,
+  UserAvatar20,
+  ArrowRight16 as ArrowRight
+} from '@carbon/icons-react';
 
 class UIShell extends Component {
   header = "Architecture Builder";
@@ -53,7 +59,8 @@ class UIShell extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      patternName: "Overview"
+      patternName: "Overview",
+      profileExpanded: false
     };
   }
 
@@ -66,7 +73,9 @@ class UIShell extends Component {
           <BuilderHeader/>
           <HeaderContainer
             render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-              <Header aria-label="IBM FS Cloud Architectures">
+              <Header aria-label="IBM FS Cloud Architectures" onClick={
+                isSideNavExpanded === true ? onClickSideNavExpand : null
+              }>
                 <SkipToContent />
                 <HeaderMenuButton
                   aria-label="Open menu"
@@ -80,17 +89,24 @@ class UIShell extends Component {
                 </HeaderNavigation>
 
                 <HeaderGlobalBar>
-                  <HeaderGlobalAction aria-label="Notifications">
-                    <Notification20 />
-                  </HeaderGlobalAction>
-                  <HeaderGlobalAction aria-label="User Avatar">
+                  <HeaderGlobalAction
+                    aria-label="App Switcher"
+                    isActive={this.state.profileExpanded}
+                    onClick={() => this.setState({profileExpanded: !this.state.profileExpanded})}
+                    tooltipAlignment="end">
                     <UserAvatar20 />
                   </HeaderGlobalAction>
                 </HeaderGlobalBar>
-
-                <HeaderGlobalBar>
-                  <HeaderMenuItem href="/ibm/cloud/appid/logout"><strong>Logout</strong></HeaderMenuItem>
-                </HeaderGlobalBar>
+                <HeaderPanel aria-label="Header Panel" expanded={this.state.profileExpanded} style={{'bottom': 'auto', 'padding-bottom': '1rem'}}>
+                  <strong style={{padding: '0.375rem 1rem'}}>Username</strong>
+                  <Switcher aria-label="Switcher Container">
+                      <SwitcherDivider />
+                      <SwitcherItem aria-label="Logout" href="/ibm/cloud/appid/logout">
+                        <span>Logout</span>
+                        <ArrowRight style={{'margin-left': '10px'}}/>
+                      </SwitcherItem>
+                    </Switcher>
+                </HeaderPanel>
                 <SideNav aria-label="Side navigation" expanded={isSideNavExpanded}>
 
                   <SideNavItems>

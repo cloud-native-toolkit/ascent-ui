@@ -97,19 +97,19 @@ const LandingPage = () => {
       </div>
       <InfoSection heading="The Principles" className="landing-page__r3">
         <InfoCard
-            heading="Security Controls"
-            body="Carbon's modularity ensures maximum flexibility in execution. It's components are designed to work seamlessly with each other, in whichever combination suits the needs of the user."
-            icon={<Link to="/controls" ><SankeyDiagramAlt32  /></Link>}
+          heading="Security Controls"
+          body="The IBM Cloud Framework for Financial Services provides a set of pre-configured compliance controls that are adhered to by the entire ecosystem — financial institutions, cloud services, and the digital supply chain of ISVs and SaaS providers."
+          icon={<Link to="/controls" ><SankeyDiagramAlt32  /></Link>}
         />
         <InfoCard
           heading="Reference Architectures"
-          body="It's a distributed effort, guided by the principles of the open-source movement. Carbon's users are also it's makers, and everyone is encouraged to contribute."
+          body="Set up your FS-ready cloud environment using our pre-defined reference architectures for the IBM Cloud for Financial Services. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
           icon={<Link to="/architectures" ><ModelBuilder32  /></Link>}
         />
 
         <InfoCard
           heading="Cloud Services"
-          body="Based on the comprehensive IBM Design Language, every element and component of Carbon was designed from the ground up to work elegantly together to ensure consistent, cohesive user experiences."
+          body="Navigate to our IBM Cloud services and learn more about how they are impacted by our compliance controls. Add those services to your own reference architecture and automate the provisioning of your custom FS-ready cloud architecture."
           icon={<Link to="/services" ><Cloud32  /></Link>}
         />
       </InfoSection>
