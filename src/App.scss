@@ -9,22 +9,22 @@ $feature-flags: (
 
 // If you're including all the styles for Carbon
 @import '~carbon-components/scss/globals/scss/styles.scss';
-
 @import '~@carbon/colors/scss/colors';
-
 @import '~@carbon/grid/scss/grid';
-
 @import "./ui-patterns/index.scss";
 @import "./ui-patterns/builder/_ArchitectureView.scss";
-
 @import "./ui-patterns/builder/ArticleCard/article-card.scss";
 @import "./ui-patterns/builder/ResourceCard/resource-card.scss";
 @import "./ui-patterns/builder/ResourceCard/resource-card-group.scss";
 
+@import './components/Info/info.scss';
+@import './components/BuilderHeader/builder-header.scss';
+@import './ui-patterns/LandingPage/landing-page.scss';
+
 .App {
   font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
-  text-align: center;
+  text-align: left;
 }
 
 a:hover, a:visited, a:link, a:active
@@ -37,5 +37,12 @@ a:hover, a:visited, a:link, a:active
   padding-bottom: 5px;
 }
 
+.content {
+  padding-top: 0;
+  padding-right: 0;
+}
 
-
+.pattern-container {
+  padding-top: 1em;
+  padding-right: 1em;
+}

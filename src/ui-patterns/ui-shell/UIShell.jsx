@@ -23,6 +23,10 @@ import {
   Link,
 } from "react-router-dom";
 import Routes from "./router";
+import BuilderHeader from "../../components/BuilderHeader/BuilderHeader";
+import {HeaderGlobalAction} from "carbon-components-react/lib/components/UIShell";
+import Notification20 from "@carbon/icons-react/lib/notification/20";
+import UserAvatar20 from "@carbon/icons-react/lib/user--avatar/20";
 
 
 class UIShell extends Component {
@@ -54,14 +58,13 @@ class UIShell extends Component {
     };
   }
 
-
   render() {
-
 
     return (
 
       <div>
         <Router>
+          <BuilderHeader/>
           <HeaderContainer
             render={({ isSideNavExpanded, onClickSideNavExpand }) => (
               <Header aria-label="IBM FS Cloud Architectures">
@@ -76,6 +79,16 @@ class UIShell extends Component {
                 </HeaderName>
                 <HeaderNavigation aria-label="IBM FS Cloud Architectures">
                 </HeaderNavigation>
+
+                <HeaderGlobalBar>
+                  <HeaderGlobalAction aria-label="Notifications">
+                    <Notification20 />
+                  </HeaderGlobalAction>
+                  <HeaderGlobalAction aria-label="User Avatar">
+                    <UserAvatar20 />
+                  </HeaderGlobalAction>
+                </HeaderGlobalBar>
+
                 <HeaderGlobalBar>
                   <HeaderMenuItem href="/ibm/cloud/appid/logout"><strong>Logout</strong></HeaderMenuItem>
                 </HeaderGlobalBar>
@@ -87,7 +100,23 @@ class UIShell extends Component {
                       <SideNavMenuItem>Overview</SideNavMenuItem>
                     </Link>
 
-                    <SideNavMenu title="Builder">
+                  <SideNavMenu title="Compliance" >
+
+                    <Link to="/controls">
+                      <SideNavMenuItem>Controls</SideNavMenuItem>
+                    </Link>
+
+                    <Link to="/mapping">
+                      <SideNavMenuItem>Mapping</SideNavMenuItem>
+                    </Link>
+
+                    <Link to="/nists">
+                      <SideNavMenuItem>NIST 800-53</SideNavMenuItem>
+                    </Link>
+
+                  </SideNavMenu>
+
+                    <SideNavMenu title="Solution Builder">
                       <Link to="/architectures">
                         <SideNavMenuItem>Architectures</SideNavMenuItem>
                       </Link>
@@ -95,30 +124,19 @@ class UIShell extends Component {
                       <Link to="/services">
                         <SideNavMenuItem>Services</SideNavMenuItem>
                       </Link>
-
                     </SideNavMenu>
-                    <SideNavMenu title="Compliance" >
 
-                      <Link to="/controls">
-                        <SideNavMenuItem>Controls</SideNavMenuItem>
-                      </Link>
+                    <Link to="/docs">
+                      <SideNavMenuItem>Documentation</SideNavMenuItem>
+                    </Link>
 
-                      <Link to="/mapping">
-                        <SideNavMenuItem>Mapping</SideNavMenuItem>
-                      </Link>
-
-                      <Link to="/nists">
-                        <SideNavMenuItem>NIST 800-53</SideNavMenuItem>
-                      </Link>
-
-                    </SideNavMenu>
 
                   </SideNavItems>
                 </SideNav>
               </Header>
             )}
           />
-          <Content>
+          <Content className="content">
 
             <Routes />
 

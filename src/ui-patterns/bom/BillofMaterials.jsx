@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import 'carbon-components/css/carbon-components.min.css';
 import * as _ from 'lodash';
+
 import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 import ServiceModal from './AddServiceModal';
 import SlidingPane from "react-sliding-pane";
@@ -216,6 +217,8 @@ class BillofMaterialsView extends Component {
         let data = this.state.data;
         const headers = this.state.headersData;
         const archid = this.state.archid;
+        console.log(JSON.stringify(archid));
+
         let title = "";
         if (!_.isUndefined(this.state.architecture.name)) {
             title = this.state.architecture.name
