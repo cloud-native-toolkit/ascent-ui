@@ -58,7 +58,7 @@ export class MappingData implements MappingDataApi {
             .send(mapping)
             .set('accept', 'application/json')
             .then(res => {
-                return res.body;
+                return res;
             })
             .catch(err => {
                 return err.response;
