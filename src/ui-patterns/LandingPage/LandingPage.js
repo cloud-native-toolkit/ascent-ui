@@ -11,6 +11,9 @@ import { InfoSection, InfoCard } from '../../components/Info';
 import ModelBuilder32 from '@carbon/icons-react/lib/model-builder/32';
 import SankeyDiagramAlt32 from '@carbon/icons-react/lib/sankey-diagram/32';
 import Cloud32 from "@carbon/icons-react/lib/cloud/32";
+import {
+  Link
+} from "react-router-dom";
 
 const props = {
   tabs: {
@@ -32,7 +35,7 @@ const LandingPage = () => {
         <div className="bx--col-lg-16">
           <Breadcrumb noTrailingSlash aria-label="Page navigation">
             <BreadcrumbItem>
-              <a href="/">Documentation</a>
+              <Link to="/docs" >Documentation</Link>
             </BreadcrumbItem>
           </Breadcrumb>
           <h1 className="landing-page__heading">
@@ -56,7 +59,8 @@ const LandingPage = () => {
                       evidence that can be clearly communicated with the Governance, Risk and
                       Compliance teams. Click on the button below to learn more about how these controls align with IBM Cloud Services.
                     </p>
-                    <Button>Learn more</Button>
+                    <Link to="/docs" ><Button>Learn more</Button></Link>
+                    
                   </div>
                   <div className="bx--col-md-4 bx--offset-lg-1 bx--col-lg-8">
                     <img
@@ -95,18 +99,18 @@ const LandingPage = () => {
         <InfoCard
             heading="Security Controls"
             body="Carbon's modularity ensures maximum flexibility in execution. It's components are designed to work seamlessly with each other, in whichever combination suits the needs of the user."
-            icon={<SankeyDiagramAlt32  />}
+            icon={<Link to="/controls" ><SankeyDiagramAlt32  /></Link>}
         />
         <InfoCard
           heading="Reference Architectures"
           body="It's a distributed effort, guided by the principles of the open-source movement. Carbon's users are also it's makers, and everyone is encouraged to contribute."
-          icon={<ModelBuilder32 />}
+          icon={<Link to="/architectures" ><ModelBuilder32  /></Link>}
         />
 
         <InfoCard
           heading="Cloud Services"
           body="Based on the comprehensive IBM Design Language, every element and component of Carbon was designed from the ground up to work elegantly together to ensure consistent, cohesive user experiences."
-          icon={<Cloud32 />}
+          icon={<Link to="/services" ><Cloud32  /></Link>}
         />
       </InfoSection>
     </div>
