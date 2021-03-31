@@ -63,6 +63,10 @@ class MappingModal extends Component {
         console.log(fields);
         this.setState({ fields });
     }
+    close() {
+        this.props.handleClose();
+        this.setState({ fields: {} })
+    }
     handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.fields.control_id && (this.state.fields.service_id || this.state.fields.arch_id) && !this.props.isUpdate) {
@@ -70,7 +74,10 @@ class MappingModal extends Component {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", "Error", res.body.error.message);
                 } else {
-                    this.props.handleClose(res);
+                    if (res && res.service_id && res.control_id) {
+                        this.props.toast("success", "Success", `Control ${res.control_id} successfully mapped to component ${res.service_id || res.arch_id}!`);
+                    }
+                    this.close();
                 }
             });
         } else if (!this.state.fields.control_id) {
@@ -79,7 +86,14 @@ class MappingModal extends Component {
             this.props.toast("error", "INVALID INPUT", "You must set a component ID (either a service or a ref. architecture).");
         } else {
             //this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id);
-            this.props.handleClose();
+            this.props.mapping.updateMapping(this.props.data.id, this.state.fields).then((res) => {
+                if (res && res.body && res.body.error) {
+                    this.props.toast("error", "Error", res.body.error.message);
+                } else {
+                    this.props.toast("success", "Success", `Control mapping successfully updated!`);
+                    this.close();
+                }
+            });
         }
     }
     render() {
@@ -94,7 +108,7 @@ class MappingModal extends Component {
                         open={this.props.show}
                         onClose={this.props.handleClose}>
                         <ModalHeader >
-                            <h3 className="bx--modal-header__heading">Add Mapping</h3>
+                            <h3 className="bx--modal-header__heading">{this.props.isUpdate ? `Update Mapping` : "Add Mapping"}</h3>
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
@@ -138,7 +152,7 @@ class MappingModal extends Component {
                                                 data-modal-primary-focus
                                                 id="service_id"
                                                 name="service_id"
-                                                disabled={this.state.fields.arch_id || this.props.serviceId ? true : false}
+                                                disabled={this.props.isUpdate || this.state.fields.arch_id || this.props.serviceId ? true : false}
                                                 hidden={this.props.serviceId ? true : false}
                                                 invalidText="Please Enter The Value"
                                                 onChange={this.handleChange.bind(this, "service_id")}
@@ -163,7 +177,7 @@ class MappingModal extends Component {
                                                 data-modal-primary-focus
                                                 id="arch_id"
                                                 name="arch_id"
-                                                disabled={this.state.fields.service_id ? true : false}
+                                                disabled={this.props.isUpdate || this.state.fields.service_id ? true : false}
                                                 hidden={this.props.serviceId ? true : false}
                                                 invalidText="Please Enter The Value"
                                                 onChange={this.handleChange.bind(this, "arch_id")}

@@ -14,6 +14,8 @@ import {
 import MappingTable from "../mapping/MappingTable"
 import { mappingHeaders as headers } from '../data/data';
 
+import { ToastNotification } from "carbon-components-react";
+
 class ServiceDetailsView extends Component {
   constructor(props) {
     super(props);
@@ -24,13 +26,19 @@ class ServiceDetailsView extends Component {
       mappingData: [],
       totalItems: 0,
       firstRowIndex: 0,
-      currentPageSize: 10
+      currentPageSize: 10,
+      notifications: []
     };
     this.loadTable = this.loadTable.bind(this);
+    this.addNotification = this.addNotification.bind(this);
   }
 
   async loadTable() {
     const mappingData = await this.props.mapping.getMappings({ where : {service_id: this.props.serviceId}});
+    this.setState({
+      mappingData: [],
+      totalItems: 0
+    });
     this.setState({
       mappingData: mappingData,
       totalItems: mappingData.length
@@ -44,6 +52,37 @@ class ServiceDetailsView extends Component {
     });
     this.loadTable();
   }
+
+  /** Notifications */
+
+  addNotification(type, message, detail) {
+    this.setState(prevState => ({
+      notifications: [
+        ...prevState.notifications,
+        {
+          message: message || "Notification",
+          detail: detail || "Notification text",
+          severity: type || "info"
+        }
+      ]
+    }));
+  }
+
+  renderNotifications() {
+  return this.state.notifications.map(notification => {
+      return (
+        <ToastNotification
+          title={notification.message}
+          subtitle={notification.detail}
+          kind={notification.severity}
+          timeout={5000}
+          caption={false}
+        />
+      );
+    });
+  }
+
+  /** Notifications END */
 
   render() {
     const data = this.state.data;
@@ -87,6 +126,8 @@ class ServiceDetailsView extends Component {
                   <h3>Impacting Controls</h3>
                   <br />
                   <MappingTable
+                    toast={this.addNotification}
+                    data={mappingData}
                     headers={headers}
                     rows={mappingData.slice(
                       this.state.firstRowIndex,
@@ -125,20 +166,25 @@ class ServiceDetailsView extends Component {
       </div>;
     }
     return (
-      <div className="bx--grid">
-        {notif &&
-          <InlineNotification
-            id={Date.now()}
-            hideCloseButton lowContrast
-            title={notif.title || "Notification title"}
-            subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
-            kind={notif.kind || "info"}
-            caption={notif.caption || "Caption"}
-          />
-        }
-        {breadcrumb}
-        {content}
-      </div >
+      <>
+        <div class='notif'>
+          {this.state.notifications.length !== 0 && this.renderNotifications()}
+        </div>
+        <div className="bx--grid">
+          {notif &&
+            <InlineNotification
+              id={Date.now()}
+              hideCloseButton lowContrast
+              title={notif.title || "Notification title"}
+              subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
+              kind={notif.kind || "info"}
+              caption={notif.caption || "Caption"}
+            />
+          }
+          {breadcrumb}
+          {content}
+        </div >
+      </>
     );
   }
 }

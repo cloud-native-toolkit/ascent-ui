@@ -34,22 +34,19 @@ import {
 import MappingModal from "./MappingModal"
 import ValidateModal from "../ValidateModal"
 
-import { ToastNotification } from "carbon-components-react";
-
 class MappingTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      mappingRecord: [],
       show: false,
       showValidate: false,
-      selectedRows: [],
-      notifications: []
+      selectedRows: []
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.validateCancel = this.validateCancel.bind(this);
     this.validateSubmit = this.validateSubmit.bind(this);
-    this.addNotification = this.addNotification.bind(this);
   }
 
   showModal = () => {
@@ -98,10 +95,10 @@ class MappingTable extends Component {
           count_success = count_success + 1;
         }
         if (count === total_count && count === count_success) {
-          this.addNotification('success', 'Success', `${count_success} mapping(s) successfully deleted!`)
+          this.props.toast('success', 'Success', `${count_success} mapping(s) successfully deleted!`)
           this.props.handleReload();
         } else if (count === total_count) {
-          this.addNotification('error', 'Error', `${count_success} mapping(s) successfully deleted, ${count - count_success} error(s)!`)
+          this.props.toast('error', 'Error', `${count_success} mapping(s) successfully deleted, ${count - count_success} error(s)!`)
           this.props.handleReload();
         }
       });
@@ -122,49 +119,24 @@ class MappingTable extends Component {
     })
   }
 
-  hideModal = (res) => {
-    console.log(res)
-    if (res && res.service_id && res.control_id) {
-      this.addNotification("success", "Success", `Control ${res.control_id} successfully mapped to component ${res.service_id || res.arch_id}!`);
-    }
+  hideModal = () => {
     this.setState(
       {
-        show: false
+        show: false,
+        isUpdate: false,
+        mappingRecord: []
       }
     );
     this.props.handleReload();
   };
 
-  /** Notifications */
-
-  addNotification(type, message, detail) {
-    this.setState(prevState => ({
-      notifications: [
-        ...prevState.notifications,
-        {
-          message: message || "Notification",
-          detail: detail || "Notification text",
-          severity: type || "info"
-        }
-      ]
-    }));
+  updateMapping(mappingId) {
+    this.setState({
+        show: true,
+        isUpdate: true,
+        mappingRecord: this.props.data.find(element => element.id === mappingId )
+    });
   }
-
-  renderNotifications() {
-  return this.state.notifications.map(notification => {
-    return (
-    <ToastNotification
-      title={notification.message}
-      subtitle={notification.detail}
-      kind={notification.severity}
-      timeout={5000}
-      caption={false}
-    />
-    );
-  });
-  }
-
-/** Notifications END */
 
   render() {
     const showModal = this.state.show;
@@ -184,16 +156,14 @@ class MappingTable extends Component {
     }
     return (
       <>
-        <div class='notif'>
-          {this.state.notifications.length !== 0 && this.renderNotifications()}
-        </div>
         <div>
           {showModal &&
             <MappingModal
-              toast={this.addNotification}
+              toast={this.props.toast}
               show={this.state.show}
               handleClose={this.hideModal}
               isUpdate={this.state.isUpdate}
+              data={this.state.mappingRecord}
               mapping={this.props.mapping}
               controls={this.props.controls}
               services={this.props.services}
@@ -313,7 +283,7 @@ class MappingTable extends Component {
                         ))}
                         <TableCell>
                           <OverflowMenu light flipped>
-                            <OverflowMenuItem itemText="Edit" disabled />
+                            <OverflowMenuItem itemText="Edit" onClick={() => this.updateMapping(row.id)} />
                           </OverflowMenu>
                         </TableCell>
                       </TableExpandRow>

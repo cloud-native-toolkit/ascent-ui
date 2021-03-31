@@ -112,7 +112,7 @@ class ServiceModal extends Component {
                                 />
                             </Form>
                         </ModalBody>
-                        <ModalFooter primaryButtonText={this.props.isUpdate ? "Update" : "Submit"} onRequestSubmit={this.handleSubmit} secondaryButtonText="Cancel" />
+                        <ModalFooter primaryButtonText={this.props.isUpdate ? "Update" : "Add"} onRequestSubmit={this.handleSubmit} secondaryButtonText="Cancel" />
                     </ComposedModal>
 
                 </div>
