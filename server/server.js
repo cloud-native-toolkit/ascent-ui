@@ -66,7 +66,7 @@ app.get(LOGOUT_URL, function(req, res, next) {
   res.redirect("/");
 });
 app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
-app.get('/userDetails', (req, res) => {
+app.get('/userDetails', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res) => {
   res.json({
     name: req.user.name,
     email: req.user.email,
@@ -76,25 +76,28 @@ app.get('/userDetails', (req, res) => {
 })
 app.use(express.static(path.join(__dirname, "../build")));
 
-// Catch all
-const knownUrl = ['bom', 'architectures','mapping', 'controls', 'nists', 'services', 'docs'];
-function catchAll(req, res, next) {
-  logger.info(req.user);
-  logger.info(req.isAuthenticated());
-  // Redirect to home if known url
-  try {
-    if(!knownUrl.includes(req.url.split('/')[1])) {
-      return next();
-    }
-    res.redirect('/');
-  } catch (e) {
+// Redirect to home when manually entering know URLs
+app.get('/bom*', (req, res) => {res.redirect('/');});
+app.get('/architectures*', (req, res) => {res.redirect('/');});
+app.get('/mapping*', (req, res) => {res.redirect('/');});
+app.get('/controls*', (req, res) => {res.redirect('/');});
+app.get('/nists*', (req, res) => {res.redirect('/');});
+app.get('/services*', (req, res) => {res.redirect('/');});
+app.get('/docs*', (req, res) => {res.redirect('/');});
+
+const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
+app.all('/api/*', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res, next) => {
+  console.log(req.method, req.url);
+  if (!protectedMethods.includes(req.method) || WebAppStrategy.hasScope(req, "edit")) {
     return next();
+  } else {
+    res.status(401).json({
+      error: {
+        message: "You must have editor role to perform this request."
+      }
+    });
   }
-  // if (req.isAuthenticated()) {
-  // }
-  // res.redirect('/');
-}
-app.all('*', catchAll);
+});
 
 const server = http.createServer(app);
 
