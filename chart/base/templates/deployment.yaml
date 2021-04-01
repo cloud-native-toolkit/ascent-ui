@@ -61,7 +61,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: binding-dev-mapper
-                  key: binding
+                  key: binding-application
             - name: APP_URI
               valueFrom:
                 configMapKeyRef:
