@@ -161,7 +161,7 @@ class UIShell extends Component {
               </Header>
             )}
           />
-          <Content className="content">
+          <Content className="content" onClick={() => this.setState({profileExpanded: false})}>
 
             <Routes />
 

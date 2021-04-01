@@ -9,7 +9,7 @@ export class ServiceData implements ServiceDataApi {
     baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl || '/services';
+        this.baseUrl = baseUrl || '/api/services';
     }
 
     async getServices(): Promise<ServiceDataModel[]> {
@@ -76,7 +76,7 @@ export class ServiceData implements ServiceDataApi {
     async doMapControl(mapping_details: any, serviceId: string): Promise<ControlMappingModel> {
         mapping_details.service_id = serviceId;
         return superagent
-            .post("/control-mapping")
+            .post("/api/control-mapping")
             .send(mapping_details)
             .set('accept', 'application/json')
             .then(res => {
