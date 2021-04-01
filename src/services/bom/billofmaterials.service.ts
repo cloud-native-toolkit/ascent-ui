@@ -7,8 +7,8 @@ export class BillofMaterialsService implements BillofMaterialsApi {
     baseUrl: string;
     servicebaseUrl: string;
     constructor(baseUrl: string, servicebaseUrl: string) {
-        this.baseUrl = baseUrl || '/architectures/';
-        this.servicebaseUrl = servicebaseUrl || '/services';
+        this.baseUrl = baseUrl || '/api/architectures/';
+        this.servicebaseUrl = servicebaseUrl || '/api/services';
     }
 
     async getServices(): Promise<ServiceDataModel[]> {
@@ -49,7 +49,7 @@ export class BillofMaterialsService implements BillofMaterialsApi {
 
     async getBomComposite(archiId: string): Promise<BillofMaterialsDataModel[]> {
         return superagent
-            .get('/boms/services/' + archiId)
+            .get('/api/boms/services/' + archiId)
             .set('accept', 'application/json')
             .then(res => {
                 return res.body || [];
@@ -58,7 +58,7 @@ export class BillofMaterialsService implements BillofMaterialsApi {
 
     async getBomDetails(bomId: string): Promise<BillofMaterialsDataModel> {
         return superagent
-            .get(`/boms/${bomId}/composite`)
+            .get(`/api/boms/${bomId}/composite`)
             .set('accept', 'application/json')
             .then(res => {
                 return res.body || {};
@@ -67,7 +67,7 @@ export class BillofMaterialsService implements BillofMaterialsApi {
 
     async doUpdateBOM(bomId: string, bomDetails: any): Promise<any> {
         return superagent
-            .patch(`/boms/${bomId}`)
+            .patch(`/api/boms/${bomId}`)
             .send(bomDetails)
             .set('accept', 'application/json')
             .then(res => {
@@ -81,7 +81,7 @@ export class BillofMaterialsService implements BillofMaterialsApi {
     async doDeleteBOM(bomId: string): Promise<any> {
         console.log(bomId);
         return superagent
-            .delete(`/boms/${bomId}`)
+            .delete(`/api/boms/${bomId}`)
             .set('accept', 'application/json')
             .then(res => {
                 return res;

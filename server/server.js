@@ -76,6 +76,26 @@ app.get('/userDetails', (req, res) => {
 })
 app.use(express.static(path.join(__dirname, "../build")));
 
+// Catch all
+const knownUrl = ['bom', 'architectures','mapping', 'controls', 'nists', 'services', 'docs'];
+function catchAll(req, res, next) {
+  logger.info(req.user);
+  logger.info(req.isAuthenticated());
+  // Redirect to home if known url
+  try {
+    if(!knownUrl.includes(req.url.split('/')[1])) {
+      return next();
+    }
+    res.redirect('/');
+  } catch (e) {
+    return next();
+  }
+  // if (req.isAuthenticated()) {
+  // }
+  // res.redirect('/');
+}
+app.all('*', catchAll);
+
 const server = http.createServer(app);
 
 app.use(

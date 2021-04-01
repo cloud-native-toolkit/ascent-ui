@@ -141,7 +141,7 @@ class BillofMaterialsView extends Component {
 
         // Create File name from Name of Architecture
         var filename = archname.replace(/[^a-z0-9_\-]/gi, '-').replace(/_{2,}/g, '_').toLowerCase()
-        var url = "/automation/" + archid;
+        var url = "/api/automation/" + archid;
         filename = filename + "-automation.zip";
         console.log(url, filename)
         fetch(url)
@@ -345,7 +345,7 @@ class BillofMaterialsView extends Component {
                                             <div>Diagram</div>
                                             <View style={{ marginLeft: "auto" }} />
                                         </TableToolbarAction>
-                                        <TableToolbarAction style={{ display: 'flex' }} href={'/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_drawio} download>
+                                        <TableToolbarAction style={{ display: 'flex' }} href={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_drawio} download>
                                             <div style={{ flex: 'left' }}>Diagram .drawio</div>
                                             <Download style={{ marginLeft: "auto" }} />
                                         </TableToolbarAction>
@@ -454,7 +454,7 @@ class BillofMaterialsView extends Component {
                             open={showDiagram}
                             onClose={this.hideDiagram}>
                             <ModalHeader title={this.state.architecture.name} />
-                            <ModalBody><img src={'/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" /></ModalBody>
+                            <ModalBody><img src={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" /></ModalBody>
                         </ComposedModal>}
                 </div>
                 <div>
