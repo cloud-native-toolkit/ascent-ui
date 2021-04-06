@@ -28,6 +28,7 @@ class ServiceDataView extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userRole: "editor",
             data: [],
             headerData: serviceHeader,
             show: false,
@@ -69,6 +70,11 @@ class ServiceDataView extends Component {
     }
 
     async componentDidMount() {
+        fetch('/userDetails')
+        .then(res => res.json())
+        .then(user => {
+            this.setState({ userRole: user.role || undefined })
+        })
         await this.loadTable();
     }
 
@@ -226,7 +232,8 @@ class ServiceDataView extends Component {
                                                 <TableBatchAction
                                                     tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                                                     renderIcon={Delete}
-                                                    onClick={() => this.deleteServices(selectedRows)}>
+                                                    onClick={() => this.deleteServices(selectedRows)}
+                                                    disabled={this.state.userRole !== "editor"}>
                                                     Delete
                                                 </TableBatchAction>
 
@@ -238,13 +245,14 @@ class ServiceDataView extends Component {
                                                     tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
                                                     size="small"
                                                     kind="primary"
-                                                    onClick={this.showModal}>Add</Button>
+                                                    onClick={this.showModal}
+                                                    disabled={this.state.userRole !== "editor"}>Add</Button>
                                             </TableToolbarContent>
                                         </TableToolbar>
                                         <Table {...getTableProps()}>
                                             <TableHead>
                                                 <TableRow>
-                                                    <TableSelectAll {...getSelectionProps()} />
+                                                    <TableSelectAll {...getSelectionProps()} disabled={this.state.userRole !== "editor"}/>
                                                     {headers.map((header) => (
                                                         <TableHeader key={header.key} {...getHeaderProps({ header })}>
                                                             {header.header}
@@ -256,7 +264,7 @@ class ServiceDataView extends Component {
                                             <TableBody>
                                                 {rows.map((row, i) => (
                                                     <TableRow key={row.id} {...getRowProps({ row })}>
-                                                        <TableSelectRow {...getSelectionProps({ row })} />
+                                                        <TableSelectRow {...getSelectionProps({ row })} disabled={this.state.userRole !== "editor"}/>
                                                         {row.cells.map((cell) => (
                                                             <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
                                                                 {
@@ -278,7 +286,12 @@ class ServiceDataView extends Component {
                                                                 <Link class="bx--overflow-menu-options__option" to={"/services/" + row.id}>
                                                                     <OverflowMenuItem itemText="Details" />
                                                                 </Link>
-                                                                <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(row.id)} />
+                                                                <OverflowMenuItem 
+                                                                    itemText="Edit"
+                                                                    onClick={() => this.doUpdateService(row.id)}
+                                                                    disabled={this.state.userRole !== "editor"}
+                                                                >
+                                                                </OverflowMenuItem>
                                                             </OverflowMenu>
                                                         </TableCell>
                                                     </TableRow>

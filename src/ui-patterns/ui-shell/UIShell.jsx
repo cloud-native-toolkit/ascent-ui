@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 
 import {
+  Tag,
   Content,
   Header,
   HeaderMenuButton,
@@ -19,7 +20,7 @@ import {
   SideNavMenuItem,
   HeaderContainer,
   Link as LinkComponent
-} from 'carbon-components-react/lib/components/UIShell/';
+} from 'carbon-components-react';
 
 import {
   BrowserRouter as Router,
@@ -30,6 +31,7 @@ import BuilderHeader from "../../components/BuilderHeader/BuilderHeader";
 import {HeaderGlobalAction} from "carbon-components-react/lib/components/UIShell";
 import {
   Fade16,
+  UserRole16,
   UserAvatar20,
   ArrowRight16 as ArrowRight
 } from '@carbon/icons-react';
@@ -107,7 +109,10 @@ class UIShell extends Component {
                   </HeaderGlobalAction>
                 </HeaderGlobalBar>
                 <HeaderPanel aria-label="Header Panel" expanded={this.state.profileExpanded} style={{'bottom': 'auto', 'padding-bottom': '1rem', 'list-style-type': 'none'}}>
-                  <li class="bx--switcher__item"><strong style={{'margin': '0 1rem', 'font-size': '1.3rem'}}>{(this.state.user && this.state.user.name) || "Username"}</strong></li>
+                  <li class="bx--switcher__item" style={{display: 'flex'}}>
+                    <strong style={{'margin': '0 1rem', 'font-size': '1.3rem'}}>{(this.state.user && this.state.user.name) || "Username"}</strong>
+                    <Tag style={{'margin-left': 'auto', 'margin-top': '0px', 'margin-bottom': '8px'}}>{(this.state.user && this.state.user.role) || "role"}</Tag>
+                  </li>
                   <li class="bx--switcher__item"><strong style={{'margin': '0 1rem'}}>{(this.state.user && this.state.user.email) || "example@ibm.com"}</strong></li>
                   <Switcher aria-label="Switcher Container">
                       <SwitcherDivider />

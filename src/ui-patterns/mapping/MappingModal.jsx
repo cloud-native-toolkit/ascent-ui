@@ -43,16 +43,6 @@ class MappingModal extends Component {
             archData: archData
         });
     }
-    async componentDidUpdate() {
-        const controlsData = await this.props.controls.getControls();
-        const servicesData = await this.props.services.getServices();
-        const archData = await this.props.arch.getArchitectures();
-        this.setState({
-            controlsData: controlsData,
-            servicesData: servicesData,
-            archData: archData
-        });
-    }
     handleChange(field, e) {
         let fields = this.state.fields;
         if (field === "compliant") {

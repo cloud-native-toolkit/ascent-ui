@@ -38,6 +38,7 @@ class MappingTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userRole: "editor",
       mappingRecord: [],
       show: false,
       showValidate: false,
@@ -139,6 +140,11 @@ class MappingTable extends Component {
   }
 
   render() {
+    fetch('/userDetails')
+    .then(res => res.json())
+    .then(user => {
+        this.setState({ userRole: user.role || undefined })
+    })
     const showModal = this.state.show;
     const showValidateModal = this.state.showValidate;
     for (let index = 0; index < this.props.rows.length; index++) {
@@ -206,7 +212,8 @@ class MappingTable extends Component {
                     <TableBatchAction
                         tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                         renderIcon={Delete}
-                        onClick={() => this.deleteMappings(selectedRows)}>
+                        onClick={() => this.deleteMappings(selectedRows)}
+                        disabled={this.state.userRole !== "editor"}>
                         Delete
                     </TableBatchAction>
                 </TableBatchActions>
@@ -216,7 +223,8 @@ class MappingTable extends Component {
                     size="small"
                     kind="primary"
                     renderIcon={Add16} 
-                    onClick={this.showModal}>Add
+                    onClick={this.showModal}
+                    disabled={this.state.userRole !== "editor"}>Add
                 </Button>
                 </TableToolbarContent>
               </TableToolbar>
@@ -224,7 +232,7 @@ class MappingTable extends Component {
                 <TableHead>
                   <TableRow>
                     <TableExpandHeader />
-                    <TableSelectAll {...getSelectionProps()} />
+                    <TableSelectAll {...getSelectionProps()} disabled={this.state.userRole !== "editor"}/>
                     {headers.map((header) => (
                       <TableHeader key={header.key} {...getHeaderProps({ header })}>
                         {header.header}
@@ -237,7 +245,7 @@ class MappingTable extends Component {
                   {rows.map((row) => (
                     <>
                       <TableExpandRow key={row.id} {...getRowProps({ row })}>
-                        <TableSelectRow {...getSelectionProps({ row })} />
+                        <TableSelectRow {...getSelectionProps({ row })} disabled={this.state.userRole !== "editor"}/>
                         {row.cells.map((cell) => (
                           <TableCell key={cell.id}>
                             {
@@ -283,7 +291,7 @@ class MappingTable extends Component {
                         ))}
                         <TableCell>
                           <OverflowMenu light flipped>
-                            <OverflowMenuItem itemText="Edit" onClick={() => this.updateMapping(row.id)} />
+                            <OverflowMenuItem itemText="Edit" onClick={() => this.updateMapping(row.id)} disabled={this.state.userRole !== "editor"}/>
                           </OverflowMenu>
                         </TableCell>
                       </TableExpandRow>
