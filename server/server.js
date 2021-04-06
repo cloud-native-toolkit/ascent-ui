@@ -67,11 +67,16 @@ app.get(LOGOUT_URL, function(req, res, next) {
 });
 app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
 app.get('/userDetails', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res) => {
+  let role = "read-only";
+  if (WebAppStrategy.hasScope(req, "edit")) {
+    role = "editor";
+  }
   res.json({
     name: req.user.name,
     email: req.user.email,
     given_name: req.user.given_name,
-    family_name: req.user.family_name
+    family_name: req.user.family_name,
+    role: role
   });
 })
 app.use(express.static(path.join(__dirname, "../build")));

@@ -37,6 +37,7 @@ class BillofMaterialsView extends Component {
         super(props);
 
         this.state = {
+            userRole: "editor",
             archid: null,
             data: [],
             headersData: bomHeader,
@@ -90,6 +91,11 @@ class BillofMaterialsView extends Component {
         });
     }
     async componentDidMount() {
+        fetch('/userDetails')
+        .then(res => res.json())
+        .then(user => {
+            this.setState({ userRole: user.role || undefined })
+        })
         await this.loadTable();
     }
 
@@ -326,6 +332,7 @@ class BillofMaterialsView extends Component {
                                         tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                                         renderIcon={Delete}
                                         onClick={() => this.deleteBOMs(selectedRows)}
+                                        disabled={this.state.userRole !== "editor"}
                                     >
                                         Delete
                                     </TableBatchAction>
@@ -358,6 +365,7 @@ class BillofMaterialsView extends Component {
                                         kind="primary"
                                         renderIcon={Add16}
                                         onClick={this.showModal}
+                                        disabled={this.state.userRole !== "editor"}
                                     >
                                         Add Service
                                                 </Button>
@@ -366,7 +374,7 @@ class BillofMaterialsView extends Component {
                             <Table {...getTableProps()}>
                                 <TableHead>
                                     <TableRow>
-                                        <TableSelectAll {...getSelectionProps()} />
+                                        <TableSelectAll {...getSelectionProps()} disabled={this.state.userRole !== "editor"}/>
                                         {headers.map((header, i) => (
                                             <TableHeader key={i} {...getHeaderProps({ header })}>
                                                 {header.header}
@@ -380,7 +388,7 @@ class BillofMaterialsView extends Component {
                                     {rows.map((row, i) => (
                                         <>
                                             <TableRow key={i} {...getRowProps({ row })} >
-                                                <TableSelectRow {...getSelectionProps({ row })} />
+                                                <TableSelectRow {...getSelectionProps({ row })} disabled={this.state.userRole !== "editor"}/>
                                                 {row.cells.map((cell) => (
                                                     <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
                                                         {
@@ -399,7 +407,7 @@ class BillofMaterialsView extends Component {
                                                 ))}
                                                 <TableCell className="bx--table-column-menu">
                                                     <OverflowMenu light flipped>
-                                                        <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(row.id)} />
+                                                        <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(row.id)} disabled={this.state.userRole !== "editor"}/>
                                                     </OverflowMenu>
                                                 </TableCell>
                                             </TableRow>

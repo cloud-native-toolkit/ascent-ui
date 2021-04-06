@@ -19,21 +19,24 @@ class NistDetailsView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nistData: {}
+      nistData: {},
+      number: undefined
     };
   }
-
-  async componentDidMount() {
-    const nistData = await this.props.nist.getNistDetails(this.props.number);
+  async loadNist(number) {
+    const nistData = await this.props.nist.getNistDetails(number);
     this.setState({
-      nistData: nistData
+      nistData: nistData,
+      number: this.props.number
     });
   }
-  async componentDidUpdate() {
-    const nistData = await this.props.nist.getNistDetails(this.props.number);
-    this.setState({
-      nistData: nistData
-    });
+  async componentDidMount() {
+    this.loadNist(this.props.number);
+  }
+  async componentWillReceiveProps(newProps){
+    if (newProps.number && newProps.number !== this.state.number) {
+      this.loadNist(newProps.number);
+    }
   }
   render() {
     const nistData = this.state.nistData;
