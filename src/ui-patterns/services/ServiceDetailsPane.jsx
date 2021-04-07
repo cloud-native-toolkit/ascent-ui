@@ -67,14 +67,29 @@ class ServiceDetailsPane extends Component {
                                     {this.props.data.service.grouping ? <div><p><strong>Group: </strong> <Tag type="blue">{this.props.data.service.grouping}</Tag></p><br /></div> : <></>}
                                     {this.props.data.service.deployment_method ? <div><p><strong>Deployment Method: </strong> <Tag type="blue">{this.props.data.service.deployment_method}</Tag></p><br /></div> : <></>}
                                     {this.props.data.service.provision ? <div><p><strong>Provision: </strong> <Tag type="blue">{this.props.data.service.provision}</Tag></p><br /></div> : <></>}
-                                    {
-                                        this.props.data.service.cloud_automation_id ? 
-                                            <div><p><strong>Cloud Automation id: </strong> <Tag type="blue">{this.props.data.service.cloud_automation_id}</Tag></p><br /></div>
-                                        : this.props.data.service.hybrid_automation_id ?
-                                            <div><p><strong>Hybrid Automation id: </strong> <Tag type="blue">{this.props.data.service.hybrid_automation_id}</Tag></p><br /></div>
-                                        :
-                                            <div><p><strong>Automation id: </strong> <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag></p><br /></div>
-                                    }
+                                    <div>
+                                            <p>
+                                                <strong>Automation id: </strong>
+                                                {
+                                                    this.props.data.service.cloud_automation_id && this.props.automationData ? 
+                                                        <Tag type="blue">
+                                                            <a href={"https://" + this.props.automationData.id} target="_blank">
+                                                                {this.props.automationData.name}
+                                                                <Launch16 style={{"margin-left": "3px"}}/>
+                                                            </a>
+                                                        </Tag>
+                                                    : this.props.data.service.cloud_automation_id ? 
+                                                        <Tag type="blue">
+                                                            {this.props.data.service.cloud_automation_id}
+                                                        </Tag>
+                                                    :
+                                                        <Tag type="red">
+                                                            <WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID
+                                                        </Tag>
+                                                }
+                                            </p>
+                                        <br />
+                                    </div>
                                 </>
                             }
                             {this.props.data.catalog && this.props.data.catalog.geo_tags && this.props.data.catalog.geo_tags.length > 0 &&

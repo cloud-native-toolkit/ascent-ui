@@ -1,16 +1,18 @@
 import React, { Component } from "react";
 import BillofMaterialsView from "../../ui-patterns/bom/BillofMaterials";
 import { Container } from 'typescript-ioc';
-import { BillofMaterialsApi } from '../../services';
-import { ArchitectureDataApi} from "../../services";
+import { BillofMaterialsApi, ArchitectureDataApi, AutomationApi } from "../../services";
 
 class BillofMaterialsComponent extends Component<any, any> {
     billofMaterialsApi: BillofMaterialsApi;
     architectureDataApi: ArchitectureDataApi;
+    automationApi: AutomationApi;
+    
     constructor(props: any) {
         super(props);
         this.billofMaterialsApi = this.bomService()
         this.architectureDataApi = this.archService()
+        this.automationApi = this.automationService()
     }
     bomService(): BillofMaterialsApi {
         return Container.get(BillofMaterialsApi);
@@ -18,11 +20,14 @@ class BillofMaterialsComponent extends Component<any, any> {
     archService(): ArchitectureDataApi {
         return Container.get(ArchitectureDataApi);
     }
+    automationService(): AutomationApi {
+        return Container.get(AutomationApi);
+    }
     render() {
         return (
 
             <div className="pattern-container">
-                <BillofMaterialsView archService={this.architectureDataApi} bomService={this.billofMaterialsApi} archId={this.props.data} />
+                <BillofMaterialsView archService={this.architectureDataApi} automationService={this.automationApi} bomService={this.billofMaterialsApi} archId={this.props.data} />
             </div>
 
         );

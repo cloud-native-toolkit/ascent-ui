@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ServiceDetailsView from "../../ui-patterns/services/ServiceDetailsView";
 
-import { ServiceDataApi, ControlsDataApi, MappingDataApi, ArchitectureDataApi } from '../../services';
+import { ServiceDataApi, ControlsDataApi, MappingDataApi, ArchitectureDataApi, AutomationApi } from '../../services';
 
 import { Container } from "typescript-ioc";
 class ServiceDetailsComponent extends Component<any, any> {
@@ -10,12 +10,14 @@ class ServiceDetailsComponent extends Component<any, any> {
     controlsDataAPI: ControlsDataApi;
     servicesDataAPI: ServiceDataApi;
     archDataAPI: ArchitectureDataApi;
+    automationApi: AutomationApi;
     constructor(props: any) {
         super(props);
         this.mappingDataAPI = this.getMappingService();
         this.controlsDataAPI = this.getControlsService();
         this.servicesDataAPI = this.getServicesService();
         this.archDataAPI = this.getArchService();
+        this.automationApi = this.automationService()
     }
     getMappingService(): MappingDataApi {
         return Container.get(MappingDataApi);
@@ -29,11 +31,21 @@ class ServiceDetailsComponent extends Component<any, any> {
     getArchService(): ArchitectureDataApi {
         return Container.get(ArchitectureDataApi);
     }
+    automationService(): AutomationApi {
+        return Container.get(AutomationApi);
+    }
 
     render() {
         return (
             <div className="pattern-container">
-                <ServiceDetailsView mapping={this.mappingDataAPI} arch={this.archDataAPI} service={this.servicesDataAPI} controls={this.controlsDataAPI} serviceId={this.props.data} />
+                <ServiceDetailsView 
+                    mapping={this.mappingDataAPI}
+                    arch={this.archDataAPI}
+                    service={this.servicesDataAPI}
+                    controls={this.controlsDataAPI}
+                    automationService={this.automationApi}
+                    serviceId={this.props.data}
+                />
             </div>
         );
     }

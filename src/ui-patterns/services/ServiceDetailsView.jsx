@@ -6,12 +6,17 @@ import {
   Tag,
   SearchSkeleton,
   InlineNotification,
-  Pagination
+  Pagination,
+  UnorderedList, ListItem
 } from 'carbon-components-react';
 import {
   Link
 } from "react-router-dom";
 import MappingTable from "../mapping/MappingTable"
+import {
+  Launch16,
+  WarningAlt16
+} from '@carbon/icons-react';
 import { mappingHeaders as headers } from '../data/data';
 
 import { ToastNotification } from "carbon-components-react";
@@ -21,6 +26,7 @@ class ServiceDetailsView extends Component {
     super(props);
     this.state = {
       data: {},
+      automationData: false,
       show: false,
       notif: false,
       mappingData: [],
@@ -34,7 +40,7 @@ class ServiceDetailsView extends Component {
   }
 
   async loadTable() {
-    const mappingData = await this.props.mapping.getMappings({ where : {service_id: this.props.serviceId}});
+    const mappingData = await this.props.mapping.getMappings({ where: { service_id: this.props.serviceId } });
     this.setState({
       mappingData: [],
       totalItems: 0
@@ -44,12 +50,23 @@ class ServiceDetailsView extends Component {
       totalItems: mappingData.length
     });
   }
-  
+
   async componentDidMount() {
     const serviceData = await this.props.service.getServiceDetails(this.props.serviceId);
+    let catalog = await this.props.service.getServiceCatalog(this.props.serviceId);
+    serviceData.catalog = catalog;
     this.setState({
       data: serviceData
     });
+    this.props.automationService.getAutomation(serviceData.cloud_automation_id).then((res) => {
+      if (res && res.name) {
+        let automationData = this.state.automationData;
+        automationData = res;
+        this.setState({
+          automationData: automationData
+        });
+      }
+    })
     this.loadTable();
   }
 
@@ -62,14 +79,14 @@ class ServiceDetailsView extends Component {
         {
           message: message || "Notification",
           detail: detail || "Notification text",
-          severity: type || "info"
+          severity: type || "info"
         }
       ]
     }));
   }
 
   renderNotifications() {
-  return this.state.notifications.map(notification => {
+    return this.state.notifications.map(notification => {
       return (
         <ToastNotification
           title={notification.message}
@@ -86,6 +103,7 @@ class ServiceDetailsView extends Component {
 
   render() {
     const data = this.state.data;
+    const automationData = this.state.automationData;
     const mappingData = this.state.mappingData;
     let breadcrumb;
     let content;
@@ -105,17 +123,164 @@ class ServiceDetailsView extends Component {
       content = <div className="bx--row">
         <div className="bx--col-lg-16">
           <br />
-          <h2 className="landing-page__subheading" style={{ display: "flex" }}>
-            {data.ibm_catalog_service ? data.ibm_catalog_service : data.service_id}
-          </h2>
           <br />
-          {data.desc ? <div class="attribute"><p><span class="name">Description: </span> {data.desc}</p></div> : <></>}
-          <div class="attribute"><p><span class="name">FS Cloud Certified: </span> {data.fs_certified ? <><Tag type="green">{data.compliance_status ? data.compliance_status : "true"}</Tag></> : <Tag type="red">false</Tag>}</p></div>
-          {data.grouping ? <div class="attribute"><p><span class="name">Group: </span> <Tag type="blue">{data.grouping}</Tag></p></div> : <></>}
-          {data.deployment_method ? <div class="attribute"><p><span class="name">Deployment Method: </span> <Tag type="blue">{data.deployment_method}</Tag></p></div> : <></>}
-          {data.provision ? <div class="attribute"><p><span class="name">Provision: </span> <Tag type="blue">{data.provision}</Tag></p></div> : <></>}
-          {data.cloud_automation_id ? <div class="attribute"><p><span class="name">Cloud Automation id: </span> <Tag type="blue">{data.cloud_automation_id}</Tag></p></div> : <></>}
-          {data.hybrid_automation_id ? <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{data.hybrid_automation_id}</Tag></p></div> : <></>}
+          {
+            data ?
+              <div>
+                <h2 style={{ display: 'flex' }}>
+                  {
+                    data.catalog && data.catalog.overview_ui && data.catalog.overview_ui.en ?
+                      data.catalog.overview_ui.en.display_name
+                      : data ?
+                        data.ibm_catalog_service || this.state.dataDetails.service.service_id
+                        :
+                        data.ibm_service || data.service_id
+                  }
+                  {((data && data && data.deployment_method === "operator") || (data.catalog && data.catalog.tags && data.catalog.tags.length > 0 && data.catalog.tags.includes("fs_ready"))) && <Tag type="green" style={{ marginLeft: "auto" }}>FS Ready</Tag>}
+                </h2>
+                <br />
+                <p>
+                  <strong>Description: </strong>
+                  {
+                    data.catalog && data.catalog.overview_ui && data.catalog.overview_ui.en ?
+                      data.catalog.overview_ui.en.long_description || data.catalog.overview_ui.en.description
+                      : data ?
+                        data.desc
+                        :
+                        data.desc
+                  }
+                </p>
+                <br />
+                {data.catalog && data.catalog.provider &&
+                  <>
+                    <div >
+                      <p>
+                        <strong>Provider: </strong>
+                        <Tag type="blue">{data.catalog.provider.name}</Tag>
+                      </p>
+                    </div>
+                    <br />
+                  </>
+                }
+                {data &&
+                  <>
+                    {data.grouping ? <div><p><strong>Group: </strong> <Tag type="blue">{data.grouping}</Tag></p><br /></div> : <></>}
+                    {data.deployment_method ? <div><p><strong>Deployment Method: </strong> <Tag type="blue">{data.deployment_method}</Tag></p><br /></div> : <></>}
+                    {data.provision ? <div><p><strong>Provision: </strong> <Tag type="blue">{data.provision}</Tag></p><br /></div> : <></>}
+                    <div>
+                      <p>
+                        <strong>Automation id: </strong>
+                        {
+                          data.cloud_automation_id && automationData ?
+                            <Tag type="blue">
+                              <a href={"https://" + automationData.id} target="_blank">
+                                {automationData.name}
+                                <Launch16 style={{ "margin-left": "3px" }} />
+                              </a>
+                            </Tag>
+                            : data.cloud_automation_id ?
+                              <Tag type="blue">
+                                {data.cloud_automation_id}
+                              </Tag>
+                              :
+                              <Tag type="red">
+                                <WarningAlt16 style={{ 'margin-right': '3px' }} /> No Automation ID
+                                                        </Tag>
+                        }
+                      </p>
+                      <br />
+                    </div>
+                  </>
+                }
+                {data.catalog && data.catalog.geo_tags && data.catalog.geo_tags.length > 0 &&
+                  <>
+                    <div>
+                      <p>
+                        <strong>Geos: </strong>
+                        {data.catalog.geo_tags.map((geo) => (
+                          <Tag type="blue">{geo}</Tag>
+                        ))}
+                      </p>
+                      <br />
+                    </div>
+                  </>
+                }
+                {data && data.controls && data.controls.length > 0 &&
+                  <>
+                    <div>
+                      <p>
+                        <strong>Impacting controls: </strong>
+                        {data.controls.map((control) => (
+                          <Tag type="blue">
+                            <Link to={"/controls/" + control.control_id.toLowerCase().replace(' ', '_')} >
+                              {control.control_id}
+                            </Link>
+                          </Tag>
+                        ))}
+                      </p>
+                      <br />
+                    </div>
+                  </>
+                }
+                {data.catalog && data.catalog.metadata && data.catalog.metadata.ui && data.catalog.metadata.ui.urls &&
+                  <>
+                    <div>
+                      <p>
+                        <strong>Links: </strong>
+                        <UnorderedList nested>
+                          {data.catalog.metadata.ui.urls.catalog_details_url &&
+                            <ListItem href={data.catalog.metadata.ui.urls.catalog_details_url}>
+                              <a href={data.catalog.metadata.ui.urls.catalog_details_url} target="_blank">
+                                Catalog
+                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
+                              </a>
+                            </ListItem>
+                          }
+                          {data.catalog.metadata.ui.urls.apidocs_url &&
+                            <ListItem href={data.catalog.metadata.ui.urls.apidocs_url}>
+                              <a href={data.catalog.metadata.ui.urls.apidocs_url} target="_blank">
+                                API Docs
+                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
+                              </a>
+                            </ListItem>
+                          }
+                          {data.catalog.metadata.ui.urls.doc_url &&
+                            <ListItem href={data.catalog.metadata.ui.urls.doc_url}>
+                              <a href={data.catalog.metadata.ui.urls.doc_url} target="_blank">
+                                Documentation
+                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
+                              </a>
+                            </ListItem>
+                          }
+                          {data.catalog.metadata.ui.urls.instructions_url &&
+                            <ListItem >
+                              <a href={data.catalog.metadata.ui.urls.instructions_url} target="_blank">
+                                Instructions
+                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
+                              </a>
+                            </ListItem>
+                          }
+                          {data.catalog.metadata.ui.urls.terms_url &&
+                            <ListItem href={data.catalog.metadata.ui.urls.terms_url}>
+                              <a href={data.catalog.metadata.ui.urls.terms_url} target="_blank">
+                                Terms
+                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
+                              </a>
+                            </ListItem>
+                          }
+                        </UnorderedList>
+                      </p>
+                    </div>
+                  </>
+                }
+              </div>
+              :
+              <div>
+                <BreadcrumbSkeleton />
+                <SearchSkeleton />
+              </div>
+          }
+          {/* {data.hybrid_automation_id ? <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{data.hybrid_automation_id}</Tag></p></div> : <></>} */}
           <div className="bx--row">
             <div className="bx--col-lg-16">
               {data.control_id ?

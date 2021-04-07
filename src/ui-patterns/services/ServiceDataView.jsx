@@ -7,10 +7,11 @@ import {
 
 import {
     Delete16 as Delete,
-    WarningAlt16
+    WarningAlt16,
+    Launch16
 } from '@carbon/icons-react';
 import {
-    DataTable, DataTableSkeleton, TableContainer, Table, Tag,
+    DataTable, DataTableSkeleton, TableContainer, Table, Tag, TagSkeleton,
     TableToolbar, OverflowMenu, OverflowMenuItem, ToastNotification,
     TableSelectAll, TableSelectRow, TableBatchActions, TableBatchAction, 
     TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, 
@@ -30,6 +31,7 @@ class ServiceDataView extends Component {
         this.state = {
             userRole: "editor",
             data: [],
+            automationData: [],
             headerData: serviceHeader,
             show: false,
             totalItems: 0,
@@ -61,7 +63,18 @@ class ServiceDataView extends Component {
                 service_name: row.ibm_catalog_service || row.service_id,
                 service_id: row.id
             };
-            row.automation_id = row.cloud_automation_id || row.hybrid_automation_id || '';
+            row.automation_id = row.cloud_automation_id || '';
+            this.props.automationService.getAutomation(row.cloud_automation_id).then((res) => {
+                if (res && res.name) {
+                    let automationData = this.state.automationData;
+                    automationData[res.name] = res;
+                    this.setState({
+                        automationData: automationData
+                    });
+                } else {
+                    console.log(res);
+                }
+            })
         }
         this.setState({
             data: serviceDetails,
@@ -79,7 +92,6 @@ class ServiceDataView extends Component {
     }
 
     openPane = async (serviceId) => {
-        console.log(serviceId)
         if (serviceId) {
             this.setState({
                 isPaneOpen: true,
@@ -274,8 +286,17 @@ class ServiceDataView extends Component {
                                                                             {cell.value.service_name}
                                                                             </Link>
                                                                         </Tag> 
-                                                                    : cell.info && cell.info.header === "automation_id" && !cell.value?
+                                                                    : cell.info && cell.info.header === "automation_id" && !cell.value ?
                                                                         <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag>
+                                                                    : cell.info && cell.info.header === "automation_id" && this.state.automationData && this.state.automationData[cell.value] ?
+                                                                        <Tag type="blue">
+                                                                            <a href={"https://" + this.state.automationData[cell.value].id} target="_blank">
+                                                                                {this.state.automationData[cell.value].name}
+                                                                                <Launch16 style={{"margin-left": "3px"}}/>
+                                                                            </a>
+                                                                        </Tag>
+                                                                    : cell.info && cell.info.header === "automation_id" ?
+                                                                        <TagSkeleton></TagSkeleton>
                                                                     :
                                                                         cell.value
                                                                 }
@@ -373,7 +394,7 @@ class ServiceDataView extends Component {
                     </div>
                 </div>
                 <div>
-                    <ServiceDetailsPane data={this.state.dataDetails} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
+                    <ServiceDetailsPane data={this.state.dataDetails} automationData={this.state.dataDetails && this.state.dataDetails.service && this.state.automationData[this.state.dataDetails.service.cloud_automation_id]} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
                 </div>
             </>
         );
