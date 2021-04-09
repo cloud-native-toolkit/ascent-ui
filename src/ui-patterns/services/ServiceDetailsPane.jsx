@@ -36,7 +36,7 @@ class ServiceDetailsPane extends Component {
                                     :
                                         this.props.data.ibm_service || this.props.data.service_id
                                 }
-                                {((this.props.data && this.props.data && this.props.data.deployment_method === "operator") || (this.props.data.catalog && this.props.data.catalog.tags && this.props.data.catalog.tags.length > 0 && this.props.data.catalog.tags.includes("fs_ready"))) && <Tag type="green" style={{ marginLeft: "auto" }}>FS Ready</Tag>}
+                                {(this.props.data.catalog && this.props.data.catalog.tags && this.props.data.catalog.tags.length > 0 && this.props.data.catalog.tags.includes("fs_ready")) && <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>}
                             </h3>
                             <br />
                             <p>

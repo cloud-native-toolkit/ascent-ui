@@ -136,7 +136,7 @@ class ServiceDetailsView extends Component {
                         :
                         data.ibm_service || data.service_id
                   }
-                  {((data && data && data.deployment_method === "operator") || (data.catalog && data.catalog.tags && data.catalog.tags.length > 0 && data.catalog.tags.includes("fs_ready"))) && <Tag type="green" style={{ marginLeft: "auto" }}>FS Ready</Tag>}
+                  {(data.catalog && data.catalog.tags && data.catalog.tags.length > 0 && data.catalog.tags.includes("fs_ready")) && <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>}
                 </h2>
                 <br />
                 <p>

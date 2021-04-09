@@ -32,6 +32,7 @@ class ServiceDataView extends Component {
             userRole: "editor",
             data: [],
             automationData: [],
+            catalogData: [],
             headerData: serviceHeader,
             show: false,
             totalItems: 0,
@@ -57,6 +58,7 @@ class ServiceDataView extends Component {
     async loadTable() {
         const jsonData = await this.props.service.getServices();
         const serviceDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"service_id\":/g, "\"id\":"));
+        let cat = this.state.catalogData;
         for (let index = 0; index < serviceDetails.length; index++) {
             let row = serviceDetails[index];
             row.service = {
@@ -75,8 +77,24 @@ class ServiceDataView extends Component {
                     console.log(res);
                 }
             })
+            cat[row.id] = {
+                name: "loading"
+            };
+            this.props.service.getServiceCatalog(row.id).then((res) => {
+                let catalogData = this.state.catalogData;
+                if (res && res.name) {
+                    catalogData[row.id] = res;
+                } else {
+                    catalogData[row.id] = false;
+                    console.log(res);
+                }
+                this.setState({
+                    catalogData: catalogData
+                });
+            })
         }
         this.setState({
+            catalogData: cat,
             data: serviceDetails,
             totalItems: serviceDetails.length
         });
@@ -294,6 +312,17 @@ class ServiceDataView extends Component {
                                                                                 {this.state.automationData[cell.value].name}
                                                                                 <Launch16 style={{"margin-left": "3px"}}/>
                                                                             </a>
+                                                                        </Tag>
+                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.catalogData && this.state.catalogData[row.id]
+                                                                        && this.state.catalogData[row.id].tags && this.state.catalogData[row.id].tags.length > 0 && this.state.catalogData[row.id].tags.includes("fs_ready") ?
+                                                                        <Tag type="green">
+                                                                            FS Validated
+                                                                        </Tag>
+                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.catalogData && this.state.catalogData[row.id] && this.state.catalogData[row.id].name === "loading" ?
+                                                                        <TagSkeleton></TagSkeleton>
+                                                                    : cell.info && cell.info.header === "fs_validated" ?
+                                                                        <Tag>
+                                                                            Not yet
                                                                         </Tag>
                                                                     : cell.info && cell.info.header === "automation_id" ?
                                                                         <TagSkeleton></TagSkeleton>
