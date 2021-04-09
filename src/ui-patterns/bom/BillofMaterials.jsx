@@ -16,10 +16,11 @@ import {
     Download16 as Download,
     ViewFilled16 as View,
     Add16,
-    WarningAlt16
+    WarningAlt16,
+    Launch16
 } from '@carbon/icons-react';
 import {
-    ComposedModal, ModalHeader, ModalBody, Tag,
+    ComposedModal, ModalHeader, ModalBody, Tag, TagSkeleton,
     DataTable, DataTableSkeleton, TableContainer, Table, TableSelectAll, TableBatchAction, TableSelectRow,
     TableBatchActions, TableToolbar, TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
     OverflowMenu, OverflowMenuItem
@@ -40,6 +41,8 @@ class BillofMaterialsView extends Component {
             userRole: "editor",
             archid: null,
             data: [],
+            automationData: [],
+            catalogData: [],
             headersData: bomHeader,
             show: false,
             showValidate: false,
@@ -68,21 +71,47 @@ class BillofMaterialsView extends Component {
     async loadTable() {
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
         const jsonData = await this.props.bomService.getBOM(this.props.archId, {"include":["service"]});
+        const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
+        let service_list = await this.props.bomService.getServices();
+        let cat = this.state.catalogData;
         // Reformat data to augment BOM details with service details
-        for (let index = 0; index < jsonData.length; index++) {
-            let row = jsonData[index];
+        for (let index = 0; index < bomDetails.length; index++) {
+            let row = bomDetails[index];
             row.ibm_service = {
                 ibm_service: (row.service && row.service.ibm_catalog_service) || row.service_id,
                 service_id: row.service_id
             };
             row.automation_id = (row.service && row.service.cloud_automation_id) || '';
+            this.props.automationService.getAutomation(row.service && row.service.cloud_automation_id).then((res) => {
+                if (res && res.name) {
+                    let automationData = this.state.automationData;
+                    automationData[res.name] = res;
+                    this.setState({
+                        automationData: automationData
+                    });
+                }
+            })
+            cat[row.id] = {
+                name: "loading"
+            };
+            this.props.bomService.getBomDetails(row.id).then((res) => {
+                let catalogData = this.state.catalogData;
+                if (res && res.catalog && res.catalog.name) {
+                    catalogData[row.id] = res.catalog;
+                } else {
+                    catalogData[row.id] = false;
+                    console.log(res);
+                }
+                this.setState({
+                    catalogData: catalogData
+                });
+            })
             row.deployment_method = (row.service && row.service.deployment_method) || '';
             row.provision = (row.service && row.service.provision) || '';
             row.grouping = (row.service && row.service.grouping) || '';
         }
-        const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
-        let service_list = await this.props.bomService.getServices();
         this.setState({
+            catalogData: cat,
             archid: this.props.archId,
             data: bomDetails,
             architecture: arch,
@@ -398,10 +427,30 @@ class BillofMaterialsView extends Component {
                                                                     {cell.value.ibm_service}
                                                                     </Link>
                                                                 </Tag> 
-                                                            : cell.info && cell.info.header === "automation_id" && !cell.value?
+                                                            : cell.info && cell.info.header === "automation_id" && !cell.value ?
                                                                 <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag>
-                                                            :
-                                                                cell.value
+                                                            : cell.info && cell.info.header === "automation_id" && this.state.automationData && this.state.automationData[cell.value] ?
+                                                                <Tag type="blue">
+                                                                    {console.log(cell.value)}
+                                                                    <a href={"https://" + this.state.automationData[cell.value].id} target="_blank">
+                                                                        {this.state.automationData[cell.value].name}
+                                                                        <Launch16 style={{"margin-left": "3px"}}/>
+                                                                    </a>
+                                                                </Tag>
+                                                            : cell.info && cell.info.header === "fs_validated" && this.state.catalogData && this.state.catalogData[row.id]
+                                                                && this.state.catalogData[row.id].tags && this.state.catalogData[row.id].tags.length > 0 && this.state.catalogData[row.id].tags.includes("fs_ready") ?
+                                                                <Tag type="green">
+                                                                    FS Validated
+                                                                </Tag>
+                                                            : cell.info && cell.info.header === "fs_validated" && this.state.catalogData && this.state.catalogData[row.id] && this.state.catalogData[row.id].name === "loading" ?
+                                                                <TagSkeleton></TagSkeleton>
+                                                            : cell.info && cell.info.header === "fs_validated" ?
+                                                                <Tag>
+                                                                    Not yet
+                                                                </Tag>
+                                                            : cell.info && cell.info.header === "automation_id" ?
+                                                                <TagSkeleton></TagSkeleton>
+                                                            : cell.value
                                                         }
                                                     </TableCell>
                                                 ))}
@@ -501,7 +550,7 @@ class BillofMaterialsView extends Component {
                     </div>
                 </div>
                 <div>
-                    <ServiceDetailsPane data={this.state.dataDetails} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
+                    <ServiceDetailsPane data={this.state.dataDetails} automationData={this.state.dataDetails && this.state.dataDetails.service && this.state.automationData[this.state.dataDetails.service.cloud_automation_id]} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
                 </div>
             </>
         );

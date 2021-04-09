@@ -1,24 +1,30 @@
 import React, { Component } from "react";
 import ServiceDataView from "../../ui-patterns/services/ServiceDataView";
 
-import { ServiceDataApi } from '../../services';
+import { ServiceDataApi, AutomationApi } from '../../services';
 
 import { Container } from "typescript-ioc";
 class ServiceComponent extends Component<any, any> {
 
     serviceDataAPI: ServiceDataApi;
+    automationApi: AutomationApi;
+    
     constructor(props: any) {
         super(props);
         this.serviceDataAPI = this.doGetService()
+        this.automationApi = this.automationService()
     }
     doGetService(): ServiceDataApi {
         return Container.get(ServiceDataApi);
+    }
+    automationService(): AutomationApi {
+        return Container.get(AutomationApi);
     }
 
     render() {
         return (
             <div className="pattern-container">
-                <ServiceDataView service={this.serviceDataAPI} />
+                <ServiceDataView service={this.serviceDataAPI} automationService={this.automationApi} />
             </div>
         );
     }

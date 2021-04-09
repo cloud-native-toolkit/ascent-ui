@@ -40,6 +40,10 @@ export const serviceHeader = [
         header: 'Provision',
     },
     {
+        key: 'fs_validated',
+        header: 'FS Validated',
+    },
+    {
         key: 'automation_id',
         header: 'Automation ID',
     },
@@ -74,6 +78,10 @@ export const bomHeader = [
     {
         key: 'provision',
         header: 'Provision',
+    },
+    {
+        key: 'fs_validated',
+        header: 'FS Validated',
     },
     {
         key: 'automation_id',
