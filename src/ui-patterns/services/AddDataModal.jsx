@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, InlineNotification, Select, SelectItem, Button, 
     ButtonSet, ComposedModal, ModalBody, ModalFooter, ModalHeader, 
-    RadioButtonGroup, RadioButton, TextArea, TextInput
+    RadioButtonGroup, RadioButton, TextArea, TextInput, SelectSkeleton
 } from 'carbon-components-react';
 
 class FormModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            caids: [],
             show: this.props.show,
             onRequestClose: this.props.handleClose,
             notif: false,
@@ -35,6 +36,11 @@ class FormModal extends Component {
                 }
             }
         }
+        this.props.automationService.getAutomationIds().then(res => {
+            if (res && res.data && res.data.length) {
+                this.state.caids = res.data;
+            }
+        })
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -170,17 +176,27 @@ class FormModal extends Component {
                                     <SelectItem value="operator" text="Operator" />
                                     <SelectItem value="ansible" text="Ansible" />
                                 </Select>
-                                <TextInput
-                                    id="caId"
-                                    name="cloud_automation_id"
-                                    invalidText="Please Enter The Value"
-
-                                    value={this.state.fields.cloud_automation_id}
-                                    onChange={this.handleChange.bind(this, "cloud_automation_id")}
-                                    labelText="Cloud Automation ID"
-                                    placeholder="e.g. ibm-access-group"
-                                    style={{ marginBottom: '1rem' }}
-                                />
+                                {
+                                    this.state.caids && this.state.caids.length > 0 ?
+                                        <>
+                                        <Select id="caId" name="cloud_automation_id"
+                                            labelText="Automation ID"
+                                            defaultValue={!this.state.fields.cloud_automation_id ? 'placeholder-item' : this.state.fields.cloud_automation_id}
+                                            invalidText="Please Select The Value"
+                                            onChange={this.handleChange.bind(this, "cloud_automation_id")}
+                                            style={{ marginBottom: '1rem' }}>
+                                            <SelectItem
+                                                disabled
+                                                hidden
+                                                value="placeholder-item"
+                                                text="Choose an option"
+                                            />
+                                            {this.state.caids.map(caid => (
+                                                <SelectItem value={caid.name} text={caid.name} />
+                                            ))}
+                                        </Select>
+                                        </> : <SelectSkeleton style={{ marginBottom: '1rem' }}/>
+                                }
                                 <TextArea
                                     cols={50}
                                     id="desc"

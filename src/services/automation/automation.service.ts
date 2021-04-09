@@ -24,4 +24,16 @@ export class AutomationService implements AutomationApi {
             });
     }
 
+    async getAutomationIds(): Promise<Object[]> {
+        return superagent
+            .get(this.baseUrl + '/ids')
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body || [];
+            })
+            .catch(err => {
+                return err;
+            });
+    }
+
 }

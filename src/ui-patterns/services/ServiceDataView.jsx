@@ -384,6 +384,7 @@ class ServiceDataView extends Component {
                             show={this.state.show}
                             handleClose={this.hideModal}
                             service={this.props.service}
+                            automationService={this.props.automationService}
                             isUpdate={this.state.isUpdate}
                             data={this.state.serviceRecord} />
                     }
