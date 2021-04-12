@@ -77,9 +77,11 @@ class ServiceDataView extends Component {
                     console.log(res);
                 }
             })
-            cat[row.id] = {
-                name: "loading"
-            };
+            if (!cat.hasOwnProperty(row.id)) {
+                cat[row.id] = {
+                    name: "loading"
+                };
+            }
             this.props.service.getServiceCatalog(row.id).then((res) => {
                 let catalogData = this.state.catalogData;
                 if (res && res.name) {

@@ -64,11 +64,11 @@ class NistDetailsView extends Component {
       title = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
-                  <h2 className="landing-page__subheading">
+                  <h2>
                     {nistData.number}
                   </h2>
                   <br></br>
-                  <h3 className="landing-page__subheading">{nistData.title && nistData.title.toLowerCase()}</h3>
+                  <h3 >{nistData.title && nistData.title.toLowerCase()}</h3>
                   <br></br>
                   <p>{nistData.statement && nistData.statement.description}</p>
                   {nistData.statement && nistData.statement.statement ? <>
@@ -87,7 +87,7 @@ class NistDetailsView extends Component {
         family = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>
-                    <h3 className="landing-page__subheading">Family</h3>
+                    <h3 >Family</h3>
                     <br></br>
                     <p>
                       {nistData.family.toLowerCase() + '.'}
@@ -100,7 +100,7 @@ class NistDetailsView extends Component {
         priority = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>
-                    <h3 className="landing-page__subheading">Priority</h3>
+                    <h3 >Priority</h3>
                     <br></br>
                     <Tag type="red">{nistData.priority}</Tag>
                     <br></br>
@@ -111,7 +111,7 @@ class NistDetailsView extends Component {
         supplemental_guidance = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>
-                    <h3 className="landing-page__subheading">Supplemental Guidance</h3>
+                    <h3 >Supplemental Guidance</h3>
                     <br></br>
                     <p>
                       {nistData.supplemental_guidance.description}
@@ -124,7 +124,7 @@ class NistDetailsView extends Component {
         parent_control = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>
-                    <h3 className="landing-page__subheading">Parent Control</h3>
+                    <h3 >Parent Control</h3>
                     <br></br>
                       <Tag type="blue">
                         <Link to={"/nists/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
@@ -139,7 +139,7 @@ class NistDetailsView extends Component {
         related = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>
-                    <h3 className="landing-page__subheading">Related NIST Controls</h3>
+                    <h3 >Related NIST Controls</h3>
                     <br></br>
                     {nistData.supplemental_guidance.related.map((related) => (
                       <Tag type="blue">
@@ -156,7 +156,7 @@ class NistDetailsView extends Component {
         baseline_impact = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>
-                    <h3 className="landing-page__subheading">Baseline Impact</h3>
+                    <h3 >Baseline Impact</h3>
                     <br></br>
                     {nistData.baseline_impact.map((baselineImpact) => (
                       <Tag type="cyan">{baselineImpact}</Tag>
@@ -169,7 +169,7 @@ class NistDetailsView extends Component {
         references = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>
-                    <h3 className="landing-page__subheading">References</h3>
+                    <h3 >References</h3>
                     <br></br>
                     <UnorderedList>
                     {nistData.references.reference.map((ref) => (

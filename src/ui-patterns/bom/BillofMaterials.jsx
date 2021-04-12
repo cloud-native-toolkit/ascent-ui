@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 
 import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 import ServiceModal from './AddServiceModal';
+import ArchitectureModal from './ArchitectureModal';
 import ServiceDetailsPane from '../services/ServiceDetailsPane';
 
 import {
@@ -15,6 +16,7 @@ import {
     Save16 as Save,
     Download16 as Download,
     ViewFilled16 as View,
+    Edit16,
     Add16,
     WarningAlt16,
     Launch16
@@ -23,7 +25,8 @@ import {
     ComposedModal, ModalHeader, ModalBody, Tag, TagSkeleton,
     DataTable, DataTableSkeleton, TableContainer, Table, TableSelectAll, TableBatchAction, TableSelectRow,
     TableBatchActions, TableToolbar, TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
-    OverflowMenu, OverflowMenuItem
+    OverflowMenu, OverflowMenuItem, ContentSwitcher, Switch, BreadcrumbSkeleton,
+    SearchSkeleton, CodeSnippet
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
@@ -44,7 +47,9 @@ class BillofMaterialsView extends Component {
             automationData: [],
             catalogData: [],
             headersData: bomHeader,
-            show: false,
+            showServiceModal: false,
+            showArchitectureModal: false,
+            showContent: "arch-data",
             showValidate: false,
             selectedRows: [],
             showDiagram: false,
@@ -58,8 +63,10 @@ class BillofMaterialsView extends Component {
             dataDetails: false,
             notifications: []
         };
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
+        this.showServiceModal = this.showServiceModal.bind(this);
+        this.hideServiceModal = this.hideServiceModal.bind(this);
+        this.showArchitectureModal = this.showArchitectureModal.bind(this);
+        this.hideArchitectureModal = this.hideArchitectureModal.bind(this);
         this.showDiagram = this.showDiagram.bind(this);
         this.hideDiagram = this.hideDiagram.bind(this);
         this.openPane = this.openPane.bind(this);
@@ -91,16 +98,17 @@ class BillofMaterialsView extends Component {
                     });
                 }
             })
-            cat[row.id] = {
-                name: "loading"
-            };
+            if (!cat.hasOwnProperty(row.id)) {
+                cat[row.id] = {
+                    name: "loading"
+                };
+            }
             this.props.bomService.getBomDetails(row.id).then((res) => {
                 let catalogData = this.state.catalogData;
                 if (res && res.catalog && res.catalog.name) {
                     catalogData[row.id] = res.catalog;
                 } else {
                     catalogData[row.id] = false;
-                    console.log(res);
                 }
                 this.setState({
                     catalogData: catalogData
@@ -110,6 +118,7 @@ class BillofMaterialsView extends Component {
             row.provision = (row.service && row.service.provision) || '';
             row.grouping = (row.service && row.service.grouping) || '';
         }
+        console.log(arch)
         this.setState({
             catalogData: cat,
             archid: this.props.archId,
@@ -250,24 +259,47 @@ class BillofMaterialsView extends Component {
         });
     }
 
-    /*********Modal From Code Start*****************/
+    /*********Service Modal From Code Start*****************/
 
-    showModal = () => {
-        this.setState({ show: true });
+    showServiceModal = () => {
+        this.setState({ showServiceModal: true });
     };
 
-    hideModal = () => {
+    hideServiceModal = () => {
         this.setState({
             isUpdate: false,
-            show: false
+            showServiceModal: false
         });
         this.loadTable();
     };
+
     doUpdateService(bomId) {
         this.setState({
-            show: true,
+            showServiceModal: true,
             isUpdate: true,
             serviceRecord: this.state.data.find(element => element.id === bomId )
+        });
+
+    }
+
+    /*********Architecture Modal From Code Start*****************/
+
+    showArchitectureModal = () => {
+        this.setState({ showArchitectureModal: true });
+    };
+
+    hideArchitectureModal = () => {
+        this.setState({
+            isUpdate: false,
+            showArchitectureModal: false
+        });
+        this.loadTable();
+    };
+
+    updateArchitecture() {
+        this.setState({
+            showArchitectureModal: true,
+            isUpdate: true
         });
 
     }
@@ -325,7 +357,8 @@ class BillofMaterialsView extends Component {
         if (!_.isUndefined(this.state.architecture.name)) {
             title = this.state.architecture.name
         }
-        let showModal = this.state.show;
+        let showServiceModal = this.state.showServiceModal;
+        let showArchitectureModal = this.state.showArchitectureModal;
         let showDiagram = this.state.showDiagram;
         let table;
         if (data.length === 0) {
@@ -385,6 +418,10 @@ class BillofMaterialsView extends Component {
                                             <div style={{ flex: 'left' }}>Diagram .drawio</div>
                                             <Download style={{ marginLeft: "auto" }} />
                                         </TableToolbarAction>
+                                        <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
+                                            <div style={{ flex: 'left' }}>Edit Variables</div>
+                                            <Edit16 style={{ marginLeft: "auto" }} />
+                                        </TableToolbarAction>
                                     </TableToolbarMenu>
 
 
@@ -393,7 +430,7 @@ class BillofMaterialsView extends Component {
                                         size="small"
                                         kind="primary"
                                         renderIcon={Add16}
-                                        onClick={this.showModal}
+                                        onClick={this.showServiceModal}
                                         disabled={this.state.userRole !== "editor"}
                                     >
                                         Add Service
@@ -431,7 +468,6 @@ class BillofMaterialsView extends Component {
                                                                 <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag>
                                                             : cell.info && cell.info.header === "automation_id" && this.state.automationData && this.state.automationData[cell.value] ?
                                                                 <Tag type="blue">
-                                                                    {console.log(cell.value)}
                                                                     <a href={"https://" + this.state.automationData[cell.value].id} target="_blank">
                                                                         {this.state.automationData[cell.value].name}
                                                                         <Launch16 style={{"margin-left": "3px"}}/>
@@ -489,70 +525,126 @@ class BillofMaterialsView extends Component {
         }
         const showValidateModal = this.state.showValidate;
         return (
-            <>
-                <div class='notif'>
-                    {this.state.notifications.length !== 0 && this.renderNotifications()}
-                </div>
-                <div>
-                    {showModal &&
-                        <ServiceModal
-                            toast={this.addNotification}
-                            archId={archid}
-                            show={this.state.show}
-                            handleClose={this.hideModal}
-                            service={this.props.bomService}
-                            isUpdate={this.state.isUpdate}
-                            data={this.state.serviceRecord}
-                            services={this.state.serviceNames}
-                        />
-                    }
-                    {showDiagram &&
-                        <ComposedModal
-                            open={showDiagram}
-                            onClose={this.hideDiagram}>
-                            <ModalHeader title={this.state.architecture.name} />
-                            <ModalBody><img src={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" /></ModalBody>
-                        </ComposedModal>}
-                </div>
-                <div>
-                    {showValidateModal &&
-                        <ValidateModal
-                            danger
-                            submitText="Delete"
-                            heading="Delete Services"
-                            message="You are about to remove services from this Bill Of Materials. This action cannot be undone, are you sure you want to proceed?"
-                            show={this.state.showValidate}
-                            onClose={this.validateCancel} 
-                            onRequestSubmit={this.validateSubmit} 
-                            onSecondarySubmit={this.validateCancel} />
-                    }
-                </div>
-                <div className="bx--grid">
-                    {this.breadCrumbs(title)}
-                    <div className="bx--row">
-                        <div className="bx--col-lg-16">
-                            <br></br>
-                            <h2 className="landing-page__subheading">
+             this.state.data && this.state.data.length ?
+                <>
+                    <div class='notif'>
+                        {this.state.notifications.length !== 0 && this.renderNotifications()}
+                    </div>
+                    <div>
+                        {showServiceModal &&
+                            <ServiceModal
+                                toast={this.addNotification}
+                                archId={archid}
+                                show={this.state.showServiceModal}
+                                handleClose={this.hideServiceModal}
+                                service={this.props.bomService}
+                                isUpdate={this.state.isUpdate}
+                                data={this.state.serviceRecord}
+                                services={this.state.serviceNames}
+                            />
+                        }
+                        {showArchitectureModal &&
+                            <ArchitectureModal
+                                toast={this.addNotification}
+                                architectureService={this.props.archService}
+                                data={this.state.architecture}
+                                show={this.state.showArchitectureModal}
+                                handleClose={this.hideArchitectureModal}
+                                isUpdate={this.state.isUpdate}
+                            />
+                        }
+                        {showDiagram &&
+                            <ComposedModal
+                                open={showDiagram}
+                                onClose={this.hideDiagram}>
+                                <ModalHeader title={this.state.architecture.name} />
+                                <ModalBody><img src={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" style={{'width': '100%'}}/></ModalBody>
+                            </ComposedModal>}
+                    </div>
+                    <div>
+                        {showValidateModal &&
+                            <ValidateModal
+                                danger
+                                submitText="Delete"
+                                heading="Delete Services"
+                                message="You are about to remove services from this Bill Of Materials. This action cannot be undone, are you sure you want to proceed?"
+                                show={this.state.showValidate}
+                                onClose={this.validateCancel} 
+                                onRequestSubmit={this.validateSubmit} 
+                                onSecondarySubmit={this.validateCancel} />
+                        }
+                    </div>
+                    
+                    <div className="bx--grid">
+                        {this.breadCrumbs(title)}
+                        <div className="bx--row">
+                            <div className="bx--col-lg-16">
+                                <br></br>
+                                <h2>
+                                    {
+                                        this.state.architecture && this.state.architecture.name
+                                    }
+                                    {this.state.architecture && this.state.architecture.confidential === "TRUE" && <Tag type="red" style={{"margin-left": "10px"}}>Confidential</Tag>}
+                                    {this.state.architecture && this.state.architecture.production_ready === "TRUE" && <Tag type="green" style={{"margin-left": "5px"}}>Production Ready</Tag> }
+                                </h2>
+    
+                                <br />
+                                <ContentSwitcher
+                                    size='xl'
+                                    onChange={(e) => {this.setState({showContent:e.name})}} >
+                                    <Switch name="arch-data" text="Reference Architecture Details" />
+                                    <Switch name="arch-diagram" text="Reference Architecture Diagram" />
+                                </ContentSwitcher>
+                                <br />
+                            </div>
+                        </div>
+    
+                        { this.state.showContent === "arch-diagram" && <img src={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" style={{'width': '100%'}}/>}
+                        { this.state.showContent === "arch-data" && <div>
+                            <p>
+                                <h3 className="landing-page__subheading">
+                                    Description
+                                </h3>
+                                {
+                                    this.state.architecture && this.state.architecture.long_desc || this.state.architecture.short_desc
+                                }
+                            </p>
+                            <br />
+                            { this.state.architecture && this.state.architecture.automation_variables &&
+                                <p>
+                                    <h3 className="landing-page__subheading">
+                                        Automation Variables
+                                    </h3>
+                                    <CodeSnippet type="multi" hideCopyButton>
+                                        {this.state.architecture.automation_variables}
+                                    </CodeSnippet>
+                                <br />
+                                </p>
+                            }
+                            <h3 className="landing-page__subheading">
                                 Bill Of Materials
-                            </h2>
-                            <br></br>
+                            </h3>
                             <p>
                                 List of IBM Cloud services that form the bill of materials for this reference architecture
                             </p>
                             <br></br>
-                        </div>
+    
+                            <div className="bx--row">
+                                <div className="bx--col-lg-16">
+                                    {table}
+                                </div>
+                            </div>
+                        </div>}
                     </div>
-
-                    <div className="bx--row">
-                        <div className="bx--col-lg-16">
-                            {table}
-                        </div>
+                    <div>
+                        <ServiceDetailsPane data={this.state.dataDetails} automationData={this.state.dataDetails && this.state.dataDetails.service && this.state.automationData[this.state.dataDetails.service.cloud_automation_id]} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
                     </div>
-                </div>
-                <div>
-                    <ServiceDetailsPane data={this.state.dataDetails} automationData={this.state.dataDetails && this.state.dataDetails.service && this.state.automationData[this.state.dataDetails.service.cloud_automation_id]} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
-                </div>
-            </>
+                </>
+            :
+                <>
+                    <BreadcrumbSkeleton />
+                    <SearchSkeleton />
+                </>
         );
     }
 }

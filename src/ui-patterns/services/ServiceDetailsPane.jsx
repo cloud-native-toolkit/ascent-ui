@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
-    UnorderedList, ListItem, BreadcrumbSkeleton, SearchSkeleton, Tag
+    UnorderedList, ListItem, BreadcrumbSkeleton, SearchSkeleton, Tag, 
+    CodeSnippet
 } from 'carbon-components-react';
 import {
     WarningAlt16,
@@ -170,6 +171,19 @@ class ServiceDetailsPane extends Component {
                                                 }
                                             </UnorderedList>
                                         </p>
+                                    </div>
+                                </>
+                            }
+                            {this.props.data && this.props.data.automation_variables &&
+                                <>
+                                    <div>
+                                        <p>
+                                            <strong>Automation Variables: </strong>
+                                            <CodeSnippet type="multi" hideCopyButton>
+                                                {this.props.data.automation_variables}
+                                            </CodeSnippet>
+                                        </p>
+                                        <br />
                                     </div>
                                 </>
                             }
