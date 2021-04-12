@@ -18,7 +18,6 @@ export class ArchitectureService implements ArchitectureDataApi {
             .then(res => {
                 return res.body || [];
             });
-
     }
 
     async getArchitectureById(archiId: string): Promise<ArchiectureDataModel> {
@@ -28,6 +27,20 @@ export class ArchitectureService implements ArchitectureDataApi {
             .then(res => {
 
                 return res.body;
+            });
+    }
+
+    async updateArchitecture(archiId: string, arch_details: any): Promise<ArchiectureDataModel> {
+        return superagent
+            .patch(this.baseUrl + "/" + archiId)
+            .send(arch_details)
+            .set('accept', 'application/json')
+            .then(res => {
+                console.log(res.status);
+                return res.body;
+            })
+            .catch(err => {
+                return err.response;
             });
     }
 }

@@ -127,7 +127,7 @@ class ControlDetailsView extends Component {
       title = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
-                  <h2 className="landing-page__subheading">
+                  <h2>
                     {data.control_id}
                   </h2>
                   <br></br>
@@ -137,7 +137,7 @@ class ControlDetailsView extends Component {
         guidance = <div className="bx--row">
                   <div className="bx--col-lg-16">
                     <br></br>
-                    <h4 className="landing-page__subheading">Guidance</h4>
+                    <h4 >Guidance</h4>
                     <br></br>
                     <p>
                       {data.guidance}
@@ -150,7 +150,7 @@ class ControlDetailsView extends Component {
         comment = <div className="bx--row">
                     <div className="bx--col-lg-16">
                       <br></br>
-                      <h4 className="landing-page__subheading">Comment</h4>
+                      <h4 >Comment</h4>
                       <br></br>
                       <p>
                         {data.comment}
@@ -164,11 +164,11 @@ class ControlDetailsView extends Component {
       nist = <div className="bx--row">
               <div className="bx--col-lg-16">
                 <br></br>
-                <h3 className="landing-page__subheading">
+                <h3 >
                   Official NIST description
                 </h3>
                 <br></br>
-                <h4 className="landing-page__subheading">{nistData.title && nistData.title.toLowerCase()}</h4>
+                <h4 >{nistData.title && nistData.title.toLowerCase()}</h4>
                 <br></br>
                 <p>{nistData.statement && nistData.statement.description}</p>
                 {nistData.statement && nistData.statement.statement ? <>
@@ -188,7 +188,7 @@ class ControlDetailsView extends Component {
       family = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
-                  <h4 className="landing-page__subheading">Family</h4>
+                  <h4 >Family</h4>
                   <br></br>
                   <p>
                     {nistData.family.toLowerCase() + '.'}
@@ -201,7 +201,7 @@ class ControlDetailsView extends Component {
       priority = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
-                  <h4 className="landing-page__subheading">Priority</h4>
+                  <h4 >Priority</h4>
                   <br></br>
                   <Tag type="red">{nistData.priority}</Tag>
                   <br></br>
@@ -212,7 +212,7 @@ class ControlDetailsView extends Component {
       supplemental_guidance = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
-                  <h4 className="landing-page__subheading">Supplemental Guidance</h4>
+                  <h4 >Supplemental Guidance</h4>
                   <br></br>
                   <p>
                     {nistData.supplemental_guidance.description}
@@ -225,7 +225,7 @@ class ControlDetailsView extends Component {
       parent_control = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
-                  <h4 className="landing-page__subheading">Parent Control</h4>
+                  <h4 >Parent Control</h4>
                   <br></br>
                     <Tag type="blue">
                       <Link to={"/nists/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
@@ -240,7 +240,7 @@ class ControlDetailsView extends Component {
       related = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
-                  <h4 className="landing-page__subheading">Related NIST Controls</h4>
+                  <h4 >Related NIST Controls</h4>
                   <br></br>
                   {nistData.supplemental_guidance.related.map((related) => (
                     <Tag type="blue">
@@ -257,7 +257,7 @@ class ControlDetailsView extends Component {
       baseline_impact = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
-                  <h4 className="landing-page__subheading">Baseline Impact</h4>
+                  <h4 >Baseline Impact</h4>
                   <br></br>
                   {nistData.baseline_impact.map((baselineImpact) => (
                     <Tag type="cyan">{baselineImpact}</Tag>
@@ -270,7 +270,7 @@ class ControlDetailsView extends Component {
       references = <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
-                  <h4 className="landing-page__subheading">References</h4>
+                  <h4 >References</h4>
                   <br></br>
                   <UnorderedList>
                   {nistData.references.reference.map((ref) => (
