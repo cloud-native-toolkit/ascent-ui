@@ -156,10 +156,20 @@ class UIShell extends Component {
                       </Link>
                     </SideNavMenu>
 
-                    <Link to="/docs">
-                      <SideNavMenuItem>Documentation</SideNavMenuItem>
-                    </Link>
+                    <SideNavMenu title="Documentation">
 
+                      <Link to="/docs">
+                        <SideNavMenuItem>Overview</SideNavMenuItem>
+                      </Link>
+
+                      <a target="_blank" href="https://github.com/cloud-native-toolkit/garage-terraform-modules/blob/main/MODULES.md">
+                        <SideNavMenuItem>Terraform Modules</SideNavMenuItem>
+                      </a>
+                      <a target="_blank" href="https://github.com/cloud-native-toolkit/iascable">
+                        <SideNavMenuItem>CLI</SideNavMenuItem>
+                      </a>
+
+                    </SideNavMenu>
 
                   </SideNavItems>
                 </SideNav>
