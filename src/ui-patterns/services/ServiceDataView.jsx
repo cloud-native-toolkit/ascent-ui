@@ -31,8 +31,7 @@ class ServiceDataView extends Component {
         this.state = {
             userRole: "editor",
             data: [],
-            automationData: [],
-            catalogData: [],
+            compositeData: [],
             headerData: serviceHeader,
             show: false,
             totalItems: 0,
@@ -58,7 +57,6 @@ class ServiceDataView extends Component {
     async loadTable() {
         const jsonData = await this.props.service.getServices();
         const serviceDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"service_id\":/g, "\"id\":"));
-        let cat = this.state.catalogData;
         for (let index = 0; index < serviceDetails.length; index++) {
             let row = serviceDetails[index];
             row.service = {
@@ -66,37 +64,19 @@ class ServiceDataView extends Component {
                 service_id: row.id
             };
             row.automation_id = row.cloud_automation_id || '';
-            this.props.automationService.getAutomation(row.cloud_automation_id).then((res) => {
-                if (res && res.name) {
-                    let automationData = this.state.automationData;
-                    automationData[res.name] = res;
-                    this.setState({
-                        automationData: automationData
-                    });
-                } else {
-                    console.log(res);
-                }
-            })
-            if (!cat.hasOwnProperty(row.id)) {
-                cat[row.id] = {
-                    name: "loading"
-                };
-            }
-            this.props.service.getServiceCatalog(row.id).then((res) => {
-                let catalogData = this.state.catalogData;
-                if (res && res.name) {
-                    catalogData[row.id] = res;
-                } else {
-                    catalogData[row.id] = false;
-                    console.log(res);
+        }
+        this.props.service.getServicesComposite().then((res) => {
+            if(res && res.length) {
+                let compositeData = {};
+                for (let ix in res) {
+                    compositeData[res[ix].service_id] = res[ix];
                 }
                 this.setState({
-                    catalogData: catalogData
-                });
-            })
-        }
+                    compositeData: compositeData
+                })
+            }
+        });
         this.setState({
-            catalogData: cat,
             data: serviceDetails,
             totalItems: serviceDetails.length
         });
@@ -119,6 +99,10 @@ class ServiceDataView extends Component {
             });
             let serviceDetails = await this.props.service.getServiceDetails(serviceId);
             let catalog = await this.props.service.getServiceCatalog(serviceId);
+            if (serviceDetails.cloud_automation_id) {
+                let automation = await this.props.automationService.getAutomation(serviceDetails.cloud_automation_id);
+                serviceDetails.automation = automation;
+            }
             serviceDetails.service = serviceDetails;
             serviceDetails.catalog = catalog;
             this.setState({
@@ -308,24 +292,24 @@ class ServiceDataView extends Component {
                                                                         </Tag> 
                                                                     : cell.info && cell.info.header === "automation_id" && !cell.value ?
                                                                         <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag>
-                                                                    : cell.info && cell.info.header === "automation_id" && this.state.automationData && this.state.automationData[cell.value] ?
+                                                                    : cell.info && cell.info.header === "automation_id" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].automation ?
                                                                         <Tag type="blue">
-                                                                            <a href={"https://" + this.state.automationData[cell.value].id} target="_blank">
-                                                                                {this.state.automationData[cell.value].name}
+                                                                            <a href={"https://" + this.state.compositeData[row.id].automation.id} target="_blank">
+                                                                                {this.state.compositeData[row.id].automation.name}
                                                                                 <Launch16 style={{"margin-left": "3px"}}/>
                                                                             </a>
                                                                         </Tag>
-                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.catalogData && this.state.catalogData[row.id]
-                                                                        && this.state.catalogData[row.id].tags && this.state.catalogData[row.id].tags.length > 0 && this.state.catalogData[row.id].tags.includes("fs_ready") ?
+                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].catalog
+                                                                        && this.state.compositeData[row.id].catalog.tags && this.state.compositeData[row.id].catalog.tags.length > 0 && this.state.compositeData[row.id].catalog.tags.includes("fs_ready") ?
                                                                         <Tag type="green">
                                                                             FS Validated
                                                                         </Tag>
-                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.catalogData && this.state.catalogData[row.id] && this.state.catalogData[row.id].name === "loading" ?
-                                                                        <TagSkeleton></TagSkeleton>
-                                                                    : cell.info && cell.info.header === "fs_validated" ?
+                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] ?
                                                                         <Tag>
                                                                             Not yet
                                                                         </Tag>
+                                                                    : cell.info && cell.info.header === "fs_validated" ?
+                                                                        <TagSkeleton></TagSkeleton>
                                                                     : cell.info && cell.info.header === "automation_id" ?
                                                                         <TagSkeleton></TagSkeleton>
                                                                     :
@@ -426,7 +410,7 @@ class ServiceDataView extends Component {
                     </div>
                 </div>
                 <div>
-                    <ServiceDetailsPane data={this.state.dataDetails} automationData={this.state.dataDetails && this.state.dataDetails.service && this.state.automationData[this.state.dataDetails.service.cloud_automation_id]} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
+                    <ServiceDetailsPane data={this.state.dataDetails} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
                 </div>
             </>
         );
