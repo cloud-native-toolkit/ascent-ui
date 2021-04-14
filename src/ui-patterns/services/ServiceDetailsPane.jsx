@@ -72,10 +72,10 @@ class ServiceDetailsPane extends Component {
                                             <p>
                                                 <strong>Automation id: </strong>
                                                 {
-                                                    this.props.data.service.cloud_automation_id && this.props.automationData ? 
+                                                    this.props.data.service.cloud_automation_id && this.props.data.automation ? 
                                                         <Tag type="blue">
-                                                            <a href={"https://" + this.props.automationData.id} target="_blank">
-                                                                {this.props.automationData.name}
+                                                            <a href={"https://" + this.props.data.automation.id} target="_blank">
+                                                                {this.props.data.automation.name}
                                                                 <Launch16 style={{"margin-left": "3px"}}/>
                                                             </a>
                                                         </Tag>
@@ -89,6 +89,19 @@ class ServiceDetailsPane extends Component {
                                                         </Tag>
                                                 }
                                             </p>
+                                        <br />
+                                    </div>
+                                </>
+                            }
+                            {this.props.data && this.props.data.automation_variables &&
+                                <>
+                                    <div>
+                                        <p>
+                                            <strong>Automation Variables: </strong>
+                                            <CodeSnippet type="multi" hideCopyButton>
+                                                {this.props.data.automation_variables}
+                                            </CodeSnippet>
+                                        </p>
                                         <br />
                                     </div>
                                 </>
@@ -171,19 +184,6 @@ class ServiceDetailsPane extends Component {
                                                 }
                                             </UnorderedList>
                                         </p>
-                                    </div>
-                                </>
-                            }
-                            {this.props.data && this.props.data.automation_variables &&
-                                <>
-                                    <div>
-                                        <p>
-                                            <strong>Automation Variables: </strong>
-                                            <CodeSnippet type="multi" hideCopyButton>
-                                                {this.props.data.automation_variables}
-                                            </CodeSnippet>
-                                        </p>
-                                        <br />
                                     </div>
                                 </>
                             }
