@@ -101,7 +101,7 @@ class ServiceModal extends Component {
                                         text="Choose an option"
                                     />
                                     {this.props.services.map((rows, i) => (
-                                        <SelectItem value={rows.service_id} text={rows.service_id} />
+                                        <SelectItem value={rows.service_id} text={rows.ibm_catalog_service || rows.service_id} />
                                     ))}
 
                                 </Select>
