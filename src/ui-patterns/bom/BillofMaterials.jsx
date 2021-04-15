@@ -170,15 +170,21 @@ class BillofMaterialsView extends Component {
         var url = "/api/automation/" + archid;
         filename = filename + "-automation.zip";
         console.log(url, filename)
+        this.addNotification("info", "BUILDING", "Started building your terraform module.");
         fetch(url)
             .then(response => {
-                response.blob().then(blob => {
-                    let url = window.URL.createObjectURL(blob);
-                    let a = document.createElement('a');
-                    a.href = url;
-                    a.download = filename;
-                    a.click();
-                });
+                if (response && response.status === 200) {
+                    response.blob().then(blob => {
+                        let url = window.URL.createObjectURL(blob);
+                        let a = document.createElement('a');
+                        a.href = url;
+                        a.download = filename;
+                        a.click();
+                    });
+                }
+                else {
+                    this.addNotification("error", response.status + " " + response.statusText, "Error building your terraform module.");
+                }
             });
     }
 
@@ -321,7 +327,7 @@ class BillofMaterialsView extends Component {
                 title={notification.message}
                 subtitle={notification.detail}
                 kind={notification.severity}
-                timeout={5000}
+                timeout={10000}
                 caption={false}
             />
             );

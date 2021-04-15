@@ -203,7 +203,7 @@ class ServiceDataView extends Component {
                 title={notification.message}
                 subtitle={notification.detail}
                 kind={notification.severity}
-                timeout={5000}
+                timeout={10000}
                 caption={false}
             />
             );
