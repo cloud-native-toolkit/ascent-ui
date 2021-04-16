@@ -212,8 +212,8 @@ class ServiceDetailsView extends Component {
                         <strong>Impacting controls: </strong>
                         {data.controls.map((control) => (
                           <Tag type="blue">
-                            <Link to={"/controls/" + control.control_id.toLowerCase().replace(' ', '_')} >
-                              {control.control_id}
+                            <Link to={"/controls/" + control.id.toLowerCase().replace(' ', '_')} >
+                              {control.id}
                             </Link>
                           </Tag>
                         ))}
@@ -283,7 +283,7 @@ class ServiceDetailsView extends Component {
           {/* {data.hybrid_automation_id ? <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{data.hybrid_automation_id}</Tag></p></div> : <></>} */}
           <div className="bx--row">
             <div className="bx--col-lg-16">
-              {data.control_id ?
+              {data.id ?
                 <></>
                 :
                 <>

@@ -109,7 +109,7 @@ class MappingModal extends Component {
                                         <>
                                             <datalist id="control_ids">
                                                 {controlsData.map((control) => (
-                                                    <option value={control.control_id} />
+                                                    <option value={control.id} />
                                                 ))}
                                             </datalist>
                                             <TextInput

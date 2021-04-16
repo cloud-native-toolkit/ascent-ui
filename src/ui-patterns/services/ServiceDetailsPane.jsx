@@ -126,8 +126,8 @@ class ServiceDetailsPane extends Component {
                                             <strong>Impacting controls: </strong>
                                             {this.props.data.service.controls.map((control) => (
                                                 <Tag type="blue">
-                                                    <Link to={"/controls/" + control.control_id.toLowerCase().replace(' ', '_')} >
-                                                        {control.control_id}
+                                                    <Link to={"/controls/" + control.id.toLowerCase().replace(' ', '_')} >
+                                                        {control.id}
                                                     </Link>
                                                 </Tag>
                                             ))}
