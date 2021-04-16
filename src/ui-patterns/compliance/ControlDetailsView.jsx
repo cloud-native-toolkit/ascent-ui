@@ -11,6 +11,7 @@ import {
   Switch,
   Pagination
 } from 'carbon-components-react';
+import ReactMarkdown from 'react-markdown';
 import {
   Link
 } from "react-router-dom";
@@ -39,8 +40,20 @@ class ControlDetailsView extends Component {
     this.addNotification = this.addNotification.bind(this);
   }
 
+  async loadControl(controlId) {
+    const controlData = await this.props.controls.getControlsDetails(controlId);
+    controlData.description = controlData.description.replaceAll(/\n\n([a-z]\))/gi, '\n\n**$1**');
+    controlData.implementation = controlData.implementation.replaceAll('\n\n#### Part', '\n\n&nbsp;  \n#### Part');
+    controlData.implementation = controlData.implementation.replaceAll('\n\n#####', '\n\n&nbsp;  \n#####');
+    const nistData = controlData.nist;
+    this.setState({
+      data: controlData,
+      nistData: nistData
+    });
+  }
+
   async loadTable() {
-    const mappingData = await this.props.mapping.getMappings({ where : {control_id: this.props.controlId}});
+    const mappingData = await this.props.mapping.getMappings({ where : {id: this.props.controlId}});
     this.setState({
       mappingData: [],
       totalItems: 0
@@ -52,13 +65,14 @@ class ControlDetailsView extends Component {
   }
 
   async componentDidMount() {
-    const controlData = await this.props.controls.getControlsDetails(this.props.controlId);
-    const nistData = controlData.nist;
-    this.setState({
-      data: controlData,
-      nistData: nistData
-    });
+    this.loadControl(this.props.controlId);
     this.loadTable();
+  }
+
+  async componentWillReceiveProps(newProps){
+    if (newProps.controlId && newProps.controlId !== this.state.controlId) {
+      this.loadControl(newProps.controlId);
+    }
   }
 
   /** Notifications */
@@ -100,7 +114,6 @@ class ControlDetailsView extends Component {
     console.log(nistData);
     let breadcrumb;
     let title;
-    let guidance = <></>;
     let comment = <></>;
 
     // NIST controls details
@@ -112,7 +125,7 @@ class ControlDetailsView extends Component {
     let related = <></>;
     let baseline_impact = <></>;
     let references = <></>;
-    if (!data.control_id) {
+    if (!data.id) {
       breadcrumb = <BreadcrumbSkeleton />;
       title = <SearchSkeleton />;
     } else {
@@ -128,37 +141,11 @@ class ControlDetailsView extends Component {
                 <div className="bx--col-lg-16">
                   <br></br>
                   <h2>
-                    {data.control_id}
+                    {(data.name && (data.id + ": " + data.name)) || data.id}
                   </h2>
                   <br></br>
                 </div>
               </div>;
-      if (data.guidance && data.guidance !== "None") {
-        guidance = <div className="bx--row">
-                  <div className="bx--col-lg-16">
-                    <br></br>
-                    <h4 >Guidance</h4>
-                    <br></br>
-                    <p>
-                      {data.guidance}
-                    </p>
-                    <br></br>
-                  </div>
-                </div>;
-      }
-      if (data.comment) {
-        comment = <div className="bx--row">
-                    <div className="bx--col-lg-16">
-                      <br></br>
-                      <h4 >Comment</h4>
-                      <br></br>
-                      <p>
-                        {data.comment}
-                      </p>
-                      <br></br>
-                    </div>
-                  </div>;
-      }
     }
     if (nistData.number) {
       nist = <div className="bx--row">
@@ -295,7 +282,7 @@ class ControlDetailsView extends Component {
           {breadcrumb}
           {title}
 
-          {data.control_id && 
+          {data.id && 
             <ContentSwitcher
               size='xl'
               onChange={(e) => {this.setState({show:e.name})}} >
@@ -306,21 +293,38 @@ class ControlDetailsView extends Component {
           
 
           {this.state.show === "fs-cloud-desc" && <div>
-            {data.control_id && 
+            {data.id && 
               <>
                 <br />
                 <h3>Description</h3>
                 <br />
-                <p>{data.control_description}</p>
+                <ReactMarkdown>{data.description}</ReactMarkdown>
+                {data.parent_control && <>
+                  <br />
+                  <p>Parent control: <Tag type="blue">
+                      <Link to={"/controls/" + data.parent_control.toLowerCase().replace(' ', '_')} >
+                        {data.parent_control}
+                      </Link>
+                    </Tag></p>
+                </>}
+                <br />
+                {data.parameters && <>
+                  <h3>Parameters</h3>
+                  <br />
+                  <ReactMarkdown>{data.parameters}</ReactMarkdown>
+                  <br />
+                </>}
+                <h3>Solution and Implementation</h3>
+                <br />
+                <ReactMarkdown>{data.implementation}</ReactMarkdown>
                 <br />
               </>
             }
             
-            {guidance}
             {comment}
             <div className="bx--row">
               <div className="bx--col-lg-16">
-                {data.control_id &&
+                {data.id &&
                   <>
                     <br />
                     <h3>Impacted Components</h3>

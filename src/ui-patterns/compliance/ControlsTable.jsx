@@ -55,11 +55,16 @@ const ControlsTable = ({ rows, headers }) => (
                 {row.cells.map((cell) => (
                   <TableCell key={cell.id}>
                     {
-                      cell.info && cell.info.header === "id" ?
+                      cell.info && (cell.info.header === "id" || cell.info.header === "parent_control" && cell.value) ?
                         <Tag type="blue">
                           <Link to={"/controls/" + cell.value.toLowerCase().replace(' ', '_')} >
                             {cell.value}
                           </Link>
+                        </Tag>
+                      :
+                      cell.info && (cell.info.header === "base_control") ?
+                        <Tag>
+                          {cell.value ? "true" : "false"}
                         </Tag>
                       :
                         cell.value

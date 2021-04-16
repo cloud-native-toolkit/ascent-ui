@@ -21,10 +21,9 @@ class ControlsView extends Component {
 
     async componentDidMount() {
         const jsonData = await this.props.controls.getControls();
-        const controlsDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"control_id\":/g, "\"id\":"));
         this.setState({
-            data: controlsDetails,
-            totalItems: controlsDetails.length
+            data: jsonData,
+            totalItems: jsonData.length
         });
     }
     render() {

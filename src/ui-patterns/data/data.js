@@ -123,36 +123,16 @@ export const ctrlsHeaders = [
         header: 'Control ID',
     },
     {
-        key: 'control_family',
-        header: 'Control Family',
-    },
-    {
-        key: 'cf_description',
-        header: 'Control Family Description',
-    },
-    // {
-    //     key: 'base_control',
-    //     header: 'Base Control',
-    // },
-    {
-        key: 'control_name',
+        key: 'name',
         header: 'Control Name',
     },
-    // {
-    //     key: 'candidate',
-    //     header: 'Candidate',
-    // },
-    // {
-    //     key: 'inherited',
-    //     header: 'Inherited',
-    // },
     {
-        key: 'platform_responsibility',
-        header: 'Platform Responsibility',
+        key: 'base_control',
+        header: 'Base Control',
     },
     {
-        key: 'app_responsibility',
-        header: 'App Responsibility',
+        key: 'parent_control',
+        header: 'Parent Control',
     }
 ];
 
