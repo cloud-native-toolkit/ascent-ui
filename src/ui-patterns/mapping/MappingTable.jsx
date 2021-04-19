@@ -151,6 +151,7 @@ class MappingTable extends Component {
       let row = this.props.rows[index];
       row.component_id = {
         val: row.service_id || row.arch_id,
+        serviceName: row?.service?.ibm_catalog_service,
         arch: row.arch_id ? true : false,
         service: row.service_id ? true : false,
         details: {
@@ -249,7 +250,6 @@ class MappingTable extends Component {
                         <TableSelectRow {...getSelectionProps({ row })} disabled={this.state.userRole !== "editor"}/>
                         {row.cells.map((cell) => (
                           <TableCell key={cell.id}>
-                            {console.log(cell)}
                             {
                               cell.info && cell.info.header === "control_id" ?
                                 <Tag type="blue">
@@ -257,11 +257,15 @@ class MappingTable extends Component {
                                     {cell.value}
                                   </Link>
                                 </Tag>
-                              : cell.info && cell.info.header === "component_id" && cell.value && cell.value.service ?
+                              : cell.info && cell.info.header === "component_id" && cell.value && cell.value.service && cell.value.serviceName ?
                                 <Tag type="blue">
                                   <Link to={"/services/" + cell.value.val} >
-                                    {cell.value.val}
+                                    {cell.value.serviceName}
                                   </Link>
+                                </Tag>
+                              : cell.info && cell.info.header === "component_id" && cell.value && cell.value.service?
+                                <Tag>
+                                  {cell.value.val}
                                 </Tag>
                               : cell.info && cell.info.header === "component_id" && cell.value && cell.value.arch ?
                                 <Tag type="blue">
