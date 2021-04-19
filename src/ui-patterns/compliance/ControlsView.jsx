@@ -12,25 +12,50 @@ class ControlsView extends Component {
         super(props);
         this.state = {
             data: [],
+            filterData: [],
             headerData: ctrlsHeaders,
             totalItems: 0,
             firstRowIndex: 0,
             currentPageSize: 10
         };
+        this.filterTable = this.filterTable.bind(this);
     }
 
     async componentDidMount() {
         const jsonData = await this.props.controls.getControls();
         this.setState({
             data: jsonData,
+            filterData: jsonData,
             totalItems: jsonData.length
         });
     }
+
+    async filterTable(searchValue) {
+        if (searchValue) {
+            const filterData = this.state.data.filter(elt => elt.id.includes(searchValue) || elt.name.includes(searchValue) || elt?.nist?.family.includes(searchValue));
+            this.setState({
+                filterData: filterData,
+                firstRowIndex: 0,
+                totalItems: filterData.length
+            });
+        } else {
+            this.setState({
+                filterData: this.state.data,
+                firstRowIndex: 0,
+                totalItems: this.state.data.length
+            });
+        }
+    }
     render() {
-        const data = this.state.data;
+        const data = this.state.filterData;
+        console.log(data);
+        for (let index = 0; index < data.length; index++) {
+            let row = data[index];
+            row.family = row?.nist?.family
+        } 
         const headers = this.state.headerData;
         let table;
-        if (data.length === 0) {
+        if (this.state.data.length === 0) {
             table = <DataTableSkeleton
                 columnCount={headers.length + 1}
                 rowCount={10}
@@ -44,6 +69,7 @@ class ControlsView extends Component {
                         this.state.firstRowIndex,
                         this.state.firstRowIndex + this.state.currentPageSize
                     )}
+                    filter={this.filterTable}
                 />
                 <Pagination
                     totalItems={this.state.totalItems}

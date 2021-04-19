@@ -127,8 +127,8 @@ export const ctrlsHeaders = [
         header: 'Control Name',
     },
     {
-        key: 'base_control',
-        header: 'Base Control',
+        key: 'family',
+        header: 'Control Family',
     },
     {
         key: 'parent_control',
@@ -173,15 +173,23 @@ export const mappingHeaders = [
         header: 'Component ID',
     },
     {
-        key: 'compliant',
-        header: 'Compliant',
+        key: 'control_subsections',
+        header: 'Control Item(s)',
     },
     {
-        key: 'evidence',
-        header: 'Evidence',
+        key: 'scc_profile',
+        header: 'SCC Profile',
     },
-    {
-        key: 'scc_goal',
-        header: 'SCC Goal',
-    }
+    // {
+    //     key: 'compliant',
+    //     header: 'Compliant',
+    // },
+    // {
+    //     key: 'evidence',
+    //     header: 'Evidence',
+    // },
+    // {
+    //     key: 'scc_goal',
+    //     header: 'SCC Goal',
+    // }
 ];

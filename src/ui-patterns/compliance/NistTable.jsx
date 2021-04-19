@@ -19,7 +19,7 @@ import {
   Link
 } from "react-router-dom";
 
-const NistTable = ({ rows, headers }) => (
+const NistTable = ({ rows, headers, filter }) => (
   <DataTable rows={rows} headers={headers}>
     {({
       rows,
@@ -28,14 +28,13 @@ const NistTable = ({ rows, headers }) => (
       getRowProps,
       getTableProps,
       getToolbarProps,
-      onInputChange,
       getTableContainerProps,
     }) => (
       <TableContainer
         {...getTableContainerProps()}>
         <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
           <TableToolbarContent>
-            <TableToolbarSearch onChange={onInputChange} />
+            <TableToolbarSearch onChange={(event) => filter(event.target.value)} />
           </TableToolbarContent>
         </TableToolbar>
         <Table {...getTableProps()}>

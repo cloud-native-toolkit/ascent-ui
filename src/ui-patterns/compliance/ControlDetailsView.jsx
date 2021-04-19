@@ -53,7 +53,9 @@ class ControlDetailsView extends Component {
   }
 
   async loadTable() {
-    const mappingData = await this.props.mapping.getMappings({ where : {id: this.props.controlId}});
+    console.log(this.props.controlId);
+    const mappingData = await this.props.mapping.getMappings({ where : {control_id: this.props.controlId}});
+    console.log(mappingData);
     this.setState({
       mappingData: [],
       totalItems: 0
@@ -111,7 +113,6 @@ class ControlDetailsView extends Component {
     const data = this.state.data;
     const nistData = this.state.nistData;
     const mappingData = this.state.mappingData;
-    console.log(nistData);
     let breadcrumb;
     let title;
     let comment = <></>;
