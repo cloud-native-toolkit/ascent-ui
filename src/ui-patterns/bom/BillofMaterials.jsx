@@ -42,7 +42,7 @@ class BillofMaterialsView extends Component {
 
         this.state = {
             userRole: "editor",
-            archid: null,
+            archid: false,
             data: [],
             compositeData: [],
             headersData: bomHeader,
@@ -348,172 +348,9 @@ class BillofMaterialsView extends Component {
         let showServiceModal = this.state.showServiceModal;
         let showArchitectureModal = this.state.showArchitectureModal;
         let showDiagram = this.state.showDiagram;
-        let table;
-        if (data.length === 0) {
-            table = <DataTableSkeleton
-                columnCount={headers.length + 1}
-                rowCount={10}
-                headers={headers}
-            />
-        } else {
-            table = <>
-                <DataTable rows={data.slice(
-                    this.state.firstRowIndex,
-                    this.state.firstRowIndex + this.state.currentPageSize
-                )} headers={headers}>
-                    {({
-                        rows,
-                        headers,
-                        getHeaderProps,
-                        getRowProps,
-                        getSelectionProps,
-                        getToolbarProps,
-                        getBatchActionProps,
-                        onInputChange,
-                        selectedRows,
-                        getTableProps,
-                        getTableContainerProps,
-                    }) => (
-                        <TableContainer
-                            {...getTableContainerProps()}>
-                            <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
-                                <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
-                                    <TableBatchAction
-                                        tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
-                                        renderIcon={Delete}
-                                        onClick={() => this.deleteBOMs(selectedRows)}
-                                        disabled={this.state.userRole !== "editor"}
-                                    >
-                                        Delete
-                                    </TableBatchAction>
-                                </TableBatchActions>
-                                <TableToolbarContent>
-                                    <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)}>
-                                        <Download /> Terraform
-                                                </TableToolbarAction>
-
-                                </TableToolbarContent>
-                                <TableToolbarContent>
-
-                                    <TableToolbarSearch onChange={onInputChange} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
-
-                                    <TableToolbarMenu>
-                                        <TableToolbarAction style={{ display: 'flex' }} onClick={this.showDiagram}>
-                                            <div>Diagram</div>
-                                            <View style={{ marginLeft: "auto" }} />
-                                        </TableToolbarAction>
-                                        <TableToolbarAction style={{ display: 'flex' }} href={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_drawio} download>
-                                            <div style={{ flex: 'left' }}>Diagram .drawio</div>
-                                            <Download style={{ marginLeft: "auto" }} />
-                                        </TableToolbarAction>
-                                        <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
-                                            <div style={{ flex: 'left' }}>Edit Variables</div>
-                                            <Edit16 style={{ marginLeft: "auto" }} />
-                                        </TableToolbarAction>
-                                    </TableToolbarMenu>
-
-
-                                    <Button
-                                        tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
-                                        size="small"
-                                        kind="primary"
-                                        renderIcon={Add16}
-                                        onClick={this.showServiceModal}
-                                        disabled={this.state.userRole !== "editor"}
-                                    >
-                                        Add Service
-                                                </Button>
-                                </TableToolbarContent>
-                            </TableToolbar>
-                            <Table {...getTableProps()}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableSelectAll {...getSelectionProps()} disabled={this.state.userRole !== "editor"}/>
-                                        {headers.map((header, i) => (
-                                            <TableHeader key={i} {...getHeaderProps({ header })}>
-                                                {header.header}
-                                            </TableHeader>
-                                        ))}
-                                        <TableHeader />
-                                    </TableRow>
-                                </TableHead>
-
-                                <TableBody>
-                                    {rows.map((row, i) => (
-                                        <>
-                                            <TableRow key={i} {...getRowProps({ row })} >
-                                                <TableSelectRow {...getSelectionProps({ row })} disabled={this.state.userRole !== "editor"}/>
-                                                {row.cells.map((cell) => (
-                                                    <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
-                                                        {
-                                                            cell.info && cell.info.header === "ibm_service"?
-                                                                <Tag type="blue">
-                                                                    <Link to={"/services/" + cell.value.service_id} >
-                                                                    {cell.value.ibm_service}
-                                                                    </Link>
-                                                                </Tag> 
-                                                            : cell.info && cell.info.header === "automation_id" && !cell.value ?
-                                                                <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag>
-                                                            : cell.info && cell.info.header === "automation_id" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].automation ?
-                                                                <Tag type="blue">
-                                                                    <a href={"https://" + this.state.compositeData[row.id].automation.id} target="_blank">
-                                                                        {this.state.compositeData[row.id].automation.name}
-                                                                        <Launch16 style={{"margin-left": "3px"}}/>
-                                                                    </a>
-                                                                </Tag>
-                                                            : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].catalog
-                                                                && this.state.compositeData[row.id].catalog.tags && this.state.compositeData[row.id].catalog.tags.length > 0 && this.state.compositeData[row.id].catalog.tags.includes("fs_ready") ?
-                                                                <Tag type="green">
-                                                                    FS Validated
-                                                                </Tag>
-                                                            : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] ?
-                                                                <Tag>
-                                                                    Not yet
-                                                                </Tag>
-                                                            : cell.info && cell.info.header === "fs_validated" ?
-                                                                <TagSkeleton></TagSkeleton>
-                                                            : cell.info && cell.info.header === "automation_id" ?
-                                                                <TagSkeleton></TagSkeleton>
-                                                            : cell.value
-                                                        }
-                                                    </TableCell>
-                                                ))}
-                                                <TableCell className="bx--table-column-menu">
-                                                    <OverflowMenu light flipped>
-                                                        <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(row.id)} disabled={this.state.userRole !== "editor"}/>
-                                                    </OverflowMenu>
-                                                </TableCell>
-                                            </TableRow>
-                                        </>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    )}
-                </DataTable>
-
-                <Pagination
-                    totalItems={this.state.totalItems}
-                    backwardText="Previous page"
-                    forwardText="Next page"
-                    pageSize={this.state.currentPageSize}
-                    pageSizes={[5, 10, 15, 25]}
-                    itemsPerPageText="Items per page"
-                    onChange={({ page, pageSize }) => {
-                        if (pageSize !== this.state.currentPageSize) {
-                            this.setState({
-                                currentPageSize: pageSize
-                            });
-                        }
-                        this.setState({
-                            firstRowIndex: pageSize * (page - 1)
-                        });
-                    }} />
-            </>
-        }
         const showValidateModal = this.state.showValidate;
         return (
-             this.state.data && this.state.data.length ?
+            this.state.archid ?
                 <>
                     <div class='notif'>
                         {this.state.notifications.length !== 0 && this.renderNotifications()}
@@ -619,7 +456,168 @@ class BillofMaterialsView extends Component {
     
                             <div className="bx--row">
                                 <div className="bx--col-lg-16">
-                                    {table}
+                                    {this.state.archid === false ?
+                                        <DataTableSkeleton
+                                            columnCount={headers.length + 1}
+                                            rowCount={10}
+                                            headers={headers}
+                                        />
+                                    :
+                                        <>
+                                        <DataTable rows={data.slice(
+                                            this.state.firstRowIndex,
+                                            this.state.firstRowIndex + this.state.currentPageSize
+                                        )} headers={headers}>
+                                            {({
+                                                rows,
+                                                headers,
+                                                getHeaderProps,
+                                                getRowProps,
+                                                getSelectionProps,
+                                                getToolbarProps,
+                                                getBatchActionProps,
+                                                onInputChange,
+                                                selectedRows,
+                                                getTableProps,
+                                                getTableContainerProps,
+                                            }) => (
+                                                <TableContainer
+                                                    {...getTableContainerProps()}>
+                                                    <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
+                                                        <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
+                                                            <TableBatchAction
+                                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
+                                                                renderIcon={Delete}
+                                                                onClick={() => this.deleteBOMs(selectedRows)}
+                                                                disabled={this.state.userRole !== "editor"}
+                                                            >
+                                                                Delete
+                                                            </TableBatchAction>
+                                                        </TableBatchActions>
+                                                        <TableToolbarContent>
+                                                            <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)}>
+                                                                <Download /> Terraform
+                                                                        </TableToolbarAction>
+                        
+                                                        </TableToolbarContent>
+                                                        <TableToolbarContent>
+                        
+                                                            <TableToolbarSearch onChange={onInputChange} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
+                        
+                                                            <TableToolbarMenu>
+                                                                <TableToolbarAction style={{ display: 'flex' }} onClick={this.showDiagram}>
+                                                                    <div>Diagram</div>
+                                                                    <View style={{ marginLeft: "auto" }} />
+                                                                </TableToolbarAction>
+                                                                <TableToolbarAction style={{ display: 'flex' }} href={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_drawio} download>
+                                                                    <div style={{ flex: 'left' }}>Diagram .drawio</div>
+                                                                    <Download style={{ marginLeft: "auto" }} />
+                                                                </TableToolbarAction>
+                                                                <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
+                                                                    <div style={{ flex: 'left' }}>Edit Variables</div>
+                                                                    <Edit16 style={{ marginLeft: "auto" }} />
+                                                                </TableToolbarAction>
+                                                            </TableToolbarMenu>
+                        
+                        
+                                                            <Button
+                                                                tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
+                                                                size="small"
+                                                                kind="primary"
+                                                                renderIcon={Add16}
+                                                                onClick={this.showServiceModal}
+                                                                disabled={this.state.userRole !== "editor"}
+                                                            >
+                                                                Add Service
+                                                                        </Button>
+                                                        </TableToolbarContent>
+                                                    </TableToolbar>
+                                                    <Table {...getTableProps()}>
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <TableSelectAll {...getSelectionProps()} disabled={this.state.userRole !== "editor"}/>
+                                                                {headers.map((header, i) => (
+                                                                    <TableHeader key={i} {...getHeaderProps({ header })}>
+                                                                        {header.header}
+                                                                    </TableHeader>
+                                                                ))}
+                                                                <TableHeader />
+                                                            </TableRow>
+                                                        </TableHead>
+                        
+                                                        <TableBody>
+                                                            {rows.map((row, i) => (
+                                                                <>
+                                                                    <TableRow key={i} {...getRowProps({ row })} >
+                                                                        <TableSelectRow {...getSelectionProps({ row })} disabled={this.state.userRole !== "editor"}/>
+                                                                        {row.cells.map((cell) => (
+                                                                            <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
+                                                                                {
+                                                                                    cell.info && cell.info.header === "ibm_service"?
+                                                                                        <Tag type="blue">
+                                                                                            <Link to={"/services/" + cell.value.service_id} >
+                                                                                            {cell.value.ibm_service}
+                                                                                            </Link>
+                                                                                        </Tag> 
+                                                                                    : cell.info && cell.info.header === "automation_id" && !cell.value ?
+                                                                                        <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag>
+                                                                                    : cell.info && cell.info.header === "automation_id" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].automation ?
+                                                                                        <Tag type="blue">
+                                                                                            <a href={"https://" + this.state.compositeData[row.id].automation.id} target="_blank">
+                                                                                                {this.state.compositeData[row.id].automation.name}
+                                                                                                <Launch16 style={{"margin-left": "3px"}}/>
+                                                                                            </a>
+                                                                                        </Tag>
+                                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].catalog
+                                                                                        && this.state.compositeData[row.id].catalog.tags && this.state.compositeData[row.id].catalog.tags.length > 0 && this.state.compositeData[row.id].catalog.tags.includes("fs_ready") ?
+                                                                                        <Tag type="green">
+                                                                                            FS Validated
+                                                                                        </Tag>
+                                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] ?
+                                                                                        <Tag>
+                                                                                            Not yet
+                                                                                        </Tag>
+                                                                                    : cell.info && cell.info.header === "fs_validated" ?
+                                                                                        <TagSkeleton></TagSkeleton>
+                                                                                    : cell.info && cell.info.header === "automation_id" ?
+                                                                                        <TagSkeleton></TagSkeleton>
+                                                                                    : cell.value
+                                                                                }
+                                                                            </TableCell>
+                                                                        ))}
+                                                                        <TableCell className="bx--table-column-menu">
+                                                                            <OverflowMenu light flipped>
+                                                                                <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(row.id)} disabled={this.state.userRole !== "editor"}/>
+                                                                            </OverflowMenu>
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                </>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
+                                            )}
+                                        </DataTable>
+                        
+                                        <Pagination
+                                            totalItems={this.state.totalItems}
+                                            backwardText="Previous page"
+                                            forwardText="Next page"
+                                            pageSize={this.state.currentPageSize}
+                                            pageSizes={[5, 10, 15, 25]}
+                                            itemsPerPageText="Items per page"
+                                            onChange={({ page, pageSize }) => {
+                                                if (pageSize !== this.state.currentPageSize) {
+                                                    this.setState({
+                                                        currentPageSize: pageSize
+                                                    });
+                                                }
+                                                this.setState({
+                                                    firstRowIndex: pageSize * (page - 1)
+                                                });
+                                            }} />
+                                        </>
+                                    }
                                 </div>
                             </div>
                         </div>}
