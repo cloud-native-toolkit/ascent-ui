@@ -154,10 +154,6 @@ export const nistHeaders = [
         header: 'Priority',
     },
     {
-        key: 'base_control',
-        header: 'Base Control',
-    },
-    {
         key: 'parent_control',
         header: 'Parent Control',
     }

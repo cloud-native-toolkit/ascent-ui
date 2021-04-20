@@ -1,6 +1,7 @@
 
 import { MappingDataApi } from './mapping.api';
 import { ControlMappingModel } from "../../models/control-mapping/controlMappingModel";
+import { ProfileModel } from "../../models/control-mapping/profileModel";
 import * as superagent from "superagent";
 
 export class MappingData implements MappingDataApi {
@@ -16,7 +17,6 @@ export class MappingData implements MappingDataApi {
         if (filter) {
             url = url + "?filter=" + encodeURIComponent(JSON.stringify(filter));
         }
-        console.log(filter, url);
         return superagent
             .get(url)
             .set('accept', 'application/json')
@@ -71,6 +71,31 @@ export class MappingData implements MappingDataApi {
             .set('accept', 'application/json')
             .then(res => {
                 return res;
+            })
+            .catch(err => {
+                return err.response;
+            });
+    }
+    async getProfiles(filter: any): Promise<ProfileModel[]> {
+        let url = "/api/mapping/profiles";
+        if (filter) {
+            url = url + "?filter=" + encodeURIComponent(JSON.stringify(filter));
+        }
+        return superagent
+            .get(url)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body || [];
+            });
+    }
+    async addProfile(file: FormData): Promise<ProfileModel> {
+        let url = "/api/mapping/profiles/import";
+        return superagent
+            .post(url)
+            .send(file)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body;
             })
             .catch(err => {
                 return err.response;

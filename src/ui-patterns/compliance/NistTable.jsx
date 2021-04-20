@@ -60,11 +60,10 @@ const NistTable = ({ rows, headers, filter }) => (
                             {cell.value}
                           </Link>
                         </Tag>
-                      :
-                      cell.info && (cell.info.header === "base_control") ?
-                        <Tag>
-                          {cell.value ? "true" : "false"}
-                        </Tag>
+                      : cell.info && (cell.info.header === "parent_control") ?
+                      <Tag>
+                        Base Control
+                      </Tag>
                       : cell.value
                     }
                   </TableCell>

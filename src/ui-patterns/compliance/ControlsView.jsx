@@ -48,7 +48,6 @@ class ControlsView extends Component {
     }
     render() {
         const data = this.state.filterData;
-        console.log(data);
         for (let index = 0; index < data.length; index++) {
             let row = data[index];
             row.family = row?.nist?.family

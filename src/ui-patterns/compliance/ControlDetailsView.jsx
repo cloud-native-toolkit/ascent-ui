@@ -31,6 +31,7 @@ class ControlDetailsView extends Component {
       nistData: {},
       show: "fs-cloud-desc",
       mappingData: [],
+      filterData: [],
       totalItems: 0,
       firstRowIndex: 0,
       currentPageSize: 10,
@@ -38,6 +39,7 @@ class ControlDetailsView extends Component {
     };
     this.loadTable = this.loadTable.bind(this);
     this.addNotification = this.addNotification.bind(this);
+    this.filterTable = this.filterTable.bind(this);
   }
 
   async loadControl(controlId) {
@@ -54,7 +56,7 @@ class ControlDetailsView extends Component {
 
   async loadTable() {
     console.log(this.props.controlId);
-    const mappingData = await this.props.mapping.getMappings({ where : {control_id: this.props.controlId}});
+    const mappingData = await this.props.mapping.getMappings({ where : {control_id: this.props.controlId}, include: ["service"] });
     console.log(mappingData);
     this.setState({
       mappingData: [],
@@ -62,8 +64,26 @@ class ControlDetailsView extends Component {
     });
     this.setState({
       mappingData: mappingData,
+      filterData: mappingData,
       totalItems: mappingData.length
     });
+  }
+
+  async filterTable(searchValue) {
+      if (searchValue) {
+          const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt.service_id?.includes(searchValue) || elt?.service?.ibm_catalog_service?.includes(searchValue));
+          this.setState({
+              filterData: filterData,
+              firstRowIndex: 0,
+              totalItems: filterData.length
+          });
+      } else {
+          this.setState({
+              filterData: this.state.mappingData,
+              firstRowIndex: 0,
+              totalItems: this.state.mappingData.length
+          });
+      }
   }
 
   async componentDidMount() {
@@ -112,7 +132,7 @@ class ControlDetailsView extends Component {
   render() {
     const data = this.state.data;
     const nistData = this.state.nistData;
-    const mappingData = this.state.mappingData;
+    const mappingData = this.state.filterData;
     let breadcrumb;
     let title;
     let comment = <></>;
@@ -289,6 +309,7 @@ class ControlDetailsView extends Component {
               onChange={(e) => {this.setState({show:e.name})}} >
               <Switch name="fs-cloud-desc" text="Description" />
               <Switch name="nist-desc" text="Additional NIST Information" />
+              <Switch name="mapping" text="Impacted Components" />
             </ContentSwitcher>
           }
           
@@ -323,50 +344,6 @@ class ControlDetailsView extends Component {
             }
             
             {comment}
-            <div className="bx--row">
-              <div className="bx--col-lg-16">
-                {data.id &&
-                  <>
-                    <br />
-                    <h3>Impacted Components</h3>
-                    <br />
-                    <MappingTable
-                      toast={this.addNotification}
-                      data={mappingData}
-                      headers={headers}
-                      rows={mappingData.slice(
-                        this.state.firstRowIndex,
-                        this.state.firstRowIndex + this.state.currentPageSize
-                      )}
-                      handleReload={this.loadTable}
-                      mapping={this.props.mapping}
-                      controls={this.props.controls}
-                      services={this.props.service}
-                      arch={this.props.arch}
-                      controlId={this.props.controlId}
-                    />
-                    <Pagination
-                      totalItems={this.state.totalItems}
-                      backwardText="Previous page"
-                      forwardText="Next page"
-                      pageSize={this.state.currentPageSize}
-                      pageSizes={[5, 10, 15, 25]}
-                      itemsPerPageText="Items per page"
-                      onChange={({ page, pageSize }) => {
-                        if (pageSize !== this.state.currentPageSize) {
-                          this.setState({
-                            currentPageSize: pageSize
-                          });
-                        }
-                        this.setState({
-                          firstRowIndex: pageSize * (page - 1)
-                        });
-                      }}
-                    />
-                  </>
-                }
-              </div>
-            </div>
           </div>}
           
           {this.state.show === "nist-desc" && <div>
@@ -378,6 +355,50 @@ class ControlDetailsView extends Component {
             {related}
             {baseline_impact}
             {references}
+          </div>}
+          
+          {this.state.show === "mapping" && <div>
+            {data.id &&
+              <>
+                <br />
+                <h3>Impacted Components</h3>
+                <br />
+                <MappingTable
+                  toast={this.addNotification}
+                  data={mappingData}
+                  headers={headers}
+                  rows={mappingData.slice(
+                    this.state.firstRowIndex,
+                    this.state.firstRowIndex + this.state.currentPageSize
+                  )}
+                  handleReload={this.loadTable}
+                  mapping={this.props.mapping}
+                  controls={this.props.controls}
+                  services={this.props.service}
+                  arch={this.props.arch}
+                  controlId={this.props.controlId}
+                  filterTable={this.filterTable}
+                />
+                <Pagination
+                  totalItems={this.state.totalItems}
+                  backwardText="Previous page"
+                  forwardText="Next page"
+                  pageSize={this.state.currentPageSize}
+                  pageSizes={[5, 10, 15, 25]}
+                  itemsPerPageText="Items per page"
+                  onChange={({ page, pageSize }) => {
+                    if (pageSize !== this.state.currentPageSize) {
+                      this.setState({
+                        currentPageSize: pageSize
+                      });
+                    }
+                    this.setState({
+                      firstRowIndex: pageSize * (page - 1)
+                    });
+                  }}
+                />
+              </>
+            }
           </div>}
           
         </div >

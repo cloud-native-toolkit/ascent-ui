@@ -21,7 +21,9 @@ import {
   TableSelectAll,
   TableSelectRow,
   TableBatchActions,
-  TableBatchAction
+  TableBatchAction,
+  TableToolbarMenu,
+  TableToolbarAction
 } from 'carbon-components-react';
 import {
   Link
@@ -29,9 +31,11 @@ import {
 import {
   Delete16 as Delete,
   Add16,
-  Launch16
+  Launch16,
+  DocumentImport16 as DocumentImport
 } from '@carbon/icons-react';
 import MappingModal from "./MappingModal"
+import ImportProfileModal from "./ImportProfileModal"
 import ValidateModal from "../ValidateModal"
 
 class MappingTable extends Component {
@@ -42,6 +46,7 @@ class MappingTable extends Component {
       mappingRecord: [],
       show: false,
       showValidate: false,
+      showImportProfile: false,
       selectedRows: []
     };
     this.showModal = this.showModal.bind(this);
@@ -65,6 +70,8 @@ class MappingTable extends Component {
       let control_id = "";
       let service_id = "";
       let arch_id = "";
+      let control_subsections= "";
+      let scc_profile= "";
       if (row.cells && row.cells.length) {
         row.cells.forEach((cell) => {
           if (cell.info && cell.info.header === "control_id") {
@@ -75,6 +82,10 @@ class MappingTable extends Component {
             } else {
               service_id = cell.value.val;
             }
+          } else if (cell.info && cell.info.header === "control_subsections") {
+            control_subsections = cell.value;
+          } else if (cell.info && cell.info.header === "scc_profile") {
+            scc_profile = cell.value;
           }
         });
       }
@@ -82,12 +93,16 @@ class MappingTable extends Component {
       if (service_id) {
         body = {
           control_id: control_id,
-          service_id: service_id
+          service_id: service_id,
+          scc_profile: scc_profile,
+          control_subsections: control_subsections
         }
       } else {
         body = {
           control_id: control_id,
-          arch_id: arch_id
+          arch_id: arch_id,
+          scc_profile: scc_profile,
+          control_subsections: control_subsections
         }
       }
       this.props.mapping.deleteMapping(body).then((res) => {
@@ -193,6 +208,21 @@ class MappingTable extends Component {
               onSecondarySubmit={this.validateCancel} />
           }
         </div>
+        <div>
+          {this.state.showImportProfile &&
+            <ImportProfileModal
+              submitText="Import"
+              show={this.state.showImportProfile}
+              onClose={() => this.setState({showImportProfile: false})} 
+              closeAndReload={() => {
+                this.setState({showImportProfile: false});
+                this.props.handleReload();
+              }} 
+              onSecondarySubmit={() => this.setState({showImportProfile: false})}
+              mapping={this.props.mapping}
+              toast={this.props.toast} />
+          }
+        </div>
         <DataTable rows={this.props.rows} headers={this.props.headers}>
           {({
             rows,
@@ -201,7 +231,6 @@ class MappingTable extends Component {
             getRowProps,
             getTableProps,
             getToolbarProps,
-            onInputChange,
             getTableContainerProps,
             getSelectionProps,
             getBatchActionProps,
@@ -220,7 +249,13 @@ class MappingTable extends Component {
                     </TableBatchAction>
                 </TableBatchActions>
                 <TableToolbarContent>
-                  <TableToolbarSearch onChange={onInputChange} />
+                  <TableToolbarSearch onChange={(event) => this.props.filterTable(event.target.value)} />
+                  <TableToolbarMenu>
+                    <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.setState({ showImportProfile: true })}>
+                      <div style={{ flex: 'left' }}>Import Profile</div>
+                      <DocumentImport style={{ marginLeft: "auto" }} />
+                    </TableToolbarAction>
+                  </TableToolbarMenu>
                   <Button
                     size="small"
                     kind="primary"

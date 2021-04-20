@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     Form, FormGroup, Button, ButtonSet, ComposedModal, ModalBody, ModalFooter,
     ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput, 
-    TextInputSkeleton
+    TextInputSkeleton, Select, SelectItem, SelectSkeleton
 } from 'carbon-components-react';
 
 
@@ -17,17 +17,23 @@ class MappingModal extends Component {
                 control_id: this.props.controlId || '',
                 service_id: this.props.serviceId || '',
                 arch_id: '',
+                control_subsections: '',
                 compliant: 'UNKNOWN',
                 configuration: '',
                 evidence: '',
                 scc_goal: '',
+                scc_profile: '',
                 desc: '',
                 comment: ''
             }
         };
         if (this.props.isUpdate) {
+            const data = this.props.data;
+            delete data.component_id;
+            delete data.profile;
+            delete data.service;
             this.state = {
-                fields: this.props.data
+                fields: data
             }
         }
         this.handleChange = this.handleChange.bind(this)
@@ -37,10 +43,12 @@ class MappingModal extends Component {
         const controlsData = await this.props.controls.getControls();
         const servicesData = await this.props.services.getServices();
         const archData = await this.props.arch.getArchitectures();
+        const profileData = await this.props.mapping.getProfiles();
         this.setState({
             controlsData: controlsData,
             servicesData: servicesData,
-            archData: archData
+            archData: archData,
+            profileData: profileData
         });
     }
     handleChange(field, e) {
@@ -90,6 +98,7 @@ class MappingModal extends Component {
         let controlsData = this.state.controlsData;
         let servicesData = this.state.servicesData;
         let archData = this.state.archData;
+        let profileData = this.state.profileData;
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -178,6 +187,19 @@ class MappingModal extends Component {
                                             />
                                         </> : !(this.props.serviceId) && <TextInputSkeleton />
                                 }
+                                <TextInput
+                                    required
+                                    cols={50}
+                                    id="control_subsections"
+                                    name="control_subsections"
+                                    value={this.state.fields.control_subsections}
+                                    onChange={this.handleChange.bind(this, "control_subsections")}
+                                    invalidText="A valid value is required"
+                                    labelText="Control sub section(s)"
+                                    placeholder="e.g. (a)(c)"
+                                    rows={1}
+                                    style={{ marginBottom: '1rem' }}
+                                />
                                 <FormGroup legendText="Compliant">
                                     <RadioButtonGroup
                                         required
@@ -237,11 +259,33 @@ class MappingModal extends Component {
                                     value={this.state.fields.scc_goal}
                                     onChange={this.handleChange.bind(this, "scc_goal")}
                                     invalidText="A valid value is required"
-                                    labelText="SCC Goal"
+                                    labelText="SCC Goal(s)"
                                     placeholder="e.g. 3000106,3000114,etc."
                                     rows={1}
                                     style={{ marginBottom: '1rem' }}
                                 />
+                                {
+                                    profileData && profileData.length > 0 ?
+                                        <>
+                                            <Select id="scc_profile" name="scc_profile"
+                                                labelText="SCC Profile"
+                                                required
+                                                disabled={this.props.isUpdate}
+                                                defaultValue={!this.state.fields.scc_profile ? 'placeholder-item' : this.state.fields.scc_profile}
+                                                invalidText="A valid value is required"
+                                                onChange={this.handleChange.bind(this, "scc_profile")}>
+                                                <SelectItem
+                                                    disabled
+                                                    hidden
+                                                    value="placeholder-item"
+                                                    text="Choose an option"
+                                                />
+                                                {profileData.map((profile) => (
+                                                    <SelectItem value={profile.id} text={profile.name || profile.id} />
+                                                ))}
+                                            </Select>
+                                        </> : <SelectSkeleton />
+                                }
                                 <TextArea
                                     required
                                     cols={50}
