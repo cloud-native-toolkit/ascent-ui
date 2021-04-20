@@ -19,7 +19,7 @@ import {
   Link
 } from "react-router-dom";
 
-const ControlsTable = ({ rows, headers }) => (
+const ControlsTable = ({ rows, headers, filter }) => (
   <DataTable rows={rows} headers={headers}>
     {({
       rows,
@@ -28,14 +28,13 @@ const ControlsTable = ({ rows, headers }) => (
       getRowProps,
       getTableProps,
       getToolbarProps,
-      onInputChange,
       getTableContainerProps,
     }) => (
       <TableContainer
         {...getTableContainerProps()}>
         <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
           <TableToolbarContent>
-            <TableToolbarSearch onChange={onInputChange} />
+            <TableToolbarSearch onChange={(event) => filter(event.target.value)} />
           </TableToolbarContent>
         </TableToolbar>
         <Table {...getTableProps()}>
@@ -55,11 +54,15 @@ const ControlsTable = ({ rows, headers }) => (
                 {row.cells.map((cell) => (
                   <TableCell key={cell.id}>
                     {
-                      cell.info && cell.info.header === "id" ?
+                      cell.info && (cell.info.header === "id" || cell.info.header === "parent_control" && cell.value) ?
                         <Tag type="blue">
                           <Link to={"/controls/" + cell.value.toLowerCase().replace(' ', '_')} >
                             {cell.value}
                           </Link>
+                        </Tag>
+                      : cell.info && cell.info.header === "parent_control" ?
+                        <Tag>
+                          Base Control
                         </Tag>
                       :
                         cell.value

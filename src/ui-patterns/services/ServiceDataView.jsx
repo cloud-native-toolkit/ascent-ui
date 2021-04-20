@@ -31,6 +31,7 @@ class ServiceDataView extends Component {
         this.state = {
             userRole: "editor",
             data: [],
+            filterData: [],
             compositeData: [],
             headerData: serviceHeader,
             show: false,
@@ -52,6 +53,7 @@ class ServiceDataView extends Component {
         this.validateCancel = this.validateCancel.bind(this);
         this.validateSubmit = this.validateSubmit.bind(this);
         this.addNotification = this.addNotification.bind(this);
+        this.filterTable = this.filterTable.bind(this);
     }
 
     async loadTable() {
@@ -78,6 +80,7 @@ class ServiceDataView extends Component {
         });
         this.setState({
             data: serviceDetails,
+            filterData: serviceDetails,
             totalItems: serviceDetails.length
         });
     }
@@ -212,12 +215,29 @@ class ServiceDataView extends Component {
 
     /** Notifications END */
 
+    async filterTable(searchValue) {
+        if (searchValue) {
+            const filterData = this.state.data.filter(elt => elt.service.service_name.includes(searchValue) || elt.service.service_id.includes(searchValue));
+            this.setState({
+                filterData: filterData,
+                firstRowIndex: 0,
+                totalItems: filterData.length
+            });
+        } else {
+            this.setState({
+                filterData: this.state.data,
+                firstRowIndex: 0,
+                totalItems: this.state.data.length
+            });
+        }
+    }
+
     render() {
-        let data = this.state.data;
+        let data = this.state.filterData;
         let headers = this.state.headerData;
         let showModal = this.state.show;
         let table;
-        if (data.length === 0) {
+        if (this.state.data.length === 0) {
             table = <DataTableSkeleton
                 columnCount={headers.length + 1}
                 rowCount={10}
@@ -238,8 +258,7 @@ class ServiceDataView extends Component {
                                 getBatchActionProps,
                                 getRowProps,
                                 getTableProps,
-                                selectedRows,
-                                onInputChange
+                                selectedRows
 
                             }) => (
                                     <TableContainer>
@@ -256,7 +275,7 @@ class ServiceDataView extends Component {
                                             </TableBatchActions>
                                             <TableToolbarContent>
 
-                                                <TableToolbarSearch onChange={onInputChange} />
+                                                <TableToolbarSearch onChange={(event) => this.filterTable(event.target.value)} />
                                                 <Button
                                                     tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
                                                     size="small"

@@ -12,11 +12,13 @@ class NistView extends Component {
         super(props);
         this.state = {
             data: [],
+            filterData: [],
             headerData: nistHeaders,
             totalItems: 0,
             firstRowIndex: 0,
             currentPageSize: 10
         };
+        this.filterTable = this.filterTable.bind(this);
     }
 
     async componentDidMount() {
@@ -24,14 +26,32 @@ class NistView extends Component {
         const nistDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"number\":/g, "\"id\":"));
         this.setState({
             data: nistDetails,
+            filterData: nistDetails,
             totalItems: nistDetails.length
         });
     }
+
+    async filterTable(searchValue) {
+        if (searchValue) {
+            const filterData = this.state.data.filter(elt => elt.id.includes(searchValue) || elt.title.includes(searchValue) || elt.family.includes(searchValue));
+            this.setState({
+                filterData: filterData,
+                firstRowIndex: 0,
+                totalItems: filterData.length
+            });
+        } else {
+            this.setState({
+                filterData: this.state.data,
+                firstRowIndex: 0,
+                totalItems: this.state.data.length
+            });
+        }
+    }
     render() {
-        const data = this.state.data;
+        const data = this.state.filterData;
         const headers = this.state.headerData;
         let table;
-        if (data.length === 0) {
+        if (this.state.data.length === 0) {
             table = <DataTableSkeleton
                 columnCount={headers.length + 1}
                 rowCount={10}
@@ -45,6 +65,7 @@ class NistView extends Component {
                         this.state.firstRowIndex,
                         this.state.firstRowIndex + this.state.currentPageSize
                     )}
+                    filter={this.filterTable}
                 />
                 <Pagination
                     totalItems={this.state.totalItems}

@@ -123,36 +123,16 @@ export const ctrlsHeaders = [
         header: 'Control ID',
     },
     {
-        key: 'control_family',
+        key: 'name',
+        header: 'Control Name',
+    },
+    {
+        key: 'family',
         header: 'Control Family',
     },
     {
-        key: 'cf_description',
-        header: 'Control Family Description',
-    },
-    // {
-    //     key: 'base_control',
-    //     header: 'Base Control',
-    // },
-    {
-        key: 'control_name',
-        header: 'Control Name',
-    },
-    // {
-    //     key: 'candidate',
-    //     header: 'Candidate',
-    // },
-    // {
-    //     key: 'inherited',
-    //     header: 'Inherited',
-    // },
-    {
-        key: 'platform_responsibility',
-        header: 'Platform Responsibility',
-    },
-    {
-        key: 'app_responsibility',
-        header: 'App Responsibility',
+        key: 'parent_control',
+        header: 'Parent Control',
     }
 ];
 
@@ -174,10 +154,6 @@ export const nistHeaders = [
         header: 'Priority',
     },
     {
-        key: 'base_control',
-        header: 'Base Control',
-    },
-    {
         key: 'parent_control',
         header: 'Parent Control',
     }
@@ -193,15 +169,23 @@ export const mappingHeaders = [
         header: 'Component ID',
     },
     {
-        key: 'compliant',
-        header: 'Compliant',
+        key: 'control_subsections',
+        header: 'Control Item(s)',
     },
     {
-        key: 'evidence',
-        header: 'Evidence',
+        key: 'scc_profile',
+        header: 'SCC Profile',
     },
-    {
-        key: 'scc_goal',
-        header: 'SCC Goal',
-    }
+    // {
+    //     key: 'compliant',
+    //     header: 'Compliant',
+    // },
+    // {
+    //     key: 'evidence',
+    //     header: 'Evidence',
+    // },
+    // {
+    //     key: 'scc_goal',
+    //     header: 'SCC Goal',
+    // }
 ];

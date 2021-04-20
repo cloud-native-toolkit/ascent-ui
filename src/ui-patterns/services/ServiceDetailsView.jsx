@@ -19,7 +19,9 @@ import {
 } from '@carbon/icons-react';
 import { mappingHeaders as headers } from '../data/data';
 
-import { ToastNotification } from "carbon-components-react";
+import {
+  ToastNotification, ContentSwitcher, Switch
+} from "carbon-components-react";
 
 class ServiceDetailsView extends Component {
   constructor(props) {
@@ -28,8 +30,10 @@ class ServiceDetailsView extends Component {
       data: {},
       automationData: false,
       show: false,
+      showContent: "service-details",
       notif: false,
       mappingData: [],
+      filterData: [],
       totalItems: 0,
       firstRowIndex: 0,
       currentPageSize: 10,
@@ -37,18 +41,38 @@ class ServiceDetailsView extends Component {
     };
     this.loadTable = this.loadTable.bind(this);
     this.addNotification = this.addNotification.bind(this);
+    this.filterTable = this.filterTable.bind(this);
   }
 
   async loadTable() {
-    const mappingData = await this.props.mapping.getMappings({ where: { service_id: this.props.serviceId } });
+    const mappingData = await this.props.mapping.getMappings({ where: { service_id: this.props.serviceId }, include: ["service"] });
     this.setState({
       mappingData: [],
+      filterData: [],
       totalItems: 0
     });
     this.setState({
       mappingData: mappingData,
+      filterData: mappingData,
       totalItems: mappingData.length
     });
+  }
+
+  async filterTable(searchValue) {
+      if (searchValue) {
+          const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt.control_id?.includes(searchValue));
+          this.setState({
+              filterData: filterData,
+              firstRowIndex: 0,
+              totalItems: filterData.length
+          });
+      } else {
+          this.setState({
+              filterData: this.state.mappingData,
+              firstRowIndex: 0,
+              totalItems: this.state.mappingData.length
+          });
+      }
   }
 
   async componentDidMount() {
@@ -104,13 +128,15 @@ class ServiceDetailsView extends Component {
   render() {
     const data = this.state.data;
     const automationData = this.state.automationData;
-    const mappingData = this.state.mappingData;
+    const mappingData = this.state.filterData;
     let breadcrumb;
     let content;
+    let title;
     let notif = this.state.notif;
     if (!data.service_id) {
       breadcrumb = <BreadcrumbSkeleton />;
-      content = <SearchSkeleton />;
+      title = <SearchSkeleton />;
+      content = <></>;
     } else {
       breadcrumb = <>
         <Breadcrumb>
@@ -120,6 +146,23 @@ class ServiceDetailsView extends Component {
           <BreadcrumbItem href="#">{data.ibm_catalog_service ? data.ibm_catalog_service : data.service_id}</BreadcrumbItem>
         </Breadcrumb>
       </>;
+      title = <div className="bx--row">
+                <div className="bx--col-lg-16">
+                  <br></br>
+                  <h2 style={{ display: 'flex' }}>
+                    {
+                      data.catalog && data.catalog.overview_ui && data.catalog.overview_ui.en ?
+                        data.catalog.overview_ui.en.display_name
+                        : data ?
+                          data.ibm_catalog_service || this.state.dataDetails.service.service_id
+                          :
+                          data.ibm_service || data.service_id
+                    }
+                    {(data.catalog && data.catalog.tags && data.catalog.tags.length > 0 && data.catalog.tags.includes("fs_ready")) && <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>}
+                  </h2>
+                  <br></br>
+                </div>
+              </div>;
       content = <div className="bx--row">
         <div className="bx--col-lg-16">
           <br />
@@ -127,18 +170,6 @@ class ServiceDetailsView extends Component {
           {
             data ?
               <div>
-                <h2 style={{ display: 'flex' }}>
-                  {
-                    data.catalog && data.catalog.overview_ui && data.catalog.overview_ui.en ?
-                      data.catalog.overview_ui.en.display_name
-                      : data ?
-                        data.ibm_catalog_service || this.state.dataDetails.service.service_id
-                        :
-                        data.ibm_service || data.service_id
-                  }
-                  {(data.catalog && data.catalog.tags && data.catalog.tags.length > 0 && data.catalog.tags.includes("fs_ready")) && <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>}
-                </h2>
-                <br />
                 <p>
                   <strong>Description: </strong>
                   {
@@ -212,8 +243,8 @@ class ServiceDetailsView extends Component {
                         <strong>Impacting controls: </strong>
                         {data.controls.map((control) => (
                           <Tag type="blue">
-                            <Link to={"/controls/" + control.control_id.toLowerCase().replace(' ', '_')} >
-                              {control.control_id}
+                            <Link to={"/controls/" + control.id.toLowerCase().replace(' ', '_')} >
+                              {control.id}
                             </Link>
                           </Tag>
                         ))}
@@ -281,52 +312,6 @@ class ServiceDetailsView extends Component {
               </div>
           }
           {/* {data.hybrid_automation_id ? <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{data.hybrid_automation_id}</Tag></p></div> : <></>} */}
-          <div className="bx--row">
-            <div className="bx--col-lg-16">
-              {data.control_id ?
-                <></>
-                :
-                <>
-                  <br />
-                  <h3>Impacting Controls</h3>
-                  <br />
-                  <MappingTable
-                    toast={this.addNotification}
-                    data={mappingData}
-                    headers={headers}
-                    rows={mappingData.slice(
-                      this.state.firstRowIndex,
-                      this.state.firstRowIndex + this.state.currentPageSize
-                    )}
-                    handleReload={this.loadTable}
-                    mapping={this.props.mapping}
-                    controls={this.props.controls}
-                    services={this.props.service}
-                    arch={this.props.arch}
-                    serviceId={this.props.serviceId}
-                  />
-                  <Pagination
-                    totalItems={this.state.totalItems}
-                    backwardText="Previous page"
-                    forwardText="Next page"
-                    pageSize={this.state.currentPageSize}
-                    pageSizes={[5, 10, 15, 25]}
-                    itemsPerPageText="Items per page"
-                    onChange={({ page, pageSize }) => {
-                      if (pageSize !== this.state.currentPageSize) {
-                        this.setState({
-                          currentPageSize: pageSize
-                        });
-                      }
-                      this.setState({
-                        firstRowIndex: pageSize * (page - 1)
-                      });
-                    }}
-                  />
-                </>
-              }
-            </div>
-          </div>
         </div>
       </div>;
     }
@@ -346,8 +331,63 @@ class ServiceDetailsView extends Component {
               caption={notif.caption || "Caption"}
             />
           }
+
           {breadcrumb}
-          {content}
+          {title}
+
+          {data.service_id && 
+            <ContentSwitcher
+              size='xl'
+              onChange={(e) => {this.setState({showContent:e.name})}} >
+              <Switch name="service-details" text="Description" />
+              <Switch name="mapping" text="Impacting Controls" />
+            </ContentSwitcher>
+          }
+          
+          {this.state.showContent === "service-details" && 
+            content
+          }
+          {data.service_id && this.state.showContent === "mapping" &&
+            <>
+              <br />
+              <h3>Impacting Controls</h3>
+              <br />
+              <MappingTable
+                toast={this.addNotification}
+                data={mappingData}
+                headers={headers}
+                rows={mappingData.slice(
+                  this.state.firstRowIndex,
+                  this.state.firstRowIndex + this.state.currentPageSize
+                )}
+                handleReload={this.loadTable}
+                mapping={this.props.mapping}
+                controls={this.props.controls}
+                services={this.props.service}
+                arch={this.props.arch}
+                serviceId={this.props.serviceId}
+                filterTable={this.filterTable}
+              />
+              <Pagination
+                totalItems={this.state.totalItems}
+                backwardText="Previous page"
+                forwardText="Next page"
+                pageSize={this.state.currentPageSize}
+                pageSizes={[5, 10, 15, 25]}
+                itemsPerPageText="Items per page"
+                onChange={({ page, pageSize }) => {
+                  if (pageSize !== this.state.currentPageSize) {
+                    this.setState({
+                      currentPageSize: pageSize
+                    });
+                  }
+                  this.setState({
+                    firstRowIndex: pageSize * (page - 1)
+                  });
+                }}
+              />
+            </>
+          }
         </div >
       </>
     );

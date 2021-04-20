@@ -12,13 +12,14 @@ import {
   TableCell,
   TableToolbarSearch,
   OverflowMenu,
-  OverflowMenuItem
+  OverflowMenuItem,
+  Tag
 } from 'carbon-components-react';
 import {
   Link
 } from "react-router-dom";
 
-const NistTable = ({ rows, headers }) => (
+const NistTable = ({ rows, headers, filter }) => (
   <DataTable rows={rows} headers={headers}>
     {({
       rows,
@@ -27,14 +28,13 @@ const NistTable = ({ rows, headers }) => (
       getRowProps,
       getTableProps,
       getToolbarProps,
-      onInputChange,
       getTableContainerProps,
     }) => (
       <TableContainer
         {...getTableContainerProps()}>
         <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
           <TableToolbarContent>
-            <TableToolbarSearch onChange={onInputChange} />
+            <TableToolbarSearch onChange={(event) => filter(event.target.value)} />
           </TableToolbarContent>
         </TableToolbar>
         <Table {...getTableProps()}>
@@ -52,7 +52,21 @@ const NistTable = ({ rows, headers }) => (
             {rows.map((row) => (
               <TableRow key={row.id} {...getRowProps({ row })}>
                 {row.cells.map((cell) => (
-                  <TableCell key={cell.id}>{cell.value}</TableCell>
+                  <TableCell key={cell.id}>
+                    {
+                      cell.info && (cell.info.header === "id" || cell.info.header === "parent_control" && cell.value) ?
+                        <Tag type="blue">
+                          <Link to={"/nists/" + cell.value.toLowerCase().replace(' ', '_')} >
+                            {cell.value}
+                          </Link>
+                        </Tag>
+                      : cell.info && (cell.info.header === "parent_control") ?
+                      <Tag>
+                        Base Control
+                      </Tag>
+                      : cell.value
+                    }
+                  </TableCell>
                 ))}
                 <TableCell>
                   <OverflowMenu light flipped>

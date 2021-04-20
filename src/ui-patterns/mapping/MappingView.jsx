@@ -14,29 +14,50 @@ class MappingView extends Component {
     super(props);
     this.state = {
       data: [],
+      filterData: [],
       headerData: mappingHeaders,
-      totalItems: 0,
+      totalItems: -1,
       firstRowIndex: 0,
       currentPageSize: 10,
       notifications: []
     };
     this.loadTable = this.loadTable.bind(this);
     this.addNotification = this.addNotification.bind(this);
+    this.filterTable = this.filterTable.bind(this);
   }
 
   async loadTable() {
     const mappingDetails = await this.props.mapping.getMappings();
     this.setState({
       data: [],
+      filterData: [],
       totalItems: 0
     });
     this.setState({
       data: mappingDetails,
+      filterData: mappingDetails,
       totalItems: mappingDetails.length
     });
   }
   async componentDidMount() {
     this.loadTable();
+  }
+
+  async filterTable(searchValue) {
+      if (searchValue) {
+          const filterData = this.state.data.filter(elt => elt?.scc_profile?.includes(searchValue) || elt.control_id?.includes(searchValue) || elt.service_id?.includes(searchValue) || elt?.service?.ibm_catalog_service?.includes(searchValue));
+          this.setState({
+              filterData: filterData,
+              firstRowIndex: 0,
+              totalItems: filterData.length
+          });
+      } else {
+          this.setState({
+              filterData: this.state.data,
+              firstRowIndex: 0,
+              totalItems: this.state.data.length
+          });
+      }
   }
 
   /** Notifications */
@@ -71,7 +92,7 @@ class MappingView extends Component {
   /** Notifications END */
 
   render() {
-    const data = this.state.data;
+    const data = this.state.filterData;
     const headers = this.state.headerData;
     return (
       <>
@@ -94,7 +115,7 @@ class MappingView extends Component {
           </div>
           <div className="bx--row">
             <div className="bx--col-lg-16">
-              {data.length === 0 ?
+              {this.state.totalItems < 0 ?
                 <DataTableSkeleton
                   columnCount={headers.length + 1}
                   rowCount={10}
@@ -115,6 +136,7 @@ class MappingView extends Component {
                     controls={this.props.controls}
                     services={this.props.services}
                     arch={this.props.arch}
+                    filterTable={this.filterTable}
                   />
                   <Pagination
                     totalItems={this.state.totalItems}

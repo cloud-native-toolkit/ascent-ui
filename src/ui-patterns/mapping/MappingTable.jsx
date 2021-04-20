@@ -21,7 +21,9 @@ import {
   TableSelectAll,
   TableSelectRow,
   TableBatchActions,
-  TableBatchAction
+  TableBatchAction,
+  TableToolbarMenu,
+  TableToolbarAction
 } from 'carbon-components-react';
 import {
   Link
@@ -29,9 +31,11 @@ import {
 import {
   Delete16 as Delete,
   Add16,
-  Launch16
+  Launch16,
+  DocumentImport16 as DocumentImport
 } from '@carbon/icons-react';
 import MappingModal from "./MappingModal"
+import ImportProfileModal from "./ImportProfileModal"
 import ValidateModal from "../ValidateModal"
 
 class MappingTable extends Component {
@@ -42,6 +46,7 @@ class MappingTable extends Component {
       mappingRecord: [],
       show: false,
       showValidate: false,
+      showImportProfile: false,
       selectedRows: []
     };
     this.showModal = this.showModal.bind(this);
@@ -65,6 +70,8 @@ class MappingTable extends Component {
       let control_id = "";
       let service_id = "";
       let arch_id = "";
+      let control_subsections= "";
+      let scc_profile= "";
       if (row.cells && row.cells.length) {
         row.cells.forEach((cell) => {
           if (cell.info && cell.info.header === "control_id") {
@@ -75,6 +82,10 @@ class MappingTable extends Component {
             } else {
               service_id = cell.value.val;
             }
+          } else if (cell.info && cell.info.header === "control_subsections") {
+            control_subsections = cell.value;
+          } else if (cell.info && cell.info.header === "scc_profile") {
+            scc_profile = cell.value;
           }
         });
       }
@@ -82,12 +93,16 @@ class MappingTable extends Component {
       if (service_id) {
         body = {
           control_id: control_id,
-          service_id: service_id
+          service_id: service_id,
+          scc_profile: scc_profile,
+          control_subsections: control_subsections
         }
       } else {
         body = {
           control_id: control_id,
-          arch_id: arch_id
+          arch_id: arch_id,
+          scc_profile: scc_profile,
+          control_subsections: control_subsections
         }
       }
       this.props.mapping.deleteMapping(body).then((res) => {
@@ -151,12 +166,14 @@ class MappingTable extends Component {
       let row = this.props.rows[index];
       row.component_id = {
         val: row.service_id || row.arch_id,
+        serviceName: row?.service?.ibm_catalog_service,
         arch: row.arch_id ? true : false,
         service: row.service_id ? true : false,
         details: {
           desc: row.desc,
           configuration: row.configuration,
-          comment: row.comment
+          comment: row.comment,
+          scc_goals: row.scc_goal
         }
       }
     }
@@ -191,6 +208,21 @@ class MappingTable extends Component {
               onSecondarySubmit={this.validateCancel} />
           }
         </div>
+        <div>
+          {this.state.showImportProfile &&
+            <ImportProfileModal
+              submitText="Import"
+              show={this.state.showImportProfile}
+              onClose={() => this.setState({showImportProfile: false})} 
+              closeAndReload={() => {
+                this.setState({showImportProfile: false});
+                this.props.handleReload();
+              }} 
+              onSecondarySubmit={() => this.setState({showImportProfile: false})}
+              mapping={this.props.mapping}
+              toast={this.props.toast} />
+          }
+        </div>
         <DataTable rows={this.props.rows} headers={this.props.headers}>
           {({
             rows,
@@ -199,7 +231,6 @@ class MappingTable extends Component {
             getRowProps,
             getTableProps,
             getToolbarProps,
-            onInputChange,
             getTableContainerProps,
             getSelectionProps,
             getBatchActionProps,
@@ -218,14 +249,20 @@ class MappingTable extends Component {
                     </TableBatchAction>
                 </TableBatchActions>
                 <TableToolbarContent>
-                  <TableToolbarSearch onChange={onInputChange} />
+                  <TableToolbarSearch onChange={(event) => this.props.filterTable(event.target.value)} />
+                  <TableToolbarMenu>
+                    <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.setState({ showImportProfile: true })}>
+                      <div style={{ flex: 'left' }}>Import Profile</div>
+                      <DocumentImport style={{ marginLeft: "auto" }} />
+                    </TableToolbarAction>
+                  </TableToolbarMenu>
                   <Button
                     size="small"
                     kind="primary"
                     renderIcon={Add16} 
                     onClick={this.showModal}
                     disabled={this.state.userRole !== "editor"}>Add
-                </Button>
+                  </Button>
                 </TableToolbarContent>
               </TableToolbar>
               <Table {...getTableProps()}>
@@ -255,37 +292,24 @@ class MappingTable extends Component {
                                     {cell.value}
                                   </Link>
                                 </Tag>
-                                :
-                                cell.info && cell.info.header === "component_id" && cell.value && cell.value.service ?
-                                  <Tag type="blue">
-                                    <Link to={"/services/" + cell.value.val} >
-                                      {cell.value.val}
-                                    </Link>
-                                  </Tag>
-                                  :
-                                  cell.info && cell.info.header === "component_id" && cell.value && cell.value.arch ?
-                                    <Tag type="blue">
-                                      <Link to={"/bom/" + cell.value.val} >
-                                        {cell.value.val}
-                                      </Link>
-                                    </Tag>
-                                    :
-                                    cell.info && cell.info.header === "scc_goal" && cell.value ?
-                                      cell.value.split(new RegExp([' ', '-', '/', ':', ','].join('|'), 'g')).map((goalId) => (
-                                        goalId.match(/^\d{7}$/) ?
-                                          <>
-                                            <Tag type="blue" renderIcon={Launch16}>
-                                              <a href={"https://cloud.ibm.com/security-compliance/goals/" + goalId} target="_blank" >
-                                                {goalId}
-                                                <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
-                                              </a>
-                                            </Tag>
-                                          </>
-                                          :
-                                          goalId
-                                      ))
-                                      :
-                                      cell.value
+                              : cell.info && cell.info.header === "component_id" && cell.value && cell.value.service && cell.value.serviceName ?
+                                <Tag type="blue">
+                                  <Link to={"/services/" + cell.value.val} >
+                                    {cell.value.serviceName}
+                                  </Link>
+                                </Tag>
+                              : cell.info && cell.info.header === "component_id" && cell.value && cell.value.service?
+                                <Tag>
+                                  {cell.value.val}
+                                </Tag>
+                              : cell.info && cell.info.header === "component_id" && cell.value && cell.value.arch ?
+                                <Tag type="blue">
+                                  <Link to={"/bom/" + cell.value.val} >
+                                    {cell.value.val}
+                                  </Link>
+                                </Tag>
+                              :
+                                cell.value
                             }
                           </TableCell>
                         ))}
@@ -301,11 +325,30 @@ class MappingTable extends Component {
                         {row.cells && row.cells.length && row.cells.map((cell) => (
                           <>
                             {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.desc &&
-                              <><h6>Description</h6><div>{cell.value.details.desc}</div></>}
+                              <><h6 style={{'margin-top': '10px'}}>Description</h6><div>{cell.value.details.desc}</div></>}
+                            {
+                              cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.scc_goals &&
+                                <>
+                                  <h6 style={{'margin-top': '10px'}}>SCC Goals</h6>
+                                  {cell.value.details.scc_goals.split(new RegExp([' ', '-', '/', ':', ','].join('|'), 'g')).map((goalId) => (
+                                  goalId.match(/^\d{7}$/) ?
+                                    <>
+                                      <Tag type="blue" renderIcon={Launch16}>
+                                        <a href={"https://cloud.ibm.com/security-compliance/goals/" + goalId} target="_blank" >
+                                          {goalId}
+                                          <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
+                                        </a>
+                                      </Tag>
+                                    </>
+                                    :
+                                    goalId
+                                ))}
+                                </>
+                            }
                             {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.configuration &&
-                              <><h6>Configuration</h6><div>{cell.value.details.configuration}</div></>}
+                              <><h6 style={{'margin-top': '10px'}}>Configuration</h6><div>{cell.value.details.configuration}</div></>}
                             {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.comment &&
-                              <><h6>Comment</h6><div>{cell.value.details.comment}</div></>}
+                              <><h6 style={{'margin-top': '10px'}}>Comment</h6><div>{cell.value.details.comment}</div></>}
                           </>
                         ))}
                       </TableExpandedRow>
