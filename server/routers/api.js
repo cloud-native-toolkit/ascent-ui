@@ -1,15 +1,8 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const express = require('express');
+const proxy = require("express-http-proxy");
 
-const apiHost = process.env.API_HOST || 'http://localhost:3001';
-
-const options = {
-  target: apiHost,
-  changeOrigin: true,
-  pathRewrite: {
-    '^/api': '/',
-  }
-};
+const apiHost = process.env.API_HOST || 'localhost:3001';
 
 module.exports = function(app){
-  app.use('/api', createProxyMiddleware('/api', options));
+  app.use('/api', proxy(apiHost));
 };
