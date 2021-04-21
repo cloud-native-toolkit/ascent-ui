@@ -241,7 +241,8 @@ class ServiceDataView extends Component {
             table = <DataTableSkeleton
                 columnCount={headers.length + 1}
                 rowCount={10}
-                headers={headers}
+                showHeader={false}
+                headers={null}
             />
         } else {
             table = <>
