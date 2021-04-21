@@ -154,12 +154,15 @@ class MappingTable extends Component {
     });
   }
 
-  render() {
+  async componentDidMount(){
     fetch('/userDetails')
-    .then(res => res.json())
-    .then(user => {
-        this.setState({ userRole: user.role || undefined })
-    })
+      .then(res => res.json())
+      .then(user => {
+          this.setState({ userRole: user.role || undefined })
+      });
+  }
+
+  render() {
     const showModal = this.state.show;
     const showValidateModal = this.state.showValidate;
     for (let index = 0; index < this.props.rows.length; index++) {
@@ -251,7 +254,7 @@ class MappingTable extends Component {
                 <TableToolbarContent>
                   <TableToolbarSearch onChange={(event) => this.props.filterTable(event.target.value)} />
                   <TableToolbarMenu>
-                    <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.setState({ showImportProfile: true })}>
+                    <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.setState({ showImportProfile: true })} disabled={this.state.userRole !== "editor"}>
                       <div style={{ flex: 'left' }}>Import Profile</div>
                       <DocumentImport style={{ marginLeft: "auto" }} />
                     </TableToolbarAction>
