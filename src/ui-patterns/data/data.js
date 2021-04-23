@@ -183,9 +183,5 @@ export const mappingHeaders = [
     // {
     //     key: 'evidence',
     //     header: 'Evidence',
-    // },
-    // {
-    //     key: 'scc_goal',
-    //     header: 'SCC Goal',
     // }
 ];

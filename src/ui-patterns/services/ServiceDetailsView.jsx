@@ -45,7 +45,14 @@ class ServiceDetailsView extends Component {
   }
 
   async loadTable() {
-    const mappingData = await this.props.mapping.getMappings({ where: { service_id: this.props.serviceId }, include: ["service"] });
+    const mappingData = await this.props.mapping.getMappings({ where: { service_id: this.props.serviceId }, include: ["profile", "control", "service"] });
+    this.props.mapping.getMappings({ where: { service_id: this.props.serviceId }, include: ["profile", "goals", "control", "service"] }).then((mappings) => {
+      this.setState({
+        mappingData: mappings,
+        filterData: mappings,
+        totalItems: mappings.length
+      });
+    });
     this.setState({
       mappingData: [],
       filterData: [],

@@ -5,7 +5,7 @@ export interface ControlMappingModel {
     compliant: string;
     configuration: string;
     evidence: string;
-    scc_goal: string;
+    scc_profile: string;
     desc: string;
     comment: string;
 }
