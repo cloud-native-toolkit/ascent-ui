@@ -19,7 +19,8 @@ import {
     Edit16,
     Add16,
     WarningAlt16,
-    Launch16
+    Launch16,
+    DocumentExport16 as DocumentExport
 } from '@carbon/icons-react';
 import {
     ComposedModal, ModalHeader, ModalBody, Tag, TagSkeleton,
@@ -517,6 +518,10 @@ class BillofMaterialsView extends Component {
                                                                 <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
                                                                     <div style={{ flex: 'left' }}>Edit Variables</div>
                                                                     <Edit16 style={{ marginLeft: "auto" }} />
+                                                                </TableToolbarAction>
+                                                                <TableToolbarAction style={{ display: 'flex' }} onClick={() => {this.addNotification('info', 'Generating Report', 'Generating your PDF report, please wait.')}} href={`/api/architectures/${this.props.archId}/compliance-report.pdf?profile=IBM_CLOUD_FS_BP_0_1`} download>
+                                                                    <div style={{ flex: 'left' }}>PDF Report</div>
+                                                                    <DocumentExport style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
                                                             </TableToolbarMenu>
                         

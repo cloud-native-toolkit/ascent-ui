@@ -21,7 +21,6 @@ class MappingModal extends Component {
                 compliant: 'UNKNOWN',
                 configuration: '',
                 evidence: '',
-                scc_goal: '',
                 scc_profile: '',
                 desc: '',
                 comment: ''
@@ -249,18 +248,6 @@ class MappingModal extends Component {
                                     invalidText="A valid value is required"
                                     labelText="Evidence"
                                     placeholder="e.g. COS FS-Ready validation, SCC Scan / Resource groups, etc."
-                                    rows={1}
-                                    style={{ marginBottom: '1rem' }}
-                                />
-                                <TextInput
-                                    cols={50}
-                                    id="scc_goal"
-                                    name="scc_goal"
-                                    value={this.state.fields.scc_goal}
-                                    onChange={this.handleChange.bind(this, "scc_goal")}
-                                    invalidText="A valid value is required"
-                                    labelText="SCC Goal(s)"
-                                    placeholder="e.g. 3000106,3000114,etc."
                                     rows={1}
                                     style={{ marginBottom: '1rem' }}
                                 />

@@ -56,8 +56,14 @@ class ControlDetailsView extends Component {
 
   async loadTable() {
     console.log(this.props.controlId);
-    const mappingData = await this.props.mapping.getMappings({ where : {control_id: this.props.controlId}, include: ["service"] });
-    console.log(mappingData);
+    const mappingData = await this.props.mapping.getMappings({ where : {control_id: this.props.controlId}, include: ["profile", "control", "service"] });
+    this.props.mapping.getMappings({ where : {control_id: this.props.controlId}, include: ["profile", "goals", "control", "service"] }).then((mappings) => {
+      this.setState({
+        mappingData: mappings,
+        filterData: mappings,
+        totalItems: mappings.length
+      });
+    });
     this.setState({
       mappingData: [],
       totalItems: 0

@@ -23,7 +23,8 @@ import {
   TableBatchActions,
   TableBatchAction,
   TableToolbarMenu,
-  TableToolbarAction
+  TableToolbarAction,
+  TagSkeleton
 } from 'carbon-components-react';
 import {
   Link
@@ -176,7 +177,7 @@ class MappingTable extends Component {
           desc: row.desc,
           configuration: row.configuration,
           comment: row.comment,
-          scc_goals: row.scc_goal
+          scc_goals: row.goals
         }
       }
     }
@@ -330,22 +331,28 @@ class MappingTable extends Component {
                             {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.desc &&
                               <><h6 style={{'margin-top': '10px'}}>Description</h6><div>{cell.value.details.desc}</div></>}
                             {
-                              cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.scc_goals &&
+                              cell.info && cell.info.header === "component_id" && cell.value && cell.value.details &&
                                 <>
                                   <h6 style={{'margin-top': '10px'}}>SCC Goals</h6>
-                                  {cell.value.details.scc_goals.split(new RegExp([' ', '-', '/', ':', ','].join('|'), 'g')).map((goalId) => (
-                                  goalId.match(/^\d{7}$/) ?
-                                    <>
-                                      <Tag type="blue" renderIcon={Launch16}>
-                                        <a href={"https://cloud.ibm.com/security-compliance/goals/" + goalId} target="_blank" >
-                                          {goalId}
-                                          <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
-                                        </a>
-                                      </Tag>
-                                    </>
+                                  {
+                                    cell.value.details.scc_goals !== undefined ?
+                                      cell.value.details.scc_goals.map((goal) => (
+                                        goal.goal_id.match(/^\d{7}$/) ?
+                                          <>
+                                            <Tag type="blue">
+                                              <a href={"https://cloud.ibm.com/security-compliance/goals/" + goal.goal_id} target="_blank" >
+                                                {goal.goal_id}
+                                                <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
+                                              </a>
+                                            </Tag>
+                                          </>
+                                        :
+                                          goal.goal_id
+                                        ))
                                     :
-                                    goalId
-                                ))}
+                                      <><TagSkeleton /><TagSkeleton /></>
+                                  }
+                                  
                                 </>
                             }
                             {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.configuration &&
