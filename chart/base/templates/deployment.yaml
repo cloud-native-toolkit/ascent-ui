@@ -65,8 +65,13 @@ spec:
             - name: APP_URI
               valueFrom:
                 configMapKeyRef:
-                  name: dev-mapper-ui
+                  name: mapper-ui
                   key: route
+            - name: API_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mapper-ui
+                  key: api-host
             - name: PROTOCOLS
               value: ""
             - name: LOG_LEVEL
