@@ -63,8 +63,8 @@ class ArchitectureView extends Component {
                         title={arch.name}
                         author={arch.short_desc}
                         desc={arch.long_desc}
-                        date="March 22, 2021"
-                        readTime="Terraform | FS Ready | Cloud-Native"
+                        date=""
+                        readTime=""
                         color="dark">
 
                         <Link to={link}>
@@ -80,8 +80,6 @@ class ArchitectureView extends Component {
                     <div className="labels">
 
                             <FormLabel>
-                                <Tooltip triggerText="FS Ready">This Architecture is FS Ready</Tooltip>
-                                <Tooltip triggerText="Hippa">This architecture support Hippa Services</Tooltip>
                                 <Tooltip triggerText="Terraform">This architecture supports Terraform.</Tooltip>
                             </FormLabel>
 
