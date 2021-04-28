@@ -59,7 +59,7 @@ class BillofMaterialsView extends Component {
             architecture: {},
             totalItems: 0,
             firstRowIndex: 0,
-            currentPageSize: 10,
+            currentPageSize: 15,
             isPaneOpen: false,
             dataDetails: false,
             notifications: []
@@ -480,7 +480,7 @@ class BillofMaterialsView extends Component {
                                     {this.state.archid === false ?
                                         <DataTableSkeleton
                                             columnCount={headers.length + 1}
-                                            rowCount={10}
+                                            rowCount={15}
                                             showHeader={false}
                                             headers={null}
                                         />

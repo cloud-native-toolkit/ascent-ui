@@ -36,7 +36,7 @@ class ServiceDetailsView extends Component {
       filterData: [],
       totalItems: 0,
       firstRowIndex: 0,
-      currentPageSize: 10,
+      currentPageSize: 15,
       notifications: []
     };
     this.loadTable = this.loadTable.bind(this);

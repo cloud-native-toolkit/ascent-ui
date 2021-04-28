@@ -18,7 +18,7 @@ class MappingView extends Component {
       headerData: mappingHeaders,
       totalItems: -1,
       firstRowIndex: 0,
-      currentPageSize: 10,
+      currentPageSize: 15,
       notifications: []
     };
     this.loadTable = this.loadTable.bind(this);
@@ -125,7 +125,7 @@ class MappingView extends Component {
               {this.state.totalItems < 0 ?
                 <DataTableSkeleton
                   columnCount={headers.length + 1}
-                  rowCount={10}
+                  rowCount={15}
                   showHeader={false}
                   headers={null}
                 />
