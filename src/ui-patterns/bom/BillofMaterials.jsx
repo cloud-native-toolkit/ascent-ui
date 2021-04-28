@@ -555,7 +555,7 @@ class BillofMaterialsView extends Component {
                                                                 disabled={this.state.userRole !== "editor"}
                                                             >
                                                                 Add Service
-                                                                        </Button>
+                                                            </Button>
                                                         </TableToolbarContent>
                                                     </TableToolbar>
                                                     <Table {...getTableProps()}>
