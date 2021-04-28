@@ -101,7 +101,7 @@ class UIShell extends Component {
 
                 <HeaderGlobalBar>
                   <HeaderGlobalAction
-                    aria-label="App Switcher"
+                    aria-label="Profile"
                     isActive={this.state.profileExpanded}
                     onClick={() => this.setState({profileExpanded: !this.state.profileExpanded})}
                     tooltipAlignment="end">

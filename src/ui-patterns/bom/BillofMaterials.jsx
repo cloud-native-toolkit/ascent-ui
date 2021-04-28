@@ -45,6 +45,7 @@ class BillofMaterialsView extends Component {
             userRole: "editor",
             archid: false,
             data: [],
+            filterData: [],
             compositeData: [],
             headersData: bomHeader,
             showServiceModal: false,
@@ -58,7 +59,7 @@ class BillofMaterialsView extends Component {
             architecture: {},
             totalItems: 0,
             firstRowIndex: 0,
-            currentPageSize: 10,
+            currentPageSize: 15,
             isPaneOpen: false,
             dataDetails: false,
             notifications: []
@@ -74,6 +75,7 @@ class BillofMaterialsView extends Component {
         this.validateCancel = this.validateCancel.bind(this);
         this.validateSubmit = this.validateSubmit.bind(this);
         this.addNotification = this.addNotification.bind(this);
+        this.filterTable = this.filterTable.bind(this);
     }
     async loadTable() {
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
@@ -106,6 +108,7 @@ class BillofMaterialsView extends Component {
         this.setState({
             archid: this.props.archId,
             data: bomDetails,
+            filterData: bomDetails,
             architecture: arch,
             totalItems: bomDetails.length,
             serviceNames: service_list
@@ -337,8 +340,25 @@ class BillofMaterialsView extends Component {
 
     /** Notifications END */
 
+    async filterTable(searchValue) {
+        if (searchValue) {
+            const filterData = this.state.data.filter(elt => elt.service.ibm_catalog_service.includes(searchValue) || elt.desc.includes(searchValue) || elt.service_id.includes(searchValue));
+            this.setState({
+                filterData: filterData,
+                firstRowIndex: 0,
+                totalItems: filterData.length
+            });
+        } else {
+            this.setState({
+                filterData: this.state.data,
+                firstRowIndex: 0,
+                totalItems: this.state.data.length
+            });
+        }
+    }
+
     render() {
-        let data = this.state.data;
+        let data = this.state.filterData;
         const headers = this.state.headersData;
         const archid = this.state.archid;
 
@@ -460,7 +480,7 @@ class BillofMaterialsView extends Component {
                                     {this.state.archid === false ?
                                         <DataTableSkeleton
                                             columnCount={headers.length + 1}
-                                            rowCount={10}
+                                            rowCount={15}
                                             showHeader={false}
                                             headers={null}
                                         />
@@ -504,7 +524,7 @@ class BillofMaterialsView extends Component {
                                                         </TableToolbarContent>
                                                         <TableToolbarContent>
                         
-                                                            <TableToolbarSearch onChange={onInputChange} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
+                                                            <TableToolbarSearch onChange={(event) => this.filterTable(event.target.value)} tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0} />
                         
                                                             <TableToolbarMenu>
                                                                 <TableToolbarAction style={{ display: 'flex' }} onClick={this.showDiagram}>
@@ -535,7 +555,7 @@ class BillofMaterialsView extends Component {
                                                                 disabled={this.state.userRole !== "editor"}
                                                             >
                                                                 Add Service
-                                                                        </Button>
+                                                            </Button>
                                                         </TableToolbarContent>
                                                     </TableToolbar>
                                                     <Table {...getTableProps()}>

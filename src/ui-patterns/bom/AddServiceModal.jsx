@@ -46,9 +46,8 @@ class ServiceModal extends Component {
         event.preventDefault();
         if (this.state.fields.service_id && !this.props.isUpdate) {
             this.props.service.doPostBOM(this.props.archId, this.state.fields).then(res => {
-                console.log(res);
                 if (res && res.body && res.body.error) {
-                    this.props.toast("error", "Error", res.body.error.message);
+                    this.props.toast("error", "Error", `${res.body.error.message}${res.body.error?.details?.reason && " Reason: " + res.body.error.details.reason}`);
                 } else {
                     this.props.toast("success", "Success", `Service ${res.service_id} successfully added to ref. architecture ${res.arch_id}!`);
                     this.props.handleClose();
@@ -59,9 +58,8 @@ class ServiceModal extends Component {
                 desc: this.state.fields.desc,
                 automation_variables: this.state.fields.automation_variables
             }).then(res => {
-                console.log(res);
                 if (res && res.body && res.body.error) {
-                    this.props.toast("error", "Error", res.body.error.message);
+                    this.props.toast("error", "Error", `${res.body.error.message}${res.body.error?.details?.reason && " Reason: " + res.body.error.details.reason}`);
                 } else {
                     this.props.toast("success", "Success", `Service ${res.service_id} successfully updated!`);
                     this.props.handleClose();
