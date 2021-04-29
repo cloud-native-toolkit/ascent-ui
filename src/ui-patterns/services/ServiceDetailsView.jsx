@@ -67,7 +67,7 @@ class ServiceDetailsView extends Component {
 
   async filterTable(searchValue) {
       if (searchValue) {
-          const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt.control_id?.includes(searchValue));
+          const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt?.control_id?.includes(searchValue));
           this.setState({
               filterData: filterData,
               firstRowIndex: 0,

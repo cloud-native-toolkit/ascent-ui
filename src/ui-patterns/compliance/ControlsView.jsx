@@ -32,7 +32,7 @@ class ControlsView extends Component {
 
     async filterTable(searchValue) {
         if (searchValue) {
-            const filterData = this.state.data.filter(elt => elt.id.includes(searchValue) || elt.name.includes(searchValue) || elt?.nist?.family.includes(searchValue));
+            const filterData = this.state.data.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.nist?.family?.includes(searchValue));
             this.setState({
                 filterData: filterData,
                 firstRowIndex: 0,

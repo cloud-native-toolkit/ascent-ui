@@ -59,7 +59,7 @@ class BillofMaterialsView extends Component {
             architecture: {},
             totalItems: 0,
             firstRowIndex: 0,
-            currentPageSize: 15,
+            currentPageSize: 10,
             isPaneOpen: false,
             dataDetails: false,
             notifications: []
@@ -342,7 +342,7 @@ class BillofMaterialsView extends Component {
 
     async filterTable(searchValue) {
         if (searchValue) {
-            const filterData = this.state.data.filter(elt => elt.service.ibm_catalog_service.includes(searchValue) || elt.desc.includes(searchValue) || elt.service_id.includes(searchValue));
+            const filterData = this.state.data.filter(elt => elt.service.grouping === searchValue || elt.service.deployment_method === searchValue || elt.service.provision === searchValue || elt.service?.ibm_catalog_service?.includes(searchValue) || elt?.desc?.includes(searchValue) || elt?.service_id?.includes(searchValue));
             this.setState({
                 filterData: filterData,
                 firstRowIndex: 0,
@@ -480,7 +480,7 @@ class BillofMaterialsView extends Component {
                                     {this.state.archid === false ?
                                         <DataTableSkeleton
                                             columnCount={headers.length + 1}
-                                            rowCount={15}
+                                            rowCount={10}
                                             showHeader={false}
                                             headers={null}
                                         />

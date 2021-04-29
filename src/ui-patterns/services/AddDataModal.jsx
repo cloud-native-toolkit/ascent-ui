@@ -137,6 +137,7 @@ class FormModal extends Component {
                                     />
                                     <SelectItem value="Security & Identity" text="Security & Identity" />
                                     <SelectItem value="Developer Tools" text="Developer Tools" />
+                                    <SelectItem value="SRE Tools" text="SRE Tools" />
                                     <SelectItem value="Databases" text="Databases" />
                                     <SelectItem value="Network" text="Network" />
                                     <SelectItem value="Storage" text="Storage" />
@@ -156,9 +157,10 @@ class FormModal extends Component {
                                         value="placeholder-item"
                                         text="Choose an option"
                                     />
-                                    <SelectItem value="managed_service" text="Managed Service" />
-                                    <SelectItem value="platform" text="Platform" />
-                                    <SelectItem value="operator" text="Operator" />
+                                    <SelectItem value="Managed Service" text="Managed Service" />
+                                    <SelectItem value="Platform" text="Platform" />
+                                    <SelectItem value="Operator" text="Operator" />
+                                    <SelectItem value="Helm" text="Helm" />
                                 </Select>
                                 <Select id="provision" name="provision"
                                     labelText="Provision"
@@ -172,9 +174,10 @@ class FormModal extends Component {
                                         value="placeholder-item"
                                         text="Choose an option"
                                     />
-                                    <SelectItem value="terraform" text="Terraform" />
-                                    <SelectItem value="operator" text="Operator" />
-                                    <SelectItem value="ansible" text="Ansible" />
+                                    <SelectItem value="Terraform" text="Terraform" />
+                                    <SelectItem value="Operator" text="Operator" />
+                                    <SelectItem value="Ansible" text="Ansible" />
+                                    <SelectItem value="Helm" text="Helm" />
                                 </Select>
                                 {
                                     this.state.caids && this.state.caids.length > 0 ?

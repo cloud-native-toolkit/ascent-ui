@@ -77,7 +77,7 @@ class ControlDetailsView extends Component {
 
   async filterTable(searchValue) {
       if (searchValue) {
-          const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt.service_id?.includes(searchValue) || elt?.service?.ibm_catalog_service?.includes(searchValue));
+          const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt?.service_id?.includes(searchValue) || elt?.service?.ibm_catalog_service?.includes(searchValue));
           this.setState({
               filterData: filterData,
               firstRowIndex: 0,

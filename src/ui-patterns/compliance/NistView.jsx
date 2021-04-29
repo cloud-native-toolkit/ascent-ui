@@ -33,7 +33,7 @@ class NistView extends Component {
 
     async filterTable(searchValue) {
         if (searchValue) {
-            const filterData = this.state.data.filter(elt => elt.id.includes(searchValue) || elt.title.includes(searchValue) || elt.family.includes(searchValue));
+            const filterData = this.state.data.filter(elt => elt?.id?.includes(searchValue) || elt?.title?.includes(searchValue) || elt?.family?.includes(searchValue));
             this.setState({
                 filterData: filterData,
                 firstRowIndex: 0,

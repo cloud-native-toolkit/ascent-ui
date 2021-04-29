@@ -217,7 +217,7 @@ class ServiceDataView extends Component {
 
     async filterTable(searchValue) {
         if (searchValue) {
-            const filterData = this.state.data.filter(elt => elt.service.service_name.includes(searchValue) || elt.service.service_id.includes(searchValue));
+            const filterData = this.state.data.filter(elt => elt.grouping === searchValue || elt.deployment_method === searchValue || elt.provision === searchValue || elt?.service?.service_name?.includes(searchValue) || elt?.service?.service_id?.includes(searchValue));
             this.setState({
                 filterData: filterData,
                 firstRowIndex: 0,
