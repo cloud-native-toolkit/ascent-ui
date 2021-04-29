@@ -67,7 +67,7 @@ class ServiceDetailsView extends Component {
 
   async filterTable(searchValue) {
       if (searchValue) {
-          const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt.control_id?.includes(searchValue));
+          const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt?.control_id?.includes(searchValue));
           this.setState({
               filterData: filterData,
               firstRowIndex: 0,
@@ -165,7 +165,12 @@ class ServiceDetailsView extends Component {
                           :
                           data.ibm_service || data.service_id
                     }
-                    {(data.catalog && data.catalog.tags && data.catalog.tags.length > 0 && data.catalog.tags.includes("fs_ready")) && <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>}
+                    {
+                      ((data?.catalog?.tags?.length > 0 && data.catalog.tags.includes("fs_ready")) 
+                      || data.grouping === "Network" 
+                      || data.deployment_method === "Operator")
+                      && <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>
+                    }
                   </h2>
                   <br></br>
                 </div>

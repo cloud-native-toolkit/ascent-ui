@@ -59,7 +59,7 @@ class BillofMaterialsView extends Component {
             architecture: {},
             totalItems: 0,
             firstRowIndex: 0,
-            currentPageSize: 15,
+            currentPageSize: 10,
             isPaneOpen: false,
             dataDetails: false,
             notifications: []
@@ -342,7 +342,7 @@ class BillofMaterialsView extends Component {
 
     async filterTable(searchValue) {
         if (searchValue) {
-            const filterData = this.state.data.filter(elt => elt.service.ibm_catalog_service.includes(searchValue) || elt.desc.includes(searchValue) || elt.service_id.includes(searchValue));
+            const filterData = this.state.data.filter(elt => elt.service.grouping === searchValue || elt.service.deployment_method === searchValue || elt.service.provision === searchValue || elt.service?.ibm_catalog_service?.includes(searchValue) || elt?.desc?.includes(searchValue) || elt?.service_id?.includes(searchValue));
             this.setState({
                 filterData: filterData,
                 firstRowIndex: 0,
@@ -480,7 +480,7 @@ class BillofMaterialsView extends Component {
                                     {this.state.archid === false ?
                                         <DataTableSkeleton
                                             columnCount={headers.length + 1}
-                                            rowCount={15}
+                                            rowCount={10}
                                             showHeader={false}
                                             headers={null}
                                         />
@@ -594,12 +594,19 @@ class BillofMaterialsView extends Component {
                                                                                                 <Launch16 style={{"margin-left": "3px"}}/>
                                                                                             </a>
                                                                                         </Tag>
-                                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].catalog
-                                                                                        && this.state.compositeData[row.id].catalog.tags && this.state.compositeData[row.id].catalog.tags.length > 0 && this.state.compositeData[row.id].catalog.tags.includes("fs_ready") ?
+                                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.catalog?.tags?.length > 0 && this.state.compositeData[row.id].catalog.tags.includes("fs_ready") ?
                                                                                         <Tag type="green">
                                                                                             FS Validated
                                                                                         </Tag>
-                                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] ?
+                                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.service?.grouping === "Network" ?
+                                                                                        <Tag type="green">
+                                                                                            VPC
+                                                                                        </Tag>
+                                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.service?.deployment_method === "Operator" ?
+                                                                                        <Tag type="green">
+                                                                                            OpenShift Software
+                                                                                        </Tag>
+                                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id] ?
                                                                                         <Tag>
                                                                                             Not yet
                                                                                         </Tag>
