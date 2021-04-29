@@ -13,7 +13,7 @@ class ArchitectureModal extends Component {
             show: this.props.show,
             onRequestClose: this.props.handleClose,
             fields: {
-                automation_variables: "alias: example\nvariables:\n\t- name: var_1\n\tvalue: value_1\n\t- name: var_2\n\tvalue: value_2"
+                automation_variables: "alias: example\nvariables:\n  - name: var_1\n  value: value_1\n  - name: var_2\n  value: value_2"
             }
         };
         if (this.props.isUpdate) {

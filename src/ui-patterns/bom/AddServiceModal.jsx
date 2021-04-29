@@ -18,7 +18,7 @@ class ServiceModal extends Component {
                 service_id: '',
                 arch_id: this.props.archId,
                 desc: '',
-                automation_variables: "alias: example\nvariables:\n\t- name: var_1\n\tvalue: value_1\n\t- name: var_2\n\tvalue: value_2"
+                automation_variables: "alias: example\nvariables:\n  - name: var_1\n  value: value_1\n  - name: var_2\n  value: value_2"
             }
         };
         if (this.props.isUpdate) {
