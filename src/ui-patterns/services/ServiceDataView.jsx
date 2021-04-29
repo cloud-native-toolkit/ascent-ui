@@ -73,6 +73,7 @@ class ServiceDataView extends Component {
                 for (let ix in res) {
                     compositeData[res[ix].service_id] = res[ix];
                 }
+                console.log(compositeData);
                 this.setState({
                     compositeData: compositeData
                 })
@@ -323,6 +324,14 @@ class ServiceDataView extends Component {
                                                                         && this.state.compositeData[row.id].catalog.tags && this.state.compositeData[row.id].catalog.tags.length > 0 && this.state.compositeData[row.id].catalog.tags.includes("fs_ready") ?
                                                                         <Tag type="green">
                                                                             FS Validated
+                                                                        </Tag>
+                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.grouping === "Network" ?
+                                                                        <Tag type="green">
+                                                                            VPC
+                                                                        </Tag>
+                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.deployment_method === "Operator" ?
+                                                                        <Tag type="green">
+                                                                            OpenShift Software
                                                                         </Tag>
                                                                     : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] ?
                                                                         <Tag>
