@@ -305,7 +305,7 @@ class ControlDetailsView extends Component {
         <div class='notif'>
           {this.state.notifications.length !== 0 && this.renderNotifications()}
         </div>
-        <div className="bx--grid">
+        <div className="bx--grid control-details">
           {breadcrumb}
           {title}
 
@@ -336,7 +336,14 @@ class ControlDetailsView extends Component {
                     </Tag></p>
                 </>}
                 <br />
-                {data.parameters && <>
+                {data.fs_guidance.replace(/[ \n]/gi, '') && <>
+                  <h3>Additional FS Cloud Guidance</h3>
+                  <br />
+                  <ReactMarkdown>{data.fs_guidance}</ReactMarkdown>
+                  <br />
+                </>}
+                <br />
+                {data.parameters.replace(/[ \n]/gi, '') && <>
                   <h3>Parameters</h3>
                   <br />
                   <ReactMarkdown>{data.parameters}</ReactMarkdown>
