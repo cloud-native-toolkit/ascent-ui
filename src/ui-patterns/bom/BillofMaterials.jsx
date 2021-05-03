@@ -76,6 +76,7 @@ class BillofMaterialsView extends Component {
         this.validateSubmit = this.validateSubmit.bind(this);
         this.addNotification = this.addNotification.bind(this);
         this.filterTable = this.filterTable.bind(this);
+        this.downloadReport = this.downloadReport.bind(this);
     }
     async loadTable() {
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
@@ -357,6 +358,26 @@ class BillofMaterialsView extends Component {
         }
     }
 
+    async downloadReport() {
+        this.addNotification('info', 'Generating Report', 'Generating your PDF report, please wait.');
+        fetch(`/api/architectures/${this.props.archId}/compliance-report?profile=IBM_CLOUD_FS_BP_0_1`)
+        .then(res => {
+            if (res && res.status === 200) {
+                res.blob().then(blob => {
+                    let url = window.URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${((this.state.architecture && this.state.architecture.name) || this.props.archId).toLowerCase().replace(/ /gi, '-')}-compliance-report.pdf`;;
+                    a.click();
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            this.addNotification('error', 'Error', `Error Generating your PDF report.${err && " Details: " + err}`);
+        });
+    }
+
     render() {
         let data = this.state.filterData;
         const headers = this.state.headersData;
@@ -539,7 +560,7 @@ class BillofMaterialsView extends Component {
                                                                     <div style={{ flex: 'left' }}>Edit Variables</div>
                                                                     <Edit16 style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
-                                                                <TableToolbarAction style={{ display: 'flex' }} onClick={() => {this.addNotification('info', 'Generating Report', 'Generating your PDF report, please wait.')}} href={`/api/architectures/${this.props.archId}/compliance-report.pdf?profile=IBM_CLOUD_FS_BP_0_1`} download>
+                                                                <TableToolbarAction style={{ display: 'flex' }} onClick={this.downloadReport} /*href={`/api/architectures/${this.props.archId}/compliance-report.pdf?profile=IBM_CLOUD_FS_BP_0_1`} download*/>
                                                                     <div style={{ flex: 'left' }}>PDF Report</div>
                                                                     <DocumentExport style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
