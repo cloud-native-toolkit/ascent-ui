@@ -31,7 +31,7 @@ import BuilderHeader from "../../components/BuilderHeader/BuilderHeader";
 import {HeaderGlobalAction} from "carbon-components-react/lib/components/UIShell";
 import {
   Fade16,
-  UserRole16,
+  Launch16,
   UserAvatar20,
   ArrowRight16 as ArrowRight
 } from '@carbon/icons-react';
@@ -162,11 +162,17 @@ class UIShell extends Component {
                         <SideNavMenuItem>Overview</SideNavMenuItem>
                       </Link>
 
-                      <a target="_blank" href="https://github.com/cloud-native-toolkit/garage-terraform-modules/blob/main/MODULES.md">
-                        <SideNavMenuItem>Terraform Modules</SideNavMenuItem>
+                      <a target="_blank" href="https://github.com/cloud-native-toolkit/garage-terraform-modules/blob/main/MODULES.md" >
+                        <SideNavMenuItem >
+                          Terraform Modules
+                          <Launch16 style={{"margin-left": "10px"}} />
+                        </SideNavMenuItem>
                       </a>
-                      <a target="_blank" href="https://github.com/cloud-native-toolkit/iascable">
-                        <SideNavMenuItem>CLI</SideNavMenuItem>
+                      <a target="_blank" href="https://github.com/cloud-native-toolkit/iascable" >
+                        <SideNavMenuItem>
+                          CLI
+                          <Launch16 style={{"margin-left": "10px"}} />
+                        </SideNavMenuItem>
                       </a>
 
                     </SideNavMenu>

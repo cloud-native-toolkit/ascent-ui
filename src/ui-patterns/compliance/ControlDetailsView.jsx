@@ -305,7 +305,7 @@ class ControlDetailsView extends Component {
         <div class='notif'>
           {this.state.notifications.length !== 0 && this.renderNotifications()}
         </div>
-        <div className="bx--grid control-details">
+        <div className="bx--grid">
           {breadcrumb}
           {title}
 
@@ -320,7 +320,7 @@ class ControlDetailsView extends Component {
           }
           
 
-          {this.state.show === "fs-cloud-desc" && <div>
+          {this.state.show === "fs-cloud-desc" && <div className="control-details">
             {data.id && 
               <>
                 <br />
