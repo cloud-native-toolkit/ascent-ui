@@ -71,8 +71,15 @@ class UIShell extends Component {
     fetch('/userDetails')
     .then(res => res.json())
     .then(user => {
-      this.setState({ user: user })
+      setTimeout(() => {
+        // Session expired, redirecting to login
+        window.location.reload(false);
+      }, (new Date(user?.sessionExpire)).getTime()-Date.now());
+      this.setState({ user: user });
     })
+    .catch(err => {
+      console.log(err);
+    });
   }
 
   render() {

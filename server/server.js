@@ -38,7 +38,11 @@ const app = express();
 app.use(session({
   secret: conf.appidConfig.secret,
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    // secure: true,
+    maxAge: 3600 * 1000 // Extend session duration to an hour
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -76,7 +80,8 @@ app.get('/userDetails', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (re
     email: req.user.email,
     given_name: req.user.given_name,
     family_name: req.user.family_name,
-    role: role
+    role: role,
+    sessionExpire: req.session.cookie.expires
   });
 })
 app.use(express.static(path.join(__dirname, "../build")));
