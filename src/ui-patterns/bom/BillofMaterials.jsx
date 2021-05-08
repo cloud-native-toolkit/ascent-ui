@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 import ServiceModal from './AddServiceModal';
-import ArchitectureModal from './ArchitectureModal';
+import ArchitectureModal from '../builder/ArchitectureModal';
 import ServiceDetailsPane from '../services/ServiceDetailsPane';
 
 import {

@@ -8,7 +8,12 @@ import {
     Link
 } from "react-router-dom";
 
-import { useHistory } from "react-router-dom";
+import { Button } from 'carbon-components-react';
+import {
+    Add16
+} from '@carbon/icons-react';
+
+import ArchitectureModal from './ArchitectureModal';
 
 class ArchitectureView extends Component {
 
@@ -17,30 +22,49 @@ class ArchitectureView extends Component {
         super(props);
 
         this.state = {
-            architectures: []
+            architectures: [],
+            userRole: "editor",
+            showArchModal: false,
+            updateModal: false,
+            archRecord: false
         };
-
+        this.showArchModal = this.showArchModal.bind(this);
+        this.hideArchModal = this.hideArchModal.bind(this);
     }
 
+    async showArchModal() {
+        this.setState({
+            showArchModal: true
+        });
+    }
+
+    async hideArchModal() {
+        this.setState({
+            showArchModal: false,
+            updateModal: false,
+            archRecord: false
+        });
+    }
 
     // Load the Data into the Project
     componentDidMount() {
-
         fetch("/api/architectures")
             .then(response => response.json())
             .then(data => {
-                console.log('architectures', data);
                 this.setState(Object.assign(
                     {},
                     this.state,
                     { architectures: data },
                 ));
             });
-
+        fetch('/userDetails')
+            .then(res => res.json())
+            .then(user => {
+                this.setState({ userRole: user.role || undefined })
+            })
     };
 
     getImage(folder, image) {
-
         const refArchLink  =  "/api/images/"
         return refArchLink+folder +"/"+ image;
     }
@@ -68,21 +92,18 @@ class ArchitectureView extends Component {
                         color="dark">
 
                         <Link to={link}>
-
-                        <img
-                            className="resource-img"
-                            src={this.getImage(arch.diagram_folder, arch.diagram_link_png)}
-                            alt={arch.short_desc}
-                            className="article-img"
-                        />
+                            <img
+                                className="resource-img"
+                                src={this.getImage(arch.diagram_folder, arch.diagram_link_png)}
+                                alt={arch.short_desc}
+                                className="article-img"
+                            />
                         </Link>
 
-                    <div className="labels">
-
+                        <div className="labels">
                             <FormLabel>
                                 <Tooltip triggerText="Terraform">This architecture supports Terraform.</Tooltip>
                             </FormLabel>
-
                         </div>
 
                     </ArticleCard>
@@ -102,16 +123,37 @@ class ArchitectureView extends Component {
 
             <div className="bx--grid"  >
 
+                {this.state.showArchModal && 
+                    <ArchitectureModal
+                        show={this.state.showArchModal}
+                        handleClose={this.hideArchModal}
+                        isUpdate={this.state.updateModal}
+                        data={this.state.archRecord}
+                        toast={this.addNotification}
+                        architectureService={this.props.architectureService}
+                    />
+                }
+
                 <div className="bx--row">
                     <div className="bx--col-lg-16">
                         <br></br>
-                        <h2 className="landing-page__subheading">
+                        <h2 style={{"display": "flex"}}>
                             Architectures
+                            <Button
+                                // size="small"
+                                kind="primary"
+                                renderIcon={Add16}
+                                onClick={this.showArchModal}
+                                disabled={this.state.userRole !== "editor"}
+                                style={{"margin-left": "auto"}}
+                            >
+                                Create
+                            </Button>
                         </h2>
                         <br></br>
                         <p>
                             Navigate to the reference architecture you are interested in and see the IBM Cloud bill of materials
-                    </p>
+                        </p>
                         <br></br>
                     </div>
                 </div>
