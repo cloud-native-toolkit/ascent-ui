@@ -425,7 +425,7 @@ class BillofMaterialsView extends Component {
                                 open={showDiagram}
                                 onClose={this.hideDiagram}>
                                 <ModalHeader title={this.state.architecture.name} />
-                                <ModalBody><img src={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" style={{'width': '100%'}}/></ModalBody>
+                                <ModalBody><img type="image/png" src={`/api/architectures/${this.state.architecture.arch_id}/diagram/png`} alt="Reference Architecture diagram" style={{'width': '100%'}}/></ModalBody>
                             </ComposedModal>}
                     </div>
                     <div>
@@ -466,7 +466,7 @@ class BillofMaterialsView extends Component {
                             </div>
                         </div>
     
-                        { this.state.showContent === "arch-diagram" && <img src={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" style={{'width': '100%'}}/>}
+                        { this.state.showContent === "arch-diagram" && <img src={`/api/architectures/${this.state.architecture.arch_id}/diagram/png`} alt="Reference Architecture diagram" style={{'width': '100%'}}/>}
                         { this.state.showContent === "arch-data" && <div>
                             <p>
                                 <h3 className="landing-page__subheading">

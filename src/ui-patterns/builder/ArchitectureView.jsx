@@ -64,11 +64,6 @@ class ArchitectureView extends Component {
             })
     };
 
-    getImage(folder, image) {
-        const refArchLink  =  "/api/images/"
-        return refArchLink+folder +"/"+ image;
-    }
-
     getArchitectures(architectures) {
 
         // Move to global or env var
@@ -94,7 +89,7 @@ class ArchitectureView extends Component {
                         <Link to={link}>
                             <img
                                 className="resource-img"
-                                src={this.getImage(arch.diagram_folder, arch.diagram_link_png)}
+                                src={`/api/architectures/${arch.arch_id}/diagram/png`}
                                 alt={arch.short_desc}
                                 className="article-img"
                             />

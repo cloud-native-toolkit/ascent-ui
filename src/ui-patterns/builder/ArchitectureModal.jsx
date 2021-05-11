@@ -124,18 +124,6 @@ class ArchitectureModal extends Component {
                                     placeholder="e.g. Common Services"
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <TextInput
-                                    data-modal-primary-focus
-                                    id="short_desc"
-                                    name="short_desc"
-                                    required
-                                    invalidText="Please Enter The Value"
-                                    onChange={this.handleChange.bind(this, "short_desc")}
-                                    value={this.state.fields.short_desc}
-                                    labelText="Short Description"
-                                    placeholder="e.g. Common Services"
-                                    style={{ marginBottom: '1rem' }}
-                                />
                                 <TextArea
                                     required
                                     // cols={50}
