@@ -552,12 +552,12 @@ class BillofMaterialsView extends Component {
                                                                     <div>Diagram</div>
                                                                     <View style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
-                                                                <TableToolbarAction style={{ display: 'flex' }} href={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_drawio} download>
+                                                                <TableToolbarAction style={{ display: 'flex' }} href={`/api/architectures/${this.state.architecture.arch_id}/diagram/drawio`} download={`${this.state.architecture.arch_id}-diagram.drawio`}>
                                                                     <div style={{ flex: 'left' }}>Diagram .drawio</div>
                                                                     <Download style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
                                                                 <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
-                                                                    <div style={{ flex: 'left' }}>Edit Variables</div>
+                                                                    <div style={{ flex: 'left' }}>Edit Architecure</div>
                                                                     <Edit16 style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
                                                                 <TableToolbarAction style={{ display: 'flex' }} onClick={this.downloadReport} /*href={`/api/architectures/${this.props.archId}/compliance-report.pdf?profile=IBM_CLOUD_FS_BP_0_1`} download*/>

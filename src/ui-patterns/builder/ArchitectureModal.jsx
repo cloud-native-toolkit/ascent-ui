@@ -22,6 +22,8 @@ class ArchitectureModal extends Component {
         this.state = {
             show: this.props.show,
             onRequestClose: this.props.handleClose,
+            diagramDrawio: false,
+            diagramPng: false,
             fields: {
                 arch_id: "",
                 name: "",
@@ -29,11 +31,12 @@ class ArchitectureModal extends Component {
                 long_desc: "",
                 public: false,
                 production_ready: false,
-                automation_variables: "alias: example\nvariables:\n  - name: var_1\n  value: value_1\n  - name: var_2\n  value: value_2"
+                automation_variables: ""
             }
         };
         if (this.props.isUpdate) {
             let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/\"id\":/g, "\"_id\":"));
+            console.log(jsonObject);
             this.state = {
                 fields: jsonObject
             }
@@ -42,11 +45,41 @@ class ArchitectureModal extends Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
+    uploadDiagrams(arch_id) {
+        // Upload Diagrams
+        const drawio = this.state.diagramDrawio;
+        const png = this.state.diagramPng;
+        if (drawio || png) {
+            this.props.toast("info", "Uploading Diagram", `Uploading diagrams for architecture ${arch_id}.`);
+            console.log(drawio);
+            console.log(png);
+            if (!drawio?.name.endsWith(".drawio")) return this.props.toast("error", "Wrong File Type", "Only .drawio is accepted.");
+            if (png?.type !== "image/png") return this.props.toast("error", "Wrong File Type", "Only .drawio is accepted.");
+            if (drawio?.size > 409600) return this.props.toast("error", "Too Large", "Drawio file too larde, max size: 400KiB.");
+            if (png?.size > 2048000) return this.props.toast("error", "Too Large", "PNG file too larde, max size: 2MiB.");
+            let data = new FormData();
+            if (drawio) data.append("drawio", drawio);
+            if (png) data.append("png", png);
+            this.props.architectureService.uploadDiagrams(this.state.fields.arch_id, data).then((res) => {
+                if (res && res.body && res.body.error) {
+                    this.props.toast("error", "Upload Error", res.body.error.message);
+                } else {
+                    this.props.toast("success", "Success", `Diagrams upload successful!`);
+                }
+                this.props.handleClose();
+            });
+        } else {
+            this.props.handleClose();
+        }
+    }
+
 
     handleChange(field, e) {
         let fields = this.state.fields;
         if (field === "automation_variables") {
             fields[field] = e;
+        } else if (field === "public" || field === "production_ready") {
+            fields[field] = e.target.value === "true";
         } else {
             fields[field] = e.target.value;
         }
@@ -54,8 +87,18 @@ class ArchitectureModal extends Component {
     }
     handleSubmit = (event) => {
         event.preventDefault();
+        console.log(this.state.fields);
         if (this.state.fields.arch_id && !this.props.isUpdate) {
-            this.props.toast("error", "NOT IMPLEMENTED", "Not yet implemented.");
+            this.props.architectureService.addArchitecture(this.state.fields).then(res => {
+                console.log(res);
+                if (res && res.body && res.body.error) {
+                    this.props.toast("error", "Error", res.body.error.message);
+                } else {
+                    this.props.toast("success", "Success", `Architecture ${res.arch_id} successfully added!`);
+                    
+                    this.uploadDiagrams(res.arch_id);
+                }
+            });
         } else if(this.state.fields.arch_id) {
             this.props.architectureService.updateArchitecture(this.props.data.arch_id, {
                 automation_variables: this.state.fields.automation_variables
@@ -64,7 +107,7 @@ class ArchitectureModal extends Component {
                     this.props.toast("error", "Error", res.body.error.message);
                 } else {
                     this.props.toast("success", "Success", `Architecture ${res.arch_id} successfully updated!`);
-                    this.props.handleClose();
+                    this.uploadDiagrams(res.arch_id);
                 }
             });
         } else {
@@ -158,12 +201,12 @@ class ArchitectureModal extends Component {
                                 <Select id="public" name="public"
                                     labelText="Public"
                                     required
-                                    defaultValue={!this.state.fields.public ? false : this.state.fields.public}
+                                    defaultValue={this.state.fields.public}
                                     invalidText="A valid value is required"
                                     onChange={this.handleChange.bind(this, "public")}
                                     style={{ marginBottom: '1rem' }}>
-                                    <SelectItem alue={false} text="False" />
-                                    <SelectItem alue={true} text="True" />
+                                    <SelectItem value={false} text="False" />
+                                    <SelectItem value={true} text="True" />
                                 </Select>
                                 <Select id="production_ready" name="production_ready"
                                     labelText="Production Ready"
@@ -172,8 +215,8 @@ class ArchitectureModal extends Component {
                                     invalidText="A valid value is required"
                                     onChange={this.handleChange.bind(this, "production_ready")}
                                     style={{ marginBottom: '1rem' }}>
-                                    <SelectItem alue={false} text="False" />
-                                    <SelectItem alue={true} text="True" />
+                                    <SelectItem value={false} text="False" />
+                                    <SelectItem value={true} text="True" />
                                 </Select>
                                 <FormGroup legendText="Automation Variables">
                                     <AceEditor
@@ -184,7 +227,7 @@ class ArchitectureModal extends Component {
                                         height="200px"
                                         id="automation_variables"
                                         name="automation_variables"
-                                        placeholder="yaml"
+                                        placeholder="alias: example"
                                         value={this.state.fields.automation_variables}
                                         onChange={this.handleChange.bind(this, "automation_variables")}
                                         labelText="Automation Variables"

@@ -13,6 +13,8 @@ import {
     Add16
 } from '@carbon/icons-react';
 
+import { ToastNotification } from "carbon-components-react";
+
 import ArchitectureModal from './ArchitectureModal';
 
 class ArchitectureView extends Component {
@@ -26,10 +28,12 @@ class ArchitectureView extends Component {
             userRole: "editor",
             showArchModal: false,
             updateModal: false,
-            archRecord: false
+            archRecord: false,
+            notifications: []
         };
         this.showArchModal = this.showArchModal.bind(this);
         this.hideArchModal = this.hideArchModal.bind(this);
+        this.addNotification = this.addNotification.bind(this);
     }
 
     async showArchModal() {
@@ -89,7 +93,7 @@ class ArchitectureView extends Component {
                         <Link to={link}>
                             <img
                                 className="resource-img"
-                                src={`/api/architectures/${arch.arch_id}/diagram/png`}
+                                src={`/api/architectures/${arch.arch_id}/diagram/png?small=true`}
                                 alt={arch.short_desc}
                                 className="article-img"
                             />
@@ -111,12 +115,47 @@ class ArchitectureView extends Component {
 
     }
 
+    /** Notifications */
+
+    addNotification(type, message, detail) {
+        this.setState(prevState => ({
+          notifications: [
+            ...prevState.notifications,
+            {
+              message: message || "Notification",
+              detail: detail || "Notification text",
+              severity: type || "info"
+            }
+          ]
+        }));
+    }
+
+    renderNotifications() {
+        return this.state.notifications.map(notification => {
+            return (
+            <ToastNotification
+                title={notification.message}
+                subtitle={notification.detail}
+                kind={notification.severity}
+                timeout={10000}
+                caption={false}
+            />
+            );
+        });
+    }
+
+    /** Notifications END */
+
 
     render() {
 
         return (
 
             <div className="bx--grid"  >
+
+                <div class='notif'>
+                    {this.state.notifications.length !== 0 && this.renderNotifications()}
+                </div>
 
                 {this.state.showArchModal && 
                     <ArchitectureModal
@@ -125,7 +164,7 @@ class ArchitectureView extends Component {
                         isUpdate={this.state.updateModal}
                         data={this.state.archRecord}
                         toast={this.addNotification}
-                        architectureService={this.props.architectureService}
+                        architectureService={this.props.archService}
                     />
                 }
 
