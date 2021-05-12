@@ -4,6 +4,20 @@
   background-color: black;
 }
 
+.bx--article-card__title {
+  font-size: 1.1rem !important;
+}
+
+.bx--aspect-ratio {
+  display:none;
+}
+
+@media only screen and (min-width: 1500px) {
+  .bx--aspect-ratio {
+    display:block;
+  }
+}
+
 .article-img {
   margin: 0px;
   vertical-align: middle;

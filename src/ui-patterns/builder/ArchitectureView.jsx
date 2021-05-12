@@ -8,7 +8,18 @@ import {
     Link
 } from "react-router-dom";
 
-import { useHistory } from "react-router-dom";
+import {
+    Button,
+    OverflowMenu,
+    OverflowMenuItem,
+    ToastNotification
+} from 'carbon-components-react';
+import {
+    Add16,
+    DocumentImport16
+} from '@carbon/icons-react';
+
+import ArchitectureModal from './ArchitectureModal';
 
 class ArchitectureView extends Component {
 
@@ -17,33 +28,60 @@ class ArchitectureView extends Component {
         super(props);
 
         this.state = {
-            architectures: []
+            architectures: [],
+            userRole: "editor",
+            showArchModal: false,
+            updateModal: false,
+            archRecord: false,
+            notifications: [],
+            isImport: false
         };
-
+        this.showArchModal = this.showArchModal.bind(this);
+        this.hideArchModal = this.hideArchModal.bind(this);
+        this.addNotification = this.addNotification.bind(this);
     }
 
+    async loadArchitectures() {
+        this.setState({
+            architectures: []
+        });
+        fetch("/api/architectures")
+        .then(response => response.json())
+        .then(data => {
+            this.setState(Object.assign(
+                {},
+                this.state,
+                { architectures: data },
+            ));
+        });
+    }
+
+    async showArchModal(isImport) {
+        this.setState({
+            showArchModal: true,
+            isImport: isImport
+        });
+    }
+
+    async hideArchModal() {
+        this.setState({
+            showArchModal: false,
+            updateModal: false,
+            archRecord: false,
+            isImport: false
+        });
+        this.loadArchitectures();
+    }
 
     // Load the Data into the Project
     componentDidMount() {
-
-        fetch("/api/architectures")
-            .then(response => response.json())
-            .then(data => {
-                console.log('architectures', data);
-                this.setState(Object.assign(
-                    {},
-                    this.state,
-                    { architectures: data },
-                ));
+        this.loadArchitectures();
+        fetch('/userDetails')
+            .then(res => res.json())
+            .then(user => {
+                this.setState({ userRole: user.role || undefined })
             });
-
     };
-
-    getImage(folder, image) {
-
-        const refArchLink  =  "/api/images/"
-        return refArchLink+folder +"/"+ image;
-    }
 
     getArchitectures(architectures) {
 
@@ -68,21 +106,18 @@ class ArchitectureView extends Component {
                         color="dark">
 
                         <Link to={link}>
-
-                        <img
-                            className="resource-img"
-                            src={this.getImage(arch.diagram_folder, arch.diagram_link_png)}
-                            alt={arch.short_desc}
-                            className="article-img"
-                        />
+                            <img
+                                className="resource-img"
+                                src={`/api/architectures/${arch.arch_id}/diagram/png?small=true`}
+                                alt={arch.short_desc}
+                                className="article-img"
+                            />
                         </Link>
 
-                    <div className="labels">
-
+                        <div className="labels">
                             <FormLabel>
                                 <Tooltip triggerText="Terraform">This architecture supports Terraform.</Tooltip>
                             </FormLabel>
-
                         </div>
 
                     </ArticleCard>
@@ -95,6 +130,37 @@ class ArchitectureView extends Component {
 
     }
 
+    /** Notifications */
+
+    addNotification(type, message, detail) {
+        this.setState(prevState => ({
+          notifications: [
+            ...prevState.notifications,
+            {
+              message: message || "Notification",
+              detail: detail || "Notification text",
+              severity: type || "info"
+            }
+          ]
+        }));
+    }
+
+    renderNotifications() {
+        return this.state.notifications.map(notification => {
+            return (
+            <ToastNotification
+                title={notification.message}
+                subtitle={notification.detail}
+                kind={notification.severity}
+                timeout={10000}
+                caption={false}
+            />
+            );
+        });
+    }
+
+    /** Notifications END */
+
 
     render() {
 
@@ -102,16 +168,51 @@ class ArchitectureView extends Component {
 
             <div className="bx--grid"  >
 
+                <div class='notif'>
+                    {this.state.notifications.length !== 0 && this.renderNotifications()}
+                </div>
+
+                {this.state.showArchModal && 
+                    <ArchitectureModal
+                        show={this.state.showArchModal}
+                        handleClose={this.hideArchModal}
+                        isUpdate={this.state.updateModal}
+                        data={this.state.archRecord}
+                        toast={this.addNotification}
+                        architectureService={this.props.archService}
+                        isImport={this.state.isImport}
+                    />
+                }
+
                 <div className="bx--row">
                     <div className="bx--col-lg-16">
                         <br></br>
-                        <h2 className="landing-page__subheading">
+                        <h2 style={{"display": "flex"}}>
                             Architectures
+                            <OverflowMenu
+                                size='lg'
+                                flipped
+                                disabled={this.state.userRole !== "editor"}
+                                style={{"margin-left": "auto"}}>
+                                <OverflowMenuItem
+                                    itemText="Add"
+                                    onClick={() => this.showArchModal(false)}
+                                    disabled={this.state.userRole !== "editor"} />
+                                <OverflowMenuItem
+                                    kind="primary"
+                                    itemText="Import BOM"
+                                    onClick={() => this.showArchModal(true)}
+                                    disabled={this.state.userRole !== "editor"} />
+                                {/* <OverflowMenuItem
+                                    requireTitle
+                                    itemText="Delete"
+                                    isDelete /> */}
+                            </OverflowMenu>
                         </h2>
                         <br></br>
                         <p>
                             Navigate to the reference architecture you are interested in and see the IBM Cloud bill of materials
-                    </p>
+                        </p>
                         <br></br>
                     </div>
                 </div>

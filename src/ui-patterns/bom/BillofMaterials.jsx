@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
 import ServiceModal from './AddServiceModal';
-import ArchitectureModal from './ArchitectureModal';
+import ArchitectureModal from '../builder/ArchitectureModal';
 import ServiceDetailsPane from '../services/ServiceDetailsPane';
 
 import {
@@ -425,7 +425,7 @@ class BillofMaterialsView extends Component {
                                 open={showDiagram}
                                 onClose={this.hideDiagram}>
                                 <ModalHeader title={this.state.architecture.name} />
-                                <ModalBody><img src={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" style={{'width': '100%'}}/></ModalBody>
+                                <ModalBody><img type="image/png" src={`/api/architectures/${this.state.architecture.arch_id}/diagram/png`} alt="Reference Architecture diagram" style={{'width': '100%'}}/></ModalBody>
                             </ComposedModal>}
                     </div>
                     <div>
@@ -466,7 +466,7 @@ class BillofMaterialsView extends Component {
                             </div>
                         </div>
     
-                        { this.state.showContent === "arch-diagram" && <img src={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_png} alt="Reference Architecture diagram" style={{'width': '100%'}}/>}
+                        { this.state.showContent === "arch-diagram" && <img src={`/api/architectures/${this.state.architecture.arch_id}/diagram/png`} alt="Reference Architecture diagram" style={{'width': '100%'}}/>}
                         { this.state.showContent === "arch-data" && <div>
                             <p>
                                 <h3 className="landing-page__subheading">
@@ -552,12 +552,12 @@ class BillofMaterialsView extends Component {
                                                                     <div>Diagram</div>
                                                                     <View style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
-                                                                <TableToolbarAction style={{ display: 'flex' }} href={'/api/images/' + this.state.architecture.diagram_folder + '/' + this.state.architecture.diagram_link_drawio} download>
+                                                                <TableToolbarAction style={{ display: 'flex' }} href={`/api/architectures/${this.state.architecture.arch_id}/diagram/drawio`} download={`${this.state.architecture.arch_id}-diagram.drawio`}>
                                                                     <div style={{ flex: 'left' }}>Diagram .drawio</div>
                                                                     <Download style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
                                                                 <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
-                                                                    <div style={{ flex: 'left' }}>Edit Variables</div>
+                                                                    <div style={{ flex: 'left' }}>Edit Architecure</div>
                                                                     <Edit16 style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
                                                                 <TableToolbarAction style={{ display: 'flex' }} onClick={this.downloadReport} /*href={`/api/architectures/${this.props.archId}/compliance-report.pdf?profile=IBM_CLOUD_FS_BP_0_1`} download*/>
