@@ -22,8 +22,10 @@ class ArchitectureModal extends Component {
         this.state = {
             show: this.props.show,
             onRequestClose: this.props.handleClose,
-            diagramDrawio: false,
-            diagramPng: false,
+            diagramDrawio: undefined,
+            diagramPng: undefined,
+            bomYaml: undefined,
+            overwrite: "",
             fields: {
                 arch_id: "",
                 name: "",
@@ -53,14 +55,14 @@ class ArchitectureModal extends Component {
             this.props.toast("info", "Uploading Diagram", `Uploading diagrams for architecture ${arch_id}.`);
             console.log(drawio);
             console.log(png);
-            if (!drawio?.name.endsWith(".drawio")) return this.props.toast("error", "Wrong File Type", "Only .drawio is accepted.");
-            if (png?.type !== "image/png") return this.props.toast("error", "Wrong File Type", "Only .drawio is accepted.");
-            if (drawio?.size > 409600) return this.props.toast("error", "Too Large", "Drawio file too larde, max size: 400KiB.");
-            if (png?.size > 2048000) return this.props.toast("error", "Too Large", "PNG file too larde, max size: 2MiB.");
+            if (drawio && !drawio?.name.endsWith(".drawio")) return this.props.toast("error", "Wrong File Type", "Only .drawio is accepted.");
+            if (png && png?.type !== "image/png") return this.props.toast("error", "Wrong File Type", "Only .drawio is accepted.");
+            if (drawio && drawio?.size > 2048000) return this.props.toast("error", "Too Large", "Drawio file too larde, max size: 2MiB.");
+            if (png && png?.size > 2048000) return this.props.toast("error", "Too Large", "PNG file too larde, max size: 2MiB.");
             let data = new FormData();
             if (drawio) data.append("drawio", drawio);
             if (png) data.append("png", png);
-            this.props.architectureService.uploadDiagrams(this.state.fields.arch_id, data).then((res) => {
+            this.props.architectureService.uploadDiagrams(arch_id, data).then((res) => {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", "Upload Error", res.body.error.message);
                 } else {
@@ -76,21 +78,47 @@ class ArchitectureModal extends Component {
 
     handleChange(field, e) {
         let fields = this.state.fields;
-        if (field === "automation_variables") {
+        let overwrite = "";
+        if (field === "overwrite") {
+            overwrite = e.target.value
+        } else if (field === "automation_variables") {
             fields[field] = e;
         } else if (field === "public" || field === "production_ready") {
             fields[field] = e.target.value === "true";
         } else {
             fields[field] = e.target.value;
         }
-        this.setState({ fields });
+        this.setState({ fields, overwrite });
     }
     handleSubmit = (event) => {
         event.preventDefault();
-        console.log(this.state.fields);
-        if (this.state.fields.arch_id && !this.props.isUpdate) {
+        if (this.props.isImport) {
+            // Upload Diagrams
+            const bom = this.state.bomYaml;
+            if (bom) {
+                this.props.toast("info", "Uploading BOM", `Uploading BOM yaml.`);
+                if (bom?.type !== "application/x-yaml" && bom?.type !== "text/yaml") return this.props.toast("error", "Wrong File Type", "Only .yaml is accepted.");
+                if (bom?.size > 409600) return this.props.toast("error", "Too Large", "YAML file too larde, max size: 400KiB.");
+                let data = new FormData();
+                data.append("bom", bom);
+                this.props.architectureService.importBomYaml(data, this.state.overwrite === "overwrite").then(res => {
+                    console.log(res);
+                    if (res && res.body && res.body.error) {
+                        this.props.toast("error", "Error", res.body.error.message);
+                    } else {
+                        this.props.toast("success", "Success", `BOM successfully imported!`);
+                        
+                        if (res?.architectures?.length) {
+                            console.log(res?.architectures[0]?.arch_id);
+                            this.uploadDiagrams(res?.architectures[0]?.arch_id);
+                        }
+                    }
+                });
+            } else {
+                this.props.toast("error", "File Missing", "You must upload the BOM yaml file.");
+            }
+        } else if (this.state.fields.arch_id && !this.props.isUpdate) {
             this.props.architectureService.addArchitecture(this.state.fields).then(res => {
-                console.log(res);
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", "Error", res.body.error.message);
                 } else {
@@ -128,8 +156,9 @@ class ArchitectureModal extends Component {
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
+
                             <Form name="architectureform" onSubmit={this.handleSubmit.bind(this)}>
-                                <TextInput
+                                {!this.props.isImport && <TextInput
                                     data-modal-primary-focus
                                     id="arch_id"
                                     name="arch_id"
@@ -142,8 +171,8 @@ class ArchitectureModal extends Component {
                                     labelText={this.props.data ? "" : "Architecture ID"}
                                     placeholder="e.g. common-services"
                                     style={{ marginBottom: '1rem' }}
-                                />
-                                <TextInput
+                                />}
+                                {!this.props.isImport && <TextInput
                                     data-modal-primary-focus
                                     id="name"
                                     name="name"
@@ -154,8 +183,8 @@ class ArchitectureModal extends Component {
                                     labelText="Architecture Name"
                                     placeholder="e.g. Common Services"
                                     style={{ marginBottom: '1rem' }}
-                                />
-                                <TextInput
+                                />}
+                                {!this.props.isImport && <TextInput
                                     data-modal-primary-focus
                                     id="short_desc"
                                     name="short_desc"
@@ -166,8 +195,8 @@ class ArchitectureModal extends Component {
                                     labelText="Short Description"
                                     placeholder="e.g. Common Services"
                                     style={{ marginBottom: '1rem' }}
-                                />
-                                <TextArea
+                                />}
+                                {!this.props.isImport && <TextArea
                                     required
                                     // cols={50}
                                     id="long_desc"
@@ -179,13 +208,34 @@ class ArchitectureModal extends Component {
                                     placeholder="Architecture long description"
                                     rows={2}
                                     style={{ marginBottom: '1rem' }}
-                                />
+                                />}
+                                {this.props.isImport && <FileUploader 
+                                    accept={['.yaml']}
+                                    labelText={"Drag and drop a .yaml file, or click to upload"}
+                                    labelTitle={"BOM Yaml"}
+                                    buttonLabel='Add file'
+                                    labelDescription={"Max file size is 400KiB. Only .yaml files are supported."}
+                                    filenameStatus='edit'
+                                    onChange={(event) => this.setState({bomYaml: event?.target?.files[0]})}
+                                    onDelete={() => this.setState({bomYaml: undefined})} />}
+                                {this.props.isImport && <><strong>Overwrite</strong><TextInput
+                                    data-modal-primary-focus
+                                    id="overwrite"
+                                    name="overwrite"
+                                    required
+                                    invalidText="Please Enter The Value"
+                                    onChange={this.handleChange.bind(this, "overwrite")}
+                                    value={this.state.overwrite}
+                                    labelText='Type "overwrite" to overwrite the existing BOM components if architecture already exists.'
+                                    placeholder="overwrite"
+                                    style={{ marginBottom: '1rem' }}
+                                /></>}
                                 <FileUploader 
                                     accept={['.drawio']}
                                     labelText={"Drag and drop a .drawio file, or click to upload"}
                                     labelTitle={"Diagram .drawio"}
                                     buttonLabel='Add file'
-                                    labelDescription={"Max file size is 400KiB. Only .drawio files are supported."}
+                                    labelDescription={"Max file size is 2MiB. Only .drawio files are supported."}
                                     filenameStatus='edit'
                                     onChange={(event) => this.setState({diagramDrawio: event?.target?.files[0]})}
                                     onDelete={() => this.setState({diagramDrawio: undefined})} />
@@ -198,7 +248,7 @@ class ArchitectureModal extends Component {
                                     filenameStatus='edit'
                                     onChange={(event) => this.setState({diagramPng: event?.target?.files[0]})}
                                     onDelete={() => this.setState({diagramPng: undefined})} />
-                                <Select id="public" name="public"
+                                {!this.props.isImport && <Select id="public" name="public"
                                     labelText="Public"
                                     required
                                     defaultValue={this.state.fields.public}
@@ -207,8 +257,8 @@ class ArchitectureModal extends Component {
                                     style={{ marginBottom: '1rem' }}>
                                     <SelectItem value={false} text="False" />
                                     <SelectItem value={true} text="True" />
-                                </Select>
-                                <Select id="production_ready" name="production_ready"
+                                </Select>}
+                                {!this.props.isImport && <Select id="production_ready" name="production_ready"
                                     labelText="Production Ready"
                                     required
                                     defaultValue={!this.state.fields.production_ready ? false : this.state.fields.production_ready}
@@ -217,8 +267,8 @@ class ArchitectureModal extends Component {
                                     style={{ marginBottom: '1rem' }}>
                                     <SelectItem value={false} text="False" />
                                     <SelectItem value={true} text="True" />
-                                </Select>
-                                <FormGroup legendText="Automation Variables">
+                                </Select>}
+                                {!this.props.isImport && <FormGroup legendText="Automation Variables">
                                     <AceEditor
                                         focus
                                         style={{ width: "100%" }}
@@ -245,8 +295,9 @@ class ArchitectureModal extends Component {
                                         }}
                                         editorProps={{ $blockScrolling: true }}
                                     />
-                                </FormGroup>
+                                </FormGroup>}
                             </Form>
+                            
                         </ModalBody>
                         <ModalFooter primaryButtonText={this.props.isUpdate ? "Update" : "Add"} onRequestSubmit={this.handleSubmit} secondaryButtonText="Cancel" />
                     </ComposedModal>

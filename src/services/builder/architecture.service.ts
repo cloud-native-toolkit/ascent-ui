@@ -43,6 +43,19 @@ export class ArchitectureService implements ArchitectureDataApi {
             });
     }
 
+    async importBomYaml(data: FormData, overwrite: boolean): Promise<object> {
+        return superagent
+            .post(`${this.baseUrl}/boms/import${overwrite ? "?overwrite=true" : ""}`)
+            .send(data)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res.body;
+            })
+            .catch(err => {
+                return err.response;
+            });
+    }
+
     async uploadDiagrams(arch_id: string, data: FormData): Promise<any> {
         return superagent
             .post(`${this.baseUrl}/${arch_id}/diagram`)

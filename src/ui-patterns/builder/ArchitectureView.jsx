@@ -8,12 +8,16 @@ import {
     Link
 } from "react-router-dom";
 
-import { Button } from 'carbon-components-react';
 import {
-    Add16
+    Button,
+    OverflowMenu,
+    OverflowMenuItem,
+    ToastNotification
+} from 'carbon-components-react';
+import {
+    Add16,
+    DocumentImport16
 } from '@carbon/icons-react';
-
-import { ToastNotification } from "carbon-components-react";
 
 import ArchitectureModal from './ArchitectureModal';
 
@@ -29,16 +33,33 @@ class ArchitectureView extends Component {
             showArchModal: false,
             updateModal: false,
             archRecord: false,
-            notifications: []
+            notifications: [],
+            isImport: false
         };
         this.showArchModal = this.showArchModal.bind(this);
         this.hideArchModal = this.hideArchModal.bind(this);
         this.addNotification = this.addNotification.bind(this);
     }
 
-    async showArchModal() {
+    async loadArchitectures() {
         this.setState({
-            showArchModal: true
+            architectures: []
+        });
+        fetch("/api/architectures")
+        .then(response => response.json())
+        .then(data => {
+            this.setState(Object.assign(
+                {},
+                this.state,
+                { architectures: data },
+            ));
+        });
+    }
+
+    async showArchModal(isImport) {
+        this.setState({
+            showArchModal: true,
+            isImport: isImport
         });
     }
 
@@ -46,26 +67,20 @@ class ArchitectureView extends Component {
         this.setState({
             showArchModal: false,
             updateModal: false,
-            archRecord: false
+            archRecord: false,
+            isImport: false
         });
+        this.loadArchitectures();
     }
 
     // Load the Data into the Project
     componentDidMount() {
-        fetch("/api/architectures")
-            .then(response => response.json())
-            .then(data => {
-                this.setState(Object.assign(
-                    {},
-                    this.state,
-                    { architectures: data },
-                ));
-            });
+        this.loadArchitectures();
         fetch('/userDetails')
             .then(res => res.json())
             .then(user => {
                 this.setState({ userRole: user.role || undefined })
-            })
+            });
     };
 
     getArchitectures(architectures) {
@@ -165,6 +180,7 @@ class ArchitectureView extends Component {
                         data={this.state.archRecord}
                         toast={this.addNotification}
                         architectureService={this.props.archService}
+                        isImport={this.state.isImport}
                     />
                 }
 
@@ -173,16 +189,25 @@ class ArchitectureView extends Component {
                         <br></br>
                         <h2 style={{"display": "flex"}}>
                             Architectures
-                            <Button
-                                // size="small"
-                                kind="primary"
-                                renderIcon={Add16}
-                                onClick={this.showArchModal}
+                            <OverflowMenu
+                                size='lg'
+                                flipped
                                 disabled={this.state.userRole !== "editor"}
-                                style={{"margin-left": "auto"}}
-                            >
-                                Create
-                            </Button>
+                                style={{"margin-left": "auto"}}>
+                                <OverflowMenuItem
+                                    itemText="Add"
+                                    onClick={() => this.showArchModal(false)}
+                                    disabled={this.state.userRole !== "editor"} />
+                                <OverflowMenuItem
+                                    kind="primary"
+                                    itemText="Import BOM"
+                                    onClick={() => this.showArchModal(true)}
+                                    disabled={this.state.userRole !== "editor"} />
+                                {/* <OverflowMenuItem
+                                    requireTitle
+                                    itemText="Delete"
+                                    isDelete /> */}
+                            </OverflowMenu>
                         </h2>
                         <br></br>
                         <p>
