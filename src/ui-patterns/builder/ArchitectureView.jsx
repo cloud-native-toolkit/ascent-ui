@@ -2,22 +2,17 @@ import React, { Component } from "react";
 import FormLabel from 'carbon-components-react/lib/components/FormLabel';
 import Tooltip from 'carbon-components-react/lib/components/Tooltip';
 import ArticleCard from './ArticleCard';
-import _ from 'lodash';
 
 import {
     Link
 } from "react-router-dom";
 
 import {
-    Button,
     OverflowMenu,
     OverflowMenuItem,
-    ToastNotification
+    ToastNotification,
+    SearchSkeleton
 } from 'carbon-components-react';
-import {
-    Add16,
-    DocumentImport16
-} from '@carbon/icons-react';
 
 import ArchitectureModal from './ArchitectureModal';
 
@@ -28,8 +23,12 @@ class ArchitectureView extends Component {
         super(props);
 
         this.state = {
+            archLoaded: false,
             architectures: [],
-            userRole: "editor",
+            user: {
+                email: "example@example.com",
+                role: "editor"
+            },
             showArchModal: false,
             updateModal: false,
             archRecord: false,
@@ -39,21 +38,37 @@ class ArchitectureView extends Component {
         this.showArchModal = this.showArchModal.bind(this);
         this.hideArchModal = this.hideArchModal.bind(this);
         this.addNotification = this.addNotification.bind(this);
+        this.deleteArchitecture = this.deleteArchitecture.bind(this);
     }
 
     async loadArchitectures() {
+
         this.setState({
-            architectures: []
+            architectures: [],
+            archLoaded: false
         });
-        fetch("/api/architectures")
-        .then(response => response.json())
-        .then(data => {
-            this.setState(Object.assign(
-                {},
-                this.state,
-                { architectures: data },
-            ));
-        });
+        if (this.props.userArch) {
+            fetch(`/api/users/${this.state?.user?.email}/architectures`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    this.setState({
+                        architectures: data,
+                        archLoaded: true
+                    });
+                });
+        } else {
+            fetch("/api/architectures")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    this.setState({
+                        architectures: data,
+                        archLoaded: true
+                    });
+                });
+        }
+        
     }
 
     async showArchModal(isImport) {
@@ -73,23 +88,47 @@ class ArchitectureView extends Component {
         this.loadArchitectures();
     }
 
+    async deleteArchitecture(arch_id) {
+        this.props.archService.deleteArchitecture(arch_id)
+            .then((res) => {
+                if (res?.body?.error) this.addNotification("error", res?.status === 401 ? "Unauthorized" : "Error", res?.body?.error?.message);
+                else {
+                    this.addNotification("success", "Success", `Architecture ${arch_id} deleted!`);
+                    this.loadArchitectures();
+                }
+            })
+            .catch((err) => {
+                this.addNotification("error", "Error", err);
+            })
+    }
+
     // Load the Data into the Project
     componentDidMount() {
-        this.loadArchitectures();
         fetch('/userDetails')
             .then(res => res.json())
             .then(user => {
-                this.setState({ userRole: user.role || undefined })
+                this.setState({ user: user || undefined })
+                this.loadArchitectures();
+            })
+            .catch(err => {
+                this.loadArchitectures();
             });
     };
 
     getArchitectures(architectures) {
 
-        // Move to global or env var
-        if (_.isUndefined(architectures))
-            return [];
-
         var archTiles = []
+
+        if (!architectures.length) archTiles.push(
+            <div className="bx--col-lg-16">
+                {this.props.userArch ? 
+                    <p>You have no architectures at the moment. To create one, duplicate an existing public architecture or click <strong>Add</strong> or <strong>Import BOM</strong> in the top right menu.</p>
+                :
+                    <p>No architecture available yet.</p>
+                }
+            </div>
+        );
+        
         for (var i = 0; i < architectures.length; i++) {
             const arch = architectures[i];
 
@@ -114,11 +153,19 @@ class ArchitectureView extends Component {
                             />
                         </Link>
 
-                        <div className="labels">
-                            <FormLabel>
-                                <Tooltip triggerText="Terraform">This architecture supports Terraform.</Tooltip>
+                        <div className="labels" style={{"display": "flex"}}>
+                            <FormLabel style={{"padding-top": "0.5rem"}}>
+                                <Tooltip direction="right" triggerText="Terraform">This architecture supports Terraform.</Tooltip>
                             </FormLabel>
+                            {/* {this.state.user?.role === "admin" && <a onClick={() => this.deleteArchitecture(arch.arch_id)}>Delete</a>} */}
+                            {this.state.user?.roles.includes("editor") ? <FormLabel style={{"margin-left": "auto", "margin-bottom": "0px"}}>
+                                <OverflowMenu light flipped>
+                                    <OverflowMenuItem itemText="Duplicate" onClick={() => console.log("duplicate")}/>
+                                    {(this.state.user?.role === "admin" || this.props.userArch || arch?.owners?.find(user => user.email === this.state.user?.email)) && <OverflowMenuItem itemText="Delete" onClick={() => this.deleteArchitecture(arch.arch_id)} isDelete/>}
+                                </OverflowMenu>
+                            </FormLabel> : <></>}
                         </div>
+                    
 
                     </ArticleCard>
 
@@ -189,25 +236,18 @@ class ArchitectureView extends Component {
                         <br></br>
                         <h2 style={{"display": "flex"}}>
                             Architectures
-                            <OverflowMenu
+                            {this.props.userArch && <OverflowMenu
                                 size='lg'
                                 flipped
-                                disabled={this.state.userRole !== "editor"}
                                 style={{"margin-left": "auto"}}>
                                 <OverflowMenuItem
                                     itemText="Add"
-                                    onClick={() => this.showArchModal(false)}
-                                    disabled={this.state.userRole !== "editor"} />
+                                    onClick={() => this.showArchModal(false)}/>
                                 <OverflowMenuItem
                                     kind="primary"
                                     itemText="Import BOM"
-                                    onClick={() => this.showArchModal(true)}
-                                    disabled={this.state.userRole !== "editor"} />
-                                {/* <OverflowMenuItem
-                                    requireTitle
-                                    itemText="Delete"
-                                    isDelete /> */}
-                            </OverflowMenu>
+                                    onClick={() => this.showArchModal(true)}/>
+                            </OverflowMenu>}
                         </h2>
                         <br></br>
                         <p>
@@ -219,7 +259,12 @@ class ArchitectureView extends Component {
 
                 <div className="bx--row">
 
-                    {this.getArchitectures(this.state.architectures, true)}
+                    {
+                        this.state.archLoaded ?
+                            this.getArchitectures(this.state.architectures, true)
+                        :
+                            <SearchSkeleton />
+                    }
 
                 </div>
 

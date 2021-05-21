@@ -87,6 +87,9 @@ module.exports = function(proxy, allowedHost) {
         target: 'http://localhost:3001',
         pathRewrite: { '^/api': '' },
       },
+      '/userDetails': {
+        target: 'http://localhost:3002'
+      },
     },
     before(app, server) {
       if (fs.existsSync(paths.proxySetup)) {

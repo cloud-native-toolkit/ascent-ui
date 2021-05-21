@@ -99,12 +99,13 @@ class ArchitectureModal extends Component {
                 this.props.toast("info", "Uploading BOM", `Uploading BOM yaml.`);
                 if (bom?.type !== "application/x-yaml" && bom?.type !== "text/yaml") return this.props.toast("error", "Wrong File Type", "Only .yaml is accepted.");
                 if (bom?.size > 409600) return this.props.toast("error", "Too Large", "YAML file too larde, max size: 400KiB.");
+                if (!this.state.fields.arch_id) return this.props.toast("error", "Missing values", "Please set an architecture ID.");
                 let data = new FormData();
                 data.append("bom", bom);
-                this.props.architectureService.importBomYaml(data, this.state.overwrite === "overwrite").then(res => {
+                this.props.architectureService.importBomYaml(this.state.fields.arch_id, data, this.state.overwrite === "overwrite").then(res => {
                     console.log(res);
                     if (res && res.body && res.body.error) {
-                        this.props.toast("error", "Error", res.body.error.message);
+                        this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                     } else {
                         this.props.toast("success", "Success", `BOM successfully imported!`);
                         
@@ -120,7 +121,7 @@ class ArchitectureModal extends Component {
         } else if (this.state.fields.arch_id && !this.props.isUpdate) {
             this.props.architectureService.addArchitecture(this.state.fields).then(res => {
                 if (res && res.body && res.body.error) {
-                    this.props.toast("error", "Error", res.body.error.message);
+                    this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                 } else {
                     this.props.toast("success", "Success", `Architecture ${res.arch_id} successfully added!`);
                     
@@ -132,7 +133,7 @@ class ArchitectureModal extends Component {
                 automation_variables: this.state.fields.automation_variables
             }).then(res => {
                 if (res && res.body && res.body.error) {
-                    this.props.toast("error", "Error", res.body.error.message);
+                    this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                 } else {
                     this.props.toast("success", "Success", `Architecture ${res.arch_id} successfully updated!`);
                     this.uploadDiagrams(res.arch_id);
@@ -158,7 +159,7 @@ class ArchitectureModal extends Component {
                         <ModalBody>
 
                             <Form name="architectureform" onSubmit={this.handleSubmit.bind(this)}>
-                                {!this.props.isImport && <TextInput
+                                <TextInput
                                     data-modal-primary-focus
                                     id="arch_id"
                                     name="arch_id"
@@ -171,7 +172,7 @@ class ArchitectureModal extends Component {
                                     labelText={this.props.data ? "" : "Architecture ID"}
                                     placeholder="e.g. common-services"
                                     style={{ marginBottom: '1rem' }}
-                                />}
+                                />
                                 {!this.props.isImport && <TextInput
                                     data-modal-primary-focus
                                     id="name"

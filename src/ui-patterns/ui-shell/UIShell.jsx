@@ -61,7 +61,7 @@ class UIShell extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null,
+      user: undefined,
       patternName: "Overview",
       profileExpanded: false
     };
@@ -75,7 +75,7 @@ class UIShell extends Component {
         // Session expired, redirecting to login
         window.location.reload(false);
       }, (new Date(user?.sessionExpire)).getTime()-Date.now());
-      this.setState({ user: user });
+      this.setState({ user: user || undefined });
     })
     .catch(err => {
       console.log(err);
@@ -118,7 +118,7 @@ class UIShell extends Component {
                 <HeaderPanel aria-label="Header Panel" expanded={this.state.profileExpanded} style={{'bottom': 'auto', 'padding-bottom': '1rem', 'list-style-type': 'none'}}>
                   <li class="bx--switcher__item" style={{display: 'flex'}}>
                     <strong style={{'margin': '0 1rem', 'font-size': '1.3rem'}}>{(this.state.user && this.state.user.name) || "Username"}</strong>
-                    <Tag style={{'margin-left': 'auto', 'margin-top': '0px', 'margin-bottom': '8px'}}>{(this.state.user && this.state.user.role) || "role"}</Tag>
+                    <Tag style={{'margin-left': 'auto', 'margin-top': '0px', 'margin-bottom': '8px'}}>{(this.state.user?.role) || "role"}</Tag>
                   </li>
                   <li class="bx--switcher__item"><strong style={{'margin': '0 1rem'}}>{(this.state.user && this.state.user.email) || "example@ibm.com"}</strong></li>
                   <Switcher aria-label="Switcher Container">
@@ -139,9 +139,9 @@ class UIShell extends Component {
 
                   <SideNavMenu title="Compliance" >
 
-                    <Link to="/controls">
+                    {this.state.user?.roles?.includes("fs-controls-viewer") ? <Link to="/controls">
                       <SideNavMenuItem>Controls</SideNavMenuItem>
-                    </Link>
+                    </Link> : <></>}
 
                     <Link to="/mapping">
                       <SideNavMenuItem>Mapping</SideNavMenuItem>
@@ -157,6 +157,10 @@ class UIShell extends Component {
                       <Link to="/architectures">
                         <SideNavMenuItem>Architectures</SideNavMenuItem>
                       </Link>
+
+                      {this.state.user?.roles?.includes("editor") ? <Link to={`/myarchitectures`}>
+                        <SideNavMenuItem>Your Architectures</SideNavMenuItem>
+                      </Link> : <></>}
 
                       <Link to="/services">
                         <SideNavMenuItem>Services</SideNavMenuItem>

@@ -18,7 +18,7 @@ class ServiceModal extends Component {
                 service_id: '',
                 arch_id: this.props.archId,
                 desc: '',
-                automation_variables: "alias: example\nvariables:\n  - name: var_1\n  value: value_1\n  - name: var_2\n  value: value_2"
+                automation_variables: ""
             }
         };
         if (this.props.isUpdate) {
@@ -124,7 +124,7 @@ class ServiceModal extends Component {
                                         height="200px"
                                         id="automation_variables"
                                         name="automation_variables"
-                                        placeholder="yaml"
+                                        placeholder="alias: example"
                                         value={this.state.fields.automation_variables}
                                         onChange={this.handleChange.bind(this, "automation_variables")}
                                         labelText="Automation Variables"

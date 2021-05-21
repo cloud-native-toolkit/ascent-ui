@@ -29,7 +29,7 @@ class ServiceDataView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userRole: "editor",
+            user: undefined,
             data: [],
             filterData: [],
             compositeData: [],
@@ -90,7 +90,7 @@ class ServiceDataView extends Component {
         fetch('/userDetails')
         .then(res => res.json())
         .then(user => {
-            this.setState({ userRole: user.role || undefined })
+            this.setState({ user: user || undefined })
         })
         await this.loadTable();
     }
@@ -265,31 +265,29 @@ class ServiceDataView extends Component {
                             }) => (
                                     <TableContainer>
                                         <TableToolbar>
-                                            <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
+                                            {this.state.user?.role === "admin" && <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
                                                 <TableBatchAction
                                                     tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                                                     renderIcon={Delete}
-                                                    onClick={() => this.deleteServices(selectedRows)}
-                                                    disabled={this.state.userRole !== "editor"}>
+                                                    onClick={() => this.deleteServices(selectedRows)}>
                                                     Delete
                                                 </TableBatchAction>
 
-                                            </TableBatchActions>
+                                            </TableBatchActions>}
                                             <TableToolbarContent>
 
                                                 <TableToolbarSearch onChange={(event) => this.filterTable(event.target.value)} />
-                                                <Button
+                                                {this.state.user?.role === "admin" && <Button
                                                     tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
                                                     size="small"
                                                     kind="primary"
-                                                    onClick={this.showModal}
-                                                    disabled={this.state.userRole !== "editor"}>Add</Button>
+                                                    onClick={this.showModal}>Add</Button>}
                                             </TableToolbarContent>
                                         </TableToolbar>
                                         <Table {...getTableProps()}>
                                             <TableHead>
                                                 <TableRow>
-                                                    <TableSelectAll {...getSelectionProps()} disabled={this.state.userRole !== "editor"}/>
+                                                    {this.state.user?.role === "admin" && <TableSelectAll {...getSelectionProps()} />}
                                                     {headers.map((header) => (
                                                         <TableHeader key={header.key} {...getHeaderProps({ header })}>
                                                             {header.header}
@@ -301,7 +299,7 @@ class ServiceDataView extends Component {
                                             <TableBody>
                                                 {rows.map((row, i) => (
                                                     <TableRow key={row.id} {...getRowProps({ row })}>
-                                                        <TableSelectRow {...getSelectionProps({ row })} disabled={this.state.userRole !== "editor"}/>
+                                                        {this.state.user?.role === "admin" && <TableSelectRow {...getSelectionProps({ row })} />}
                                                         {row.cells.map((cell) => (
                                                             <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
                                                                 {
@@ -351,12 +349,11 @@ class ServiceDataView extends Component {
                                                                 <Link class="bx--overflow-menu-options__option" to={"/services/" + row.id}>
                                                                     <OverflowMenuItem itemText="Details" />
                                                                 </Link>
-                                                                <OverflowMenuItem 
+                                                                {this.state.user?.role === "admin" && <OverflowMenuItem 
                                                                     itemText="Edit"
                                                                     onClick={() => this.doUpdateService(row.id)}
-                                                                    disabled={this.state.userRole !== "editor"}
                                                                 >
-                                                                </OverflowMenuItem>
+                                                                </OverflowMenuItem>}
                                                             </OverflowMenu>
                                                         </TableCell>
                                                     </TableRow>

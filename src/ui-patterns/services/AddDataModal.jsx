@@ -38,7 +38,7 @@ class FormModal extends Component {
         }
         this.props.automationService.getAutomationIds().then(res => {
             if (res && res.data && res.data.length) {
-                this.state.caids = res.data;
+                this.setState({caids: res.data});
             }
         })
         this.handleChange = this.handleChange.bind(this)
