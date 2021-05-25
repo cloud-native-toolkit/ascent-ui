@@ -54,6 +54,20 @@ export class ArchitectureService implements ArchitectureDataApi {
             });
     }
 
+    async duplicateArchitecture(arch_id: string, data: object): Promise<ArchiectureDataModel> {
+        return superagent
+            .post(`${this.baseUrl}/${arch_id}/duplicate`)
+            .send(data)
+            .set('accept', 'application/json')
+            .then(res => {
+                console.log(res);
+                return res.body;
+            })
+            .catch(err => {
+                return err.response;
+            });
+    }
+
     async importBomYaml(arch_id: string, data: FormData, overwrite: boolean): Promise<object> {
         return superagent
             .post(`${this.baseUrl}/${arch_id}/boms/import${overwrite ? "?overwrite=true" : ""}`)

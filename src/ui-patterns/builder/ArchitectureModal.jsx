@@ -13,6 +13,8 @@ import {
     FileUploader
 } from 'carbon-components-react';
 
+import {Redirect} from 'react-router-dom';
+
 import AceEditor from "react-ace";
 import "brace/mode/yaml";
 
@@ -118,6 +120,22 @@ class ArchitectureModal extends Component {
             } else {
                 this.props.toast("error", "File Missing", "You must upload the BOM yaml file.");
             }
+        } else if (this.props.isDuplicate) {
+            this.props.toast("info", "Duplicating", `Duplicating architecture ${this.props.isDuplicate}...`);
+            this.props.architectureService.duplicateArchitecture(this.props.isDuplicate, {
+                arch_id: this.state.fields.arch_id,
+                name: this.state.fields.name
+            })
+            .then((res) => {
+                if (res?.body?.error) this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res?.body?.error?.message);
+                else {
+                    this.props.toast("success", "Success", `Architecture ${this.props.isDuplicate} duplicated!`);
+                    this.props.handleClose();
+                }
+            })
+            .catch((err) => {
+                this.addNotification("error", "Error", err);
+            })
         } else if (this.state.fields.arch_id && !this.props.isUpdate) {
             this.props.architectureService.addArchitecture(this.state.fields).then(res => {
                 if (res && res.body && res.body.error) {
@@ -153,7 +171,7 @@ class ArchitectureModal extends Component {
                         open={this.props.show}
                         onClose={this.props.handleClose}>
                         <ModalHeader >
-                            <h3 className="bx--modal-header__heading">{this.props.isUpdate ? "Update" : "Add"} Architecture</h3>
+                            <h3 className="bx--modal-header__heading">{this.props.isUpdate ? "Update" : this.props.isDuplicate ? "Duplicate" : "Add"} Architecture</h3>
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
@@ -185,7 +203,7 @@ class ArchitectureModal extends Component {
                                     placeholder="e.g. Common Services"
                                     style={{ marginBottom: '1rem' }}
                                 />}
-                                {!this.props.isImport && <TextInput
+                                {!this.props.isImport && !this.props.isDuplicate && <TextInput
                                     data-modal-primary-focus
                                     id="short_desc"
                                     name="short_desc"
@@ -197,7 +215,7 @@ class ArchitectureModal extends Component {
                                     placeholder="e.g. Common Services"
                                     style={{ marginBottom: '1rem' }}
                                 />}
-                                {!this.props.isImport && <TextArea
+                                {!this.props.isImport && !this.props.isDuplicate && <TextArea
                                     required
                                     // cols={50}
                                     id="long_desc"
@@ -231,7 +249,7 @@ class ArchitectureModal extends Component {
                                     placeholder="overwrite"
                                     style={{ marginBottom: '1rem' }}
                                 /></>}
-                                <FileUploader 
+                                {!this.props.isDuplicate && <FileUploader 
                                     accept={['.drawio']}
                                     labelText={"Drag and drop a .drawio file, or click to upload"}
                                     labelTitle={"Diagram .drawio"}
@@ -239,8 +257,8 @@ class ArchitectureModal extends Component {
                                     labelDescription={"Max file size is 2MiB. Only .drawio files are supported."}
                                     filenameStatus='edit'
                                     onChange={(event) => this.setState({diagramDrawio: event?.target?.files[0]})}
-                                    onDelete={() => this.setState({diagramDrawio: undefined})} />
-                                <FileUploader 
+                                    onDelete={() => this.setState({diagramDrawio: undefined})} />}
+                                {!this.props.isDuplicate && <FileUploader 
                                     accept={['.png']}
                                     labelText={"Drag and drop a .png file, or click to upload"}
                                     labelTitle={"Diagram .png"}
@@ -248,8 +266,8 @@ class ArchitectureModal extends Component {
                                     labelDescription={"Max file size is 2MiB. Only .png files are supported."}
                                     filenameStatus='edit'
                                     onChange={(event) => this.setState({diagramPng: event?.target?.files[0]})}
-                                    onDelete={() => this.setState({diagramPng: undefined})} />
-                                {!this.props.isImport && <Select id="public" name="public"
+                                    onDelete={() => this.setState({diagramPng: undefined})} />}
+                                {!this.props.isImport && !this.props.isDuplicate && <Select id="public" name="public"
                                     labelText="Public"
                                     required
                                     defaultValue={this.state.fields.public}
@@ -259,7 +277,7 @@ class ArchitectureModal extends Component {
                                     <SelectItem value={false} text="False" />
                                     <SelectItem value={true} text="True" />
                                 </Select>}
-                                {!this.props.isImport && <Select id="production_ready" name="production_ready"
+                                {!this.props.isImport && !this.props.isDuplicate && <Select id="production_ready" name="production_ready"
                                     labelText="Production Ready"
                                     required
                                     defaultValue={!this.state.fields.production_ready ? false : this.state.fields.production_ready}
@@ -269,7 +287,7 @@ class ArchitectureModal extends Component {
                                     <SelectItem value={false} text="False" />
                                     <SelectItem value={true} text="True" />
                                 </Select>}
-                                {!this.props.isImport && <FormGroup legendText="Automation Variables">
+                                {!this.props.isImport && !this.props.isDuplicate && <FormGroup legendText="Automation Variables">
                                     <AceEditor
                                         focus
                                         style={{ width: "100%" }}
@@ -300,7 +318,7 @@ class ArchitectureModal extends Component {
                             </Form>
                             
                         </ModalBody>
-                        <ModalFooter primaryButtonText={this.props.isUpdate ? "Update" : "Add"} onRequestSubmit={this.handleSubmit} secondaryButtonText="Cancel" />
+                        <ModalFooter primaryButtonText={this.props.isUpdate ? "Update" : this.props.isDuplicate ? "Duplicate" : "Add"} onRequestSubmit={this.handleSubmit} secondaryButtonText="Cancel" />
                     </ComposedModal>
 
                 </div>

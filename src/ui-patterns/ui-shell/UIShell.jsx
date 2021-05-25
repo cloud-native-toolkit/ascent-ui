@@ -137,34 +137,35 @@ class UIShell extends Component {
                       <SideNavMenuItem>Overview</SideNavMenuItem>
                     </Link>
 
-                  <SideNavMenu title="Compliance" >
-
-                    {this.state.user?.roles?.includes("fs-controls-viewer") ? <Link to="/controls">
-                      <SideNavMenuItem>Controls</SideNavMenuItem>
-                    </Link> : <></>}
-
-                    <Link to="/mapping">
-                      <SideNavMenuItem>Mapping</SideNavMenuItem>
-                    </Link>
-
-                    <Link to="/nists">
-                      <SideNavMenuItem>NIST 800-53</SideNavMenuItem>
-                    </Link>
-
-                  </SideNavMenu>
-
                     <SideNavMenu title="Solution Builder">
-                      <Link to="/architectures">
-                        <SideNavMenuItem>Architectures</SideNavMenuItem>
-                      </Link>
 
                       {this.state.user?.roles?.includes("editor") ? <Link to={`/myarchitectures`}>
                         <SideNavMenuItem>Your Architectures</SideNavMenuItem>
                       </Link> : <></>}
 
+                      <Link to="/architectures">
+                        <SideNavMenuItem>Architectures</SideNavMenuItem>
+                      </Link>
+
                       <Link to="/services">
                         <SideNavMenuItem>Services</SideNavMenuItem>
                       </Link>
+                    </SideNavMenu>
+
+                    <SideNavMenu title="Compliance" >
+
+                      {this.state.user?.roles?.includes("fs-controls-viewer") ? <Link to="/controls">
+                        <SideNavMenuItem>Controls</SideNavMenuItem>
+                      </Link> : <></>}
+
+                      <Link to="/mapping">
+                        <SideNavMenuItem>Mapping</SideNavMenuItem>
+                      </Link>
+
+                      <Link to="/nists">
+                        <SideNavMenuItem>NIST 800-53</SideNavMenuItem>
+                      </Link>
+
                     </SideNavMenu>
 
                     <SideNavMenu title="Documentation">

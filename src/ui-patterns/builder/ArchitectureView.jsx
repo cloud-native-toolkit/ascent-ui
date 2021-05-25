@@ -16,6 +16,8 @@ import {
 
 import ArchitectureModal from './ArchitectureModal';
 
+import ValidateModal from '../ValidateModal';
+
 class ArchitectureView extends Component {
 
     // Configure the App
@@ -33,7 +35,10 @@ class ArchitectureView extends Component {
             updateModal: false,
             archRecord: false,
             notifications: [],
-            isImport: false
+            isImport: false,
+            isDuplicate: false,
+            showValidate: false,
+            curArch: undefined
         };
         this.showArchModal = this.showArchModal.bind(this);
         this.hideArchModal = this.hideArchModal.bind(this);
@@ -83,22 +88,32 @@ class ArchitectureView extends Component {
             showArchModal: false,
             updateModal: false,
             archRecord: false,
-            isImport: false
+            isImport: false,
+            isDuplicate: false
         });
         this.loadArchitectures();
     }
 
-    async deleteArchitecture(arch_id) {
+    async deleteArchitecture() {
+        let arch_id = this.state.curArch.arch_id;
         this.props.archService.deleteArchitecture(arch_id)
             .then((res) => {
                 if (res?.body?.error) this.addNotification("error", res?.status === 401 ? "Unauthorized" : "Error", res?.body?.error?.message);
                 else {
                     this.addNotification("success", "Success", `Architecture ${arch_id} deleted!`);
+                    this.setState({
+                        showValidate: false,
+                        curArch: undefined
+                    });
                     this.loadArchitectures();
                 }
             })
             .catch((err) => {
                 this.addNotification("error", "Error", err);
+                this.setState({
+                    showValidate: false,
+                    curArch: undefined
+                });
             })
     }
 
@@ -157,11 +172,16 @@ class ArchitectureView extends Component {
                             <FormLabel style={{"padding-top": "0.5rem"}}>
                                 <Tooltip direction="right" triggerText="Terraform">This architecture supports Terraform.</Tooltip>
                             </FormLabel>
-                            {/* {this.state.user?.role === "admin" && <a onClick={() => this.deleteArchitecture(arch.arch_id)}>Delete</a>} */}
                             {this.state.user?.roles.includes("editor") ? <FormLabel style={{"margin-left": "auto", "margin-bottom": "0px"}}>
                                 <OverflowMenu light flipped>
-                                    <OverflowMenuItem itemText="Duplicate" onClick={() => console.log("duplicate")}/>
-                                    {(this.state.user?.role === "admin" || this.props.userArch || arch?.owners?.find(user => user.email === this.state.user?.email)) && <OverflowMenuItem itemText="Delete" onClick={() => this.deleteArchitecture(arch.arch_id)} isDelete/>}
+                                    <OverflowMenuItem itemText="Duplicate" onClick={() => this.setState({
+                                        showArchModal: true,
+                                        isDuplicate: arch.arch_id
+                                    })}/>
+                                    {(this.state.user?.role === "admin" || this.props.userArch || arch?.owners?.find(user => user.email === this.state.user?.email)) && <OverflowMenuItem itemText="Delete" onClick={() => this.setState({
+                                        showValidate: true,
+                                        curArch: arch
+                                    })} isDelete/>}
                                 </OverflowMenu>
                             </FormLabel> : <></>}
                         </div>
@@ -228,7 +248,31 @@ class ArchitectureView extends Component {
                         toast={this.addNotification}
                         architectureService={this.props.archService}
                         isImport={this.state.isImport}
+                        isDuplicate={this.state.isDuplicate}
                     />
+                }
+
+                {this.state.showValidate && this.state.curArch && 
+                    <ValidateModal
+                        danger
+                        submitText="Delete"
+                        heading="Delete Archictecture"
+                        message={`You are about to remove architecture ${this.state.curArch.name}. This action cannot be undone. This will remove the architecture record, as well as architecture Bill of Material and diagrams. If you are sure, type "${this.state.curArch.arch_id}" and click Delete to confirm deletion.`}
+                        show={this.state.showValidate}
+                        inputRequired={this.state.curArch.arch_id}
+                        onClose={() => {
+                            this.setState({
+                                showValidate: false,
+                                curArch: undefined
+                            });
+                        }} 
+                        onRequestSubmit={this.deleteArchitecture} 
+                        onSecondarySubmit={() => {
+                            this.setState({
+                                showValidate: false,
+                                curArch: undefined
+                            });
+                        }} />
                 }
 
                 <div className="bx--row">
