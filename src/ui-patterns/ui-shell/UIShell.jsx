@@ -91,7 +91,7 @@ class UIShell extends Component {
           <BuilderHeader/>
           <HeaderContainer
             render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-              <Header aria-label="IBM FS Cloud Architectures" onClick={
+              <Header aria-label="IBM GSI Labs" onClick={
                 isSideNavExpanded === true ? onClickSideNavExpand : null
               }>
                 <SkipToContent />
@@ -101,9 +101,9 @@ class UIShell extends Component {
                   isActive={isSideNavExpanded}
                 />
                 <HeaderName href="#" prefix="IBM">
-                  FS Cloud Architectures
+                  GSI Labs
                 </HeaderName>
-                <HeaderNavigation aria-label="IBM FS Cloud Architectures">
+                <HeaderNavigation aria-label="GSI Labs">
                 </HeaderNavigation>
 
                 <HeaderGlobalBar>

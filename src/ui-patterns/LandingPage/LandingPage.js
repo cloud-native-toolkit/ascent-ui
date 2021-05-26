@@ -39,7 +39,7 @@ const LandingPage = () => {
             </BreadcrumbItem>
           </Breadcrumb>
           <h1 className="landing-page__heading">
-            Financial  Controls &amp; Reference Architectures
+            Architecture and Security Controls Excelerator Tool (ASCENT)
           </h1>
         </div>
       </div>
@@ -60,12 +60,12 @@ const LandingPage = () => {
                       Compliance teams. Click on the button below to learn more about how these controls align with IBM Cloud Services.
                     </p>
                     <Link to="/docs" ><Button>Learn more</Button></Link>
-                    
+
                   </div>
                   <div className="bx--col-md-4 bx--offset-lg-1 bx--col-lg-8">
                     <img
                       className="landing-page__illo"
-                      src={`${process.env.PUBLIC_URL}/tab-illo.png`}
+                      src={`${process.env.PUBLIC_URL}/finance.jpg`}
                       alt="Tool illustration"
                     />
                   </div>
