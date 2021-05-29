@@ -8,6 +8,11 @@ import Error20 from '@carbon/icons-react/lib/error/20';
 import Email20 from '@carbon/icons-react/lib/email/20';
 import { settings } from 'carbon-components';
 
+import {
+    OverflowMenu,
+    OverflowMenuItem
+} from 'carbon-components-react';
+
 const { prefix } = settings;
 
 export default class ArticleCard extends React.Component {

@@ -27,9 +27,10 @@ class ControlDetailsView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: undefined,
       data: {},
       nistData: {},
-      show: "fs-cloud-desc",
+      show: "",
       mappingData: [],
       filterData: [],
       totalItems: 0,
@@ -43,10 +44,16 @@ class ControlDetailsView extends Component {
   }
 
   async loadControl(controlId) {
-    const controlData = await this.props.controls.getControlsDetails(controlId);
-    controlData.description = controlData.description.replaceAll(/\n\n([a-z]\))/gi, '\n\n**$1**');
-    controlData.implementation = controlData.implementation.replaceAll('\n\n#### Part', '\n\n&nbsp;  \n#### Part');
-    controlData.implementation = controlData.implementation.replaceAll('\n\n#####', '\n\n&nbsp;  \n#####');
+    let filter = {
+      include: ['nist', 'services', 'architectures']
+    }
+    if (this.state.user?.roles?.includes("fs-viewer")) filter = {
+      include: ["controlDetails", 'nist', 'services', 'architectures']
+    }
+    const controlData = await this.props.controls.getControlsDetails(controlId, filter);
+    if (controlData?.controlDetails?.description) controlData.controlDetails.description = controlData.controlDetails.description.replaceAll(/\n\n([a-z]\))/gi, '\n\n**$1**');
+    if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#### Part', '\n\n&nbsp;  \n#### Part');
+    if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#####', '\n\n&nbsp;  \n#####');
     const nistData = controlData.nist;
     this.setState({
       data: controlData,
@@ -93,8 +100,16 @@ class ControlDetailsView extends Component {
   }
 
   async componentDidMount() {
-    this.loadControl(this.props.controlId);
-    this.loadTable();
+    fetch('/userDetails')
+      .then(res => res.json())
+      .then(user => {
+          this.setState({
+            user: user || undefined,
+            show: user?.roles?.includes("fs-viewer") ? "fs-cloud-desc" : "nist-desc"
+          });
+          this.loadControl(this.props.controlId);
+          this.loadTable();
+      });
   }
 
   async componentWillReceiveProps(newProps){
@@ -159,7 +174,11 @@ class ControlDetailsView extends Component {
       breadcrumb = <>
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to="/controls">Controls</Link>
+            {this.state.user?.roles?.includes("fs-viewer") ?
+              <Link to="/controls">Controls</Link>
+            :
+              <Link to="/nists">NIST</Link>
+            }
           </BreadcrumbItem>
           <BreadcrumbItem href="#">{this.props.controlId}</BreadcrumbItem>
         </Breadcrumb>
@@ -313,20 +332,20 @@ class ControlDetailsView extends Component {
             <ContentSwitcher
               size='xl'
               onChange={(e) => {this.setState({show:e.name})}} >
-              <Switch name="fs-cloud-desc" text="Description" />
-              <Switch name="nist-desc" text="Additional NIST Information" />
+              {this.state.user?.roles?.includes("fs-viewer") ? <Switch name="fs-cloud-desc" text="Description" /> : <></>}
+              <Switch className={this.state.show === "nist-desc" && !this.state.user?.roles?.includes("fs-viewer") ? "bx--content-switcher--selected" : ""} name="nist-desc" text="Additional NIST Information" />
               <Switch name="mapping" text="Impacted Components" />
             </ContentSwitcher>
           }
           
 
-          {this.state.show === "fs-cloud-desc" && <div className="control-details">
+          {data?.controlDetails && this.state.show === "fs-cloud-desc" && <div className="control-details">
             {data.id && 
               <>
                 <br />
                 <h3>Description</h3>
                 <br />
-                <ReactMarkdown>{data.description}</ReactMarkdown>
+                <ReactMarkdown>{data?.controlDetails?.description}</ReactMarkdown>
                 {data.parent_control && <>
                   <br />
                   <p>Parent control: <Tag type="blue">
@@ -336,22 +355,22 @@ class ControlDetailsView extends Component {
                     </Tag></p>
                 </>}
                 <br />
-                {data.fs_guidance.replace(/[ \n]/gi, '') && <>
+                {data?.controlDetails?.fs_guidance.replace(/[ \n]/gi, '') && <>
                   <h3>Additional FS Cloud Guidance</h3>
                   <br />
-                  <ReactMarkdown>{data.fs_guidance}</ReactMarkdown>
+                  <ReactMarkdown>{data?.controlDetails?.fs_guidance}</ReactMarkdown>
                   <br />
                 </>}
                 <br />
-                {data.parameters.replace(/[ \n]/gi, '') && <>
+                {data?.controlDetails?.parameters.replace(/[ \n]/gi, '') && <>
                   <h3>Parameters</h3>
                   <br />
-                  <ReactMarkdown>{data.parameters}</ReactMarkdown>
+                  <ReactMarkdown>{data?.controlDetails?.parameters}</ReactMarkdown>
                   <br />
                 </>}
                 <h3>Solution and Implementation</h3>
                 <br />
-                <ReactMarkdown>{data.implementation}</ReactMarkdown>
+                <ReactMarkdown>{data?.controlDetails?.implementation}</ReactMarkdown>
                 <br />
               </>
             }

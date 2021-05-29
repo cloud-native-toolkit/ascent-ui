@@ -115,7 +115,7 @@ class MappingView extends Component {
                           </h2>
               <br></br>
               <p>
-                Mapping list showing the relationship between FS controls, IMB Cloud services and reference architectures for the FS Cloud.
+                Mapping list showing the relationship between FS controls, IBM Cloud services and reference architectures for the FS Cloud.
               </p>
               <br></br>
             </div>

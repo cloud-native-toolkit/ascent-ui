@@ -42,7 +42,7 @@ class BillofMaterialsView extends Component {
         super(props);
 
         this.state = {
-            userRole: "editor",
+            user: undefined,
             archid: false,
             data: [],
             filterData: [],
@@ -119,7 +119,7 @@ class BillofMaterialsView extends Component {
         fetch('/userDetails')
         .then(res => res.json())
         .then(user => {
-            this.setState({ userRole: user.role || undefined })
+            this.setState({ user: user || undefined })
         })
         await this.loadTable();
     }
@@ -527,16 +527,15 @@ class BillofMaterialsView extends Component {
                                                 <TableContainer
                                                     {...getTableContainerProps()}>
                                                     <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
-                                                        <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
+                                                        {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
                                                             <TableBatchAction
                                                                 tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                                                                 renderIcon={Delete}
                                                                 onClick={() => this.deleteBOMs(selectedRows)}
-                                                                disabled={this.state.userRole !== "editor"}
                                                             >
                                                                 Delete
                                                             </TableBatchAction>
-                                                        </TableBatchActions>
+                                                        </TableBatchActions>}
                                                         <TableToolbarContent>
                                                             <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)}>
                                                                 <Download /> Terraform
@@ -556,10 +555,10 @@ class BillofMaterialsView extends Component {
                                                                     <div style={{ flex: 'left' }}>Diagram .drawio</div>
                                                                     <Download style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
-                                                                <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
+                                                                {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
                                                                     <div style={{ flex: 'left' }}>Edit Architecure</div>
                                                                     <Edit16 style={{ marginLeft: "auto" }} />
-                                                                </TableToolbarAction>
+                                                                </TableToolbarAction>}
                                                                 <TableToolbarAction style={{ display: 'flex' }} onClick={this.downloadReport} /*href={`/api/architectures/${this.props.archId}/compliance-report.pdf?profile=IBM_CLOUD_FS_BP_0_1`} download*/>
                                                                     <div style={{ flex: 'left' }}>PDF Report</div>
                                                                     <DocumentExport style={{ marginLeft: "auto" }} />
@@ -567,28 +566,27 @@ class BillofMaterialsView extends Component {
                                                             </TableToolbarMenu>
                         
                         
-                                                            <Button
+                                                            {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <Button
                                                                 tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
                                                                 size="small"
                                                                 kind="primary"
                                                                 renderIcon={Add16}
                                                                 onClick={this.showServiceModal}
-                                                                disabled={this.state.userRole !== "editor"}
                                                             >
                                                                 Add Service
-                                                            </Button>
+                                                            </Button>}
                                                         </TableToolbarContent>
                                                     </TableToolbar>
                                                     <Table {...getTableProps()}>
                                                         <TableHead>
                                                             <TableRow>
-                                                                <TableSelectAll {...getSelectionProps()} disabled={this.state.userRole !== "editor"}/>
+                                                                {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableSelectAll {...getSelectionProps()}/>}
                                                                 {headers.map((header, i) => (
                                                                     <TableHeader key={i} {...getHeaderProps({ header })}>
                                                                         {header.header}
                                                                     </TableHeader>
                                                                 ))}
-                                                                <TableHeader />
+                                                                {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableHeader />}
                                                             </TableRow>
                                                         </TableHead>
                         
@@ -596,7 +594,7 @@ class BillofMaterialsView extends Component {
                                                             {rows.map((row, i) => (
                                                                 <>
                                                                     <TableRow key={i} {...getRowProps({ row })} >
-                                                                        <TableSelectRow {...getSelectionProps({ row })} disabled={this.state.userRole !== "editor"}/>
+                                                                        {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableSelectRow {...getSelectionProps({ row })}/>}
                                                                         {row.cells.map((cell) => (
                                                                             <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
                                                                                 {
@@ -639,11 +637,11 @@ class BillofMaterialsView extends Component {
                                                                                 }
                                                                             </TableCell>
                                                                         ))}
-                                                                        <TableCell className="bx--table-column-menu">
+                                                                        {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableCell className="bx--table-column-menu">
                                                                             <OverflowMenu light flipped>
-                                                                                <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(row.id)} disabled={this.state.userRole !== "editor"}/>
+                                                                                <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(row.id)}/>
                                                                             </OverflowMenu>
-                                                                        </TableCell>
+                                                                        </TableCell>}
                                                                     </TableRow>
                                                                 </>
                                                             ))}

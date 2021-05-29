@@ -12,16 +12,20 @@ export class ControlsData implements ControlsDataApi {
     }
 
     async getControls(): Promise<ControlsDataModel[]> {
+        let filter = {
+            include: ["nist", "controlDetails"]
+        }
         return superagent
-            .get(this.baseUrl + "?filter=%7B%22include%22%3A%20%5B%22nist%22%5D%7D")
+            .get(`${this.baseUrl}?filter=${encodeURIComponent(JSON.stringify(filter))}`)
             .set('accept', 'application/json')
             .then(res => {
+                console.log(res.body);
                 return res.body || [];
             });
     }
-    async getControlsDetails(controlId: string): Promise<ControlsDataModel> {
+    async getControlsDetails(controlId: string, filter: object): Promise<ControlsDataModel> {
         return superagent
-            .get(this.baseUrl + "/" + controlId)
+            .get(`${this.baseUrl}/${controlId}?filter=${encodeURIComponent(JSON.stringify(filter))}`)
             .set('accept', 'application/json')
             .then(res => {
                 return res.body || {};

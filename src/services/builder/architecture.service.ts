@@ -8,7 +8,7 @@ export class ArchitectureService implements ArchitectureDataApi {
     baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl || '/api/architectures/';
+        this.baseUrl = baseUrl || '/api/architectures';
     }
 
     async getArchitectures(): Promise<ArchiectureDataModel[]> {
@@ -22,10 +22,9 @@ export class ArchitectureService implements ArchitectureDataApi {
 
     async getArchitectureById(archiId: string): Promise<ArchiectureDataModel> {
         return superagent
-            .get(this.baseUrl + archiId)
+            .get(`${this.baseUrl}/${archiId}?filter=%7B%22include%22%3A%20%5B%22owners%22%5D%7D`)
             .set('accept', 'application/json')
             .then(res => {
-
                 return res.body;
             });
     }
@@ -43,9 +42,35 @@ export class ArchitectureService implements ArchitectureDataApi {
             });
     }
 
-    async importBomYaml(data: FormData, overwrite: boolean): Promise<object> {
+    async deleteArchitecture(arch_id: string): Promise<void> {
         return superagent
-            .post(`${this.baseUrl}/boms/import${overwrite ? "?overwrite=true" : ""}`)
+            .delete(`${this.baseUrl}/${arch_id}`)
+            .set('accept', 'application/json')
+            .then(res => {
+                return res;
+            })
+            .catch(err => {
+                return err.response;
+            });
+    }
+
+    async duplicateArchitecture(arch_id: string, data: object): Promise<ArchiectureDataModel> {
+        return superagent
+            .post(`${this.baseUrl}/${arch_id}/duplicate`)
+            .send(data)
+            .set('accept', 'application/json')
+            .then(res => {
+                console.log(res);
+                return res.body;
+            })
+            .catch(err => {
+                return err.response;
+            });
+    }
+
+    async importBomYaml(arch_id: string, data: FormData, overwrite: boolean): Promise<object> {
+        return superagent
+            .post(`${this.baseUrl}/${arch_id}/boms/import${overwrite ? "?overwrite=true" : ""}`)
             .send(data)
             .set('accept', 'application/json')
             .then(res => {

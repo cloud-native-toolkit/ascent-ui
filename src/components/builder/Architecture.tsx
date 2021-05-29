@@ -18,7 +18,7 @@ class ArchitectureComponent extends Component<any, any> {
     render() {
         return (
             <div className="pattern-container">
-                <ArchitectureView archService={this.architectureDataAPI} />
+                <ArchitectureView archService={this.architectureDataAPI} userArch={this.props.userArch} />
             </div>
         );
     }

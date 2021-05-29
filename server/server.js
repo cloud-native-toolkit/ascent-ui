@@ -35,6 +35,12 @@ const conf = {
 }
 
 const app = express();
+
+// Health check
+app.get('/health', function (req, res, next) {
+  res.json({status: 'UP'});
+});
+
 app.use(session({
   secret: conf.appidConfig.secret,
   resave: true,
@@ -71,16 +77,23 @@ app.get(LOGOUT_URL, function(req, res, next) {
 });
 app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
 app.get('/userDetails', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res) => {
-  let role = "read-only";
+  let roles = ["read-only"];
+  if (WebAppStrategy.hasScope(req, "view_controls")) {
+    roles.push("fs-viewer");
+  }
   if (WebAppStrategy.hasScope(req, "edit")) {
-    role = "editor";
+    roles.push("editor");
+  }
+  if (WebAppStrategy.hasScope(req, "super_edit")) {
+    roles.push("admin");
   }
   res.json({
     name: req.user.name,
     email: req.user.email,
     given_name: req.user.given_name,
     family_name: req.user.family_name,
-    role: role,
+    roles: roles,
+    role: roles[roles.length-1],
     sessionExpire: req.session.cookie.expires
   });
 })
@@ -89,6 +102,7 @@ app.use(express.static(path.join(__dirname, "../build")));
 // Redirect to home when manually entering know URLs
 app.get('/bom*', (req, res) => {res.redirect('/');});
 app.get('/architectures*', (req, res) => {res.redirect('/');});
+app.get('/myarchitectures', (req, res) => {res.redirect('/');});
 app.get('/mapping*', (req, res) => {res.redirect('/');});
 app.get('/controls*', (req, res) => {res.redirect('/');});
 app.get('/nists*', (req, res) => {res.redirect('/');});
@@ -96,9 +110,9 @@ app.get('/services*', (req, res) => {res.redirect('/');});
 app.get('/docs*', (req, res) => {res.redirect('/');});
 
 const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
-app.all('/api/*', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res, next) => {
-  console.log(req.method, req.url);
+app.use('/api', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res, next) => {
   if (!protectedMethods.includes(req.method) || WebAppStrategy.hasScope(req, "edit")) {
+    req.headers['Authorization'] = `Bearer ${req.session[WebAppStrategy.AUTH_CONTEXT].accessToken} ${req.session[WebAppStrategy.AUTH_CONTEXT].identityToken}`;
     return next();
   } else {
     res.status(401).json({
