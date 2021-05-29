@@ -35,6 +35,12 @@ const conf = {
 }
 
 const app = express();
+
+// Health check
+app.get('/health', function (req, res, next) {
+  res.json({status: 'UP'});
+});
+
 app.use(session({
   secret: conf.appidConfig.secret,
   resave: true,
@@ -73,7 +79,7 @@ app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
 app.get('/userDetails', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res) => {
   let roles = ["read-only"];
   if (WebAppStrategy.hasScope(req, "view_controls")) {
-    roles.push("fs-controls-viewer");
+    roles.push("fs-viewer");
   }
   if (WebAppStrategy.hasScope(req, "edit")) {
     roles.push("editor");
