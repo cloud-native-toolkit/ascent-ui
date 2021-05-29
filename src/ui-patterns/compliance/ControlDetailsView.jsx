@@ -47,7 +47,7 @@ class ControlDetailsView extends Component {
     let filter = {
       include: ['nist', 'services', 'architectures']
     }
-    if (this.state.user?.roles?.includes("fs-controls-viewer")) filter = {
+    if (this.state.user?.roles?.includes("fs-viewer")) filter = {
       include: ["controlDetails", 'nist', 'services', 'architectures']
     }
     const controlData = await this.props.controls.getControlsDetails(controlId, filter);
@@ -105,7 +105,7 @@ class ControlDetailsView extends Component {
       .then(user => {
           this.setState({
             user: user || undefined,
-            show: user?.roles?.includes("fs-controls-viewer") ? "fs-cloud-desc" : "nist-desc"
+            show: user?.roles?.includes("fs-viewer") ? "fs-cloud-desc" : "nist-desc"
           });
           this.loadControl(this.props.controlId);
           this.loadTable();
@@ -174,7 +174,7 @@ class ControlDetailsView extends Component {
       breadcrumb = <>
         <Breadcrumb>
           <BreadcrumbItem>
-            {this.state.user?.roles?.includes("fs-controls-viewer") ?
+            {this.state.user?.roles?.includes("fs-viewer") ?
               <Link to="/controls">Controls</Link>
             :
               <Link to="/nists">NIST</Link>
@@ -332,8 +332,8 @@ class ControlDetailsView extends Component {
             <ContentSwitcher
               size='xl'
               onChange={(e) => {this.setState({show:e.name})}} >
-              {this.state.user?.roles?.includes("fs-controls-viewer") ? <Switch name="fs-cloud-desc" text="Description" /> : <></>}
-              <Switch className={this.state.show === "nist-desc" && !this.state.user?.roles?.includes("fs-controls-viewer") ? "bx--content-switcher--selected" : ""} name="nist-desc" text="Additional NIST Information" />
+              {this.state.user?.roles?.includes("fs-viewer") ? <Switch name="fs-cloud-desc" text="Description" /> : <></>}
+              <Switch className={this.state.show === "nist-desc" && !this.state.user?.roles?.includes("fs-viewer") ? "bx--content-switcher--selected" : ""} name="nist-desc" text="Additional NIST Information" />
               <Switch name="mapping" text="Impacted Components" />
             </ContentSwitcher>
           }

@@ -10,7 +10,7 @@ app.get('/userDetails', (req, res) => {
         email: "noe.samaille@ibm.com",
         given_name: "Noé",
         family_name: "Samaille",
-        roles: ["fs-controls-viewer", "editor", "admin"],
+        roles: ["fs-viewer", "editor", "admin"],
         role: "admin",
         sessionExpire: new Date(Date.now()+3600*1000)
     });
