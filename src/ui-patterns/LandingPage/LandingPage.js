@@ -62,10 +62,10 @@ const LandingPage = () => {
                     <Link to="/docs" ><Button>Learn more</Button></Link>
 
                   </div>
-                  <div className="bx--col-md-4 bx--offset-lg-1 bx--col-lg-8">
+                  <div className="bx--col-md-4 bx--col-lg-8">
                     <img
                       className="landing-page__illo"
-                      src={`${process.env.PUBLIC_URL}/finance.jpg`}
+                      src={`${process.env.PUBLIC_URL}/ascent.png`}
                       alt="Tool illustration"
                     />
                   </div>

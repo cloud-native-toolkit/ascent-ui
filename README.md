@@ -83,6 +83,26 @@ export APPID_CONFIG='{"apikey":...,"version":4}'
 export APP_URI="http://localhost:3000"
 ```
 
+A script has been provided to set these values automatically. Follow these steps to set up the environment:
+
+1. Log into the IBM Cloud account using the cli
+   
+    ```shell
+    ibmcloud login
+    ```
+
+2. Get the name of the AppId instance that will be used with the UI
+
+    ```shell
+    ibmcloud resource service-instances
+    ```
+
+3. Source the `scripts/setup-environment.sh` file with the name of the App Id instance
+
+    ```shell
+    source ./scripts/setup-environment.sh "${APPID_NAME}"
+    ```
+
 To run your application locally:
 ```bash
 npm run build
