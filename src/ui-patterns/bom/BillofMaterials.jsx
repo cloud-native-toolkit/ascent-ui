@@ -370,6 +370,10 @@ class BillofMaterialsView extends Component {
                     a.download = `${((this.state.architecture && this.state.architecture.name) || this.props.archId).toLowerCase().replace(/ /gi, '-')}-compliance-report.pdf`;;
                     a.click();
                 });
+            } else {
+                res.json().then(body => {
+                    if (body?.error?.message) this.addNotification("error", res?.status === 401 ? "Unauthorized" : "Error", body?.error?.message);
+                })
             }
         })
         .catch(err => {
