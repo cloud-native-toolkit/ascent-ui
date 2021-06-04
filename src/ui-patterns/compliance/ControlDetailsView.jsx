@@ -48,7 +48,7 @@ class ControlDetailsView extends Component {
       include: ['nist', 'services', 'architectures']
     }
     if (this.state.user?.roles?.includes("fs-viewer")) filter = {
-      include: ["controlDetails", 'nist', 'services', 'architectures']
+      include: ['controlDetails', 'nist', 'services', 'architectures']
     }
     const controlData = await this.props.controls.getControlsDetails(controlId, filter);
     if (controlData?.controlDetails?.description) controlData.controlDetails.description = controlData.controlDetails.description.replaceAll(/\n\n([a-z]\))/gi, '\n\n**$1**');

@@ -4,7 +4,7 @@ import {
     Pagination
 } from 'carbon-components-react';
 import ControlsTable from './ControlsTable';
-import { ctrlsHeaders } from '../data/data';
+import { ctrlsHeaders, ctrlsfFilterItems } from '../data/data';
 
 
 class ControlsView extends Component {
@@ -16,7 +16,9 @@ class ControlsView extends Component {
             headerData: ctrlsHeaders,
             totalItems: 0,
             firstRowIndex: 0,
-            currentPageSize: 15
+            currentPageSize: 15,
+            searchValue: '',
+            selectedFilters: []
         };
         this.filterTable = this.filterTable.bind(this);
     }
@@ -30,27 +32,41 @@ class ControlsView extends Component {
         });
     }
 
-    async filterTable(searchValue) {
-        if (searchValue) {
-            const filterData = this.state.data.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.nist?.family?.includes(searchValue));
-            this.setState({
-                filterData: filterData,
-                firstRowIndex: 0,
-                totalItems: filterData.length
-            });
-        } else {
-            this.setState({
-                filterData: this.state.data,
-                firstRowIndex: 0,
-                totalItems: this.state.data.length
+    async filterTable(event) {
+        const searchValue = event?.target ? event?.target?.value : this.state.searchValue;
+        const selectedFilters = event.hasOwnProperty('selectedItems') ? event?.selectedItems: this.state.selectedFilters;
+        console.log(event)
+        console.log(searchValue)
+        console.log(selectedFilters)
+        let filterData = this.state.data;
+        if (event?.target || searchValue) {
+            console.log("search")
+            filterData = this.state.data.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.nist?.family?.includes(searchValue));
+        }
+        if (selectedFilters.length) {
+            console.log("filter")
+            filterData = filterData.filter(elt => {
+                let metFilters = 0;
+                for (const item of selectedFilters) {
+                    if (elt[item.attr] === item.val && ++metFilters === selectedFilters.length) return true;
+                }
+                return false;
             });
         }
+        this.setState({
+            filterData: filterData,
+            firstRowIndex: 0,
+            totalItems: filterData.length,
+            searchValue: searchValue,
+            selectedFilters: selectedFilters
+        });
     }
+
     render() {
         const data = this.state.filterData;
         for (let index = 0; index < data.length; index++) {
             let row = data[index];
-            row.family = row?.nist?.family
+            row.family = row?.family || row?.nist?.family
         } 
         const headers = this.state.headerData;
         let table;
@@ -70,6 +86,7 @@ class ControlsView extends Component {
                         this.state.firstRowIndex + this.state.currentPageSize
                     )}
                     filter={this.filterTable}
+                    filterItems={ctrlsfFilterItems}
                 />
                 <Pagination
                     totalItems={this.state.totalItems}

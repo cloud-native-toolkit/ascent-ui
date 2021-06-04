@@ -8,6 +8,11 @@ export interface ControlsDataModel {
         implementation: string,
         parameters: string
     },
+    existing_scc_goals?: string,
+    human_or_automated?: string,
+    frequency?: string,
+    org_defined_parameter?: string,
+    create_document?: string,
     base_control: boolean,
     parent_control: string,
     nist: object;

@@ -29,7 +29,10 @@ export class ControlsData implements ControlsDataApi {
             .set('accept', 'application/json')
             .then(res => {
                 return res.body || {};
-            });
+            })
+            .catch(err => {
+                return err
+            })
     }
 }
 

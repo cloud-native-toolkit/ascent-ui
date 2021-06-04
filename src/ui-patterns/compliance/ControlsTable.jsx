@@ -13,13 +13,18 @@ import {
   TableToolbarSearch,
   OverflowMenu,
   OverflowMenuItem,
-  Tag
+  Tag,
+  MultiSelect,
+  TableToolbarMenu
 } from 'carbon-components-react';
+import {
+  Filter32
+} from '@carbon/icons-react';
 import {
   Link
 } from "react-router-dom";
 
-const ControlsTable = ({ rows, headers, filter }) => (
+const ControlsTable = ({ rows, headers, filter, filterItems }) => (
   <DataTable rows={rows} headers={headers}>
     {({
       rows,
@@ -34,7 +39,7 @@ const ControlsTable = ({ rows, headers, filter }) => (
         {...getTableContainerProps()}>
         <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
           <TableToolbarContent>
-            <TableToolbarSearch onChange={(event) => filter(event.target.value)} />
+            <TableToolbarSearch onChange={(event) => filter(event)} />
           </TableToolbarContent>
         </TableToolbar>
         <Table {...getTableProps()}>
@@ -45,7 +50,15 @@ const ControlsTable = ({ rows, headers, filter }) => (
                   {header.header}
                 </TableHeader>
               ))}
-              <TableHeader></TableHeader>
+              <TableHeader>
+                <MultiSelect.Filterable
+                  id='controls-filter'
+                  items={filterItems}
+                  onChange={(event) => filter(event)}
+                  placeholder='Filter'
+                  size='sm'
+                />
+              </TableHeader>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -71,7 +84,7 @@ const ControlsTable = ({ rows, headers, filter }) => (
                 ))}
                 <TableCell>
                   
-                  <OverflowMenu light flipped style={{flex:1}}>
+                  <OverflowMenu light flipped style={{flex:1, 'margin-left': 'auto'}}>
                     <Link class="bx--overflow-menu-options__option" to={"/controls/" + row.id.toLowerCase().replace(' ', '_')}>
                       <OverflowMenuItem itemText="Details" />
                     </Link>
