@@ -34,21 +34,19 @@ class ControlsView extends Component {
 
     async filterTable(event) {
         const searchValue = event?.target ? event?.target?.value : this.state.searchValue;
-        const selectedFilters = event.hasOwnProperty('selectedItems') ? event?.selectedItems: this.state.selectedFilters;
-        console.log(event)
-        console.log(searchValue)
-        console.log(selectedFilters)
+        let selectedFilters = event.hasOwnProperty('selectedItems') ? event?.selectedItems: this.state.selectedFilters;
+        let filterIsOr = selectedFilters.find(elt => elt.label === 'AND') === undefined;
+        selectedFilters = selectedFilters.filter(elt => elt.label !== 'AND');
         let filterData = this.state.data;
         if (event?.target || searchValue) {
-            console.log("search")
             filterData = this.state.data.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.nist?.family?.includes(searchValue));
         }
         if (selectedFilters.length) {
-            console.log("filter")
+            console.log(selectedFilters)
             filterData = filterData.filter(elt => {
                 let metFilters = 0;
                 for (const item of selectedFilters) {
-                    if (elt[item.attr] === item.val && ++metFilters === selectedFilters.length) return true;
+                    if (elt[item.attr] === item.val && (filterIsOr || ++metFilters === selectedFilters.length)) return true;
                 }
                 return false;
             });
