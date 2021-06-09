@@ -170,7 +170,7 @@ export const ctrlsfFilterItems = [
     {
         attr: 'existing_scc_goals',
         label: 'scc-goals:yes',
-        val: 'Automated'
+        val: 'Yes'
     },
     {
         attr: 'existing_scc_goals',
@@ -181,11 +181,6 @@ export const ctrlsfFilterItems = [
         attr: 'frequency',
         label: 'freq:setup',
         val: 'Setup'
-    },
-    {
-        attr: 'frequency',
-        label: 'freq:set',
-        val: 'Set'
     },
     {
         attr: 'frequency',
