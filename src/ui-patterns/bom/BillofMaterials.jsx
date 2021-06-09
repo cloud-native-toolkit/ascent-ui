@@ -465,12 +465,22 @@ class BillofMaterialsView extends Component {
                                     onChange={(e) => {this.setState({showContent:e.name})}} >
                                     <Switch name="arch-data" text="Reference Architecture Details" />
                                     <Switch name="arch-diagram" text="Reference Architecture Diagram" />
+                                    {this.state.architecture && this.state.architecture.automation_variables && <Switch name="automation-variables" text="Automation Variables" />}
                                 </ContentSwitcher>
                                 <br />
                             </div>
                         </div>
     
                         { this.state.showContent === "arch-diagram" && <img src={`/api/architectures/${this.state.architecture.arch_id}/diagram/png`} alt="Reference Architecture diagram" style={{'width': '100%'}}/>}
+                        { this.state.showContent === "automation-variables" && <p>
+                                    <h3 className="landing-page__subheading">
+                                        Automation Variables
+                                    </h3>
+                                    <CodeSnippet type="multi" hideCopyButton>
+                                        {this.state.architecture.automation_variables}
+                                    </CodeSnippet>
+                                <br />
+                                </p>}
                         { this.state.showContent === "arch-data" && <div>
                             <p>
                                 <h3 className="landing-page__subheading">
@@ -481,17 +491,6 @@ class BillofMaterialsView extends Component {
                                 }
                             </p>
                             <br />
-                            { this.state.architecture && this.state.architecture.automation_variables &&
-                                <p>
-                                    <h3 className="landing-page__subheading">
-                                        Automation Variables
-                                    </h3>
-                                    <CodeSnippet type="multi" hideCopyButton>
-                                        {this.state.architecture.automation_variables}
-                                    </CodeSnippet>
-                                <br />
-                                </p>
-                            }
                             <h3 className="landing-page__subheading">
                                 Bill Of Materials
                             </h3>
