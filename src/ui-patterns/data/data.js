@@ -158,6 +158,11 @@ export const ctrlsHeaders = [
 
 export const ctrlsfFilterItems = [
     {
+        attr: '',
+        label: 'AND',
+        val: ''
+    },
+    {
         attr: 'human_or_automated',
         label: 'human',
         val: 'Human'
