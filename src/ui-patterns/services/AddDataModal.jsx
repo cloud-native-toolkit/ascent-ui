@@ -4,6 +4,9 @@ import { Form, FormGroup, InlineNotification, Select, SelectItem, Button,
     RadioButtonGroup, RadioButton, TextArea, TextInput, SelectSkeleton
 } from 'carbon-components-react';
 
+import AceEditor from "react-ace";
+import "brace/mode/yaml";
+
 class FormModal extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +23,8 @@ class FormModal extends Component {
                 deployment_method: '',
                 provision: '',
                 cloud_automation_id: '',
-                desc: ''
+                desc: '',
+                default_automation_variables: ''
             }
         };
         if (this.props.isUpdate) {
@@ -34,7 +38,8 @@ class FormModal extends Component {
                     fs_validated: jsonObject.fs_validated,
                     provision: jsonObject.provision,
                     cloud_automation_id: jsonObject.cloud_automation_id,
-                    desc: jsonObject.desc
+                    desc: jsonObject.desc,
+                    default_automation_variables: jsonObject.default_automation_variables
                 }
             }
         }
@@ -48,7 +53,9 @@ class FormModal extends Component {
     }
     handleChange(field, e) {
         let fields = this.state.fields;
-        if (field === "fs_validated") {
+        if (field === "default_automation_variables") {
+            fields[field] = e;
+        } else if (field === "fs_validated") {
             fields[field] = e.target.value === "false" ? false : true;
         } else {
             fields[field] = e.target.value;
@@ -223,9 +230,37 @@ class FormModal extends Component {
                                     invalidText="A valid value is required"
                                     labelText="Description"
                                     placeholder="Service description"
-                                    rows={4}
+                                    rows={2}
                                     style={{ marginBottom: '1rem' }}
                                 />
+                                <FormGroup legendText="Default Automation Variables">
+                                    <AceEditor
+                                        focus
+                                        style={{ width: "100%" }}
+                                        mode="yaml"
+                                        // theme="github"
+                                        height="200px"
+                                        id="default_automation_variables"
+                                        name="default_automation_variables"
+                                        placeholder="alias: example"
+                                        value={this.state.fields.default_automation_variables}
+                                        onChange={this.handleChange.bind(this, "default_automation_variables")}
+                                        labelText="Default Automation Variables"
+                                        ref="editorInput"
+                                        // fontSize={20}
+                                        showPrintMargin
+                                        showGutter={true}
+                                        highlightActiveLine
+                                        setOptions={{
+                                            enableBasicAutocompletion: false,
+                                            enableLiveAutocompletion: false,
+                                            enableSnippets: false,
+                                            showLineNumbers: true,
+                                            tabSize: 2
+                                        }}
+                                        editorProps={{ $blockScrolling: true }}
+                                    />
+                                </FormGroup>
                             </Form>
                         </ModalBody>
                         <ModalFooter onRequestSubmit={this.handleSubmit} primaryButtonText={this.props.isUpdate ? "Update" : "Add"} secondaryButtonText="Cancel" />

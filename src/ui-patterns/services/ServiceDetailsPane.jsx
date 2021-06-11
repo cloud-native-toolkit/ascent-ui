@@ -98,13 +98,13 @@ class ServiceDetailsPane extends Component {
                                     </div>
                                 </>
                             }
-                            {this.props.data && this.props.data.automation_variables &&
+                            {this.props.data && (this.props.data.automation_variables || this.props.data.default_automation_variables) &&
                                 <>
                                     <div>
                                         <p>
-                                            <strong>Automation Variables: </strong>
+                                            <strong>{this.props.data.automation_variables ? "" : "Default "}Automation Variables: </strong>
                                             <CodeSnippet type="multi" hideCopyButton>
-                                                {this.props.data.automation_variables}
+                                                {this.props.data.automation_variables || this.props.data.default_automation_variables}
                                             </CodeSnippet>
                                         </p>
                                         <br />
