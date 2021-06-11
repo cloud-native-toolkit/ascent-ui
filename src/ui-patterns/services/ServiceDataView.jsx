@@ -318,20 +318,15 @@ class ServiceDataView extends Component {
                                                                                 <Launch16 style={{"margin-left": "3px"}}/>
                                                                             </a>
                                                                         </Tag>
-                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].catalog
-                                                                        && this.state.compositeData[row.id].catalog.tags && this.state.compositeData[row.id].catalog.tags.length > 0 && this.state.compositeData[row.id].catalog.tags.includes("fs_ready") ?
+                                                                    : cell.info && cell.info.header === "fs_validated" && (this?.state?.compositeData[row.id]?.fs_validated || this?.state?.compositeData[row.id]?.catalog?.tags?.includes("fs_ready")) ?
                                                                         <Tag type="green">
                                                                             FS Validated
                                                                         </Tag>
-                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.grouping === "Network" ?
-                                                                        <Tag type="green">
-                                                                            VPC
-                                                                        </Tag>
                                                                     : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.deployment_method === "Operator" ?
-                                                                        <Tag type="green">
+                                                                        <Tag style={{"background-color": "#F5606D"}}>
                                                                             OpenShift Software
                                                                         </Tag>
-                                                                    : cell.info && cell.info.header === "fs_validated" && this.state.compositeData && this.state.compositeData[row.id] ?
+                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id] ?
                                                                         <Tag>
                                                                             Not yet
                                                                         </Tag>

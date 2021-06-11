@@ -37,6 +37,9 @@ class ServiceModal extends Component {
         let fields = this.state.fields;
         if (field === "automation_variables") {
             fields[field] = e;
+        } else if (field === "service_id") {
+            fields["automation_variables"] = this.props.services.find((service) => service.service_id === e.target.value)?.default_automation_variables || "";
+            fields[field] = e.target.value;
         } else {
             fields[field] = e.target.value;
         }

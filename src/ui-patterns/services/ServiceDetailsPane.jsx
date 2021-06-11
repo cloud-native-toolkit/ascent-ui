@@ -38,10 +38,10 @@ class ServiceDetailsPane extends Component {
                                         this.props.data.ibm_service || this.props.data.service_id
                                 }
                                 {
-                                    ((this?.props?.data?.catalog?.tags?.length > 0 && this.props.data.catalog.tags.includes("fs_ready"))
-                                    || this.props.data.service.grouping === "Network" 
-                                    || this.props.data.service.deployment_method === "Operator")  
-                                    && <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>
+                                    this.props.data?.fs_validated || this.props.data?.catalog?.tags?.includes("fs_ready")
+                                    ? <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>
+                                    : this.props.data?.service?.deployment_method === "Operator"
+                                    && <Tag style={{"background-color": "#F5606D", marginLeft: "auto"}}> OpenShift Software </Tag>
                                 }
                             </h3>
                             <br />
@@ -98,13 +98,13 @@ class ServiceDetailsPane extends Component {
                                     </div>
                                 </>
                             }
-                            {this.props.data && this.props.data.automation_variables &&
+                            {this.props.data && (this.props.data.automation_variables || this.props.data.default_automation_variables) &&
                                 <>
                                     <div>
                                         <p>
-                                            <strong>Automation Variables: </strong>
+                                            <strong>{this.props.data.automation_variables ? "" : "Default "}Automation Variables: </strong>
                                             <CodeSnippet type="multi" hideCopyButton>
-                                                {this.props.data.automation_variables}
+                                                {this.props.data.automation_variables || this.props.data.default_automation_variables}
                                             </CodeSnippet>
                                         </p>
                                         <br />
