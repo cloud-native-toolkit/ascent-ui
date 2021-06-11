@@ -20,8 +20,8 @@ export const serviceHeader = [
         header: 'Deployment Method',
     },
     // {
-    //     key: 'fs_certified',
-    //     header: 'FS Certified',
+    //     key: 'fs_validated',
+    //     header: 'FS Validated',
     // },
     // {
     //     key: 'compliance_status',

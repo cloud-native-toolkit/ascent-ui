@@ -16,6 +16,7 @@ class FormModal extends Component {
                 service_id: '',
                 ibm_catalog_service: '',
                 grouping: '',
+                fs_validated: false,
                 deployment_method: '',
                 provision: '',
                 cloud_automation_id: '',
@@ -30,6 +31,7 @@ class FormModal extends Component {
                     ibm_catalog_service: jsonObject.ibm_catalog_service,
                     grouping: jsonObject.grouping,
                     deployment_method: jsonObject.deployment_method,
+                    fs_validated: jsonObject.fs_validated,
                     provision: jsonObject.provision,
                     cloud_automation_id: jsonObject.cloud_automation_id,
                     desc: jsonObject.desc
@@ -46,8 +48,8 @@ class FormModal extends Component {
     }
     handleChange(field, e) {
         let fields = this.state.fields;
-        if (field === "fs_certified") {
-            fields[field] = e === "false" ? false : true;
+        if (field === "fs_validated") {
+            fields[field] = e.target.value === "false" ? false : true;
         } else {
             fields[field] = e.target.value;
         }
@@ -64,7 +66,8 @@ class FormModal extends Component {
         if (this.validateForm()) {
             if (!this.props.isUpdate) {
                 this.props.service.doAddService(this.state.fields).then((res) => {
-                    if (res && res.body && res.body.error) {
+                    if (res?.body?.error) {
+                        console.log(res?.body?.error);
                         this.props.toast("error", "Error", res.body.error.message);
                     } else {
                         this.props.toast("success", "Success", `Service ${res.service_id} successfully created!`);
@@ -73,7 +76,8 @@ class FormModal extends Component {
                 });
             } else {
                 this.props.service.doUpdateService(this.state.fields, this.state.fields.service_id).then((res) => {
-                    if (res && res.body && res.body.error) {
+                    if (res?.body?.error) {
+                        console.log(res?.body?.error);
                         this.props.toast("error", "Error", res.body.error.message);
                     } else {
                         this.props.toast("success", "Success", `Service ${res.service_id} successfully updated!`);
@@ -161,6 +165,16 @@ class FormModal extends Component {
                                     <SelectItem value="Platform" text="Platform" />
                                     <SelectItem value="Operator" text="Operator" />
                                     <SelectItem value="Helm" text="Helm" />
+                                </Select>
+                                <Select id="fs_validated"
+                                    name="fs_validated"
+                                    invalidText="Please Enter The Value"
+                                    labelText="FS Validated"
+                                    defaultValue={this.state.fields.fs_validated}
+                                    onChange={this.handleChange.bind(this, "fs_validated")}
+                                    style={{ marginBottom: '1rem' }}>
+                                    <SelectItem value={false} text="False" />
+                                    <SelectItem value={true} text="True" />
                                 </Select>
                                 <Select id="provision" name="provision"
                                     labelText="Provision"
