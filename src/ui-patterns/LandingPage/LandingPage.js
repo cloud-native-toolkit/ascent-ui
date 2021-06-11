@@ -39,7 +39,7 @@ const LandingPage = () => {
             </BreadcrumbItem>
           </Breadcrumb>
           <h1 className="landing-page__heading">
-            Architecture and Security Controls Excelerator Tool (ASCENT)
+            Architecture and Security Controls Enterprise Tool (ASCENT)
           </h1>
         </div>
       </div>
@@ -51,13 +51,13 @@ const LandingPage = () => {
                 <div className="bx--row landing-page__tab-content">
                   <div className="bx--col-md-4 bx--col-lg-7">
                     <h2 className="landing-page__subheading">
-                      What are Controls?
+                      What is ASCENT?
                     </h2>
                     <p className="landing-page__p">
-                      The IBM Cloud Financial Security Controls framework will help an
-                      enterprise deliver a compliance cloud architecture that produces
-                      evidence that can be clearly communicated with the Governance, Risk and
-                      Compliance teams. Click on the button below to learn more about how these controls align with IBM Cloud Services.
+                      ASCENT is a tool created by IBM to accelerate partner's journey to the IBM Financial Services Cloud.
+                      Through automation and integration, ASCENT enables enterprises to deliver compliant cloud architectures which can be
+                      clearly evidenced and communicated with Governance, Risk and Compliance teams. Click on the links below to learn more
+                      about how ASCENT automates and integrates Security Controls, Reference Architectures and Cloud Services.
                     </p>
                     <Link to="/docs" ><Button>Learn more</Button></Link>
 

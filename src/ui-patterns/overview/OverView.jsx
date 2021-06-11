@@ -23,11 +23,10 @@ class OverView extends Component {
 
                         <p style={{ lineHeight: "20px" }}>
 
-                            The Architecture builder's goal is to simplify the complexity of the data attributes that surround a
+                            ASCENT's goal is to simplify the complexity of the data attributes that surround a
                             reference architecture for the FS Cloud. When we review the Financial Controls the number of cloud services
                             and the possible reference architectures these can be assembled in. It has become clear
                             a tool will help manage this wide range of attributes.
-
                         </p>
                         <h2
                             style={{
@@ -39,16 +38,14 @@ class OverView extends Component {
                             Overview
                         </h2>
                         <p style={{ lineHeight: "20px" }}>
-
-
-                            This application backend will enable a collection of APIs that will support the relationship between a
-                            Reference Architecture and its Bill of Materials(BOM) (list of comprising services). The BOM relationship to
+                            This application backend enables a collection of APIs that will support the relationship between a
+                            Reference Architecture and its Bill of Materials (BOM) (list of comprising services). The BOM relationship to
                             the list of FS Ready services. The mapping between the cloud services and the FS Controls. Finally you can
-                            view the FS Controls mapping to the Cloud Services and the supporting refernece Architectures.
+                            view the FS Controls mapping to the Cloud Services and the supporting reference architectures.
                             <p/>
-                            Once we have this data model in place, we will be able to link it to the Automation Catalog that is being
-                            built by Asset team,  we will be able to take the BOM and input it into the Solution Builder API they have built
-                            and output a package of consistent terraform.
+                            Once we have this data model in place, we link it to the Automation Catalog that is being
+                            built by Asset team, we take the BOM and input it into the Solution Builder API they have built
+                            and output a package of consistent terraform that we can use to automate the provisionning of reference architectures for the FS Cloud.
 
                             <br /> <br />
 
@@ -58,30 +55,6 @@ class OverView extends Component {
                         </p>
 
                     </section>
-                </div>
-                <div className="bx--row">
-
-                            <h2
-                            style={{
-                                fontWeight: "800",
-                                margin: "30px 0",
-                                fontSize: "20px"
-                            }}
-                        >
-                            Secondary navigation
-                       </h2>
-
-                        <p style={{ lineHeight: "20px" }}>
-                            The side-nav contains secondary navigation and fits below the
-                            header.It can be configured to be either fixed-width or flexible,
-                            ith only one level of nested items allowed.Both links and category
-                            sts can be used in the side-nav and may be mixed together.There
-                            several configurations of the side-nav, but only one
-                            figuration should be used per product section.If tabs are needed
-                            page when using a side-nav, then the tabs are secondary in
-                            hierarchy to the side-nav.
-                        </p>
-
                 </div>
             </div>
         );
