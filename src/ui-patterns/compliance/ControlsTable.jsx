@@ -24,7 +24,7 @@ import {
   Link
 } from "react-router-dom";
 
-const ControlsTable = ({ rows, headers, filter, filterItems }) => (
+const ControlsTable = ({ rows, headers, onClickFilter, filter, filterItems }) => (
   <DataTable rows={rows} headers={headers}>
     {({
       rows,
@@ -40,6 +40,11 @@ const ControlsTable = ({ rows, headers, filter, filterItems }) => (
         <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
           <TableToolbarContent>
             <TableToolbarSearch onChange={(event) => filter(event)} />
+            <TableToolbarMenu
+              light
+              renderIcon={Filter32}
+              onClick={() => onClickFilter()}
+              />
           </TableToolbarContent>
         </TableToolbar>
         <Table {...getTableProps()}>
@@ -51,13 +56,6 @@ const ControlsTable = ({ rows, headers, filter, filterItems }) => (
                 </TableHeader>
               ))}
               <TableHeader>
-                <MultiSelect.Filterable
-                  id='controls-filter'
-                  items={filterItems}
-                  onChange={(event) => filter(event)}
-                  placeholder='Filter'
-                  size='sm'
-                />
               </TableHeader>
             </TableRow>
           </TableHead>

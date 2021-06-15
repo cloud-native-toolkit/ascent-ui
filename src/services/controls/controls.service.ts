@@ -19,7 +19,6 @@ export class ControlsData implements ControlsDataApi {
             .get(`${this.baseUrl}?filter=${encodeURIComponent(JSON.stringify(filter))}`)
             .set('accept', 'application/json')
             .then(res => {
-                console.log(res.body);
                 return res.body || [];
             });
     }
