@@ -14,6 +14,7 @@ export interface ControlsDataModel {
     org_defined_parameter?: string,
     create_document?: string,
     base_control: boolean,
+    control_item: boolean,
     parent_control: string,
     nist: object;
     services: object[];
