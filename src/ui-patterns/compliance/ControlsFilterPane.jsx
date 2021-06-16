@@ -67,6 +67,11 @@ class ControlsFilterPane extends Component {
                                     labelText='Show Control Items'
                                     onChange={(value, id, event) => this.handleCheck('control_item', undefined, value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'control_item' && elt.val === undefined)}  />
+                                <Checkbox
+                                    id='controls-and-operator'
+                                    labelText='Use AND operator'
+                                    onChange={(value, id, event) => this.handleCheck('and', 1, value)}
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'and' && elt.val === 1)}  />
                             </AccordionItem>
                             <AccordionItem title="Control Family" open={this.props.selectedFilters.find((elt) => elt.attr === 'family')}>
                                 <MultiSelect.Filterable
