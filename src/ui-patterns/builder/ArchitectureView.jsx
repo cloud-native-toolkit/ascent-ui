@@ -157,6 +157,7 @@ class ArchitectureView extends Component {
                         desc={arch.long_desc}
                         date=""
                         readTime=""
+                        link={link}
                         color="dark">
 
                         <Link to={link}>
