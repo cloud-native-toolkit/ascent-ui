@@ -9,6 +9,10 @@ import Email20 from '@carbon/icons-react/lib/email/20';
 import { settings } from 'carbon-components';
 
 import {
+  Link
+} from "react-router-dom";
+
+import {
     OverflowMenu,
     OverflowMenuItem
 } from 'carbon-components-react';
@@ -23,6 +27,7 @@ export default class ArticleCard extends React.Component {
      * Set url for card
      */
     href: PropTypes.string,
+    link: PropTypes.string,
 
     /**
      * Title
@@ -85,6 +90,7 @@ export default class ArticleCard extends React.Component {
     const {
       children,
       href,
+      link,
       title,
       subTitle,
       desc,
@@ -121,6 +127,7 @@ export default class ArticleCard extends React.Component {
     const cardContent = (
       <>
         <div className={`${prefix}--article-card__img`}>{children}</div>
+        <Link to={link}>
         <div className={aspectRatioClassNames}>
           <div
             className={`${prefix}--aspect-ratio--object ${prefix}--article-card__tile`}
@@ -171,6 +178,7 @@ export default class ArticleCard extends React.Component {
             </div>
           </div>
         </div>
+        </Link>
       </>
     );
 
