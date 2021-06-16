@@ -40,13 +40,12 @@ class ControlsView extends Component {
 
     async filterTable(event) {
         const searchValue = event?.target ? event?.target?.value : this.state.searchValue;
-        let selectedFilters = event.hasOwnProperty('selectedItems') ? event?.selectedItems: this.state.selectedFilters;
-        let filterIsOr = true; // let filterIsOr = selectedFilters.find(elt => elt.label === 'AND') === undefined;
-        // selectedFilters = selectedFilters.filter(elt => elt.label !== 'AND');
+        let selFilters = event.hasOwnProperty('selectedItems') ? event?.selectedItems: this.state.selectedFilters;
+        let filterIsOr = selFilters.find(elt => elt.attr === 'and') === undefined;
         let filterData;
-        if (selectedFilters.find(elt => elt.attr === 'control_item')) filterData = this.state.data;
+        if (selFilters.find(elt => elt.attr === 'control_item')) filterData = this.state.data;
         else filterData = this.state.data.filter(elt => !elt?.control_item);
-        selectedFilters = selectedFilters.filter(elt => elt.attr !== 'control_item');
+        const selectedFilters = selFilters.filter(elt => elt.attr !== 'control_item' && elt.attr !== 'and');
         if (event?.target || searchValue) {
             filterData = filterData.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.nist?.family?.includes(searchValue));
         }
@@ -64,7 +63,7 @@ class ControlsView extends Component {
             firstRowIndex: 0,
             totalItems: filterData.length,
             searchValue: searchValue,
-            selectedFilters: selectedFilters
+            selectedFilters: selFilters
         });
     }
 
@@ -101,6 +100,7 @@ class ControlsView extends Component {
                         this.state.firstRowIndex,
                         this.state.firstRowIndex + this.state.currentPageSize
                     )}
+                    filter={this.filterTable}
                     onClickFilter={this.openFilterPane}
                 />
                 <Pagination
