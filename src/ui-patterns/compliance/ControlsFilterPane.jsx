@@ -68,7 +68,7 @@ class ControlsFilterPane extends Component {
                                     onChange={(value, id, event) => this.handleCheck('control_item', undefined, value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'control_item' && elt.val === undefined)}  />
                             </AccordionItem>
-                            <AccordionItem title="Control Families" open={this.props.selectedFilters.find((elt) => elt.attr === 'family')}>
+                            <AccordionItem title="Control Family" open={this.props.selectedFilters.find((elt) => elt.attr === 'family')}>
                                 <MultiSelect.Filterable
                                     id='control-families'
                                     items={controlFamilies}
@@ -102,6 +102,11 @@ class ControlsFilterPane extends Component {
                                     onChange={(value, id, event) => this.handleCheck('human_or_automated', 'Automated', value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'human_or_automated' && elt.val === 'Automated')} />
                                 <Checkbox
+                                    id='control-type-mix'
+                                    labelText='Partly Both'
+                                    onChange={(value, id, event) => this.handleCheck('human_or_automated', 'Mix', value)}
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'human_or_automated' && elt.val === 'Mix')} />
+                                <Checkbox
                                     id='control-type-unknown'
                                     labelText='Unknown'
                                     onChange={(value, id, event) => this.handleCheck('human_or_automated', 'Unknown', value)}
@@ -122,18 +127,6 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                             </AccordionItem>
-                            <AccordionItem title="Existing Goals" open={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals')}>
-                                <Checkbox
-                                    id='control-scc-goals'
-                                    labelText='Existing SCC Goals'
-                                    onChange={(value, id, event) => this.handleCheck('existing_scc_goals', 'Yes', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals' && elt.val === 'Yes')} />
-                                <Checkbox
-                                    id='control-no-scc-goals'
-                                    labelText='No Existing SCC Goals'
-                                    onChange={(value, id, event) => this.handleCheck('existing_scc_goals', 'No', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals' && elt.val === 'No')} />
-                            </AccordionItem>
                             <AccordionItem title="Parameters" open={this.props.selectedFilters.find((elt) => elt.attr === 'org_defined_parameter')}>
                                 <Checkbox
                                     id='control-org-defined-params'
@@ -141,21 +134,47 @@ class ControlsFilterPane extends Component {
                                     onChange={(value, id, event) => this.handleCheck('org_defined_parameter', 'Yes', value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'org_defined_parameter' && elt.val === 'Yes')} />
                                 <Checkbox
+                                    id='control-org-defined-params-mix'
+                                    labelText='Partly Organization Defined'
+                                    onChange={(value, id, event) => this.handleCheck('org_defined_parameter', 'Mix', value)}
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'org_defined_parameter' && elt.val === 'Mix')} />
+                                <Checkbox
                                     id='control-not-org-defined-params'
                                     labelText='Other'
                                     onChange={(value, id, event) => this.handleCheck('org_defined_parameter', 'No', value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'org_defined_parameter' && elt.val === 'No')} />
                             </AccordionItem>
-                            <AccordionItem title="Evidencing" open={this.props.selectedFilters.find((elt) => elt.attr === 'create_document')}>
+                            <AccordionItem title="Security and Compliance" open={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals')}>
+                                <Checkbox
+                                    id='control-scc-goals'
+                                    labelText='Existing SCC Goals'
+                                    onChange={(value, id, event) => this.handleCheck('existing_scc_goals', 'Yes', value)}
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals' && elt.val === 'Yes')} />
+                                <Checkbox
+                                    id='control-scc-goals-mix'
+                                    labelText='Partly Existing SCC Goals'
+                                    onChange={(value, id, event) => this.handleCheck('existing_scc_goals', 'Mix', value)}
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals' && elt.val === 'Mix')} />
+                                <Checkbox
+                                    id='control-no-scc-goals'
+                                    labelText='No Existing SCC Goals'
+                                    onChange={(value, id, event) => this.handleCheck('existing_scc_goals', 'No', value)}
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals' && elt.val === 'No')} />
+                            </AccordionItem>
+                            <AccordionItem title="Evindencing" open={this.props.selectedFilters.find((elt) => elt.attr === 'create_document')}>
                                 <Checkbox
                                     id='control-require-doc'
                                     labelText='Require Document'
                                     onChange={(value, id, event) => this.handleCheck('create_document', 'Yes', value)} 
-                                    // checked={this.props.selectedFilters.find((elt) => elt.attr === 'create_document' && elt.val === 'Yes')}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'create_document' && elt.val === 'Yes')}/>
                                 <Checkbox
+                                    id='control-require-doc-mix'
+                                    labelText='Partly Require Document'
+                                    onChange={(value, id, event) => this.handleCheck('create_document', 'Mix', value)} 
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'create_document' && elt.val === 'Mix')}/>
+                                <Checkbox
                                     id='control-no-require-doc'
-                                    labelText="Other"
+                                    labelText="Don't Require Document"
                                     onChange={(value, id, event) => this.handleCheck('create_document', 'No', value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'create_document' && elt.val === 'No')}/>
                             </AccordionItem>
