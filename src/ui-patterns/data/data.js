@@ -134,10 +134,10 @@ export const ctrlsHeaders = [
         key: 'parent_control',
         header: 'Parent Control',
     },
-    {
-        key: 'existing_scc_goals',
-        header: 'Existing SCC Goals',
-    },
+    // {
+    //     key: 'existing_scc_goals',
+    //     header: 'Existing SCC Goals',
+    // },
     {
         key: 'human_or_automated',
         header: 'Human / Automated',
@@ -146,14 +146,14 @@ export const ctrlsHeaders = [
         key: 'frequency',
         header: 'Frequency',
     },
-    {
-        key: 'org_defined_parameter',
-        header: 'Org. Defined Parameters',
-    },
-    {
-        key: 'create_document',
-        header: 'Require document',
-    }
+    // {
+    //     key: 'org_defined_parameter',
+    //     header: 'Org. Defined Parameters',
+    // },
+    // {
+    //     key: 'create_document',
+    //     header: 'Require document',
+    // }
 ];
 
 export const controlFamilies = [
@@ -274,6 +274,11 @@ export const controlFrequencies = [
         attr: 'frequency',
         label: 'Org Defined',
         val: 'Org. Defined'
+    },
+    {
+        attr: 'frequency',
+        label: 'Mix',
+        val: 'Mix'
     },
 ];
 
