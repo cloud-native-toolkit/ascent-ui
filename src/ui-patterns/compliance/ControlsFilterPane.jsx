@@ -9,7 +9,8 @@ import {
 } from 'carbon-components-react';
 import {
     WarningAlt16,
-    Launch16
+    Launch16,
+    Close32 as Close
 } from '@carbon/icons-react';
 import {
     Link
@@ -51,14 +52,15 @@ class ControlsFilterPane extends Component {
                 className="sliding-pane"
                 isOpen={this.props.open}
                 width="500px"
+                title="Filters"
                 onRequestClose={this.props.onRequestClose}
-                hideHeader
+                closeIcon={<Close style={{width: '32px'}}/>}
             >
                 {
                     <div>
-                        <h4>
+                        {/* <h4>
                             Filters
-                        </h4>
+                        </h4> */}
                         <br/>
                         <Accordion>
                             <AccordionItem title="General" open>

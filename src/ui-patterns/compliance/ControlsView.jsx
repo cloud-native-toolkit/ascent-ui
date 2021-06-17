@@ -155,7 +155,6 @@ class ControlsView extends Component {
             </div>
             </>
         );
-
     }
 }
 export default ControlsView;
