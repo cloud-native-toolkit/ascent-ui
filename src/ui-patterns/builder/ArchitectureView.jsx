@@ -328,7 +328,7 @@ class ArchitectureView extends Component {
                                         itemText="Import BOM"
                                         onClick={() => this.showArchModal(true)}/>
                                 </OverflowMenu>
-                                :
+                                : this.state.user?.role === "admin" && 
                                 <Tag
                                     key='tag1'
                                     renderIcon={LogoGitHub}
