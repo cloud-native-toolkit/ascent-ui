@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
 import BillofMaterialsComponent from "../../components/bom/BillofMaterials";
 import ArchitectureComponent from "../../components/builder/Architecture";
+import SolutionsComponent from "../../components/builder/Solutions";
 import ControlsComponent from "../../components/compliance/Controls";
 import NistComponent from "../../components/compliance/Nist";
 import ControlDetailsComponent from "../../components/compliance/ControlDetails";
@@ -113,6 +114,7 @@ function Routes() {
             <Route path="/bom/:bomid" children={<RenderBOM></RenderBOM>}></Route>
             <Route path="/architectures" component={ArchitectureComponent} />
             <Route path="/myarchitectures" component={userArch} />
+            <Route path="/solutions" component={SolutionsComponent} />
             <Route path="/mapping" component={MappingComponent} />
             <Route path="/controls" component={Controls} />
             <Route path="/nists" component={Nists} />
