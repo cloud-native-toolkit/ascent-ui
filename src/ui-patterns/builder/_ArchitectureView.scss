@@ -8,13 +8,30 @@
   font-size: 1.1rem !important;
 }
 
-.bx--aspect-ratio {
-  display:none;
+.bx--article-card__img a, .bx--article-card__author {
+  display:block;
 }
 
-@media only screen and (min-width: 1500px) {
-  .bx--aspect-ratio {
-    display:block;
+@media only screen
+  and (min-width: 1050px) 
+  and (max-width: 1500px) {
+  .bx--article-card__img a, .bx--article-card__author {
+    display:none;
+  }
+}
+
+@media only screen
+  and (min-width: 670px) 
+  and (max-width: 850px) {
+  .bx--article-card__img a, .bx--article-card__author {
+    display:none;
+  }
+}
+
+@media only screen
+  and (max-width: 570px) {
+  .bx--article-card__img a, .bx--article-card__author {
+    display:none;
   }
 }
 

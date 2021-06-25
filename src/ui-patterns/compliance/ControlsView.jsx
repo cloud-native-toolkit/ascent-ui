@@ -3,8 +3,9 @@ import {
     DataTableSkeleton,
     Pagination
 } from 'carbon-components-react';
+import ControlsFilterPane from './ControlsFilterPane';
 import ControlsTable from './ControlsTable';
-import { ctrlsHeaders, ctrlsfFilterItems } from '../data/data';
+import { ctrlsHeaders } from '../data/data';
 
 
 class ControlsView extends Component {
@@ -18,31 +19,37 @@ class ControlsView extends Component {
             firstRowIndex: 0,
             currentPageSize: 15,
             searchValue: '',
-            selectedFilters: []
+            selectedFilters: [],
+            isPaneOpen: false
         };
         this.filterTable = this.filterTable.bind(this);
+        this.openFilterPane = this.openFilterPane.bind(this);
+        this.hideFilterPane = this.hideFilterPane.bind(this);
     }
 
     async componentDidMount() {
         const jsonData = await this.props.controls.getControls();
+        const filterData = jsonData.filter(elt => elt.control_item === false);
+        console.log(filterData)
         this.setState({
             data: jsonData,
-            filterData: jsonData,
-            totalItems: jsonData.length
+            filterData: filterData,
+            totalItems: filterData.length
         });
     }
 
     async filterTable(event) {
         const searchValue = event?.target ? event?.target?.value : this.state.searchValue;
-        let selectedFilters = event.hasOwnProperty('selectedItems') ? event?.selectedItems: this.state.selectedFilters;
-        let filterIsOr = selectedFilters.find(elt => elt.label === 'AND') === undefined;
-        selectedFilters = selectedFilters.filter(elt => elt.label !== 'AND');
-        let filterData = this.state.data;
+        let selFilters = event.hasOwnProperty('selectedItems') ? event?.selectedItems: this.state.selectedFilters;
+        let filterIsOr = selFilters.find(elt => elt.attr === 'and') === undefined;
+        let filterData;
+        if (selFilters.find(elt => elt.attr === 'control_item')) filterData = this.state.data;
+        else filterData = this.state.data.filter(elt => !elt?.control_item);
+        const selectedFilters = selFilters.filter(elt => elt.attr !== 'control_item' && elt.attr !== 'and');
         if (event?.target || searchValue) {
-            filterData = this.state.data.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.nist?.family?.includes(searchValue));
+            filterData = filterData.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.nist?.family?.includes(searchValue));
         }
         if (selectedFilters.length) {
-            console.log(selectedFilters)
             filterData = filterData.filter(elt => {
                 let metFilters = 0;
                 for (const item of selectedFilters) {
@@ -56,9 +63,19 @@ class ControlsView extends Component {
             firstRowIndex: 0,
             totalItems: filterData.length,
             searchValue: searchValue,
-            selectedFilters: selectedFilters
+            selectedFilters: selFilters
         });
     }
+
+    openFilterPane = () => {
+        this.setState({
+            isFilterPaneOpen: true
+        });
+    };
+
+    hideFilterPane = () => {
+        this.setState({ isFilterPaneOpen: false });
+    };
 
     render() {
         const data = this.state.filterData;
@@ -84,7 +101,7 @@ class ControlsView extends Component {
                         this.state.firstRowIndex + this.state.currentPageSize
                     )}
                     filter={this.filterTable}
-                    filterItems={ctrlsfFilterItems}
+                    onClickFilter={this.openFilterPane}
                 />
                 <Pagination
                     totalItems={this.state.totalItems}
@@ -107,6 +124,7 @@ class ControlsView extends Component {
             </>
         }
         return (
+            <>
             <div className="bx--grid">
                 <div className="bx--row">
                     <div className="bx--col-lg-16">
@@ -121,14 +139,22 @@ class ControlsView extends Component {
                         <br></br>
                     </div>
                 </div>
+                
                 <div className="bx--row">
                     <div className="bx--col-lg-16">
                         {table}
                     </div>
                 </div>
             </div >
+            <div>
+                <ControlsFilterPane
+                    open={this.state.isFilterPaneOpen}
+                    onRequestClose={this.hideFilterPane}
+                    filterTable={this.filterTable}
+                    selectedFilters={this.state.selectedFilters}/>
+            </div>
+            </>
         );
-
     }
 }
 export default ControlsView;

@@ -39,12 +39,7 @@ div.notif {
 .control-details p {
   margin-bottom: 0.5rem;
 }
-#controls-filter {
-  max-width: 150px;
-}
-#controls-filter + .bx--list-box__menu {
-  width: fit-content;
-  position: absolute;
-  right: 0;
-  left: unset;
+
+.slide-pane__title-wrapper {
+  margin-left: 0px;
 }

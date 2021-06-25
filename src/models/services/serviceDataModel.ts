@@ -4,10 +4,11 @@ export interface ServiceDataModel {
     ibm_catalog_service: string;
     desc: string;
     deployment_method: string;
-    fs_certified: string;
+    fs_validated: string;
     compliance_status: string;
     provision: string;
     cloud_automation_id: string;
     hybrid_automation_id: string;
+    default_automation_variables: string;
     controls: Array<Object>;
 }

@@ -166,10 +166,10 @@ class ServiceDetailsView extends Component {
                           data.ibm_service || data.service_id
                     }
                     {
-                      ((data?.catalog?.tags?.length > 0 && data.catalog.tags.includes("fs_ready")) 
-                      || data.grouping === "Network" 
-                      || data.deployment_method === "Operator")
-                      && <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>
+                      data?.fs_validated || data?.catalog?.tags?.includes("fs_ready")
+                      ? <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>
+                      : data?.deployment_method === "Operator"
+                      && <Tag style={{"background-color": "#F5606D", marginLeft: "auto"}}> OpenShift Software </Tag>
                     }
                   </h2>
                   <br></br>

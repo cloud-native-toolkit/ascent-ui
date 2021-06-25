@@ -20,8 +20,8 @@ export const serviceHeader = [
         header: 'Deployment Method',
     },
     // {
-    //     key: 'fs_certified',
-    //     header: 'FS Certified',
+    //     key: 'fs_validated',
+    //     header: 'FS Validated',
     // },
     // {
     //     key: 'compliance_status',
@@ -46,7 +46,7 @@ export const serviceHeader = [
     {
         key: 'automation_id',
         header: 'Automation ID',
-    },
+    }, 
     // {
     //     key: 'cloud_automation_id',
     //     header: 'CA-ID',
@@ -134,10 +134,10 @@ export const ctrlsHeaders = [
         key: 'parent_control',
         header: 'Parent Control',
     },
-    {
-        key: 'existing_scc_goals',
-        header: 'Existing SCC Goals',
-    },
+    // {
+    //     key: 'existing_scc_goals',
+    //     header: 'Existing SCC Goals',
+    // },
     {
         key: 'human_or_automated',
         header: 'Human / Automated',
@@ -146,156 +146,139 @@ export const ctrlsHeaders = [
         key: 'frequency',
         header: 'Frequency',
     },
-    {
-        key: 'org_defined_parameter',
-        header: 'Org. Defined Parameters',
-    },
-    {
-        key: 'create_document',
-        header: 'Require document',
-    }
+    // {
+    //     key: 'org_defined_parameter',
+    //     header: 'Org. Defined Parameters',
+    // },
+    // {
+    //     key: 'create_document',
+    //     header: 'Require document',
+    // }
 ];
 
-export const ctrlsfFilterItems = [
-    {
-        attr: '',
-        label: 'AND',
-        val: ''
-    },
-    {
-        attr: 'human_or_automated',
-        label: 'human',
-        val: 'Human'
-    },
-    {
-        attr: 'human_or_automated',
-        label: 'automated',
-        val: 'Automated'
-    },
-    {
-        attr: 'existing_scc_goals',
-        label: 'scc-goals:yes',
-        val: 'Yes'
-    },
-    {
-        attr: 'existing_scc_goals',
-        label: 'scc-goals:no',
-        val: 'No'
-    },
+export const controlFamilies = [
+    {attr: 'family', label: 'Access Control', val: 'Access Control'}, 
+    {attr: 'family', label: 'Awareness And Training', val: 'Awareness And Training'},
+    {attr: 'family', label: 'Audit And Accountability', val: 'Audit And Accountability'},
+    {attr: 'family', label: 'Security Assessment And Authorization', val: 'Security Assessment And Authorization'},
+    {attr: 'family', label: 'Configuration Management', val: 'Configuration Management'},
+    {attr: 'family', label: 'Contingency Planning', val: 'Contingency Planning'},
+    {attr: 'family', label: 'Identification And Authentication', val: 'Identification And Authentication'},
+    {attr: 'family', label: 'Incident Response', val: 'Incident Response'},
+    {attr: 'family', label: 'Maintenance', val: 'Maintenance'},
+    {attr: 'family', label: 'Media Protection', val: 'Media Protection'},
+    {attr: 'family', label: 'Physical And Environmental Protection', val: 'Physical And Environmental Protection'},
+    {attr: 'family', label: 'Planning', val: 'Planning'},
+    {attr: 'family', label: 'Personnel Security', val: 'Personnel Security'},
+    {attr: 'family', label: 'Risk Assessment', val: 'Risk Assessment'},
+    {attr: 'family', label: 'System And Services Acquisition', val: 'System And Services Acquisition'},
+    {attr: 'family', label: 'System And Communications Protection', val: 'System And Communications Protection'},
+    {attr: 'family', label: 'System And Information Integrity', val: 'System And Information Integrity'},
+    {attr: 'family', label: 'Program Management', val: 'Program Management'},
+    {attr: 'family', label: 'Enterprise Data Management', val: 'Enterprise Data Management'},
+    {attr: 'family', label: 'Enterprise System And Services Acquisition', val: 'Enterprise System And Services Acquisition'}
+]
+
+export const controlFrequencies = [
     {
         attr: 'frequency',
-        label: 'freq:setup',
+        label: 'Setup',
         val: 'Setup'
     },
     {
         attr: 'frequency',
-        label: 'freq:event',
+        label: 'Event',
         val: 'Event'
     },
     {
         attr: 'frequency',
-        label: 'freq:setup-event',
+        label: 'Setup, Event',
         val: 'Setup, Event'
     },
     {
         attr: 'frequency',
-        label: 'freq:3-years',
+        label: 'Every 3 years',
         val: 'Every 3 years'
     },
     {
         attr: 'frequency',
-        label: 'freq:annually',
+        label: 'Annually',
         val: 'Annually'
     },
     {
         attr: 'frequency',
-        label: 'freq:annually-event',
+        label: 'Annually, Event',
         val: 'Annually, Event'
     },
     {
         attr: 'frequency',
-        label: 'freq:setup-annually-event',
+        label: 'Setup, Annually, Event',
         val: 'Setup, Annually, Event'
     },
     {
         attr: 'frequency',
-        label: 'freq:quarterly',
+        label: 'Quarterly',
         val: 'Quarterly'
     },
     {
         attr: 'frequency',
-        label: 'freq:quarterly-and-annually',
+        label: 'Quarterly and Annually',
         val: 'Quarterly and Annually'
     },
     {
         attr: 'frequency',
-        label: 'freq:monthly',
+        label: 'Monthly',
         val: 'Monthly'
     },
     {
         attr: 'frequency',
-        label: 'freq:monthly-annually',
+        label: 'Monthly, Annually',
         val: 'Monthly, Annually'
     },
     {
         attr: 'frequency',
-        label: 'freq:weekly',
+        label: 'Weekly',
         val: 'Weekly'
     },
     {
         attr: 'frequency',
-        label: 'freq:weekly-quarterly-annually',
+        label: 'Weekly, Quarterly, Annually',
         val: 'Weekly, Quarterly, Annually'
     },
     {
         attr: 'frequency',
-        label: 'freq:daily',
+        label: 'Daily',
         val: 'Daily'
     },
     {
         attr: 'frequency',
-        label: 'freq:hourly',
+        label: 'Hourly',
         val: 'Hourly'
     },
     {
         attr: 'frequency',
-        label: 'freq:daily-hourly',
+        label: 'Daily, Hourly',
         val: 'Daily, Hourly'
     },
     {
         attr: 'frequency',
-        label: 'freq:continuous',
+        label: 'Continuous',
         val: 'Continuous'
     },
     {
         attr: 'frequency',
-        label: 'freq:when-scanned',
+        label: 'When Scanned',
         val: 'WhenScanned'
     },
     {
         attr: 'frequency',
-        label: 'freq:org-defined',
-        val: 'Org Defined'
+        label: 'Org Defined',
+        val: 'Org. Defined'
     },
     {
-        attr: 'org_defined_parameter',
-        label: 'params:org-defined',
-        val: 'Yes'
-    },
-    {
-        attr: 'org_defined_parameter',
-        label: 'params:not-org-defined',
-        val: 'No'
-    },
-    {
-        attr: 'create_document',
-        label: 'document:required',
-        val: 'Yes'
-    },
-    {
-        attr: 'create_document',
-        label: 'document:not-required',
-        val: 'No'
+        attr: 'frequency',
+        label: 'Mix',
+        val: 'Mix'
     },
 ];
 
