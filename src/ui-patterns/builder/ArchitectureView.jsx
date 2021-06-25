@@ -8,10 +8,15 @@ import {
 } from "react-router-dom";
 
 import {
+    LogoGithub16 as LogoGitHub,
+} from '@carbon/icons-react';
+
+import {
     OverflowMenu,
     OverflowMenuItem,
     ToastNotification,
-    SearchSkeleton
+    SearchSkeleton,
+    Tag
 } from 'carbon-components-react';
 
 import ArchitectureModal from './ArchitectureModal';
@@ -44,6 +49,7 @@ class ArchitectureView extends Component {
         this.hideArchModal = this.hideArchModal.bind(this);
         this.addNotification = this.addNotification.bind(this);
         this.deleteArchitecture = this.deleteArchitecture.bind(this);
+        this.syncIascable = this.syncIascable.bind(this);
     }
 
     async loadArchitectures() {
@@ -52,6 +58,13 @@ class ArchitectureView extends Component {
             architectures: [],
             archLoaded: false
         });
+        let iascableRelease;
+        try {
+            iascableRelease = await (await fetch('/api/architectures/public/version')).json();
+            if (iascableRelease.error) iascableRelease = undefined;
+        } catch (error) {
+            console.log(error);
+        }
         if (this.props.userArch) {
             fetch(`/api/users/${this.state?.user?.email}/architectures`)
                 .then(response => response.json())
@@ -59,7 +72,8 @@ class ArchitectureView extends Component {
                     console.log(data)
                     this.setState({
                         architectures: data,
-                        archLoaded: true
+                        archLoaded: true,
+                        iascableRelease: iascableRelease
                     });
                 });
         } else {
@@ -69,7 +83,8 @@ class ArchitectureView extends Component {
                     console.log(data)
                     this.setState({
                         architectures: data,
-                        archLoaded: true
+                        archLoaded: true,
+                        iascableRelease: iascableRelease
                     });
                 });
         }
@@ -129,6 +144,25 @@ class ArchitectureView extends Component {
                 this.loadArchitectures();
             });
     };
+
+    syncIascable() {
+        this.addNotification('info', 'Synchronizing', 'Synchronizing with latest release of @cloud-native-toolkit/iascable');
+        fetch('/api/architectures/public/sync', { method: "POST" })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res);
+                const upToDate = res?.error?.message?.includes('up to date');
+                if (res.error) this.addNotification(upToDate ? 'success' : 'error', upToDate ? 'Up to date' : 'Error', res?.error?.message);
+                else if (res.release && res?.refArchs?.length > 0) {
+                    this.addNotification('success', 'Success', `${res?.refArchs?.length} ref. architectures have been synchronized from iascable: v${res.release.tagName}`);
+                    this.loadArchitectures();
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                this.addNotification('error', 'Error', '' + err);
+            });
+    }
 
     getArchitectures(architectures) {
 
@@ -281,18 +315,32 @@ class ArchitectureView extends Component {
                         <br></br>
                         <h2 style={{"display": "flex"}}>
                             Architectures
-                            {this.props.userArch && <OverflowMenu
-                                size='lg'
-                                flipped
-                                style={{"margin-left": "auto"}}>
-                                <OverflowMenuItem
-                                    itemText="Add"
-                                    onClick={() => this.showArchModal(false)}/>
-                                <OverflowMenuItem
-                                    kind="primary"
-                                    itemText="Import BOM"
-                                    onClick={() => this.showArchModal(true)}/>
-                            </OverflowMenu>}
+                            {
+                                this.props.userArch ?
+                                <OverflowMenu
+                                    size='lg'
+                                    flipped
+                                    style={{"margin-left": "auto"}}>
+                                    <OverflowMenuItem
+                                        itemText="Add"
+                                        onClick={() => this.showArchModal(false)}/>
+                                    <OverflowMenuItem
+                                        kind="primary"
+                                        itemText="Import BOM"
+                                        onClick={() => this.showArchModal(true)}/>
+                                </OverflowMenu>
+                                : this.state.user?.role === "admin" && 
+                                <Tag
+                                    key='tag1'
+                                    renderIcon={LogoGitHub}
+                                    style={{"margin-left": "auto"}}
+                                    type="high-contrast"
+                                    title="Sync"
+                                    onClick={this.syncIascable}
+                                >
+                                    iascable: {this.state.iascableRelease ? this.state.iascableRelease.tagName : "unknown"}
+                                </Tag>
+                            }
                         </h2>
                         <br></br>
                         <p>
