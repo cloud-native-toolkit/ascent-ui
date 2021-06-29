@@ -11,6 +11,7 @@ import DetailsViewComponent from "../../components/overview/DetailsView";
 import LandingPage from "../LandingPage";
 import ServiceComponent from "../../components/services/service";
 import MappingComponent from "../../components/mapping/Mapping";
+import OnBoardingComponent from "../../components/compliance/OnBoarding";
 
 function RenderBOM() {
     let { bomid } = useParams();
@@ -115,6 +116,7 @@ function Routes() {
             <Route path="/myarchitectures" component={userArch} />
             <Route path="/mapping" component={MappingComponent} />
             <Route path="/controls" component={Controls} />
+            <Route path="/onboarding" component={OnBoardingComponent} />
             <Route path="/nists" component={Nists} />
             <Route path="/services" component={Services} />
             <Route path="/docs" exact component={DetailsViewComponent} />
