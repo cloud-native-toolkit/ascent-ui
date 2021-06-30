@@ -7,9 +7,46 @@ import {
     Button
 } from 'carbon-components-react';
 
+import Tree from 'react-d3-tree';
+import { useCenteredTree } from "../../helpers/tree-helper";
+
 import ControlDetailsPane from './ControlDetailsPane';
 
-import Draggable from 'react-draggable';
+const orgChart = {
+    id: 'AC-14',
+    children: [
+      {
+        id: 'AC-17 (9)',
+        attributes: {
+          department: 'Production',
+        },
+        children: [
+          {
+            id: 'AC-19 (5)',
+            attributes: {
+              department: 'Fabrication',
+            },
+            children: [
+              {
+                id: 'AC-20',
+              },
+            ],
+          },
+          {
+            id: 'AC-21',
+            attributes: {
+              department: 'Assembly',
+            },
+            children: [
+              {
+                id: 'AC-5',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
 
 const mockControls = [
     {
@@ -38,43 +75,43 @@ const mockControls = [
 function createSVG() {
     var svg = document.getElementById("svg-canvas");
     if (!svg) {
-      svg = document.createElementNS("http://www.w3.org/2000/svg", 
-                                     "svg");
-      svg.setAttribute('id', 'svg-canvas');
-      svg.setAttribute('style', 'position:absolute;top:0px;left:0px');
-      svg.setAttribute('width', document.body.clientWidth);
-      svg.setAttribute('height', document.body.clientHeight);
-      svg.setAttributeNS("http://www.w3.org/2000/xmlns/", 
-                         "xmlns:xlink", 
-                         "http://www.w3.org/1999/xlink");
-      document.body.appendChild(svg);
+        svg = document.createElementNS("http://www.w3.org/2000/svg",
+            "svg");
+        svg.setAttribute('id', 'svg-canvas');
+        svg.setAttribute('style', 'position:absolute;top:0px;left:0px');
+        svg.setAttribute('width', document.body.clientWidth);
+        svg.setAttribute('height', document.body.clientHeight);
+        svg.setAttributeNS("http://www.w3.org/2000/xmlns/",
+            "xmlns:xlink",
+            "http://www.w3.org/1999/xlink");
+        document.getElementsByClassName("pattern-container").item(0).appendChild(svg);
     }
     return svg;
 }
 
-  function drawCircle(x, y, radius, color) {
+function drawCircle(x, y, radius, color) {
     var svg = createSVG();
-	    var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     shape.setAttributeNS(null, "cx", x);
     shape.setAttributeNS(null, "cy", y);
-    shape.setAttributeNS(null, "r",  radius);
+    shape.setAttributeNS(null, "r", radius);
     shape.setAttributeNS(null, "fill", color);
     svg.appendChild(shape);
 }
 
 function drawCurvedLine(x1, y1, x2, y2, color, tension) {
     var svg = createSVG();
-    var shape = document.createElementNS("http://www.w3.org/2000/svg", 
-                                         "path");
-    var delta = (x2-x1)*tension;
-    var hx1=x1+delta;
-    var hy1=y1;
-    var hx2=x2-delta;
-    var hy2=y2;
-    var path = "M "  + x1 + " " + y1 + 
-               " C " + hx1 + " " + hy1 
-                     + " "  + hx2 + " " + hy2 
-               + " " + x2 + " " + y2;
+    var shape = document.createElementNS("http://www.w3.org/2000/svg",
+        "path");
+    var delta = (x2 - x1) * tension;
+    var hx1 = x1 + delta;
+    var hy1 = y1;
+    var hx2 = x2 - delta;
+    var hy2 = y2;
+    var path = "M " + x1 + " " + y1 +
+        " C " + hx1 + " " + hy1
+        + " " + hx2 + " " + hy2
+        + " " + x2 + " " + y2;
     shape.setAttributeNS(null, "d", path);
     shape.setAttributeNS(null, "fill", "none");
     shape.setAttributeNS(null, "stroke", color);
@@ -85,42 +122,17 @@ function findAbsolutePosition(htmlElement) {
     var x = htmlElement.offsetLeft;
     var y = htmlElement.offsetTop;
     console.log(x, y)
-    for (var x=0, y=0, el=htmlElement; 
-         el != null; 
-         el = el.offsetParent) {
-           x += el.offsetLeft;
-           y += el.offsetTop;
+    for (var x = 0, y = 0, el = htmlElement;
+        el != null;
+        el = el.offsetParent) {
+        x += el.offsetLeft;
+        y += el.offsetTop;
     }
     return {
         "x": x,
         "y": y
     };
-  }
-
-  function connectDivs(leftId, rightId, color, tension) {
-    var svg = document.getElementById("svg-canvas");
-    if (svg) document.body.removeChild(svg);
-    var left = document.getElementById(leftId);
-    var right = document.getElementById(rightId);
-      
-    var leftPos = findAbsolutePosition(left);
-    var x1 = leftPos.x;
-    var y1 = leftPos.y;
-    x1 += left.offsetWidth;
-    y1 += (left.offsetHeight / 2);
-  
-    var rightPos = findAbsolutePosition(right);
-    var x2 = rightPos.x;
-    var y2 = rightPos.y;
-    y2 += (right.offsetHeight / 2);
-  
-    var width=x2-x1;
-    var height = y2-y1;
-  
-    drawCircle(x1, y1, 3, color);
-    drawCircle(x2, y2, 3, color);
-    drawCurvedLine(x1, y1, x2, y2, color, tension);
-  }
+}
 
 class OnBoardingView extends Component {
     constructor(props) {
@@ -133,6 +145,7 @@ class OnBoardingView extends Component {
             curControls: mockControls
         };
         this.connectControls = this.connectControls.bind(this);
+        this.renderForeignObjectNode = this.renderForeignObjectNode.bind(this);
         this.openPane = this.openPane.bind(this);
         this.hidePane = this.hidePane.bind(this);
     }
@@ -155,22 +168,22 @@ class OnBoardingView extends Component {
         const color = '#456';
         const tension = 0;
         var svg = document.getElementById("svg-canvas");
-        if (svg) document.body.removeChild(svg);
+        if (svg) document.getElementsByClassName("pattern-container").item(0).removeChild(svg);
 
         for (let index = 1; index < this.state.curControls.length; index++) {
-            const left = document.getElementById(`control-tile-${this.state.curControls[index-1].id.toLowerCase().replaceAll(' ', '-').replace(/[() ]/gi, '')}`);
+            const left = document.getElementById(`control-tile-${this.state.curControls[index - 1].id.toLowerCase().replaceAll(' ', '-').replace(/[() ]/gi, '')}`);
             const right = document.getElementById(`control-tile-${this.state.curControls[index].id.toLowerCase().replaceAll(' ', '-').replace(/[() ]/gi, '')}`);
             const leftPos = findAbsolutePosition(left);
             var x1 = leftPos.x;
             var y1 = leftPos.y;
             x1 += left.offsetWidth;
             y1 += (left.offsetHeight / 2);
-            
+
             const rightPos = findAbsolutePosition(right);
             var x2 = rightPos.x;
             var y2 = rightPos.y;
             y2 += (right.offsetHeight / 2);
-            
+
             drawCircle(x1, y1, 3, color);
             drawCircle(x2, y2, 3, color);
             drawCurvedLine(x1, y1, x2, y2, color, tension);
@@ -206,7 +219,40 @@ class OnBoardingView extends Component {
         });
     };
 
+    renderForeignObjectNode = ({
+        nodeDatum,
+        toggleNode,
+        foreignObjectProps
+      }) => (
+        <g>
+          <circle r={15}></circle>
+          {/* `foreignObject` requires width & height to be explicitly set. */}
+          <foreignObject {...foreignObjectProps}>
+                <ClickableTile
+                    id={`control-tile-${nodeDatum.id.toLowerCase().replaceAll(' ', '-').replace(/[() ]/gi, '')}`}
+                    style={{ marginLeft: '2rem' }}
+                    handleClick={() => this.openPane(nodeDatum.id)}>
+                    {nodeDatum.id}
+                </ClickableTile>
+            {/* <div style={{ border: "1px solid black", backgroundColor: "#dedede" }}>
+              <h3 style={{ textAlign: "center" }}>{nodeDatum.name}</h3>
+              {nodeDatum.children && (
+                <button style={{ width: "100%" }} onClick={toggleNode}>
+                  {nodeDatum.__rd3t.collapsed ? "Expand" : "Collapse"}
+                </button>
+              )}
+            </div> */}
+          </foreignObject>
+        </g>
+      );
+
     render() {
+        const nodeSize = { x: 200, y: 200 };
+        const foreignObjectProps = { width: nodeSize.x, height: nodeSize.y, x: 20 };   
+        const containerStyles = {
+            width: "100vw",
+            height: "100vh"
+          };   
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -215,36 +261,36 @@ class OnBoardingView extends Component {
                         Controls On Boarding
                     </h2>
                 </div>
-                <div className="bx--row"  style={{marginTop: '1rem', marginBottom: '3rem'}}>
+                <div className="bx--row" style={{ marginTop: '1rem', marginBottom: '3rem' }}>
                     <ProgressIndicator
                         // vertical
                         // currentIndex={number('Current progress (currentIndex)', 1)}
                         spaceEqually>
                         <ProgressStep
-                            label="Setup"
+                            label="Project Setup"
                             description="Step 1: Getting started with Carbon Design System"
-                            secondaryLabel="Optional label"
-                            />
+                            secondaryLabel="Initial setup"
+                        />
                         <ProgressStep
-                            label="Weekly"
+                            label="Stage 2"
                             description="Step 2: Getting started with Carbon Design System"
                             secondaryLabel="Optional label"
-                            />
+                        />
                         <ProgressStep
-                            label="Monthly"
+                            label="Stage 3"
                             description="Step 3: Getting started with Carbon Design System"
                             secondaryLabel="Optional label"
-                            />
+                        />
                         <ProgressStep
-                            label="Quarterly"
+                            label="Stage 4"
                             description="Step 4: Getting started with Carbon Design System"
                             secondaryLabel="Optional label"
-                            />
+                        />
                         <ProgressStep
-                            label="Annual"
+                            label="Stage 5"
                             description="Step 5: Getting started with Carbon Design System"
                             secondaryLabel="Optional label"
-                            />
+                        />
                     </ProgressIndicator>
                 </div>
                 <div className="bx--row">
@@ -263,20 +309,32 @@ class OnBoardingView extends Component {
                     </Draggable> */}
 
                     {this.state.curControls && this.state.curControls.map((control) => (
-                         <ClickableTile 
+                        <ClickableTile
                             id={`control-tile-${control.id.toLowerCase().replaceAll(' ', '-').replace(/[() ]/gi, '')}`}
-                            style={{marginLeft: '2rem'}}
+                            style={{ marginLeft: '2rem' }}
                             handleClick={() => this.openPane(control.id)}>
                             {control.id}
                         </ClickableTile>
                     ))}
+
                 </div>
-                
+
+                <div style={containerStyles} id='test-elt'>
+                    <Tree
+                        data={orgChart}
+                        translate={{ x: 50, y: document.getElementById('test-elt')?.getBoundingClientRect().height / 2 }}
+                        nodeSize={nodeSize}
+                        renderCustomNodeElement={(rd3tProps) =>
+                            this.renderForeignObjectNode({ ...rd3tProps, foreignObjectProps })
+                        }
+                    />
+                </div>
+
                 <div>
-                    <ControlDetailsPane 
+                    <ControlDetailsPane
                         data={this.state.dataDetails}
                         open={this.state.isPaneOpen}
-                        onRequestClose={this.hidePane}/>
+                        onRequestClose={this.hidePane} />
                 </div>
             </div >
         );

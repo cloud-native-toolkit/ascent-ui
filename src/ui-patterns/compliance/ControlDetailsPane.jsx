@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import {
     UnorderedList, ListItem, BreadcrumbSkeleton, SearchSkeleton, Tag, 
-    CodeSnippet
+    CodeSnippet,
+    Button
 } from 'carbon-components-react';
 import {
     WarningAlt16,
-    Launch16
+    Launch16,
+    CheckmarkOutline32 as CheckmarkOutline
 } from '@carbon/icons-react';
 import {
     Link
@@ -30,7 +32,10 @@ class ControlDetailsPane extends Component {
                 {
                     this.props.data ?
                         <div className="control-details">
-                            <h2>{data?.id}</h2>
+                            <h2 style={{ display: 'flex' }} >
+                                {data?.id}
+                                <Button renderIcon={CheckmarkOutline} iconDescription="Add" style={{marginLeft: 'auto'}}>Mark complete</Button>
+                            </h2>
                             <h3>Description</h3>
                             <br />
                             <ReactMarkdown>{data?.controlDetails?.description}</ReactMarkdown>
