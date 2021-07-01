@@ -8,7 +8,6 @@ import {
 } from 'carbon-components-react';
 
 import Tree from 'react-d3-tree';
-import { useCenteredTree } from "../../helpers/tree-helper";
 
 import ControlDetailsPane from './ControlDetailsPane';
 
@@ -160,8 +159,8 @@ class OnBoardingView extends Component {
                     data: jsonData
                 });
             });
-        this.connectControls();
-        window.addEventListener('resize', this.connectControls);
+        // this.connectControls();
+        // window.addEventListener('resize', this.connectControls);
     }
 
     connectControls() {
@@ -228,30 +227,28 @@ class OnBoardingView extends Component {
           <circle r={15}></circle>
           {/* `foreignObject` requires width & height to be explicitly set. */}
           <foreignObject {...foreignObjectProps}>
-                <ClickableTile
-                    id={`control-tile-${nodeDatum.id.toLowerCase().replaceAll(' ', '-').replace(/[() ]/gi, '')}`}
-                    style={{ marginLeft: '2rem' }}
-                    handleClick={() => this.openPane(nodeDatum.id)}>
+                <div 
+                    style={{
+                        'border': "1px solid #dfe3e6",
+                        'box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
+                        'background-color': '#fff',
+                        'padding': '1rem',
+                        'min-height': '4rem'
+                    }}
+                    width={128}
+                    onClick={() => this.openPane(nodeDatum.id)}>
                     {nodeDatum.id}
-                </ClickableTile>
-            {/* <div style={{ border: "1px solid black", backgroundColor: "#dedede" }}>
-              <h3 style={{ textAlign: "center" }}>{nodeDatum.name}</h3>
-              {nodeDatum.children && (
-                <button style={{ width: "100%" }} onClick={toggleNode}>
-                  {nodeDatum.__rd3t.collapsed ? "Expand" : "Collapse"}
-                </button>
-              )}
-            </div> */}
+                </div>
           </foreignObject>
         </g>
       );
 
     render() {
-        const nodeSize = { x: 200, y: 200 };
-        const foreignObjectProps = { width: nodeSize.x, height: nodeSize.y, x: 20 };   
+        const nodeSize = { x: 150, y: 100 };
+        const foreignObjectProps = { width: 128, height: 64, x: -64, y: -32 };   
         const containerStyles = {
-            width: "100vw",
-            height: "100vh"
+            width: "80vw",
+            height: "80vh"
           };   
         return (
             <div className="bx--grid">
@@ -293,20 +290,7 @@ class OnBoardingView extends Component {
                         />
                     </ProgressIndicator>
                 </div>
-                <div className="bx--row">
-                    {/* <Draggable>
-                        <ClickableTile id='control-ac-2'>
-                            AC-2
-                        </ClickableTile>
-                    </Draggable>
-                    <Draggable handle=".handle">
-                        <div><ClickableTile id='control-ac-3' handleClick={() => {
-                            this.openPane("SC-12");
-                        }}>
-                            SC-12
-                        </ClickableTile>
-                        <div  className="handle"> DRAG</div></div>
-                    </Draggable> */}
+                {/* <div className="bx--row">
 
                     {this.state.curControls && this.state.curControls.map((control) => (
                         <ClickableTile
@@ -317,13 +301,14 @@ class OnBoardingView extends Component {
                         </ClickableTile>
                     ))}
 
-                </div>
+                </div> */}
 
                 <div style={containerStyles} id='test-elt'>
                     <Tree
                         data={orgChart}
-                        translate={{ x: 50, y: document.getElementById('test-elt')?.getBoundingClientRect().height / 2 }}
+                        translate={{ x: 100, y: document.getElementById('test-elt')?.getBoundingClientRect().height / 2 }}
                         nodeSize={nodeSize}
+                        pathFunc="step"
                         renderCustomNodeElement={(rd3tProps) =>
                             this.renderForeignObjectNode({ ...rd3tProps, foreignObjectProps })
                         }
