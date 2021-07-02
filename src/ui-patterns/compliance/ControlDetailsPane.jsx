@@ -7,7 +7,8 @@ import {
 import {
     WarningAlt16,
     Launch16,
-    CheckmarkOutline32 as CheckmarkOutline
+    CheckmarkOutline32 as CheckmarkOutline,
+    Close32 as Close
 } from '@carbon/icons-react';
 import {
     Link
@@ -27,7 +28,8 @@ class ControlDetailsPane extends Component {
                 isOpen={this.props.open}
                 width="600px"
                 onRequestClose={this.props.onRequestClose}
-                hideHeader
+                closeIcon={<Close style={{width: '32px'}}/>}
+                // hideHeader
             >
                 {
                     this.props.data ?

@@ -7,38 +7,53 @@ import {
     Button
 } from 'carbon-components-react';
 
+import {
+    ChevronRight20 as ChevronRight,
+    User16 as User,
+    Bot16 as Bot
+} from '@carbon/icons-react';
+
 import Tree from 'react-d3-tree';
 
 import ControlDetailsPane from './ControlDetailsPane';
 
 const orgChart = {
     id: 'AC-14',
+    attributes: {
+        human_or_automated: 'Human',
+    },
     children: [
       {
         id: 'AC-17 (9)',
         attributes: {
-          department: 'Production',
+            human_or_automated: 'Human',
         },
         children: [
           {
             id: 'AC-19 (5)',
             attributes: {
-              department: 'Fabrication',
+                human_or_automated: 'Automated',
             },
             children: [
               {
                 id: 'AC-20',
+                attributes: {
+                    human_or_automated: 'Human',
+                },
               },
             ],
           },
           {
             id: 'AC-21',
             attributes: {
-              department: 'Assembly',
+                human_or_automated: 'Automated',
             },
             children: [
               {
                 id: 'AC-5',
+                attributes: {
+                    human_or_automated: 'Human',
+                },
               },
             ],
           },
@@ -46,92 +61,6 @@ const orgChart = {
       },
     ],
   };
-
-const mockControls = [
-    {
-        id: "AC-14"
-    },
-    {
-        id: "AC-17 (9)"
-    },
-    {
-        id: "AC-19 (5)"
-    },
-    {
-        id: "AC-20"
-    },
-    {
-        id: "AC-21"
-    },
-    {
-        id: "AC-5"
-    },
-    {
-        id: "AC-6"
-    },
-]
-
-function createSVG() {
-    var svg = document.getElementById("svg-canvas");
-    if (!svg) {
-        svg = document.createElementNS("http://www.w3.org/2000/svg",
-            "svg");
-        svg.setAttribute('id', 'svg-canvas');
-        svg.setAttribute('style', 'position:absolute;top:0px;left:0px');
-        svg.setAttribute('width', document.body.clientWidth);
-        svg.setAttribute('height', document.body.clientHeight);
-        svg.setAttributeNS("http://www.w3.org/2000/xmlns/",
-            "xmlns:xlink",
-            "http://www.w3.org/1999/xlink");
-        document.getElementsByClassName("pattern-container").item(0).appendChild(svg);
-    }
-    return svg;
-}
-
-function drawCircle(x, y, radius, color) {
-    var svg = createSVG();
-    var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    shape.setAttributeNS(null, "cx", x);
-    shape.setAttributeNS(null, "cy", y);
-    shape.setAttributeNS(null, "r", radius);
-    shape.setAttributeNS(null, "fill", color);
-    svg.appendChild(shape);
-}
-
-function drawCurvedLine(x1, y1, x2, y2, color, tension) {
-    var svg = createSVG();
-    var shape = document.createElementNS("http://www.w3.org/2000/svg",
-        "path");
-    var delta = (x2 - x1) * tension;
-    var hx1 = x1 + delta;
-    var hy1 = y1;
-    var hx2 = x2 - delta;
-    var hy2 = y2;
-    var path = "M " + x1 + " " + y1 +
-        " C " + hx1 + " " + hy1
-        + " " + hx2 + " " + hy2
-        + " " + x2 + " " + y2;
-    shape.setAttributeNS(null, "d", path);
-    shape.setAttributeNS(null, "fill", "none");
-    shape.setAttributeNS(null, "stroke", color);
-    svg.appendChild(shape);
-}
-
-function findAbsolutePosition(htmlElement) {
-    var x = htmlElement.offsetLeft;
-    var y = htmlElement.offsetTop;
-    console.log(x, y)
-    for (var x = 0, y = 0, el = htmlElement;
-        el != null;
-        el = el.offsetParent) {
-        x += el.offsetLeft;
-        y += el.offsetTop;
-    }
-    return {
-        "x": x,
-        "y": y
-    };
-}
 
 class OnBoardingView extends Component {
     constructor(props) {
@@ -141,9 +70,8 @@ class OnBoardingView extends Component {
             isPaneOpen: false,
             dataDetails: false,
             data: [],
-            curControls: mockControls
+            curControls: []
         };
-        this.connectControls = this.connectControls.bind(this);
         this.renderForeignObjectNode = this.renderForeignObjectNode.bind(this);
         this.openPane = this.openPane.bind(this);
         this.hidePane = this.hidePane.bind(this);
@@ -159,34 +87,6 @@ class OnBoardingView extends Component {
                     data: jsonData
                 });
             });
-        // this.connectControls();
-        // window.addEventListener('resize', this.connectControls);
-    }
-
-    connectControls() {
-        const color = '#456';
-        const tension = 0;
-        var svg = document.getElementById("svg-canvas");
-        if (svg) document.getElementsByClassName("pattern-container").item(0).removeChild(svg);
-
-        for (let index = 1; index < this.state.curControls.length; index++) {
-            const left = document.getElementById(`control-tile-${this.state.curControls[index - 1].id.toLowerCase().replaceAll(' ', '-').replace(/[() ]/gi, '')}`);
-            const right = document.getElementById(`control-tile-${this.state.curControls[index].id.toLowerCase().replaceAll(' ', '-').replace(/[() ]/gi, '')}`);
-            const leftPos = findAbsolutePosition(left);
-            var x1 = leftPos.x;
-            var y1 = leftPos.y;
-            x1 += left.offsetWidth;
-            y1 += (left.offsetHeight / 2);
-
-            const rightPos = findAbsolutePosition(right);
-            var x2 = rightPos.x;
-            var y2 = rightPos.y;
-            y2 += (right.offsetHeight / 2);
-
-            drawCircle(x1, y1, 3, color);
-            drawCircle(x2, y2, 3, color);
-            drawCurvedLine(x1, y1, x2, y2, color, tension);
-        }
     }
 
     openPane = async (controlId) => {
@@ -231,24 +131,31 @@ class OnBoardingView extends Component {
                     style={{
                         'border': "1px solid #dfe3e6",
                         'box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
-                        'background-color': '#fff',
-                        'padding': '1rem',
-                        'min-height': '4rem'
+                        'background-color': nodeDatum?.attributes?.human_or_automated === 'Automated' ? '#CBFFCA' : '#fff',
+                        'min-height': '4rem',
+                        'stroke': 'none',
+                        'stroke-width': 'unset',
+                        'display': 'flex',
                     }}
-                    width={128}
-                    onClick={() => this.openPane(nodeDatum.id)}>
-                    {nodeDatum.id}
+                    width={128} >
+                    <div style={{'padding': '1rem', 'padding-right': '0'}} onClick={() => this.openPane(nodeDatum.id)}>
+                        <span className='text'>{nodeDatum.id}</span>
+                        {nodeDatum?.attributes?.human_or_automated && nodeDatum?.attributes?.human_or_automated === "Human" ? <User className='text-icon' style={{marginLeft: '5px'}} /> : <Bot className='text-icon' style={{marginLeft: '5px'}} /> }
+                    </div>
+                    <div style={{marginLeft: 'auto', 'padding': '1rem', 'padding-left': '0'}} onClick={toggleNode} >
+                        {nodeDatum.children && <ChevronRight style={{'stroke': '#000', 'stroke-width': '2'}} className='text-icon'/>}
+                    </div>
                 </div>
           </foreignObject>
         </g>
       );
 
     render() {
-        const nodeSize = { x: 150, y: 100 };
-        const foreignObjectProps = { width: 128, height: 64, x: -64, y: -32 };   
+        const nodeSize = { x: 175, y: 100 };
+        const foreignObjectProps = { width: 150, height: 64, x: -75, y: -32 };   
         const containerStyles = {
-            width: "80vw",
-            height: "80vh"
+            width: "75vw",
+            height: "600px"
           };   
         return (
             <div className="bx--grid">

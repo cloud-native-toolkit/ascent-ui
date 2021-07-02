@@ -61,3 +61,8 @@ svg#svg-canvas {
 svg#svg-canvas circle, svg#svg-canvas path {
   z-index: 1;
 }
+
+span.text, svg.text-icon {
+  vertical-align: middle;
+  display: inline-block;
+}
