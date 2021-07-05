@@ -4,7 +4,9 @@ import {
     ProgressIndicator,
     ProgressStep,
     ClickableTile,
-    Button
+    Button,
+    BreadcrumbSkeleton,
+    SearchSkeleton
 } from 'carbon-components-react';
 
 import {
@@ -17,51 +19,6 @@ import Tree from 'react-d3-tree';
 
 import ControlDetailsPane from './ControlDetailsPane';
 
-const orgChart = {
-    id: 'AC-14',
-    attributes: {
-        human_or_automated: 'Human',
-    },
-    children: [
-      {
-        id: 'AC-17 (9)',
-        attributes: {
-            human_or_automated: 'Human',
-        },
-        children: [
-          {
-            id: 'AC-19 (5)',
-            attributes: {
-                human_or_automated: 'Automated',
-            },
-            children: [
-              {
-                id: 'AC-20',
-                attributes: {
-                    human_or_automated: 'Human',
-                },
-              },
-            ],
-          },
-          {
-            id: 'AC-21',
-            attributes: {
-                human_or_automated: 'Automated',
-            },
-            children: [
-              {
-                id: 'AC-5',
-                attributes: {
-                    human_or_automated: 'Human',
-                },
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-
 class OnBoardingView extends Component {
     constructor(props) {
         super(props);
@@ -73,18 +30,39 @@ class OnBoardingView extends Component {
             curControls: []
         };
         this.renderForeignObjectNode = this.renderForeignObjectNode.bind(this);
+        this.decorateTree = this.decorateTree.bind(this);
         this.openPane = this.openPane.bind(this);
         this.hidePane = this.hidePane.bind(this);
+    }
+
+    async decorateTree(tree) {
+        let filter = {
+            include: ['controlDetails', 'nist', 'services', 'architectures']
+        }
+        tree.attributes = await this.props.controls.getControlsDetails(tree.id, filter);
+        for (let index = 0; index < tree?.children?.length; index++) {
+            tree.children[index] = await this.decorateTree(tree.children[index]);
+        }
+        return tree;
     }
 
     async componentDidMount() {
         fetch('/userDetails')
             .then(res => res.json())
             .then(async user => {
-                const jsonData = await this.props.controls.getControls();
+                let stages = await (await fetch('/api/on-boarding-stages')).json();
+                stages = stages.sort((a,b) => {return a.position-b.position});
+                const controls = await this.props.controls.getControls();
+                // Put control attribute for each control in stage
+                for (let index = 0; index < stages.length; index++) {
+                    const stage = stages[index];
+                    stage.content = await this.decorateTree(JSON.parse(stage.content));
+                }
                 this.setState({
                     user: user || undefined,
-                    data: jsonData
+                    stages: stages,
+                    curStage: stages[0],
+                    data: controls
                 });
             });
     }
@@ -122,12 +100,12 @@ class OnBoardingView extends Component {
         nodeDatum,
         toggleNode,
         foreignObjectProps
-      }) => (
+    }) => (
         <g>
-          <circle r={15}></circle>
-          {/* `foreignObject` requires width & height to be explicitly set. */}
-          <foreignObject {...foreignObjectProps}>
-                <div 
+            <circle r={15}></circle>
+            {/* `foreignObject` requires width & height to be explicitly set. */}
+            <foreignObject {...foreignObjectProps}>
+                <div
                     style={{
                         'border': "1px solid #dfe3e6",
                         'box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
@@ -138,25 +116,28 @@ class OnBoardingView extends Component {
                         'display': 'flex',
                     }}
                     width={128} >
-                    <div style={{'padding': '1rem', 'padding-right': '0'}} onClick={() => this.openPane(nodeDatum.id)}>
-                        <span className='text'>{nodeDatum.id}</span>
-                        {nodeDatum?.attributes?.human_or_automated && nodeDatum?.attributes?.human_or_automated === "Human" ? <User className='text-icon' style={{marginLeft: '5px'}} /> : <Bot className='text-icon' style={{marginLeft: '5px'}} /> }
+                        {console.log(nodeDatum)}
+                    <div style={{ 'padding': '1rem', 'padding-right': '0' }} onClick={() => this.openPane(nodeDatum.id)}>
+                        <span title={nodeDatum?.attributes?.name} className='text' >{nodeDatum.id}</span>
+                        {nodeDatum?.attributes?.human_or_automated && nodeDatum?.attributes?.human_or_automated === "Automated" ? <Bot className='text-icon' style={{ marginLeft: '5px' }} /> : <User className='text-icon' style={{ marginLeft: '5px' }} />}
                     </div>
-                    <div style={{marginLeft: 'auto', 'padding': '1rem', 'padding-left': '0'}} onClick={toggleNode} >
-                        {nodeDatum.children && <ChevronRight style={{'stroke': '#000', 'stroke-width': '2'}} className='text-icon'/>}
+                    <div style={{ marginLeft: 'auto', 'padding': '1rem', 'padding-left': '0' }} onClick={toggleNode} >
+                        {nodeDatum.children && <ChevronRight style={{ 'stroke': '#000', 'stroke-width': '2' }} className='text-icon' />}
                     </div>
+                    {/* {nodeDatum?.attributes?.family && <span style={{'font-size': '0.75rem', 'font-weight': '400', 'color': '#525252'}}>{nodeDatum?.attributes?.family}</span>} */}
                 </div>
-          </foreignObject>
+                {nodeDatum?.attributes?.family && <span className="bx--progress-optional" style={{margin: "1rem", "top": "1.3rem"}}>{nodeDatum?.attributes?.family}</span>}
+            </foreignObject>
         </g>
-      );
+    );
 
     render() {
         const nodeSize = { x: 175, y: 100 };
-        const foreignObjectProps = { width: 150, height: 64, x: -75, y: -32 };   
+        const foreignObjectProps = { width: 150, height: 64, x: -75, y: -32 };
         const containerStyles = {
             width: "75vw",
-            height: "600px"
-          };   
+            height: "75vh"
+        };
         return (
             <div className="bx--grid">
                 <div className="bx--row">
@@ -165,69 +146,46 @@ class OnBoardingView extends Component {
                         Controls On Boarding
                     </h2>
                 </div>
-                <div className="bx--row" style={{ marginTop: '1rem', marginBottom: '3rem' }}>
-                    <ProgressIndicator
-                        // vertical
-                        // currentIndex={number('Current progress (currentIndex)', 1)}
-                        spaceEqually>
-                        <ProgressStep
-                            label="Project Setup"
-                            description="Step 1: Getting started with Carbon Design System"
-                            secondaryLabel="Initial setup"
+                {this.state.stages ? <div>
+                    <div className="bx--row" style={{ marginTop: '1rem', marginBottom: '3rem' }}>
+                        <ProgressIndicator
+                            // vertical
+                            currentIndex={this.state.curStage.position}
+                            onChange={(ix) => this.setState({curStage: this.state.stages.find(stage => {return stage.position === ix})})}
+                            spaceEqually>
+                            {this.state.stages.map(stage => (
+                                <ProgressStep
+                                    label={stage.label}
+                                    description={stage.description}
+                                    secondaryLabel={stage.secondary_label} />
+                            ))}
+                        </ProgressIndicator>
+                    </div>
+                    <div style={containerStyles} id='test-elt'>
+                        <Tree
+                            data={this.state.curStage.content}
+                            translate={{ x: 100, y: document.getElementById('test-elt')?.getBoundingClientRect().height / 2 || 200 }}
+                            nodeSize={nodeSize}
+                            pathFunc="step"
+                            renderCustomNodeElement={(rd3tProps) =>
+                                this.renderForeignObjectNode({ ...rd3tProps, foreignObjectProps })
+                            }
                         />
-                        <ProgressStep
-                            label="Stage 2"
-                            description="Step 2: Getting started with Carbon Design System"
-                            secondaryLabel="Optional label"
-                        />
-                        <ProgressStep
-                            label="Stage 3"
-                            description="Step 3: Getting started with Carbon Design System"
-                            secondaryLabel="Optional label"
-                        />
-                        <ProgressStep
-                            label="Stage 4"
-                            description="Step 4: Getting started with Carbon Design System"
-                            secondaryLabel="Optional label"
-                        />
-                        <ProgressStep
-                            label="Stage 5"
-                            description="Step 5: Getting started with Carbon Design System"
-                            secondaryLabel="Optional label"
-                        />
-                    </ProgressIndicator>
+                    </div>
+                    <div>
+                        <ControlDetailsPane
+                            data={this.state.dataDetails}
+                            open={this.state.isPaneOpen}
+                            onRequestClose={this.hidePane} />
+                    </div>
                 </div>
-                {/* <div className="bx--row">
-
-                    {this.state.curControls && this.state.curControls.map((control) => (
-                        <ClickableTile
-                            id={`control-tile-${control.id.toLowerCase().replaceAll(' ', '-').replace(/[() ]/gi, '')}`}
-                            style={{ marginLeft: '2rem' }}
-                            handleClick={() => this.openPane(control.id)}>
-                            {control.id}
-                        </ClickableTile>
-                    ))}
-
-                </div> */}
-
-                <div style={containerStyles} id='test-elt'>
-                    <Tree
-                        data={orgChart}
-                        translate={{ x: 100, y: document.getElementById('test-elt')?.getBoundingClientRect().height / 2 }}
-                        nodeSize={nodeSize}
-                        pathFunc="step"
-                        renderCustomNodeElement={(rd3tProps) =>
-                            this.renderForeignObjectNode({ ...rd3tProps, foreignObjectProps })
-                        }
-                    />
-                </div>
-
-                <div>
-                    <ControlDetailsPane
-                        data={this.state.dataDetails}
-                        open={this.state.isPaneOpen}
-                        onRequestClose={this.hidePane} />
-                </div>
+                : 
+                    <div style={{marginTop: '1rem'}}>
+                        <BreadcrumbSkeleton />
+                        <SearchSkeleton />
+                    </div>
+                }
+                
             </div >
         );
     }
