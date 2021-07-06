@@ -19,7 +19,6 @@ import {
 import { controlFrequencies, controlFamilies } from '../data/data';
 
 import SlidingPane from "react-sliding-pane";
-import "react-sliding-pane/dist/react-sliding-pane.css";
 
 class ControlsFilterPane extends Component {
 
