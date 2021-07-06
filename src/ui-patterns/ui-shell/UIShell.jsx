@@ -154,7 +154,7 @@ class UIShell extends Component {
 
                     <SideNavMenu title="Compliance" >
 
-                      {this.state.user?.roles?.includes("editor") ? <Link to="/onboarding">
+                      {this.state.user?.roles?.includes("fs-viewer") ? <Link to="/onboarding">
                         <SideNavMenuItem>On Boarding</SideNavMenuItem>
                       </Link> : <></>}
 

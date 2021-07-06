@@ -108,6 +108,7 @@ app.get('/controls*', (req, res) => {res.redirect('/');});
 app.get('/nists*', (req, res) => {res.redirect('/');});
 app.get('/services*', (req, res) => {res.redirect('/');});
 app.get('/docs*', (req, res) => {res.redirect('/');});
+app.get('/onboarding*', (req, res) => {res.redirect('/');});
 
 const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
 app.use('/api', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res, next) => {
