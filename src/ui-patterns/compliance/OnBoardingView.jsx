@@ -76,10 +76,7 @@ class OnBoardingView extends Component {
             curStage: false
         });
         // Get onboarding status
-        let filter = {
-            where: {user_id: this.state.user.email}
-        }
-        let userOnBoarding = await (await fetch(`/api/user-onboarding?filter=${encodeURIComponent(JSON.stringify(filter))}`)).json();
+        let userOnBoarding = await (await fetch(`/api/user/${this.state.user.email}/onboarding`)).json();
         // Get stages
         let stages = await (await fetch('/api/on-boarding-stages')).json();
         stages = stages.sort((a,b) => {return a.position-b.position});
@@ -187,7 +184,7 @@ class OnBoardingView extends Component {
                         'border': "1px solid #dfe3e6",
                         'box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
                         // 'background-color': nodeDatum?.attributes?.human_or_automated === 'Automated' ? '#CBFFCA' : '#fff',
-                        'background-color': this.state.userOnBoarding?.find(elt => elt.control_id === nodeDatum.id) ? '#CBFFCA' : '#fff',
+                        'background-color': this.state?.userOnBoarding?.find(elt => elt.control_id === nodeDatum.id) ? '#CBFFCA' : '#fff',
                         'min-height': '4rem',
                         'stroke': 'none',
                         'stroke-width': 'unset',
@@ -269,7 +266,7 @@ class OnBoardingView extends Component {
                             data={this.state.dataDetails}
                             open={this.state.isPaneOpen}
                             onRequestClose={this.hidePane}
-                            handleComplete={!this.state.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id) ? async () => {
+                            handleComplete={!this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id) ? async () => {
                                 let newUserOnBoarding = await (await fetch(`/api/user-onboarding`, {
                                     method: "POST",
                                     headers: {
