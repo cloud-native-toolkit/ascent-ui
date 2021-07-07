@@ -179,7 +179,8 @@ class OnBoardingView extends Component {
                     style={{
                         'border': "1px solid #dfe3e6",
                         'box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
-                        'background-color': nodeDatum?.attributes?.human_or_automated === 'Automated' ? '#CBFFCA' : '#fff',
+                        // 'background-color': nodeDatum?.attributes?.human_or_automated === 'Automated' ? '#CBFFCA' : '#fff',
+                        'background-color': '#fff',
                         'min-height': '4rem',
                         'stroke': 'none',
                         'stroke-width': 'unset',
@@ -195,7 +196,7 @@ class OnBoardingView extends Component {
                     </div>
                     {/* {nodeDatum?.attributes?.family && <span style={{'font-size': '0.75rem', 'font-weight': '400', 'color': '#525252'}}>{nodeDatum?.attributes?.family}</span>} */}
                 </div>
-                {nodeDatum?.attributes?.family && <span className="bx--progress-optional" style={{margin: "1rem", "top": "1.3rem"}}>{nodeDatum?.attributes?.family}</span>}
+                {nodeDatum?.attributes?.family && <span className="bx--progress-optional" style={{margin: "1rem", "top": "1.1rem", "overflow": "hidden", "maxHeight": "25px", "lineHeight": "1"}}>{nodeDatum?.attributes?.family}</span>}
             </foreignObject>
         </g>
     );
