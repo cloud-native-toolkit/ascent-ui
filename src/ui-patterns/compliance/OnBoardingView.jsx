@@ -75,11 +75,18 @@ class OnBoardingView extends Component {
             data: false,
             curStage: false
         });
+        // Get onboarding status
+        let filter = {
+            where: {user_id: this.state.user.email}
+        }
+        let userOnBoarding = await (await fetch(`/api/user-onboarding?filter=${encodeURIComponent(JSON.stringify(filter))}`)).json();
+        // Get stages
         let stages = await (await fetch('/api/on-boarding-stages')).json();
         stages = stages.sort((a,b) => {return a.position-b.position});
         if (stages.length) {
             const controls = await this.props.controls.getControls();
             this.setState({
+                userOnBoarding: userOnBoarding,
                 stages: stages,
                 data: controls
             });
@@ -91,10 +98,10 @@ class OnBoardingView extends Component {
         fetch('/userDetails')
             .then(res => res.json())
             .then(async user => {
-                this.loadStages();
                 this.setState({
                     user: user || undefined,
                 });
+                this.loadStages();
             });
     }
 
@@ -180,7 +187,7 @@ class OnBoardingView extends Component {
                         'border': "1px solid #dfe3e6",
                         'box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
                         // 'background-color': nodeDatum?.attributes?.human_or_automated === 'Automated' ? '#CBFFCA' : '#fff',
-                        'background-color': '#fff',
+                        'background-color': this.state.userOnBoarding?.find(elt => elt.control_id === nodeDatum.id) ? '#CBFFCA' : '#fff',
                         'min-height': '4rem',
                         'stroke': 'none',
                         'stroke-width': 'unset',
@@ -261,7 +268,27 @@ class OnBoardingView extends Component {
                         <ControlDetailsPane
                             data={this.state.dataDetails}
                             open={this.state.isPaneOpen}
-                            onRequestClose={this.hidePane} />
+                            onRequestClose={this.hidePane}
+                            handleComplete={!this.state.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id) ? async () => {
+                                let newUserOnBoarding = await (await fetch(`/api/user-onboarding`, {
+                                    method: "POST",
+                                    headers: {
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        user_id: this.state.user.email,
+                                        control_id: this.state.dataDetails.id,
+                                        status: 'complete'
+                                    })
+                                })).json();
+                                if (newUserOnBoarding?.error) {
+                                    this.addNotification("error", "Error", newUserOnBoarding.error.message);
+                                } else {
+                                    this.addNotification("success", "Success", `Control '${newUserOnBoarding.control_id}' successfully marked complete!`);
+                                }
+                                this.hidePane();
+                                this.loadStages();
+                            } : undefined} />
                     </div>
                 </div>
 
