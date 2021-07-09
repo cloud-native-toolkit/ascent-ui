@@ -36,7 +36,7 @@ class ControlDetailsPane extends Component {
                         <div className="control-details">
                             <h2 style={{ display: 'flex' }} >
                                 {data?.id}
-                                {this.props.handleComplete && <Button onClick={this.props.handleComplete} renderIcon={CheckmarkOutline} iconDescription="Add" style={{marginLeft: 'auto'}}>Mark complete</Button>}
+                                {this.props.handleButtonClick && <Button onClick={this.props.handleButtonClick} renderIcon={CheckmarkOutline} iconDescription="Add" style={{marginLeft: 'auto'}}>{this.props.buttonTitle || 'Submit'}</Button>}
                             </h2>
                             <h3>Description</h3>
                             <br />

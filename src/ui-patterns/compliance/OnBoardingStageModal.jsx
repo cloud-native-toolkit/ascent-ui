@@ -57,7 +57,14 @@ class OnBoardingStageModal extends Component {
     }
     handleSubmit = (event) => {
         event.preventDefault();
-        const content = JSON.stringify(yaml.load(this.state.fields.content));
+        let content;
+        try {
+            content = JSON.stringify(yaml.load(this.state.fields.content));
+        } catch (error) {
+            this.props.toast("error", error.name, error.reason);
+            console.error(error);
+            return;
+        }
         if (this.props.isUpdate) {
             fetch(`${endpoint}/${this.props.data.id}`, {
                 method: "PATCH",

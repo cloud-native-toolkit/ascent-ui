@@ -51,8 +51,16 @@ class OnBoardingView extends Component {
             include: ['controlDetails', 'nist', 'services', 'architectures']
         }
         tree.attributes = await this.props.controls.getControlsDetails(tree.id, filter);
-        for (let index = 0; index < tree?.children?.length; index++) {
-            tree.children[index] = await this.decorateTree(tree.children[index]);
+        if (tree.attributes instanceof Error) tree.attributes = {};
+        if (tree.children) {
+            let complete = 0;
+            for (let index = 0; index < tree?.children?.length; index++) {
+                tree.children[index] = await this.decorateTree(tree.children[index]);
+                if (tree.children[index].attributes.complete) complete += 1;
+            }
+            tree.attributes.complete = complete === tree?.children?.length;
+        } else {
+            tree.attributes.complete = this.state?.userOnBoarding?.find(elt => elt.control_id === tree.id && elt.status === 'complete') !== undefined;
         }
         return tree;
     }
@@ -63,6 +71,7 @@ class OnBoardingView extends Component {
         });
         const curStage = JSON.parse(JSON.stringify(this.state.stages[ix]));
         curStage.content = await this.decorateTree(JSON.parse(curStage.content));
+        console.log(curStage.content)
         this.setState({
             curStageIx: ix,
             curStage: curStage
@@ -184,21 +193,20 @@ class OnBoardingView extends Component {
                         'border': "1px solid #dfe3e6",
                         'box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
                         // 'background-color': nodeDatum?.attributes?.human_or_automated === 'Automated' ? '#CBFFCA' : '#fff',
-                        'background-color': this.state?.userOnBoarding?.find(elt => elt.control_id === nodeDatum.id) ? '#CBFFCA' : '#fff',
+                        'background-color': nodeDatum?.attributes?.complete ? '#CBFFCA' : '#fff',
                         'min-height': '4rem',
                         'stroke': 'none',
                         'stroke-width': 'unset',
                         'display': 'flex',
                     }}
                     width={128} >
-                    <div style={{ 'padding': '1rem', 'padding-right': '0' }} onClick={() => this.openPane(nodeDatum.id)}>
+                    <div style={{ 'padding': '1rem', 'padding-right': '0' }} onClick={nodeDatum?.attributes ? () => this.openPane(nodeDatum.id) : undefined}>
                         <span title={nodeDatum?.attributes?.name} className='text' >{nodeDatum.id}</span>
-                        {nodeDatum?.attributes?.human_or_automated && nodeDatum?.attributes?.human_or_automated === "Automated" ? <Bot className='text-icon' style={{ marginLeft: '5px' }} /> : <User className='text-icon' style={{ marginLeft: '5px' }} />}
+                        {nodeDatum?.attributes ? nodeDatum.attributes?.human_or_automated && nodeDatum.attributes?.human_or_automated === "Automated" ? <Bot className='text-icon' style={{ marginLeft: '5px' }} /> : <User className='text-icon' style={{ marginLeft: '5px' }} /> : <></>}
                     </div>
                     <div style={{ marginLeft: 'auto', 'padding': '1rem', 'padding-left': '0' }} onClick={toggleNode} >
                         {nodeDatum.children && <ChevronRight style={{ 'stroke': '#000', 'stroke-width': '2' }} className='text-icon' />}
                     </div>
-                    {/* {nodeDatum?.attributes?.family && <span style={{'font-size': '0.75rem', 'font-weight': '400', 'color': '#525252'}}>{nodeDatum?.attributes?.family}</span>} */}
                 </div>
                 {nodeDatum?.attributes?.family && <span className="bx--progress-optional" style={{margin: "1rem", "top": "1.1rem", "overflow": "hidden", "maxHeight": "25px", "lineHeight": "1"}}>{nodeDatum?.attributes?.family}</span>}
             </foreignObject>
@@ -266,7 +274,8 @@ class OnBoardingView extends Component {
                             data={this.state.dataDetails}
                             open={this.state.isPaneOpen}
                             onRequestClose={this.hidePane}
-                            handleComplete={!this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id) ? async () => {
+                            buttonTitle={this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id && elt.status === 'complete') ? "Mark uncomplete" : "Mark complete"}
+                            handleButtonClick={!this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id && elt.status === 'complete') ? async () => {
                                 let newUserOnBoarding = await (await fetch(`/api/user-onboarding`, {
                                     method: "POST",
                                     headers: {
@@ -285,7 +294,17 @@ class OnBoardingView extends Component {
                                 }
                                 this.hidePane();
                                 this.loadStages();
-                            } : undefined} />
+                            } : async () => {
+                                let userOnBoarding = this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id && elt.status === 'complete');
+                                let delStatus = await (await fetch(`/api/user-onboarding/${userOnBoarding.id}`, { method: "DELETE" })).status;
+                                if (delStatus !== 204) {
+                                    this.addNotification("error", "Error", `Error marking control ${userOnBoarding.control_id} uncomplete, got status ${delStatus}`);
+                                } else {
+                                    this.addNotification("success", "Success", `Control '${userOnBoarding.control_id}' successfully marked uncomplete!`);
+                                }
+                                this.hidePane();
+                                this.loadStages();
+                            }} />
                     </div>
                 </div>
 
