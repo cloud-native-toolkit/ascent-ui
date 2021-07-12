@@ -193,14 +193,14 @@ class OnBoardingView extends Component {
                         'border': "1px solid #dfe3e6",
                         'box-shadow': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
                         // 'background-color': nodeDatum?.attributes?.human_or_automated === 'Automated' ? '#CBFFCA' : '#fff',
-                        'background-color': nodeDatum?.attributes?.complete ? '#CBFFCA' : '#fff',
+                        'background-color': this.state?.userOnBoarding?.find(elt => elt.control_id === nodeDatum.id && elt.status === 'complete') || nodeDatum?.attributes?.complete ? '#CBFFCA' : '#fff',
                         'min-height': '4rem',
                         'stroke': 'none',
                         'stroke-width': 'unset',
                         'display': 'flex',
                     }}
                     width={128} >
-                    <div style={{ 'padding': '1rem', 'padding-right': '0' }} onClick={nodeDatum?.attributes ? () => this.openPane(nodeDatum.id) : undefined}>
+                    <div style={{ 'padding': '1rem', 'padding-right': '0' }} onClick={nodeDatum?.attributes?.id ? () => this.openPane(nodeDatum.id) : undefined}>
                         <span title={nodeDatum?.attributes?.name} className='text' >{nodeDatum.id}</span>
                         {nodeDatum?.attributes ? nodeDatum.attributes?.human_or_automated && nodeDatum.attributes?.human_or_automated === "Automated" ? <Bot className='text-icon' style={{ marginLeft: '5px' }} /> : <User className='text-icon' style={{ marginLeft: '5px' }} /> : <></>}
                     </div>
