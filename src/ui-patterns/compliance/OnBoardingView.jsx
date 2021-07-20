@@ -44,18 +44,22 @@ class OnBoardingView extends Component {
         this.decorateTree = this.decorateTree.bind(this);
         this.openPane = this.openPane.bind(this);
         this.hidePane = this.hidePane.bind(this);
+        this.markComplete = this.markComplete.bind(this);
+        this.markUncomplete = this.markUncomplete.bind(this);
     }
 
-    async decorateTree(tree) {
+    async decorateTree(tree, level=0) {
         let filter = {
             include: ['controlDetails', 'nist', 'services', 'architectures']
         }
         tree.attributes = await this.props.controls.getControlsDetails(tree.id, filter);
         if (tree.attributes instanceof Error) tree.attributes = {};
+        tree.attributes.expanded = level > 2;
         if (tree.children) {
             let complete = 0;
             for (let index = 0; index < tree?.children?.length; index++) {
-                tree.children[index] = await this.decorateTree(tree.children[index]);
+                tree.children[index] = await this.decorateTree(tree.children[index], level+1);
+                tree.children[index].parent = tree;
                 if (tree.children[index].attributes.complete) complete += 1;
             }
             tree.attributes.complete = complete === tree?.children?.length;
@@ -150,7 +154,7 @@ class OnBoardingView extends Component {
         this.loadStages();
     }
 
-    openPane = async (controlId) => {
+    openPane = async (controlId, tree) => {
         if (controlId) {
             let filter = {
                 include: ['nist', 'services', 'architectures']
@@ -166,12 +170,39 @@ class OnBoardingView extends Component {
                 if (controlData?.controlDetails?.description) controlData.controlDetails.description = controlData.controlDetails.description.replaceAll(/\n\n([a-z]\))/gi, '\n\n**$1**');
                 if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#### Part', '\n\n&nbsp;  \n#### Part');
                 if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#####', '\n\n&nbsp;  \n#####');
+                controlData.children = tree.children;
+                controlData.parent = tree.parent;
                 this.setState({
                     dataDetails: controlData
                 });
             });
         }
     };
+
+    markComplete = async (control) => {
+        let newUserOnBoarding = await (await fetch(`/api/user-onboarding`, {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: this.state.user.email,
+                control_id: control.id,
+                status: 'complete'
+            })
+        })).json();
+        if (control.children) for (let child of control.children) {
+            await this.markComplete(child);
+        }
+        return newUserOnBoarding;
+    }
+
+    markUncomplete = async (control) => {
+        let userOnBoarding = this.state?.userOnBoarding?.find(elt => elt.control_id === control.id && elt.status === 'complete');
+        let delStatus = await (await fetch(`/api/user-onboarding/${userOnBoarding.id}`, { method: "DELETE" })).status;
+        if (control.parent && control.parent.attributes.id) await this.markUncomplete(control.parent);
+        return delStatus;
+    }
 
     hidePane = () => {
         this.setState({
@@ -200,22 +231,22 @@ class OnBoardingView extends Component {
                         'display': 'flex',
                     }}
                     width={128} >
-                    <div style={{ 'padding': '1rem', 'padding-right': '0' }} onClick={nodeDatum?.attributes?.id ? () => this.openPane(nodeDatum.id) : undefined}>
-                        <span title={nodeDatum?.attributes?.name} className='text' >{nodeDatum.id}</span>
-                        {nodeDatum?.attributes ? nodeDatum.attributes?.human_or_automated && nodeDatum.attributes?.human_or_automated === "Automated" ? <Bot className='text-icon' style={{ marginLeft: '5px' }} /> : <User className='text-icon' style={{ marginLeft: '5px' }} /> : <></>}
+                    <div style={nodeDatum?.attributes?.id ? { 'padding': '0.7rem', 'padding-right': '0'} : { 'padding': '0.7rem', 'padding-right': '0', cursor: 'default' }} onClick={nodeDatum?.attributes?.id ? () => this.openPane(nodeDatum.id, nodeDatum) : undefined}>
+                        <span title={nodeDatum?.attributes?.name} className='text' style={{maxHeight: '40px'}} >{nodeDatum.id}</span>
+                        {nodeDatum?.attributes?.id ? nodeDatum.attributes?.human_or_automated && nodeDatum.attributes?.human_or_automated === "Automated" ? <Bot className='text-icon' style={{ marginLeft: '5px' }} /> : <User className='text-icon' style={{ marginLeft: '5px' }} /> : <></>}
                     </div>
                     <div style={{ marginLeft: 'auto', 'padding': '1rem', 'padding-left': '0' }} onClick={toggleNode} >
                         {nodeDatum.children && <ChevronRight style={{ 'stroke': '#000', 'stroke-width': '2' }} className='text-icon' />}
                     </div>
                 </div>
-                {nodeDatum?.attributes?.family && <span className="bx--progress-optional" style={{margin: "1rem", "top": "1.1rem", "overflow": "hidden", "maxHeight": "25px", "lineHeight": "1"}}>{nodeDatum?.attributes?.family}</span>}
+                {nodeDatum?.attributes?.family && <span className="bx--progress-optional" style={{margin: "0.7rem", "top": "1.2rem", "overflow": "hidden", "maxHeight": "25px", "lineHeight": "1"}}>{nodeDatum?.attributes?.family}</span>}
             </foreignObject>
         </g>
     );
 
     render() {
-        const nodeSize = { x: 175, y: 100 };
-        const foreignObjectProps = { width: 150, height: 64, x: -75, y: -32 };
+        const nodeSize = { x: 250, y: 100 };
+        const foreignObjectProps = { width: 200, height: 64, x: -100, y: -32 };
         const containerStyles = {
             width: "75vw",
             height: "75vh"
@@ -264,6 +295,7 @@ class OnBoardingView extends Component {
                             translate={{ x: 100, y: document.getElementById('test-elt')?.getBoundingClientRect().height / 2 || 200 }}
                             nodeSize={nodeSize}
                             pathFunc="step"
+                            initialDepth={1}
                             renderCustomNodeElement={(rd3tProps) =>
                                 this.renderForeignObjectNode({ ...rd3tProps, foreignObjectProps })
                             }
@@ -276,17 +308,7 @@ class OnBoardingView extends Component {
                             onRequestClose={this.hidePane}
                             buttonTitle={this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id && elt.status === 'complete') ? "Mark uncomplete" : "Mark complete"}
                             handleButtonClick={!this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id && elt.status === 'complete') ? async () => {
-                                let newUserOnBoarding = await (await fetch(`/api/user-onboarding`, {
-                                    method: "POST",
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        user_id: this.state.user.email,
-                                        control_id: this.state.dataDetails.id,
-                                        status: 'complete'
-                                    })
-                                })).json();
+                                let newUserOnBoarding = await this.markComplete(this.state.dataDetails);
                                 if (newUserOnBoarding?.error) {
                                     this.addNotification("error", "Error", newUserOnBoarding.error.message);
                                 } else {
@@ -294,9 +316,9 @@ class OnBoardingView extends Component {
                                 }
                                 this.hidePane();
                                 this.loadStages();
-                            } : async () => {
+                            }: async () => {
                                 let userOnBoarding = this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id && elt.status === 'complete');
-                                let delStatus = await (await fetch(`/api/user-onboarding/${userOnBoarding.id}`, { method: "DELETE" })).status;
+                                let delStatus = await this.markUncomplete(this.state.dataDetails);
                                 if (delStatus !== 204) {
                                     this.addNotification("error", "Error", `Error marking control ${userOnBoarding.control_id} uncomplete, got status ${delStatus}`);
                                 } else {
