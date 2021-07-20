@@ -44,6 +44,8 @@ class OnBoardingView extends Component {
         this.decorateTree = this.decorateTree.bind(this);
         this.openPane = this.openPane.bind(this);
         this.hidePane = this.hidePane.bind(this);
+        this.markComplete = this.markComplete.bind(this);
+        this.markUncomplete = this.markUncomplete.bind(this);
     }
 
     async decorateTree(tree, level=0) {
@@ -57,6 +59,7 @@ class OnBoardingView extends Component {
             let complete = 0;
             for (let index = 0; index < tree?.children?.length; index++) {
                 tree.children[index] = await this.decorateTree(tree.children[index], level+1);
+                tree.children[index].parent = tree;
                 if (tree.children[index].attributes.complete) complete += 1;
             }
             tree.attributes.complete = complete === tree?.children?.length;
@@ -151,7 +154,7 @@ class OnBoardingView extends Component {
         this.loadStages();
     }
 
-    openPane = async (controlId) => {
+    openPane = async (controlId, tree) => {
         if (controlId) {
             let filter = {
                 include: ['nist', 'services', 'architectures']
@@ -167,12 +170,39 @@ class OnBoardingView extends Component {
                 if (controlData?.controlDetails?.description) controlData.controlDetails.description = controlData.controlDetails.description.replaceAll(/\n\n([a-z]\))/gi, '\n\n**$1**');
                 if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#### Part', '\n\n&nbsp;  \n#### Part');
                 if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#####', '\n\n&nbsp;  \n#####');
+                controlData.children = tree.children;
+                controlData.parent = tree.parent;
                 this.setState({
                     dataDetails: controlData
                 });
             });
         }
     };
+
+    markComplete = async (control) => {
+        let newUserOnBoarding = await (await fetch(`/api/user-onboarding`, {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: this.state.user.email,
+                control_id: control.id,
+                status: 'complete'
+            })
+        })).json();
+        if (control.children) for (let child of control.children) {
+            await this.markComplete(child);
+        }
+        return newUserOnBoarding;
+    }
+
+    markUncomplete = async (control) => {
+        let userOnBoarding = this.state?.userOnBoarding?.find(elt => elt.control_id === control.id && elt.status === 'complete');
+        let delStatus = await (await fetch(`/api/user-onboarding/${userOnBoarding.id}`, { method: "DELETE" })).status;
+        if (control.parent && control.parent.attributes.id) await this.markUncomplete(control.parent);
+        return delStatus;
+    }
 
     hidePane = () => {
         this.setState({
@@ -201,7 +231,7 @@ class OnBoardingView extends Component {
                         'display': 'flex',
                     }}
                     width={128} >
-                    <div style={nodeDatum?.attributes?.id ? { 'padding': '0.7rem', 'padding-right': '0'} : { 'padding': '0.7rem', 'padding-right': '0', cursor: 'default' }} onClick={nodeDatum?.attributes?.id ? () => this.openPane(nodeDatum.id) : undefined}>
+                    <div style={nodeDatum?.attributes?.id ? { 'padding': '0.7rem', 'padding-right': '0'} : { 'padding': '0.7rem', 'padding-right': '0', cursor: 'default' }} onClick={nodeDatum?.attributes?.id ? () => this.openPane(nodeDatum.id, nodeDatum) : undefined}>
                         <span title={nodeDatum?.attributes?.name} className='text' style={{maxHeight: '40px'}} >{nodeDatum.id}</span>
                         {nodeDatum?.attributes?.id ? nodeDatum.attributes?.human_or_automated && nodeDatum.attributes?.human_or_automated === "Automated" ? <Bot className='text-icon' style={{ marginLeft: '5px' }} /> : <User className='text-icon' style={{ marginLeft: '5px' }} /> : <></>}
                     </div>
@@ -278,17 +308,7 @@ class OnBoardingView extends Component {
                             onRequestClose={this.hidePane}
                             buttonTitle={this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id && elt.status === 'complete') ? "Mark uncomplete" : "Mark complete"}
                             handleButtonClick={!this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id && elt.status === 'complete') ? async () => {
-                                let newUserOnBoarding = await (await fetch(`/api/user-onboarding`, {
-                                    method: "POST",
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        user_id: this.state.user.email,
-                                        control_id: this.state.dataDetails.id,
-                                        status: 'complete'
-                                    })
-                                })).json();
+                                let newUserOnBoarding = await this.markComplete(this.state.dataDetails);
                                 if (newUserOnBoarding?.error) {
                                     this.addNotification("error", "Error", newUserOnBoarding.error.message);
                                 } else {
@@ -296,9 +316,9 @@ class OnBoardingView extends Component {
                                 }
                                 this.hidePane();
                                 this.loadStages();
-                            } : async () => {
+                            }: async () => {
                                 let userOnBoarding = this.state?.userOnBoarding?.find(elt => elt.control_id === this.state.dataDetails.id && elt.status === 'complete');
-                                let delStatus = await (await fetch(`/api/user-onboarding/${userOnBoarding.id}`, { method: "DELETE" })).status;
+                                let delStatus = await this.markUncomplete(this.state.dataDetails);
                                 if (delStatus !== 204) {
                                     this.addNotification("error", "Error", `Error marking control ${userOnBoarding.control_id} uncomplete, got status ${delStatus}`);
                                 } else {
