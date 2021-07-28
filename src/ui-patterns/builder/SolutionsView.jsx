@@ -34,13 +34,16 @@ class SolutionsView extends Component {
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.addNotification = this.addNotification.bind(this);
+        this.deleteSolution = this.deleteSolution.bind(this);
     }
 
     async loadSolutions() {
+        this.setState({dataLoaded: false});
         fetch('/api/solutions')
             .then(res => res.json())
             .then(solutions => {
-                this.setState({ solutions: solutions });
+                console.log(solutions)
+                this.setState({ solutions: solutions, dataLoaded: true });
             })
             .catch(console.error);
     }
@@ -55,6 +58,26 @@ class SolutionsView extends Component {
             })
             .catch(console.error);
     };
+
+    deleteSolution() {
+        if (this.state.curSol) {
+            this.addNotification('info', 'Deleting', `Deleting solution ${this.state.curSol.id} id beeing deleted...`);
+            fetch(`/api/solutions/${this.state.curSol.id}`, {method: 'delete'})
+                .then(res => {
+                    console.log(res);
+                    this.addNotification('success', 'OK', `Solution ${this.state.curSol.id} deleted successfully!`);
+                    this.setState({
+                        showValidate: false,
+                        curSol: undefined
+                    });
+                    this.loadSolutions();
+                })
+                .catch((err) => {
+                    this.addNotification('error', 'Error', `Error while deleting solution ${this.state.curSol.id}, check the logs for details.`);
+                    console.log(err);
+                });
+        }
+    }
 
     async showModal() {
         this.setState({
@@ -111,18 +134,6 @@ class SolutionsView extends Component {
                     {this.state.notifications.length !== 0 && this.renderNotifications()}
                 </div>
 
-                {this.state.showModal && 
-                    <SolutionModal
-                        show={this.state.showModal}
-                        handleClose={this.hideModal}
-                        isUpdate={this.state.updateModal}
-                        data={this.state.archRecord}
-                        toast={this.addNotification}
-                        isDuplicate={this.state.isDuplicate}
-                        user={this.state.user}
-                    />
-                }
-
                 <div className="bx--row">
                     <div className="bx--col-lg-16">
                         <br></br>
@@ -143,7 +154,8 @@ class SolutionsView extends Component {
 
                 <Container>
                     <Row>
-                        {this.state.solutions ?
+                        {this.state.dataLoaded ?
+                        this.state.solutions?.length ?
                             this.state.solutions.map((solution) => (
                                 <Col>
                                     <Card style={{ width: '18rem', marginBottom: '1rem' }}>
@@ -153,16 +165,58 @@ class SolutionsView extends Component {
                                             <Card.Text>{solution.short_desc}</Card.Text>
                                             <Card.Link href="#">View</Card.Link>
                                             <Card.Link href="#">Download</Card.Link>
-                                            <Card.Link style={{color: 'red'}} href="#">Delete</Card.Link>
+                                            <Card.Link style={{color: 'red'}} onClick={() => {
+                                                this.setState({
+                                                    showValidate: true,
+                                                    curSol: solution
+                                                });
+                                            }}>Delete</Card.Link>
                                         </Card.Body>
                                     </Card>
                                 </Col>
                             ))
                         :
+                            <p>No Solutions at the moment, click <strong>Add</strong> on the top right corner to create a new one.</p>
+                        :
                             <SearchSkeleton />
                         }
                     </Row>
                 </Container>
+
+                {this.state.showModal && 
+                    <SolutionModal
+                        show={this.state.showModal}
+                        handleClose={this.hideModal}
+                        isUpdate={this.state.updateModal}
+                        data={this.state.archRecord}
+                        toast={this.addNotification}
+                        isDuplicate={this.state.isDuplicate}
+                        user={this.state.user}
+                    />
+                }
+
+                {this.state.showValidate && this.state.curSol && 
+                    <ValidateModal
+                        danger
+                        submitText="Delete"
+                        heading="Delete Solution"
+                        message={`You are about to remove solution ${this.state.curSol.id}. This action cannot be undone. This will remove the solution record, as well as all associated files. If you are sure, type "${this.state.curSol.id}" and click Delete to confirm deletion.`}
+                        show={this.state.showValidate}
+                        inputRequired={this.state.curSol.id}
+                        onClose={() => {
+                            this.setState({
+                                showValidate: false,
+                                curSol: undefined
+                            });
+                        }} 
+                        onRequestSubmit={this.deleteSolution}
+                        onSecondarySubmit={() => {
+                            this.setState({
+                                showValidate: false,
+                                curSol: undefined
+                            });
+                        }} />
+                }
 
             </div>
 

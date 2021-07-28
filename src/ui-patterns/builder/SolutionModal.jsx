@@ -89,10 +89,12 @@ class SolutionModal extends Component {
                 .set('accept', 'application/json')
                 .then(res => {
                     this.props.toast("success", "OK", `Upload successful for solution ${solutionId}!`);
+                    this.props.handleClose();
                 })
                 .catch(err => {
                     console.log(err);
                     this.props.toast("error", "Upload Error", `Error uploading files for solution ${solutionId} (check the logs for more details).`);
+                    this.props.handleClose();
                 });
         } else {
             this.props.handleClose();
@@ -116,7 +118,6 @@ class SolutionModal extends Component {
                 return;
             }
             this.uploadDiagrams(res.id);
-            this.props.handleClose();
         } else if(this.state.fields.id) {
             console.log("Not yet implemented.");
         } else {
