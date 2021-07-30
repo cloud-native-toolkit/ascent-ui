@@ -139,6 +139,10 @@ class UIShell extends Component {
 
                     <SideNavMenu title="Solution Builder">
 
+                      <Link to="/solutions">
+                        <SideNavMenuItem>Solutions</SideNavMenuItem>
+                      </Link>
+
                       {this.state.user?.roles?.includes("editor") ? <Link to={`/myarchitectures`}>
                         <SideNavMenuItem>Your Architectures</SideNavMenuItem>
                       </Link> : <></>}

@@ -1,4 +1,4 @@
-export interface ArchiectureDataModel {
+export interface ArchitectureDataModel {
     arch_id: string;
     name: string;
     short_desc: string;

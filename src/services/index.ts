@@ -21,6 +21,9 @@ import { MappingData } from './mapping/mapping.service';
 import { AutomationApi } from './automation/automation.api';
 import { AutomationService } from './automation/automation.service';
 
+import { SolutionsDataApi } from './builder/solutions.api';
+import { SolutionsService } from './builder/solutions.service';
+
 export * from './bom/billofmaterials.api';
 export * from './bom/billofmaterials.service';
 
@@ -42,6 +45,9 @@ export * from './mapping/mapping.service';
 export * from './automation/automation.api';
 export * from './automation/automation.service';
 
+export * from './builder/solutions.api';
+export * from './builder/solutions.service';
+
 Container.bind(BillofMaterialsApi).to(BillofMaterialsService);
 Container.bind(ArchitectureDataApi).to(ArchitectureService);
 Container.bind(ServiceDataApi).to(ServiceData);
@@ -49,3 +55,4 @@ Container.bind(ControlsDataApi).to(ControlsData);
 Container.bind(NistDataApi).to(NistData);
 Container.bind(MappingDataApi).to(MappingData);
 Container.bind(AutomationApi).to(AutomationService);
+Container.bind(SolutionsDataApi).to(SolutionsService);

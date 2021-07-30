@@ -21,6 +21,8 @@ $feature-flags: (
 @import './components/BuilderHeader/builder-header.scss';
 @import './ui-patterns/LandingPage/landing-page.scss';
 
+@import "~bootstrap/scss/bootstrap";
+
 .App {
   font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;

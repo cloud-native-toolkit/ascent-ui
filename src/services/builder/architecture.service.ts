@@ -1,6 +1,6 @@
 
 import { ArchitectureDataApi } from './architecture.api';
-import { ArchiectureDataModel } from "../../models/builder/ArchitectureDataModel";
+import { ArchitectureDataModel } from "../../models/builder/ArchitectureDataModel";
 import * as superagent from "superagent";
 
 export class ArchitectureService implements ArchitectureDataApi {
@@ -11,7 +11,7 @@ export class ArchitectureService implements ArchitectureDataApi {
         this.baseUrl = baseUrl || '/api/architectures';
     }
 
-    async getArchitectures(): Promise<ArchiectureDataModel[]> {
+    async getArchitectures(): Promise<ArchitectureDataModel[]> {
         return superagent
             .get(this.baseUrl )
             .set('accept', 'application/json')
@@ -20,7 +20,7 @@ export class ArchitectureService implements ArchitectureDataApi {
             });
     }
 
-    async getArchitectureById(archiId: string): Promise<ArchiectureDataModel> {
+    async getArchitectureById(archiId: string): Promise<ArchitectureDataModel> {
         return superagent
             .get(`${this.baseUrl}/${archiId}?filter=%7B%22include%22%3A%20%5B%22owners%22%5D%7D`)
             .set('accept', 'application/json')
@@ -29,7 +29,7 @@ export class ArchitectureService implements ArchitectureDataApi {
             });
     }
 
-    async addArchitecture(arch_details: Partial<ArchiectureDataModel>): Promise<ArchiectureDataModel> {
+    async addArchitecture(arch_details: Partial<ArchitectureDataModel>): Promise<ArchitectureDataModel> {
         return superagent
             .post(this.baseUrl)
             .send(arch_details)
@@ -54,7 +54,7 @@ export class ArchitectureService implements ArchitectureDataApi {
             });
     }
 
-    async duplicateArchitecture(arch_id: string, data: object): Promise<ArchiectureDataModel> {
+    async duplicateArchitecture(arch_id: string, data: object): Promise<ArchitectureDataModel> {
         return superagent
             .post(`${this.baseUrl}/${arch_id}/duplicate`)
             .send(data)
@@ -94,7 +94,7 @@ export class ArchitectureService implements ArchitectureDataApi {
             });
     }
 
-    async updateArchitecture(archiId: string, arch_details: any): Promise<ArchiectureDataModel> {
+    async updateArchitecture(archiId: string, arch_details: any): Promise<ArchitectureDataModel> {
         return superagent
             .patch(this.baseUrl + "/" + archiId)
             .send(arch_details)
