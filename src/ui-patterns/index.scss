@@ -7,6 +7,10 @@ div.attribute {
   padding-bottom: 4px;
 }
 
+main.bx--content {
+  background: unset;
+}
+
 // Sliding pane below header
 .sliding-pane {
   padding-top: 48px;
@@ -38,4 +42,27 @@ div.notif {
 
 .slide-pane__title-wrapper {
   margin-left: 0px;
+}
+
+a.bx--tile.bx--tile--clickable {
+  width: max-content;
+}
+
+.bx--progress-step svg {
+  z-index: unset;
+}
+
+// SVG
+
+svg#svg-canvas {
+  z-index: -1;
+}
+
+svg#svg-canvas circle, svg#svg-canvas path {
+  z-index: 1;
+}
+
+span.text, svg.text-icon {
+  vertical-align: middle;
+  display: inline-block;
 }

@@ -12,7 +12,6 @@ import {
 } from "react-router-dom";
 
 import SlidingPane from "react-sliding-pane";
-import "react-sliding-pane/dist/react-sliding-pane.css";
 
 class ServiceDetailsPane extends Component {
 
