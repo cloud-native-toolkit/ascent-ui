@@ -218,7 +218,7 @@ class SolutionsView extends Component {
                                 </Col>
                             ))
                         :
-                            <p>No Solutions at the moment, click <strong>Create</strong> on the top right corner to create a new one.</p>
+                            <p>No Solutions at the moment{this.state.user?.role === "admin" ? <>, click <strong>Create</strong> on the top right corner to create a new one.</>: <>.</>}</p>
                         :
                             <SearchSkeleton />
                         }
