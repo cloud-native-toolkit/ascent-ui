@@ -94,6 +94,8 @@ class SolutionsView extends Component {
             this.addNotification('info', 'Deleting', `Deleting solution ${this.state.curSol.id} id beeing deleted...`);
             fetch(`/api/solutions/${this.state.curSol.id}`, {method: 'delete'})
                 .then(res => {
+                    console.log(res);
+                    if (res.error) return this.addNotification("error", res?.status === 401 ? "Unauthorized" : "Error", res.error.message);
                     this.addNotification('success', 'OK', `Solution ${this.state.curSol.id} deleted successfully!`);
                     this.setState({
                         showValidate: false,
@@ -170,13 +172,13 @@ class SolutionsView extends Component {
                         <br></br>
                         <h2 style={{"display": "flex"}}>
                             Solutions
-                            <Button
+                            {this.state.user?.role === "admin" && <Button
                                 size='sm'
                                 style={{"margin-left": "auto"}}
                                 onClick={() => this.showModal()}
                                 renderIcon={Add16} >
                                 Create
-                            </Button>
+                            </Button>}
                         </h2>
                         <br></br>
                     </div>
@@ -204,12 +206,12 @@ class SolutionsView extends Component {
                                                         .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
                                                     }}>Details</Card.Link>
                                                 <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
-                                                <Card.Link style={{color: 'red'}} onClick={() => {
+                                                {this.state.user?.role === "admin" && <Card.Link style={{color: 'red', cursor: 'pointer'}} onClick={() => {
                                                     this.setState({
                                                         showValidate: true,
                                                         curSol: solution
                                                     });
-                                                }}>Delete</Card.Link>
+                                                }}>Delete</Card.Link>}
                                             </Card.Body>
                                         </Card>
                                     {/* </CardGroup> */}
@@ -265,6 +267,7 @@ class SolutionsView extends Component {
                             this.setState({ isPaneOpen: false });
                             this.showModal(true);
                         }}
+                        user={this.state.user}
                         buttonIcon={Edit16}
                         buttonText='Edit'
                         onRequestClose={() => this.setState({ isPaneOpen: false })} />

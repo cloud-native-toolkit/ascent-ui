@@ -29,7 +29,7 @@ class SolutionDetailsPane extends Component {
                         <div>
                             <h3 style={{ display: 'flex' }}>
                                 {this.props.data.name}
-                                {this.props.buttonClick && <Button style={{marginLeft: 'auto'}} size='sm' renderIcon={this.props.buttonIcon} onClick={this.props.buttonClick}>{this.props.buttonText || 'Submit'}</Button>}
+                                {this.props.buttonClick && this.props.user?.role === "admin" && <Button style={{marginLeft: 'auto'}} size='sm' renderIcon={this.props.buttonIcon} onClick={this.props.buttonClick}>{this.props.buttonText || 'Submit'}</Button>}
                             </h3>
                             <h4 style={{ display: 'flex', color: 'gray' }}>
                                 {this.props.data.id}
