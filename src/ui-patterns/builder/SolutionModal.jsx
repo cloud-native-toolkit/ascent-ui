@@ -42,7 +42,8 @@ class SolutionModal extends Component {
         if (this.props.isUpdate) {
             let jsonObject = JSON.parse(JSON.stringify(this.props.data));
             this.state = {
-                fields: jsonObject
+                fields: jsonObject,
+                selectedArchs: jsonObject.architectures || []
             }
         }
         this.handleChange = this.handleChange.bind(this);
@@ -54,7 +55,6 @@ class SolutionModal extends Component {
         this.setState({
             architectures: [...(await (await fetch(`/api/users/${this.props?.user?.email}/architectures`)).json()),...(await (await fetch(`/api/architectures`)).json())]
         });
-        console.log(this.state.architectures);
     };
 
     handleChange(field, e) {
@@ -73,7 +73,6 @@ class SolutionModal extends Component {
     uploadDiagrams(solutionId) {
         // Upload Diagrams
         const files = this.state.solutionFiles;
-        console.log(files);
         if (files) {
             this.props.toast("info", "Uploading Files", `Uploading files for solution ${solutionId}...`);
             for (const file of files) {
@@ -105,7 +104,22 @@ class SolutionModal extends Component {
         event.preventDefault();
         if (this.props.isDuplicate) {
             console.log("Not yet implemented.");
-        } else if (this.state.fields.id && !this.props.isUpdate) {
+        } else if(this.state.fields.id && this.props.isUpdate) {
+            // PATCH Solution
+            delete this.state.fields?.architectures;
+            const body = {
+                solution: this.state.fields,
+                architectures: this.state.selectedArchs
+            };
+            this.props.toast("info", "Updating", `Updating solution ${body.solution.id}...`);
+            const res = await (await fetch(`/api/solutions/${body.solution.id}`, {method: 'PATCH', body: JSON.stringify(body), headers: {"Content-type": "application/json"}})).json();
+            if (res?.error) {
+                this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.error.message);
+                return;
+            }
+            this.props.toast("success", "OK", `Solution ${body.solution.id} has been updated.`);
+            this.uploadDiagrams(res.id);
+        } else if (this.state.fields.id) {
             // POST new solution
             const body = {
                 solution: this.state.fields,
@@ -118,8 +132,6 @@ class SolutionModal extends Component {
                 return;
             }
             this.uploadDiagrams(res.id);
-        } else if(this.state.fields.id) {
-            console.log("Not yet implemented.");
         } else {
             this.props.toast("error", "INVALID INPUT", "You must set a solution ID.");
         }
@@ -204,7 +216,7 @@ class SolutionModal extends Component {
                                 {!this.props.isDuplicate && this.state.architectures ? <FormGroup legendText="Architectures" style={{ marginBottom: '1rem' }} ><MultiSelect.Filterable
                                     id='ref-archs'
                                     items={this.state.architectures}
-                                    itemToString={(item) => {return item.arch_id}}
+                                    itemToString={(item) => {return item.name}}
                                     onChange={(event) => this.setState({selectedArchs: event.selectedItems})}
                                     initialSelectedItems={this.state.selectedArchs}
                                     placeholder='Control Families'

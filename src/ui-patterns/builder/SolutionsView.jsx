@@ -8,16 +8,22 @@ import {
 } from "react-router-dom";
 
 import {
+    Button,
     OverflowMenu,
     OverflowMenuItem,
     ToastNotification,
     SearchSkeleton
 } from 'carbon-components-react';
+import {
+    Add16,
+    Edit16
+} from '@carbon/icons-react';
 
-import { Card, Container, Row, Col } from 'react-bootstrap';
+import { Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
 
 import ValidateModal from '../ValidateModal';
 import SolutionModal from "./SolutionModal";
+import SolutionDetailsPane from './SolutionDetailsPane';
 
 class SolutionsView extends Component {
 
@@ -42,7 +48,6 @@ class SolutionsView extends Component {
         fetch('/api/solutions')
             .then(res => res.json())
             .then(solutions => {
-                console.log(solutions)
                 this.setState({ solutions: solutions, dataLoaded: true });
             })
             .catch(console.error);
@@ -59,12 +64,36 @@ class SolutionsView extends Component {
             .catch(console.error);
     };
 
+    downloadTerraform(solution) {
+
+        if (!solution) {
+            this.addNotification("error", "Error", "Cannot download Terraform at this time.");
+            return
+        }
+
+        this.addNotification("info", "BUILDING", "Building your terraform module...");
+        fetch(`/api/solutions/${solution.id}/automation`)
+            .then(response => {
+                if (response && response.status === 200) {
+                    response.blob().then(blob => {
+                        let url = window.URL.createObjectURL(blob);
+                        let a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${solution.id}-automation.zip`;
+                        a.click();
+                    });
+                }
+                else {
+                    this.addNotification("error", response.status + " " + response.statusText, "Error building your terraform module.");
+                }
+            });
+    }
+
     deleteSolution() {
         if (this.state.curSol) {
             this.addNotification('info', 'Deleting', `Deleting solution ${this.state.curSol.id} id beeing deleted...`);
             fetch(`/api/solutions/${this.state.curSol.id}`, {method: 'delete'})
                 .then(res => {
-                    console.log(res);
                     this.addNotification('success', 'OK', `Solution ${this.state.curSol.id} deleted successfully!`);
                     this.setState({
                         showValidate: false,
@@ -79,16 +108,18 @@ class SolutionsView extends Component {
         }
     }
 
-    async showModal() {
+    async showModal(updateModal) {
         this.setState({
             showModal: true,
+            updateModal: updateModal || false
         });
     }
 
     async hideModal() {
         this.setState({
             showModal: false,
-            isDuplicate: false
+            isDuplicate: false,
+            updateModal: false
         });
         this.loadSolutions();
     }
@@ -139,56 +170,64 @@ class SolutionsView extends Component {
                         <br></br>
                         <h2 style={{"display": "flex"}}>
                             Solutions
-                            <OverflowMenu
-                                size='lg'
-                                flipped
-                                style={{"margin-left": "auto"}}>
-                                <OverflowMenuItem
-                                    itemText="Add"
-                                    onClick={() => this.showModal()}/>
-                            </OverflowMenu>
+                            <Button
+                                size='sm'
+                                style={{"margin-left": "auto"}}
+                                onClick={() => this.showModal()}
+                                renderIcon={Add16} >
+                                Create
+                            </Button>
                         </h2>
                         <br></br>
                     </div>
                 </div>
 
-                <Container>
-                    <Row>
+                    <Row sm={1} md={2} lg={3} xl={4} xxl={5} className="g-4">
                         {this.state.dataLoaded ?
                         this.state.solutions?.length ?
                             this.state.solutions.map((solution) => (
                                 <Col>
-                                    <Card style={{ width: '18rem', marginBottom: '1rem' }}>
-                                        <Card.Body>
-                                            <Card.Title>{solution.name}</Card.Title>
-                                            <Card.Subtitle className="mb-2 text-muted">{solution.id}</Card.Subtitle>
-                                            <Card.Text>{solution.short_desc}</Card.Text>
-                                            <Card.Link href="#">View</Card.Link>
-                                            <Card.Link href="#">Download</Card.Link>
-                                            <Card.Link style={{color: 'red'}} onClick={() => {
-                                                this.setState({
-                                                    showValidate: true,
-                                                    curSol: solution
-                                                });
-                                            }}>Delete</Card.Link>
-                                        </Card.Body>
-                                    </Card>
+                                    {/* <CardGroup> */}
+                                        {/* <Card style={{ width: '20rem', marginBottom: '1rem' }}> */}
+                                        <Card style={{ marginBottom: '1rem' }}>
+                                            <Card.Body>
+                                                <Card.Title>{solution.name}</Card.Title>
+                                                <Card.Subtitle className="mb-2 text-muted">{solution.id}</Card.Subtitle>
+                                                <Card.Text>{solution.short_desc}</Card.Text>
+                                                <Card.Link href="#" onClick={() => {
+                                                    this.setState({ isPaneOpen: true, dataDetails:undefined });
+                                                    fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
+                                                    .then((res) => res.json())
+                                                    .then((sol) => {
+                                                        this.setState({dataDetails: sol})
+                                                    })
+                                                        .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
+                                                    }}>Details</Card.Link>
+                                                <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
+                                                <Card.Link style={{color: 'red'}} onClick={() => {
+                                                    this.setState({
+                                                        showValidate: true,
+                                                        curSol: solution
+                                                    });
+                                                }}>Delete</Card.Link>
+                                            </Card.Body>
+                                        </Card>
+                                    {/* </CardGroup> */}
                                 </Col>
                             ))
                         :
-                            <p>No Solutions at the moment, click <strong>Add</strong> on the top right corner to create a new one.</p>
+                            <p>No Solutions at the moment, click <strong>Create</strong> on the top right corner to create a new one.</p>
                         :
                             <SearchSkeleton />
                         }
                     </Row>
-                </Container>
 
                 {this.state.showModal && 
                     <SolutionModal
                         show={this.state.showModal}
                         handleClose={this.hideModal}
                         isUpdate={this.state.updateModal}
-                        data={this.state.archRecord}
+                        data={this.state.dataDetails}
                         toast={this.addNotification}
                         isDuplicate={this.state.isDuplicate}
                         user={this.state.user}
@@ -217,6 +256,19 @@ class SolutionsView extends Component {
                             });
                         }} />
                 }
+
+                <div>
+                    <SolutionDetailsPane 
+                        data={this.state.dataDetails}
+                        open={this.state.isPaneOpen}
+                        buttonClick={() => {
+                            this.setState({ isPaneOpen: false });
+                            this.showModal(true);
+                        }}
+                        buttonIcon={Edit16}
+                        buttonText='Edit'
+                        onRequestClose={() => this.setState({ isPaneOpen: false })} />
+                </div>
 
             </div>
 
