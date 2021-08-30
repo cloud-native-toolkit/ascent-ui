@@ -28,6 +28,7 @@ class MappingView extends Component {
 
   async loadTable() {
     const mappingDetails = await this.props.mapping.getMappings({ include: ["profile", "control", "service"] });
+    console.log(mappingDetails);
     this.props.mapping.getMappings({ include: ["profile", "goals", "control", "service"] }).then((mappings) => {
       this.setState({
         data: mappings,
