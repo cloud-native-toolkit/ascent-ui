@@ -25,6 +25,12 @@ import ValidateModal from '../ValidateModal';
 import SolutionModal from "./SolutionModal";
 import SolutionDetailsPane from './SolutionDetailsPane';
 
+let groupByN = (n, data) => {
+    let result = [];
+    for (let i = 0; i < data.length; i += n) result.push(data.slice(i, i + n));
+    return result;
+};
+
 class SolutionsView extends Component {
 
     // Configure the App
@@ -183,47 +189,47 @@ class SolutionsView extends Component {
                         <br></br>
                     </div>
                 </div>
-
-                    <Row sm={1} md={2} lg={3} xl={4} xxl={5} className="g-4">
-                        {this.state.dataLoaded ?
-                        this.state.solutions?.length ?
-                            this.state.solutions.map((solution) => (
-                                <Col>
-                                    {/* <CardGroup> */}
-                                        {/* <Card style={{ width: '20rem', marginBottom: '1rem' }}> */}
-                                        <Card style={{ marginBottom: '1rem' }}>
-                                            <Card.Body>
-                                                <Card.Title>{solution.name}</Card.Title>
-                                                <Card.Subtitle className="mb-2 text-muted">{solution.id}</Card.Subtitle>
-                                                <Card.Text>{solution.short_desc}</Card.Text>
-                                                <Card.Link href="#" onClick={() => {
-                                                    this.setState({ isPaneOpen: true, dataDetails:undefined });
-                                                    fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
-                                                    .then((res) => res.json())
-                                                    .then((sol) => {
-                                                        this.setState({dataDetails: sol})
-                                                    })
-                                                        .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
-                                                    }}>Details</Card.Link>
-                                                <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
-                                                {this.state.user?.role === "admin" && <Card.Link style={{color: 'red', cursor: 'pointer'}} onClick={() => {
-                                                    this.setState({
-                                                        showValidate: true,
-                                                        curSol: solution
-                                                    });
-                                                }}>Delete</Card.Link>}
-                                            </Card.Body>
-                                        </Card>
-                                    {/* </CardGroup> */}
-                                </Col>
-                            ))
-                        :
-                            <p>No Solutions at the moment{this.state.user?.role === "admin" ? <>, click <strong>Create</strong> on the top right corner to create a new one.</>: <>.</>}</p>
-                        :
-                            <SearchSkeleton />
-                        }
-                    </Row>
-
+                {groupByN(4, this.state.solutions).map(solGroup => (
+                    <CardGroup>
+                        {/* <Row sm={1} md={2} lg={3} xl={4} xxl={5} className="g-4"> */}
+                            {this.state.dataLoaded ?
+                                solGroup?.length ?
+                                solGroup.map((solution) => (
+                                    <Card style={{ marginBottom: '1rem', marginRight: '1rem', borderLeft: '1px solid rgba(0, 0, 0, 0.125)' }}>
+                                        <Card.Body>
+                                            <Card.Title>{solution.name}</Card.Title>
+                                            <Card.Subtitle className="mb-2 text-muted">{solution.id}</Card.Subtitle>
+                                            <Card.Text>{solution.short_desc}</Card.Text>
+                                        </Card.Body>
+                                        <Card.Footer>
+                                            <Card.Link href="#" onClick={() => {
+                                                this.setState({ isPaneOpen: true, dataDetails:undefined });
+                                                fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
+                                                .then((res) => res.json())
+                                                .then((sol) => {
+                                                    this.setState({dataDetails: sol})
+                                                })
+                                                    .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
+                                                }}>Details</Card.Link>
+                                            <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
+                                            {this.state.user?.role === "admin" && <Card.Link style={{color: 'red', cursor: 'pointer'}} onClick={() => {
+                                                this.setState({
+                                                    showValidate: true,
+                                                    curSol: solution
+                                                });
+                                            }}>Delete</Card.Link>}
+                                        </Card.Footer>
+                                    </Card>
+                                ))
+                            :
+                                <p>No Solutions at the moment{this.state.user?.role === "admin" ? <>, click <strong>Create</strong> on the top right corner to create a new one.</>: <>.</>}</p>
+                            :
+                                <SearchSkeleton />
+                            }
+                        {/* </Row> */}
+                </CardGroup>
+                ))}
+                
                 {this.state.showModal && 
                     <SolutionModal
                         show={this.state.showModal}
