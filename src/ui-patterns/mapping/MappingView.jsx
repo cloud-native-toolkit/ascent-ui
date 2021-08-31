@@ -27,19 +27,20 @@ class MappingView extends Component {
   }
 
   async loadTable() {
-    const mappingDetails = await this.props.mapping.getMappings({ include: ["profile", "control", "service"] });
-    console.log(mappingDetails);
-    this.props.mapping.getMappings({ include: ["profile", "goals", "control", "service"] }).then((mappings) => {
+    this.setState({
+      data: [],
+      filterData: [],
+      totalItems: 0
+    });
+    let mappingDetails = await this.props.mapping.getMappings({ include: ['profile', "control", "service"] });
+    mappingDetails = mappingDetails.sort((a, b) => b?.profile?.createdAt - a?.profile?.createdAt);
+    this.props.mapping.getMappings({ include: ['profile', "goals", "control", "service"] }).then((mappings) => {
+      mappings = mappings.sort((a, b) => b?.profile?.createdAt - a?.profile?.createdAt)
       this.setState({
         data: mappings,
         filterData: mappings,
         totalItems: mappings.length
       });
-    });
-    this.setState({
-      data: [],
-      filterData: [],
-      totalItems: 0
     });
     this.setState({
       data: mappingDetails,

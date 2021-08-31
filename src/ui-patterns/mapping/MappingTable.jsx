@@ -318,6 +318,16 @@ class MappingTable extends Component {
                         {this.state.user?.role === "admin" && <TableCell>
                           <OverflowMenu light flipped>
                             <OverflowMenuItem itemText="Edit" onClick={() => this.updateMapping(row.id)} />
+                            {/* <OverflowMenuItem itemText="Archive Profile" onClick={async () => {
+                              const profileId = row.cells.find(cell => cell.info.header === 'scc_profile').value;
+                              const response = await fetch(`/api/mapping/profiles/${profileId}/archive`, {method: 'POST'});
+                              if (response.status === 204) {
+                                this.props.toast('success', 'Success', `Profile ${profileId} successfully archived!`)
+                                this.props.handleReload();
+                              } else {
+                                this.props.toast('error', 'Error', `Error archiving profile ${profileId}.`)
+                              }
+                            }} /> */}
                           </OverflowMenu>
                         </TableCell>}
                       </TableExpandRow>
