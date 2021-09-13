@@ -91,7 +91,7 @@ class UIShell extends Component {
           <BuilderHeader/>
           <HeaderContainer
             render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-              <Header aria-label="IBM GSI Labs" onClick={
+              <Header aria-label="IBM Ecosystem Labs" onClick={
                 isSideNavExpanded === true ? onClickSideNavExpand : null
               }>
                 <SkipToContent />
@@ -101,9 +101,9 @@ class UIShell extends Component {
                   isActive={isSideNavExpanded}
                 />
                 <HeaderName href="#" prefix="IBM">
-                  GSI Labs
+                  Ecosystem Labs - ASCENT
                 </HeaderName>
-                <HeaderNavigation aria-label="GSI Labs">
+                <HeaderNavigation aria-label="Ecosystem Labs">
                 </HeaderNavigation>
 
                 <HeaderGlobalBar>

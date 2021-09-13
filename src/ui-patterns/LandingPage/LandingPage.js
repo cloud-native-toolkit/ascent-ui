@@ -72,7 +72,7 @@ class LandingPage extends Component {
                         What is ASCENT?
                       </h2>
                       <p className="landing-page__p">
-                        ASCENT is a tool created by IBM to accelerate partner's journey to the IBM Financial Services Cloud.
+                        ASCENT is a tool created by IBM to accelerate partner's journey to the IBM Cloud.
                         Through automation and integration, ASCENT enables enterprises to deliver compliant cloud architectures which can be
                         clearly evidenced and communicated with Governance, Risk and Compliance teams. Click on the links below to learn more
                         about how ASCENT automates and integrates Security Controls, Reference Architectures and Cloud Services.
@@ -121,13 +121,13 @@ class LandingPage extends Component {
           />
           <InfoCard
             heading="Reference Architectures"
-            body="Set up your FS-ready cloud environment using our pre-defined reference architectures for the IBM Cloud for Financial Services. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
+            body="Set up your compliant cloud environment using our pre-defined reference architectures for the IBM Cloud. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
             icon={<Link to="/architectures" ><ModelBuilder32  /></Link>}
           />
 
           <InfoCard
             heading="Cloud Services"
-            body="Navigate to our IBM Cloud services and learn more about how they are impacted by our compliance controls. Add those services to your own reference architecture and automate the provisioning of your custom FS-ready cloud architecture."
+            body="Navigate to our IBM Cloud services and learn more about how they are impacted by our compliance controls. Add those services to your own reference architecture and automate the provisioning of your custom cloud architecture."
             icon={<Link to="/services" ><Cloud32  /></Link>}
           />
         </InfoSection>
