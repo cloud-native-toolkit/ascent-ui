@@ -24,8 +24,9 @@ var cookieParser = require("cookie-parser");
 const session = require('express-session')
 const passport = require('passport');
 const WebAppStrategy = require("ibmcloud-appid").WebAppStrategy;
+const LOGIN_URL = "/login";
+const LOGOUT_URL = "/logout";
 const CALLBACK_URL = "/ibm/cloud/appid/callback";
-const LOGOUT_URL = "/ibm/cloud/appid/logout";
 const logger = log4js.getLogger(appName);
 
 const conf = {
@@ -69,33 +70,40 @@ passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
   });
 app.get(CALLBACK_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME));
+app.get(LOGIN_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME), function(req, res, next) {
+  res.redirect("/");
+});
 app.get(LOGOUT_URL, function(req, res, next) {
   WebAppStrategy.logout(req);
   // If you chose to store your refresh-token, don't forgot to clear it also in logout:
   res.clearCookie("refreshToken");
   res.redirect("/");
 });
-app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
-app.get('/userDetails', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res) => {
-  let roles = ["read-only"];
-  if (WebAppStrategy.hasScope(req, "view_controls")) {
-    roles.push("fs-viewer");
+// app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
+app.get('/userDetails', (req, res) => {
+  if (req.isAuthenticated()) {
+    let roles = ["read-only"];
+    if (WebAppStrategy.hasScope(req, "view_controls")) {
+      roles.push("fs-viewer");
+    }
+    if (WebAppStrategy.hasScope(req, "edit")) {
+      roles.push("editor");
+    }
+    if (WebAppStrategy.hasScope(req, "super_edit")) {
+      roles.push("admin");
+    }
+    res.json({
+      name: req.user.name,
+      email: req.user.email,
+      given_name: req.user.given_name,
+      family_name: req.user.family_name,
+      roles: roles,
+      role: roles[roles.length-1],
+      sessionExpire: req.session.cookie.expires
+    });
+  } else {
+    res.json({error: "Not authenticated"});
   }
-  if (WebAppStrategy.hasScope(req, "edit")) {
-    roles.push("editor");
-  }
-  if (WebAppStrategy.hasScope(req, "super_edit")) {
-    roles.push("admin");
-  }
-  res.json({
-    name: req.user.name,
-    email: req.user.email,
-    given_name: req.user.given_name,
-    family_name: req.user.family_name,
-    roles: roles,
-    role: roles[roles.length-1],
-    sessionExpire: req.session.cookie.expires
-  });
 })
 app.use(express.static(path.join(__dirname, "../build")));
 

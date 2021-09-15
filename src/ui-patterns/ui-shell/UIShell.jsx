@@ -30,9 +30,10 @@ import Routes from "./router";
 import BuilderHeader from "../../components/BuilderHeader/BuilderHeader";
 import {HeaderGlobalAction} from "carbon-components-react/lib/components/UIShell";
 import {
-  Fade16,
   Launch16,
   UserAvatar20,
+  Login20,
+  Locked16,
   ArrowRight16 as ArrowRight
 } from '@carbon/icons-react';
 
@@ -67,15 +68,23 @@ class UIShell extends Component {
     };
   }
 
+  async redirectToLogin() {
+    window.location.href = "/login";
+  }
+
   async componentDidMount() {
     fetch('/userDetails')
     .then(res => res.json())
     .then(user => {
-      setTimeout(() => {
-        // Session expired, redirecting to login
-        window.location.reload(false);
-      }, (new Date(user?.sessionExpire)).getTime()-Date.now());
-      this.setState({ user: user || undefined });
+      if (user.name) {
+        setTimeout(() => {
+          // Session expired, redirecting to login
+          window.location.reload(false);
+        }, (new Date(user?.sessionExpire)).getTime()-Date.now());
+        this.setState({ user: user || undefined });
+      } else {
+        console.log(user);
+      }
     })
     .catch(err => {
       console.log(err);
@@ -107,13 +116,22 @@ class UIShell extends Component {
                 </HeaderNavigation>
 
                 <HeaderGlobalBar>
-                  <HeaderGlobalAction
-                    aria-label="Profile"
-                    isActive={this.state.profileExpanded}
-                    onClick={() => this.setState({profileExpanded: !this.state.profileExpanded})}
-                    tooltipAlignment="end">
-                    <UserAvatar20 />
-                  </HeaderGlobalAction>
+                  {this.state.user ? 
+                    <HeaderGlobalAction
+                      aria-label="Profile"
+                      isActive={this.state.profileExpanded}
+                      onClick={() => this.setState({profileExpanded: !this.state.profileExpanded})}
+                      tooltipAlignment="end">
+                      <UserAvatar20 />
+                    </HeaderGlobalAction>
+                  :
+                    <HeaderGlobalAction
+                      aria-label="Login / Register"
+                      onClick={this.redirectToLogin}
+                      tooltipAlignment="end">
+                      <Login20 />
+                    </HeaderGlobalAction>
+                  }
                 </HeaderGlobalBar>
                 <HeaderPanel aria-label="Header Panel" expanded={this.state.profileExpanded} style={{'bottom': 'auto', 'padding-bottom': '1rem', 'list-style-type': 'none'}}>
                   <li class="bx--switcher__item" style={{display: 'flex'}}>
@@ -123,7 +141,7 @@ class UIShell extends Component {
                   <li class="bx--switcher__item"><strong style={{'margin': '0 1rem'}}>{(this.state.user && this.state.user.email) || "example@ibm.com"}</strong></li>
                   <Switcher aria-label="Switcher Container">
                       <SwitcherDivider />
-                      <SwitcherItem aria-label="Logout" href="/ibm/cloud/appid/logout" style={{display: 'flex'}}>
+                      <SwitcherItem aria-label="Logout" href="/logout" style={{display: 'flex'}}>
                         <span>Logout</span>
                         <ArrowRight style={{'margin-left': 'auto'}}/>
                       </SwitcherItem>
@@ -139,21 +157,42 @@ class UIShell extends Component {
 
                     <SideNavMenu title="Solution Builder">
 
-                      <Link to="/solutions">
-                        <SideNavMenuItem>Solutions</SideNavMenuItem>
-                      </Link>
+                      {this.state.user ?
+                        <Link to="/solutions">
+                          <SideNavMenuItem>Solutions</SideNavMenuItem>
+                        </Link>
+                        :
+                        <SideNavMenuItem onClick={this.redirectToLogin} >
+                          Solutions
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
 
                       {this.state.user?.roles?.includes("editor") ? <Link to={`/myarchitectures`}>
                         <SideNavMenuItem>Your Architectures</SideNavMenuItem>
                       </Link> : <></>}
 
-                      <Link to="/architectures">
-                        <SideNavMenuItem>Architectures</SideNavMenuItem>
-                      </Link>
+                      {this.state.user ?
+                        <Link to="/architectures">
+                          <SideNavMenuItem>Architectures</SideNavMenuItem>
+                        </Link>
+                        :
+                        <SideNavMenuItem onClick={this.redirectToLogin} >
+                          Architectures
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
 
-                      <Link to="/services">
-                        <SideNavMenuItem>Services</SideNavMenuItem>
-                      </Link>
+                      {this.state.user ?
+                        <Link to="/services">
+                          <SideNavMenuItem>Services</SideNavMenuItem>
+                        </Link>
+                        :
+                        <SideNavMenuItem onClick={this.redirectToLogin} >
+                          Services
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
                     </SideNavMenu>
 
                     <SideNavMenu title="Compliance" >
@@ -166,13 +205,27 @@ class UIShell extends Component {
                         <SideNavMenuItem>Controls</SideNavMenuItem>
                       </Link> : <></>}
 
-                      <Link to="/mapping">
-                        <SideNavMenuItem>Mapping</SideNavMenuItem>
-                      </Link>
+                      {this.state.user ?
+                        <Link to="/mapping">
+                          <SideNavMenuItem>Mapping</SideNavMenuItem>
+                        </Link>
+                        :
+                          <SideNavMenuItem onClick={this.redirectToLogin} >
+                            Mapping
+                            <Locked16 style={{ marginLeft: "auto" }}  />
+                          </SideNavMenuItem>
+                      }
 
-                      <Link to="/nists">
-                        <SideNavMenuItem>NIST 800-53</SideNavMenuItem>
-                      </Link>
+                      {this.state.user ?
+                        <Link to="/nists">
+                          <SideNavMenuItem>NIST 800-53</SideNavMenuItem>
+                        </Link>
+                        :
+                          <SideNavMenuItem onClick={this.redirectToLogin} >
+                            NIST 800-53
+                            <Locked16 style={{ marginLeft: "auto" }}  />
+                          </SideNavMenuItem>
+                      }
 
                     </SideNavMenu>
 

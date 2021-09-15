@@ -119,7 +119,12 @@ class BillofMaterialsView extends Component {
         fetch('/userDetails')
         .then(res => res.json())
         .then(user => {
-            this.setState({ user: user || undefined })
+            if (user.name) {
+                this.setState({ user: user || undefined });
+            } else {
+                // Redirect to login page
+                window.location.href = "/login";
+            }
         })
         await this.loadTable();
     }
