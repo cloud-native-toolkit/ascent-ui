@@ -14,6 +14,7 @@ app.get('/userDetails', (req, res) => {
         role: "admin",
         sessionExpire: new Date(Date.now()+3600*1000)
     });
+    // res.json({error: "Not authenticated"});
 });
 
 const port = process.env.API_PORT || 3002;

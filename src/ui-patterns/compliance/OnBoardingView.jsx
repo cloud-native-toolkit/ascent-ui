@@ -108,10 +108,15 @@ class OnBoardingView extends Component {
         fetch('/userDetails')
             .then(res => res.json())
             .then(async user => {
-                this.setState({
-                    user: user || undefined,
-                });
-                this.loadStages();
+                if (user.name) {
+                    this.setState({
+                        user: user || undefined,
+                    });
+                    this.loadStages();
+                } else {
+                    // Redirect to login page
+                    window.location.href = "/login";
+                }
             });
     }
 

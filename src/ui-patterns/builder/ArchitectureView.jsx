@@ -137,8 +137,13 @@ class ArchitectureView extends Component {
         fetch('/userDetails')
             .then(res => res.json())
             .then(user => {
-                this.setState({ user: user || undefined })
-                this.loadArchitectures();
+                if (user.name) {
+                    this.setState({ user: user || undefined });
+                    this.loadArchitectures();
+                } else {
+                    // Redirect to login page
+                    window.location.href = "/login";
+                }
             })
             .catch(err => {
                 this.loadArchitectures();

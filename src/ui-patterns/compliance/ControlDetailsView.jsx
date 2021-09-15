@@ -103,12 +103,17 @@ class ControlDetailsView extends Component {
     fetch('/userDetails')
       .then(res => res.json())
       .then(user => {
+        if (user.name) {
           this.setState({
             user: user || undefined,
             show: user?.roles?.includes("fs-viewer") ? "fs-cloud-desc" : "nist-desc"
           });
           this.loadControl(this.props.controlId);
           this.loadTable();
+        } else {
+          // Redirect to login page
+          window.location.href = "/login";
+        }
       });
   }
 

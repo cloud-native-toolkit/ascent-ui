@@ -64,8 +64,13 @@ class SolutionsView extends Component {
         fetch('/userDetails')
             .then(res => res.json())
             .then(user => {
-                this.setState({ user: user || undefined });
-                this.loadSolutions();
+                if (user.name) {
+                    this.setState({ user: user || undefined });
+                    this.loadSolutions();
+                } else {
+                    // Redirect to login page
+                    window.location.href = "/login";
+                }
             })
             .catch(console.error);
     };

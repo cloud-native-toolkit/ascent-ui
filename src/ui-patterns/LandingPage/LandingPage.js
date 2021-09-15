@@ -42,7 +42,9 @@ class LandingPage extends Component {
       fetch('/userDetails')
       .then(res => res.json())
       .then(user => {
-          this.setState({ user: user || undefined })
+        if (user.name) {
+          this.setState({ user: user });
+        }
       })
   }
 
@@ -117,18 +119,18 @@ class LandingPage extends Component {
           <InfoCard
             heading="Security Controls"
             body="The IBM Cloud Framework for Financial Services provides a set of pre-configured compliance controls that are adhered to by the entire ecosystem — financial institutions, cloud services, and the digital supply chain of ISVs and SaaS providers."
-            icon={<Link to={this.state.user?.roles?.includes("fs-viewer") ? "/controls" : "/nists"} ><SankeyDiagramAlt32  /></Link>}
+            icon={this.state.user ? <Link to={this.state.user?.roles?.includes("fs-viewer") ? "/controls" : "/nists"} ><SankeyDiagramAlt32  /></Link> : <SankeyDiagramAlt32  />}
           />
           <InfoCard
             heading="Reference Architectures"
             body="Set up your compliant cloud environment using our pre-defined reference architectures for the IBM Cloud. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
-            icon={<Link to="/architectures" ><ModelBuilder32  /></Link>}
+            icon={this.state.user ? <Link to="/architectures" ><ModelBuilder32  /></Link> : <ModelBuilder32  />}
           />
 
           <InfoCard
             heading="Cloud Services"
             body="Navigate to our IBM Cloud services and learn more about how they are impacted by our compliance controls. Add those services to your own reference architecture and automate the provisioning of your custom cloud architecture."
-            icon={<Link to="/services" ><Cloud32  /></Link>}
+            icon={this.state.user ? <Link to="/services" ><Cloud32  /></Link> : <Cloud32  />}
           />
         </InfoSection>
       </div>
