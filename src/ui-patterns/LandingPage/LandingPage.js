@@ -11,6 +11,11 @@ import { InfoSection, InfoCard } from '../../components/Info';
 import ModelBuilder32 from '@carbon/icons-react/lib/model-builder/32';
 import SankeyDiagramAlt32 from '@carbon/icons-react/lib/sankey-diagram/32';
 import Cloud32 from "@carbon/icons-react/lib/cloud/32";
+
+import {
+  Login20,
+} from '@carbon/icons-react';
+
 import {
   Link
 } from "react-router-dom";
@@ -79,7 +84,7 @@ class LandingPage extends Component {
                         clearly evidenced and communicated with Governance, Risk and Compliance teams. Click on the links below to learn more
                         about how ASCENT automates and integrates Security Controls, Reference Architectures and Cloud Services.
                       </p>
-                      <Link to="/docs" ><Button>Learn more</Button></Link>
+                      {this.state.user ? <Link to="/docs" ><Button>Learn more</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
 
                     </div>
                     <div className="bx--col-md-4 bx--col-lg-8">
