@@ -109,9 +109,12 @@ class UIShell extends Component {
                   onClick={onClickSideNavExpand}
                   isActive={isSideNavExpanded}
                 />
-                <HeaderName href="#" prefix="IBM">
-                  Ecosystem Labs - ASCENT
-                </HeaderName>
+                <Link to="/">
+                  <HeaderName prefix="IBM">
+                    Ecosystem Labs - ASCENT
+                  </HeaderName>
+                </Link>
+                
                 <HeaderNavigation aria-label="Ecosystem Labs">
                 </HeaderNavigation>
 
