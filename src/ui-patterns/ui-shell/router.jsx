@@ -3,6 +3,7 @@ import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
 import BillofMaterialsComponent from "../../components/bom/BillofMaterials";
 import ArchitectureComponent from "../../components/builder/Architecture";
 import SolutionsComponent from "../../components/builder/Solutions";
+import SolutionDetailsComponent from "../../components/builder/SolutionDetails";
 import ControlsComponent from "../../components/compliance/Controls";
 import NistComponent from "../../components/compliance/Nist";
 import ControlDetailsComponent from "../../components/compliance/ControlDetails";
@@ -106,6 +107,29 @@ function Nists() {
     )
 }
 
+/**
+ * Solutions
+ */
+function SolutionDetails() {
+    let { id } = useParams();
+    return (
+        <SolutionDetailsComponent data={id}></SolutionDetailsComponent>
+    );
+}
+function Solutions() {
+    let { path, url } = useRouteMatch();
+    return (
+        <Switch>
+            <Route exact path={path}>
+                <SolutionsComponent />
+            </Route>
+            <Route path={`${path}/:id`}>
+                <SolutionDetails />
+            </Route>
+        </Switch>
+    )
+}
+
 
 function Routes() {
     return (
@@ -115,7 +139,7 @@ function Routes() {
             <Route path="/bom/:bomid" children={<RenderBOM></RenderBOM>}></Route>
             <Route path="/architectures" component={ArchitectureComponent} />
             <Route path="/myarchitectures" component={userArch} />
-            <Route path="/solutions" component={SolutionsComponent} />
+            <Route path="/solutions" component={Solutions} />
             <Route path="/mapping" component={MappingComponent} />
             <Route path="/controls" component={Controls} />
             <Route path="/onboarding" component={OnBoardingComponent} />
