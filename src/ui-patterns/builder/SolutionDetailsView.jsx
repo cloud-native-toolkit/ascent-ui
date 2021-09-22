@@ -15,8 +15,11 @@ import {
     Download16
 } from '@carbon/icons-react';
 
-import ValidateModal from '../ValidateModal';
+import ReactMarkdown from 'react-markdown';
+
 import SolutionModal from "./SolutionModal";
+
+import marked from 'marked';
 
 import {
     ToastNotification, ContentSwitcher, Switch
@@ -43,8 +46,13 @@ class SolutionDetailsView extends Component {
         this.setState({ data: undefined });
         fetch(`/api/solutions/${this.props.solId}?filter=${encodeURIComponent(JSON.stringify({ include: ['architectures'] }))}`)
             .then((res) => res.json())
-            .then((sol) => {
-                this.setState({ data: sol });
+            .then(async (sol) => {
+                // Fetch README content if it exists
+                let readme = sol.files?.find(elt => elt.Key?.toLowerCase() === "readme.md");
+                if (readme) {
+                    readme = await (await fetch(`/api/solutions/${this.props.solId}/files/${readme.Key}`)).text();
+                }
+                this.setState({ data: sol, readme: readme });
             })
             .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${this.props.solId}`))
     }
@@ -64,6 +72,11 @@ class SolutionDetailsView extends Component {
             .catch(err => {
                 this.loadSolution();
             });
+    }
+
+    getMarkdownText() {
+        var rawMarkup = marked(this.state.readme, {sanitize: true});
+        return { __html: rawMarkup };
     }
 
     downloadTerraform() {
@@ -134,6 +147,7 @@ class SolutionDetailsView extends Component {
 
     render() {
         const data = this.state.data;
+        const diagram = data?.files?.find(elt => elt.Key?.toLowerCase() === "diagram.png");
         let notif = this.state.notif;
         return (
             <>
@@ -195,8 +209,8 @@ class SolutionDetailsView extends Component {
                             size='xl'
                             onChange={(e) => { this.setState({ showContent: e.name }) }} >
                             <Switch name="solution-details" text="Description" />
-                            <Switch name="solution-readme" text="Readme" />
-                            <Switch name="solution-diagram" text="Diagram" />
+                            {this.state.readme ? <Switch name="solution-readme" text="Readme" />: <></>}
+                            {diagram ? <Switch name="solution-diagram" text="Diagram" />: <></>}
                         </ContentSwitcher>
                     }
 
@@ -236,11 +250,14 @@ class SolutionDetailsView extends Component {
                                         <div>
                                             <h3>Files</h3>
                                             <p>
+                                                To update files, dowload them and edit them in your favorite text editor, then upload them again using the <strong>Edit</strong> Button in the top right corner.
                                                 <ul style={{listStyle:'inside'}}>
                                                     {
                                                         data?.files?.map((file) => (
                                                             <li>
-                                                                {file.Key} ({`${(file.Size/1024).toFixed(2)} Kio`})
+                                                                <a href={`/api/solutions/${data.id}/files/${file.Key}`} >
+                                                                    {file.Key} ({`${(file.Size/1024).toFixed(2)} Kio`}) <Download16/>
+                                                                </a>
                                                             </li>
                                                         ))
                                                     }
@@ -251,15 +268,13 @@ class SolutionDetailsView extends Component {
                                 </div>}
                         </>
                     }
-                    {data?.id && this.state.showContent === "solution-readme" &&
-                        <>
-                            Not Yet Implemented
-                        </>
+                    {data?.id && this.state.readme && this.state.showContent === "solution-readme" &&
+                        <div className="markdown" dangerouslySetInnerHTML={this.getMarkdownText()} />
                     }
-                    {data?.id && this.state.showContent === "solution-diagram" &&
-                        <>
-                            Not Yet Implemented
-                        </>
+                    {data?.id && diagram && this.state.showContent === "solution-diagram" &&
+                        <img
+                            src={`/api/solutions/${this.props.solId}/files/${diagram.Key}`}
+                            alt={`Diagram of solution ${this.props.solId}`} />
                     }
 
                     {this.state.showModal && 

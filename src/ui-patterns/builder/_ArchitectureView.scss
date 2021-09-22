@@ -56,3 +56,33 @@
   height: auto;
 
 }
+
+// README
+
+$quoteborder: #CA2CC3;
+
+div.markdown blockquote {
+  margin: 0 3em;
+  padding: 0 0 0 0.5em;
+  border-left: 3px solid $quoteborder;
+  p+p {
+    // I think it looks better to not indent paragraphs in block quotes
+    text-indent: 0;
+  }
+}
+
+div.markdown h1, div.markdown h2, div.markdown h3, div.markdown h4 {
+  margin-top: 1rem;
+}
+
+div.markdown ul {
+  list-style: inside;
+}
+
+div.markdown ol {
+  list-style-type: decimal;
+}
+
+div.markdown th {
+  font-weight: bold;
+}
