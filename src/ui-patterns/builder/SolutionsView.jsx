@@ -207,15 +207,21 @@ class SolutionsView extends Component {
                                             <Card.Text>{solution.short_desc}</Card.Text>
                                         </Card.Body>
                                         <Card.Footer>
-                                            <Card.Link href="#" onClick={() => {
-                                                this.setState({ isPaneOpen: true, dataDetails:undefined });
-                                                fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
-                                                .then((res) => res.json())
-                                                .then((sol) => {
-                                                    this.setState({dataDetails: sol})
-                                                })
-                                                    .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
-                                                }}>Details</Card.Link>
+                                            <Card.Link href="#" 
+                                                // onClick={() => {
+                                                //     this.setState({ isPaneOpen: true, dataDetails:undefined });
+                                                //     fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
+                                                //     .then((res) => res.json())
+                                                //     .then((sol) => {
+                                                //         this.setState({dataDetails: sol})
+                                                //     })
+                                                //     .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
+                                                // }}
+                                            >
+                                                <Link to={`/solutions/${solution.id}`} >
+                                                    Details
+                                                </Link>
+                                            </Card.Link>
                                             <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
                                             {this.state.user?.role === "admin" && <Card.Link style={{color: 'red', cursor: 'pointer'}} onClick={() => {
                                                 this.setState({
