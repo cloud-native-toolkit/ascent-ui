@@ -209,7 +209,7 @@ class SolutionDetailsView extends Component {
                             size='xl'
                             onChange={(e) => { this.setState({ showContent: e.name }) }} >
                             <Switch name="solution-details" text="Description" />
-                            {this.state.readme ? <Switch name="solution-readme" text="Readme" />: <></>}
+                            {this.state.readme ? <Switch name="solution-readme" text="Documentation" />: <></>}
                             {diagram ? <Switch name="solution-diagram" text="Diagram" />: <></>}
                         </ContentSwitcher>
                     }
@@ -272,7 +272,7 @@ class SolutionDetailsView extends Component {
                         <div className="markdown" dangerouslySetInnerHTML={this.getMarkdownText()} />
                     }
                     {data?.id && diagram && this.state.showContent === "solution-diagram" &&
-                        <img
+                        <img style={{ maxWidth: '100%' }}
                             src={`/api/solutions/${this.props.solId}/files/${diagram.Key}`}
                             alt={`Diagram of solution ${this.props.solId}`} />
                     }
