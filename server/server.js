@@ -190,10 +190,13 @@ app.get('/docs*', (req, res) => {res.redirect('/');});
 app.get('/onboarding*', (req, res) => {res.redirect('/');});
 
 const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
-app.use('/api', passport.authenticate(AUTH_PROVIDER), (req, res, next) => {
-  if (!protectedMethods.includes(req.method) || AuthStrategy.hasScope(req, "edit")) {
+app.use('/api', (req, res, next) => {
+  if (  req.isAuthenticated() && (!protectedMethods.includes(req.method)
+      || (AUTH_PROVIDER === "appid" && AuthStrategy.hasScope(req, "edit"))
+      || (AUTH_PROVIDER === "openshift" && (req.user.groups.includes("ascent-editors") || req.user.groups.includes("ascent-admins"))))
+    ) {
     if (AUTH_PROVIDER === "openshift") {
-      req.headers['Authorization'] = `Bearer ${res.user?.token}`;
+      req.headers['Authorization'] = `Bearer ${req.user.token}`;
     } else {
       req.headers['Authorization'] = `Bearer ${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`;
     }
@@ -201,7 +204,7 @@ app.use('/api', passport.authenticate(AUTH_PROVIDER), (req, res, next) => {
   } else {
     res.status(401).json({
       error: {
-        message: "You must have editor role to perform this request."
+        message: "You must be authenticated and have editor role to perform this request."
       }
     });
   }
