@@ -23,16 +23,30 @@ const path = require("path");
 var cookieParser = require("cookie-parser");
 const session = require('express-session')
 const passport = require('passport');
-const WebAppStrategy = require("ibmcloud-appid").WebAppStrategy;
+const logger = log4js.getLogger(appName);
+const request = require('request');
+
+// Auth config, defaults to AppId unless config for OpenShift is provided
+const AUTH_PROVIDER = process.env.OCP_OAUTH_CONFIG ? "openshift" : "appid";
 const LOGIN_URL = "/login";
 const LOGOUT_URL = "/logout";
-const CALLBACK_URL = "/ibm/cloud/appid/callback";
-const logger = log4js.getLogger(appName);
+const CALLBACK_URL = "/login/callback";
 
 const conf = {
   application_url: process.env.APP_URI,
-  appidConfig: JSON.parse(process.env.APPID_CONFIG),
   port: 3000
+}
+
+// Set up authentication
+let AuthStrategy;
+if (AUTH_PROVIDER === "openshift") {
+  AuthStrategy = require('passport-oauth').OAuth2Strategy;
+  conf.authConfig = JSON.parse(process.env.OCP_OAUTH_CONFIG);
+  conf.authConfig.secret = conf.authConfig.clientSecret;
+} else {
+  // Auth provider defaults to App ID
+  AuthStrategy = require("ibmcloud-appid").WebAppStrategy;
+  conf.authConfig = JSON.parse(process.env.APPID_CONFIG);
 }
 
 const app = express();
@@ -43,7 +57,7 @@ app.get('/health', function (req, res, next) {
 });
 
 app.use(session({
-  secret: conf.appidConfig.secret,
+  secret: conf.authConfig.secret,
   resave: true,
   saveUninitialized: true,
   cookie: {
@@ -56,51 +70,107 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-passport.use(new WebAppStrategy({
-  tenantId: conf.appidConfig.tenantId,
-  clientId: conf.appidConfig.clientId,
-  secret: conf.appidConfig.secret,
-  oauthServerUrl: conf.appidConfig.oauthServerUrl,
-  redirectUri: conf.application_url+CALLBACK_URL
-}));
+
+passport.use(AUTH_PROVIDER, AUTH_PROVIDER === "openshift" ?
+  new AuthStrategy({
+    authorizationURL: conf.authConfig.authorization_endpoint,
+    tokenURL: conf.authConfig.token_endpoint,
+    clientID: conf.authConfig.clientID,
+    clientSecret: conf.authConfig.clientSecret,
+    callbackURL: conf.application_url + CALLBACK_URL
+  },
+  (accessToken, refreshToken, profile, done) => {
+    request({
+      url: `${conf.authConfig.api_endpoint}/apis/user.openshift.io/v1/users/~`,
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    }, (err, response, body) => {
+      const user = JSON.parse(body);
+      user.token = accessToken;
+      done(err, user);
+    });
+  })
+  :
+  new AuthStrategy({
+    tenantId: conf.authConfig.tenantId,
+    clientId: conf.authConfig.clientId,
+    secret: conf.authConfig.secret,
+    oauthServerUrl: conf.authConfig.oauthServerUrl,
+    redirectUri: conf.application_url + CALLBACK_URL
+  })
+);
+
 passport.serializeUser(function(user, cb) {
   cb(null, user);
-  });
+});
 passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
-  });
-app.get(CALLBACK_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME));
-app.get(LOGIN_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME), function(req, res, next) {
+});
+app.get(CALLBACK_URL, passport.authenticate(AUTH_PROVIDER), (req, res, next) => {
+  res.redirect("/");
+});
+app.get(LOGIN_URL, passport.authenticate(AUTH_PROVIDER), function(req, res, next) {
   res.redirect("/");
 });
 app.get(LOGOUT_URL, function(req, res, next) {
-  WebAppStrategy.logout(req);
-  // If you chose to store your refresh-token, don't forgot to clear it also in logout:
+  try {
+    req.session.destroy();
+    req.logout();
+  } catch (e) {
+    console.log(`req.logout() ERROR:`, e);
+  }
+  try {
+    AuthStrategy.logout(req);
+  } catch (e) {
+    console.log(`AuthStrategy.logout(req):`, e);
+  }
   res.clearCookie("refreshToken");
   res.redirect("/");
 });
-// app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME ));
+// app.use(passport.authenticate(WebAppStrategy.name ));
 app.get('/userDetails', (req, res) => {
   if (req.isAuthenticated()) {
     let roles = ["read-only"];
-    if (WebAppStrategy.hasScope(req, "view_controls")) {
-      roles.push("fs-viewer");
+    if (AUTH_PROVIDER === "openshift") {
+      if (req.user?.groups?.includes("ascent-fs-viewers")) {
+        roles.push("fs-viewer");
+      }
+      if (req.user?.groups?.includes("ascent-editors")) {
+        roles.push("editor");
+      }
+      if (req.user?.groups?.includes("ascent-admins")) {
+        roles.push("admin");
+      }
+      res.json({
+        name: "OCP User",
+        email: req.user?.metadata?.name,
+        given_name: "OCP",
+        family_name: "User",
+        roles: roles,
+        role: roles[roles.length-1],
+        sessionExpire: req.session.cookie.expires
+      });
+    } else {
+      if (AuthStrategy.hasScope(req, "view_controls")) {
+        roles.push("fs-viewer");
+      }
+      if (AuthStrategy.hasScope(req, "edit")) {
+        roles.push("editor");
+      }
+      if (AuthStrategy.hasScope(req, "super_edit")) {
+        roles.push("admin");
+      }
+      res.json({
+        name: req.user.name,
+        email: req.user.email,
+        given_name: req.user.given_name,
+        family_name: req.user.family_name,
+        roles: roles,
+        role: roles[roles.length-1],
+        sessionExpire: req.session.cookie.expires
+      });
     }
-    if (WebAppStrategy.hasScope(req, "edit")) {
-      roles.push("editor");
-    }
-    if (WebAppStrategy.hasScope(req, "super_edit")) {
-      roles.push("admin");
-    }
-    res.json({
-      name: req.user.name,
-      email: req.user.email,
-      given_name: req.user.given_name,
-      family_name: req.user.family_name,
-      roles: roles,
-      role: roles[roles.length-1],
-      sessionExpire: req.session.cookie.expires
-    });
   } else {
     res.json({error: "Not authenticated"});
   }
@@ -120,9 +190,13 @@ app.get('/docs*', (req, res) => {res.redirect('/');});
 app.get('/onboarding*', (req, res) => {res.redirect('/');});
 
 const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
-app.use('/api', passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res, next) => {
-  if (!protectedMethods.includes(req.method) || WebAppStrategy.hasScope(req, "edit")) {
-    req.headers['Authorization'] = `Bearer ${req.session[WebAppStrategy.AUTH_CONTEXT].accessToken} ${req.session[WebAppStrategy.AUTH_CONTEXT].identityToken}`;
+app.use('/api', passport.authenticate(AUTH_PROVIDER), (req, res, next) => {
+  if (!protectedMethods.includes(req.method) || AuthStrategy.hasScope(req, "edit")) {
+    if (AUTH_PROVIDER === "openshift") {
+      req.headers['Authorization'] = `Bearer ${res.user?.token}`;
+    } else {
+      req.headers['Authorization'] = `Bearer ${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`;
+    }
     return next();
   } else {
     res.status(401).json({
