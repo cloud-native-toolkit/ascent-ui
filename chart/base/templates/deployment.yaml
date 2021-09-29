@@ -62,6 +62,11 @@ spec:
                 secretKeyRef:
                   name: binding-dev-mapper
                   key: binding-application
+            - name: OCP_OAUTH_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: ascent-oauth-config
+                  key: oauth-config
             - name: APP_URI
               valueFrom:
                 configMapKeyRef:
