@@ -143,9 +143,9 @@ app.get('/userDetails', (req, res) => {
         roles.push("admin");
       }
       res.json({
-        name: "OCP User",
+        name: "OpenShift User",
         email: req.user?.metadata?.name,
-        given_name: "OCP",
+        given_name: "OpenShift",
         family_name: "User",
         roles: roles,
         role: roles[roles.length-1],
