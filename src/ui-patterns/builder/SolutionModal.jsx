@@ -53,7 +53,7 @@ class SolutionModal extends Component {
 
     async componentDidMount() {
         this.setState({
-            architectures: [...(await (await fetch(`/api/users/${this.props?.user?.email}/architectures`)).json()),...(await (await fetch(`/api/architectures`)).json())]
+            architectures: [...(await (await fetch(`/api/users/${encodeURIComponent(this.props?.user?.email)}/architectures`)).json()),...(await (await fetch(`/api/architectures`)).json())]
         });
     };
 
