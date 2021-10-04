@@ -25,6 +25,7 @@ const session = require('express-session')
 const passport = require('passport');
 const logger = log4js.getLogger(appName);
 const request = require('request');
+const syncRequest = require('sync-request');
 
 // Auth config, defaults to AppId unless config for OpenShift is provided
 const AUTH_PROVIDER = process.env.OCP_OAUTH_CONFIG ? "openshift" : "appid";
@@ -41,7 +42,16 @@ const conf = {
 let AuthStrategy;
 if (AUTH_PROVIDER === "openshift") {
   AuthStrategy = require('passport-oauth').OAuth2Strategy;
-  conf.authConfig = JSON.parse(process.env.OCP_OAUTH_CONFIG);
+  // Fetch OpenShift auth server config
+  let oauthServer;
+  try {
+    oauthServer = JSON.parse(syncRequest('GET', 'https://openshift.default.svc/.well-known/oauth-authorization-server').getBody('utf8'));
+    console.log(oauthServer);
+  } catch (error) {
+    console.log(error);
+    oauthServer = {};
+  }
+  conf.authConfig = Object.assign(oauthServer, JSON.parse(process.env.OCP_OAUTH_CONFIG));
   conf.authConfig.secret = conf.authConfig.clientSecret;
 } else {
   // Auth provider defaults to App ID

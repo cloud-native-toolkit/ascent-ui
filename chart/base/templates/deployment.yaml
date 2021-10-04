@@ -61,7 +61,7 @@ spec:
             - name: APPID_CONFIG
               valueFrom:
                 secretKeyRef:
-                  name: binding-dev-mapper
+                  name: ascent-appid-config
                   key: binding-application
             {{- end }}
             {{- if eq .Values.authentication.provider "openshift" }}
@@ -74,12 +74,12 @@ spec:
             - name: APP_URI
               valueFrom:
                 configMapKeyRef:
-                  name: mapper-ui
+                  name: ascent
                   key: route
             - name: API_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: mapper-ui
+                  name: ascent
                   key: api-host
             - name: PROTOCOLS
               value: ""

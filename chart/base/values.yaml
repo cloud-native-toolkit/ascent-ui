@@ -41,7 +41,7 @@ vcsInfo:
   branch: ""
 
 authentication:
-  provider: "openshift"
+  provider: "appid"
 
 partOf: "ascent"
 
