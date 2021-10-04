@@ -45,7 +45,9 @@ if (AUTH_PROVIDER === "openshift") {
   // Fetch OpenShift auth server config
   let oauthServer;
   try {
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
     oauthServer = JSON.parse(syncRequest('GET', 'https://openshift.default.svc/.well-known/oauth-authorization-server').getBody('utf8'));
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 1;
     console.log(oauthServer);
   } catch (error) {
     console.log(error);
