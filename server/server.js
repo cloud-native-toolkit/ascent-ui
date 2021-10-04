@@ -25,7 +25,10 @@ const session = require('express-session')
 const passport = require('passport');
 const logger = log4js.getLogger(appName);
 const request = require('request');
-const syncRequest = require('sync-request');
+const https = require('https');
+
+(async function () {
+
 
 // Auth config, defaults to AppId unless config for OpenShift is provided
 const AUTH_PROVIDER = process.env.OCP_OAUTH_CONFIG ? "openshift" : "appid";
@@ -36,6 +39,19 @@ const CALLBACK_URL = "/login/callback";
 const conf = {
   application_url: process.env.APP_URI,
   port: 3000
+};
+
+function getOAuthServerConfig() {
+  return new Promise((resolve,reject) => {
+    https.get('https://openshift.default.svc/.well-known/oauth-authorization-server', {rejectUnauthorized: false}, (res) => {
+      res.on('data', (d) => {
+        console.log('data', d.toString());
+        resolve(JSON.parse(d.toString()));
+      });
+    }).on('error', (e) => {
+      reject(e);
+    });
+ });
 }
 
 // Set up authentication
@@ -43,11 +59,9 @@ let AuthStrategy;
 if (AUTH_PROVIDER === "openshift") {
   AuthStrategy = require('passport-oauth').OAuth2Strategy;
   // Fetch OpenShift auth server config
-  let oauthServer;
+  let oauthServer = {};
   try {
-    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
-    oauthServer = JSON.parse(syncRequest('GET', 'https://openshift.default.svc/.well-known/oauth-authorization-server').getBody('utf8'));
-    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 1;
+    oauthServer = await getOAuthServerConfig();
     console.log(oauthServer);
   } catch (error) {
     console.log(error);
@@ -246,3 +260,5 @@ app.use(function(err, req, res, next) {
   res.sendFile(path.join(__dirname, "../public", "500.html"));
 });
 module.exports = server;
+
+})();
