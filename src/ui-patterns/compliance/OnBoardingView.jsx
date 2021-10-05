@@ -89,7 +89,7 @@ class OnBoardingView extends Component {
             curStage: false
         });
         // Get onboarding status
-        let userOnBoarding = await (await fetch(`/api/user/${this.state.user.email}/onboarding`)).json();
+        let userOnBoarding = await (await fetch(`/api/user/${encodeURIComponent(this.state.user.email)}/onboarding`)).json();
         // Get stages
         let stages = await (await fetch('/api/on-boarding-stages')).json();
         stages = stages.sort((a,b) => {return a.position-b.position});

@@ -127,34 +127,47 @@ The React code pattern having segregated folder structure. Each design pattern h
 - Remove the design files from Components, Models, Service,View(UI-patterns).
 - Every Design files having the reference in UI-Shell folder which contains UIShell and  UIShellBody files. So need to remove respective reference.
 
+### Authentication
 
+### App ID
 
-<!--
-#### IBM Cloud Developer Tools
-
-Install [IBM Cloud Developer Tools](https://cloud.ibm.com/docs/cli?topic=cloud-cli-getting-started) on your machine by running the following command:
-```
-curl -sL https://ibm.biz/idt-installer | bash
-```
-
-Your application will be compiled with Docker containers. To compile and run your app, run:
-```bash
-ibmcloud dev build
-ibmcloud dev run
-```
-
-This will launch your application locally. When you are ready to deploy to IBM Cloud on Cloud Foundry or Kubernetes, run one of the following commands:
-```bash
-ibmcloud dev deploy -t buildpack
-ibmcloud dev deploy -t container
+Authentication to this application defaults to AppId, you therefore need to set the `$APPID_CONFIG` environment variable, with the following format (create a new application on AppID and copy/paste the configuration):
+```json
+{
+    "clientId": "<clientId>",
+    "tenantId": "<tenantId>",
+    "secret": "<secret>",
+    "name": "<name>",
+    "oauthServerUrl": "<oauthServerUrl>",
+    "profilesUrl": "<profilesUrl>",
+    "discoveryEndpoint": "<discoveryEndpoint>",
+    "type": "<type>",
+    "scopes": "<scopes>"
+} 
 ```
 
-You can build and debug your app locally with:
-```bash
-ibmcloud dev build --debug
-ibmcloud dev debug
+### OpenShift OAuth
+
+If running on OpenShift you can also create your own OpenShift `OAuthClient` and use that to log in to ascent, you'll need to set the `$OCP_OAUTH_CONFIG` environment variable, with the following format:
+```json
+{
+    "authorization_endpoint": "<authorization_endpoint>",
+    "token_endpoint": "<token_endpoint>",
+    "clientID": "<clientID>",
+    "clientSecret": "<clientSecret>",
+    "api_endpoint": "<api_endpoint>"
+} 
 ```
--->
+
+This option will allow you to use OpenShift RBAC and OpenShift users and groups to define roles for your users:
+
+```sh
+oc adm groups new ascent-admins
+oc adm groups new ascent-editors
+oc adm groups new ascent-fs-viewers
+oc adm groups add-users <GROUP_NAME> <USER_NAME>
+...
+```
 
 ##### Session Store
 

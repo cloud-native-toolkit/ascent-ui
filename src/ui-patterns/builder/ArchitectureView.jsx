@@ -66,7 +66,7 @@ class ArchitectureView extends Component {
             console.log(error);
         }
         if (this.props.userArch) {
-            fetch(`/api/users/${this.state?.user?.email}/architectures`)
+            fetch(`/api/users/${encodeURIComponent(this.state?.user?.email)}/architectures`)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data)

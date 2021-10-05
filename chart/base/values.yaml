@@ -40,8 +40,11 @@ vcsInfo:
   repoUrl: ""
   branch: ""
 
-partOf: ""
+authentication:
+  provider: "openshift"
 
-connectsTo: ""
+partOf: "ascent"
+
+connectsTo: "architecture-builder-bff"
 
 runtime: js
