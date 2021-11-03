@@ -10,6 +10,7 @@ FROM registry.access.redhat.com/ubi8/nodejs-14:1-28.1618434924
 COPY --from=builder /opt/app-root/src/build build
 COPY public public
 COPY server server
+COPY package-lock.json .
 COPY package.json .
 
 RUN npm install --production
