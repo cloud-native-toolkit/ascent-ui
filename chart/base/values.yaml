@@ -45,6 +45,6 @@ authentication:
 
 partOf: "ascent"
 
-connectsTo: "architecture-builder-bff"
+connectsTo: "ascent-bff"
 
 runtime: js
