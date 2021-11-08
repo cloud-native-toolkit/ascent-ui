@@ -206,7 +206,6 @@ app.use(express.static(path.join(__dirname, "../build")));
 // Redirect to home when manually entering know URLs
 app.get('/bom*', (req, res) => {res.redirect('/');});
 app.get('/architectures*', (req, res) => {res.redirect('/');});
-app.get('/myarchitectures', (req, res) => {res.redirect('/');});
 app.get('/solutions', (req, res) => {res.redirect('/');});
 app.get('/mapping*', (req, res) => {res.redirect('/');});
 app.get('/controls*', (req, res) => {res.redirect('/');});

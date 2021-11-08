@@ -171,10 +171,6 @@ class UIShell extends Component {
                         </SideNavMenuItem>
                       }
 
-                      {this.state.user?.roles?.includes("editor") ? <Link to={`/myarchitectures`}>
-                        <SideNavMenuItem>Your Architectures</SideNavMenuItem>
-                      </Link> : <></>}
-
                       {this.state.user ?
                         <Link to="/architectures">
                           <SideNavMenuItem>Architectures</SideNavMenuItem>

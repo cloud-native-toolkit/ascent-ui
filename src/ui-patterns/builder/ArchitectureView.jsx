@@ -16,6 +16,8 @@ import {
     OverflowMenuItem,
     ToastNotification,
     SearchSkeleton,
+    ContentSwitcher,
+    Switch,
     Tag
 } from 'carbon-components-react';
 
@@ -32,6 +34,7 @@ class ArchitectureView extends Component {
         this.state = {
             archLoaded: false,
             architectures: [],
+            userArchitectures: [],
             user: {
                 email: "example@example.com",
                 role: "editor"
@@ -43,7 +46,8 @@ class ArchitectureView extends Component {
             isImport: false,
             isDuplicate: false,
             showValidate: false,
-            curArch: undefined
+            curArch: undefined,
+            show: "public-archs"
         };
         this.showArchModal = this.showArchModal.bind(this);
         this.hideArchModal = this.hideArchModal.bind(this);
@@ -65,29 +69,22 @@ class ArchitectureView extends Component {
         } catch (error) {
             console.log(error);
         }
-        if (this.props.userArch) {
+
+        fetch("/api/architectures")
+        .then(response => response.json())
+        .then(architectures => {
             fetch(`/api/users/${encodeURIComponent(this.state?.user?.email)}/architectures`)
                 .then(response => response.json())
-                .then(data => {
-                    console.log(data)
+                .then(userArchitectures => {
+                    console.log(userArchitectures)
                     this.setState({
-                        architectures: data,
+                        userArchitectures: userArchitectures,
+                        architectures: architectures,
                         archLoaded: true,
                         iascableRelease: iascableRelease
                     });
                 });
-        } else {
-            fetch("/api/architectures")
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                    this.setState({
-                        architectures: data,
-                        archLoaded: true,
-                        iascableRelease: iascableRelease
-                    });
-                });
-        }
+        });
         
     }
 
@@ -169,13 +166,13 @@ class ArchitectureView extends Component {
             });
     }
 
-    getArchitectures(architectures) {
+    getArchitectures(architectures, userArch) {
 
         var archTiles = []
 
         if (!architectures.length) archTiles.push(
             <div className="bx--col-lg-16">
-                {this.props.userArch ? 
+                {userArch ? 
                     <p>You have no architectures at the moment. To create one, duplicate an existing public architecture or click <strong>Add</strong> or <strong>Import BOM</strong> in the top right menu.</p>
                 :
                     <p>No architecture available yet.</p>
@@ -218,7 +215,7 @@ class ArchitectureView extends Component {
                                         showArchModal: true,
                                         isDuplicate: arch.arch_id
                                     })}/>
-                                    {(this.state.user?.role === "admin" || this.props.userArch || arch?.owners?.find(user => user.email === this.state.user?.email)) && <OverflowMenuItem itemText="Delete" onClick={() => this.setState({
+                                    {(this.state.user?.role === "admin" || userArch || arch?.owners?.find(user => user.email === this.state.user?.email)) && <OverflowMenuItem itemText="Delete" onClick={() => this.setState({
                                         showValidate: true,
                                         curArch: arch
                                     })} isDelete/>}
@@ -320,12 +317,23 @@ class ArchitectureView extends Component {
                         <br></br>
                         <h2 style={{"display": "flex"}}>
                             Architectures
-                            {
-                                this.props.userArch ?
-                                <OverflowMenu
+                            <div style={{"margin-left": "auto", "display": "flex"}}>
+                                {
+                                    this.state.user?.role === "admin" && 
+                                    <Tag
+                                        key='tag1'
+                                        renderIcon={LogoGitHub}
+                                        type="high-contrast"
+                                        title="Sync"
+                                        onClick={this.syncIascable}
+                                    >
+                                        iascable: {this.state.iascableRelease ? this.state.iascableRelease.tagName : "unknown"}
+                                    </Tag>
+                                }
+
+                                {this.state.user?.roles?.includes("editor") && <OverflowMenu
                                     size='lg'
-                                    flipped
-                                    style={{"margin-left": "auto"}}>
+                                    flipped>
                                     <OverflowMenuItem
                                         itemText="Add"
                                         onClick={() => this.showArchModal(false)}/>
@@ -333,38 +341,43 @@ class ArchitectureView extends Component {
                                         kind="primary"
                                         itemText="Import BOM"
                                         onClick={() => this.showArchModal(true)}/>
-                                </OverflowMenu>
-                                : this.state.user?.role === "admin" && 
-                                <Tag
-                                    key='tag1'
-                                    renderIcon={LogoGitHub}
-                                    style={{"margin-left": "auto"}}
-                                    type="high-contrast"
-                                    title="Sync"
-                                    onClick={this.syncIascable}
-                                >
-                                    iascable: {this.state.iascableRelease ? this.state.iascableRelease.tagName : "unknown"}
-                                </Tag>
-                            }
+                                </OverflowMenu>}
+                            </div>
                         </h2>
                         <br></br>
                         <p>
                             Navigate to the reference architecture you are interested in and see the IBM Cloud bill of materials
                         </p>
+
+                        {this.state.user?.roles?.includes("editor") && <ContentSwitcher
+                            size='xl'
+                            onChange={(e) => {this.setState({show:e.name})}} >
+                                <Switch name="public-archs" text="Public Architectures" />
+                                <Switch name="user-archs" text="Your Architectures" />
+                        </ContentSwitcher>}
                         <br></br>
+
                     </div>
                 </div>
 
-                <div className="bx--row">
+                
 
                     {
-                        this.state.archLoaded ?
-                            this.getArchitectures(this.state.architectures, true)
+                        this.state.archLoaded && this.state.show === "public-archs" ?
+                            <div className="bx--row">
+                                {this.getArchitectures(this.state.architectures, false)}
+                            </div>
+                            
+                        : this.state.archLoaded && this.state.show === "user-archs" ?
+                            <div className="bx--row">
+                                {this.getArchitectures(this.state.userArchitectures, true)}
+                            </div>
                         :
-                            <SearchSkeleton />
+                            <div className="bx--row">
+                                <SearchSkeleton />
+                            </div>
                     }
 
-                </div>
 
             </div>
 
