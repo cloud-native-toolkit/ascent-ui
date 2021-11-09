@@ -22,12 +22,6 @@ function RenderBOM() {
     );
 }
 
-function userArch() {
-    return (
-        <ArchitectureComponent userArch={true} />
-    )
-}
-
 /**
  * Services
  */
@@ -138,7 +132,6 @@ function Routes() {
             <Route path="/" exact component={DetailsViewComponent} />
             <Route path="/bom/:bomid" children={<RenderBOM></RenderBOM>}></Route>
             <Route path="/architectures" component={ArchitectureComponent} />
-            <Route path="/myarchitectures" component={userArch} />
             <Route path="/solutions" component={Solutions} />
             <Route path="/mapping" component={MappingComponent} />
             <Route path="/controls" component={Controls} />
