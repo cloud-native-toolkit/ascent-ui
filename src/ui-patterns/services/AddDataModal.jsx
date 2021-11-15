@@ -196,9 +196,7 @@ class FormModal extends Component {
                                         text="Choose an option"
                                     />
                                     <SelectItem value="Terraform" text="Terraform" />
-                                    <SelectItem value="Operator" text="Operator" />
-                                    <SelectItem value="Ansible" text="Ansible" />
-                                    <SelectItem value="Helm" text="Helm" />
+                                    <SelectItem value="GitOps" text="GitOps" />
                                 </Select>
                                 {
                                     this.state.caids && this.state.caids.length > 0 ?
