@@ -8,14 +8,15 @@ import {
 import {
     Delete16 as Delete,
     WarningAlt16,
-    Launch16
+    Launch16,
+    Filter32
 } from '@carbon/icons-react';
 import {
     DataTable, DataTableSkeleton, TableContainer, Table, Tag, TagSkeleton,
     TableToolbar, OverflowMenu, OverflowMenuItem, ToastNotification,
     TableSelectAll, TableSelectRow, TableBatchActions, TableBatchAction, 
     TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, 
-    TableBody, TableCell
+    TableBody, TableCell, TableToolbarMenu
 } from 'carbon-components-react';
 import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
@@ -23,6 +24,7 @@ import { serviceHeader } from '../data/data';
 import FormModal from './AddDataModal';
 import ServiceDetailsPane from './ServiceDetailsPane';
 import ValidateModal from "../ValidateModal"
+import ServiceFilterPane from "./ServiceFilterPane";
 
 
 class ServiceDataView extends Component {
@@ -44,6 +46,9 @@ class ServiceDataView extends Component {
             showValidate: false,
             isPaneOpen: false,
             dataDetails: false,
+            searchValue: '',
+            selectedFilters: [],
+            isFilterPaneOpen: false,
             notifications: []
         };
         this.showModal = this.showModal.bind(this);
@@ -54,6 +59,8 @@ class ServiceDataView extends Component {
         this.validateSubmit = this.validateSubmit.bind(this);
         this.addNotification = this.addNotification.bind(this);
         this.filterTable = this.filterTable.bind(this);
+        this.openFilterPane = this.openFilterPane.bind(this);
+        this.hideFilterPane = this.hideFilterPane.bind(this);
     }
 
     async loadTable() {
@@ -79,11 +86,18 @@ class ServiceDataView extends Component {
                 })
             }
         });
-        this.setState({
-            data: serviceDetails,
-            filterData: serviceDetails,
-            totalItems: serviceDetails.length
-        });
+        if (this.state.searchValue || this.state.selectedFilters.length) {
+            this.setState({
+                data: serviceDetails
+            });
+            this.filterTable({});
+        } else {
+            this.setState({
+                data: serviceDetails,
+                filterData: serviceDetails,
+                totalItems: serviceDetails.length
+            });
+        }
     }
 
     async componentDidMount() {
@@ -221,22 +235,46 @@ class ServiceDataView extends Component {
 
     /** Notifications END */
 
-    async filterTable(searchValue) {
-        if (searchValue) {
-            const filterData = this.state.data.filter(elt => elt.grouping === searchValue || elt.deployment_method === searchValue || elt.provision === searchValue || elt?.service?.service_name?.includes(searchValue) || elt?.service?.service_id?.includes(searchValue));
-            this.setState({
-                filterData: filterData,
-                firstRowIndex: 0,
-                totalItems: filterData.length
-            });
-        } else {
-            this.setState({
-                filterData: this.state.data,
-                firstRowIndex: 0,
-                totalItems: this.state.data.length
+    /** Search / Filtering */
+
+    async filterTable(event) {
+        const searchValue = event?.target ? event?.target?.value : this.state.searchValue;
+        let selFilters = event.hasOwnProperty('selectedItems') ? event?.selectedItems: this.state.selectedFilters;
+        let filterIsOr = selFilters.find(elt => elt.attr === 'and') === undefined;
+        let filterData = this.state.data;
+        const selectedFilters = selFilters.filter(elt => elt.attr !== 'and');
+        if (event?.target || searchValue) {
+            filterData = this.state.data.filter(elt => elt.grouping === searchValue || elt.deployment_method === searchValue || elt.provision === searchValue || elt?.service?.service_name?.includes(searchValue) || elt?.service?.service_id?.includes(searchValue));
+        }
+        if (selectedFilters.length) {
+            filterData = filterData.filter(elt => {
+                let metFilters = 0;
+                for (const item of selectedFilters) {
+                    if (elt[item.attr] === item.val && (filterIsOr || ++metFilters === selectedFilters.length)) return true;
+                }
+                return false;
             });
         }
+        this.setState({
+            filterData: filterData,
+            firstRowIndex: 0,
+            totalItems: filterData.length,
+            searchValue: searchValue,
+            selectedFilters: selFilters
+        });
     }
+
+    openFilterPane = () => {
+        this.setState({
+            isFilterPaneOpen: true
+        });
+    };
+
+    hideFilterPane = () => {
+        this.setState({ isFilterPaneOpen: false });
+    };
+
+    /** Search / Filtering END */
 
     render() {
         let data = this.state.filterData;
@@ -280,13 +318,18 @@ class ServiceDataView extends Component {
 
                                             </TableBatchActions>}
                                             <TableToolbarContent>
-
-                                                <TableToolbarSearch onChange={(event) => this.filterTable(event.target.value)} />
+                                                <TableToolbarSearch onChange={(event) => this.filterTable(event)} />
+                                                <TableToolbarMenu
+                                                    light
+                                                    renderIcon={Filter32}
+                                                    onClick={() => this.openFilterPane()}
+                                                    />
                                                 {this.state.user?.role === "admin" && <Button
                                                     tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
                                                     size="small"
                                                     kind="primary"
                                                     onClick={this.showModal}>Add</Button>}
+                                                
                                             </TableToolbarContent>
                                         </TableToolbar>
                                         <Table {...getTableProps()}>
@@ -437,6 +480,13 @@ class ServiceDataView extends Component {
                 </div>
                 <div>
                     <ServiceDetailsPane data={this.state.dataDetails} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
+                </div>
+                <div>
+                    <ServiceFilterPane
+                        open={this.state.isFilterPaneOpen}
+                        onRequestClose={this.hideFilterPane}
+                        filterTable={this.filterTable}
+                        selectedFilters={this.state.selectedFilters}/>
                 </div>
             </>
         );

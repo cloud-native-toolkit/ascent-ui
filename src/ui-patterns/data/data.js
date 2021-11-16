@@ -1,5 +1,4 @@
-export const serviceHeader = [
-    {
+export const serviceHeader = [{
         key: 'service',
         header: 'Service Name',
     },
@@ -46,7 +45,7 @@ export const serviceHeader = [
     {
         key: 'automation_id',
         header: 'Automation ID',
-    }, 
+    },
     // {
     //     key: 'cloud_automation_id',
     //     header: 'CA-ID',
@@ -117,8 +116,7 @@ export const bomHeader = [
     // }
 ];
 
-export const ctrlsHeaders = [
-    {
+export const ctrlsHeaders = [{
         key: 'id',
         header: 'Control ID',
     },
@@ -156,31 +154,113 @@ export const ctrlsHeaders = [
     // }
 ];
 
-export const controlFamilies = [
-    {attr: 'family', label: 'Access Control', val: 'Access Control'}, 
-    {attr: 'family', label: 'Awareness And Training', val: 'Awareness And Training'},
-    {attr: 'family', label: 'Audit And Accountability', val: 'Audit And Accountability'},
-    {attr: 'family', label: 'Security Assessment And Authorization', val: 'Security Assessment And Authorization'},
-    {attr: 'family', label: 'Configuration Management', val: 'Configuration Management'},
-    {attr: 'family', label: 'Contingency Planning', val: 'Contingency Planning'},
-    {attr: 'family', label: 'Identification And Authentication', val: 'Identification And Authentication'},
-    {attr: 'family', label: 'Incident Response', val: 'Incident Response'},
-    {attr: 'family', label: 'Maintenance', val: 'Maintenance'},
-    {attr: 'family', label: 'Media Protection', val: 'Media Protection'},
-    {attr: 'family', label: 'Physical And Environmental Protection', val: 'Physical And Environmental Protection'},
-    {attr: 'family', label: 'Planning', val: 'Planning'},
-    {attr: 'family', label: 'Personnel Security', val: 'Personnel Security'},
-    {attr: 'family', label: 'Risk Assessment', val: 'Risk Assessment'},
-    {attr: 'family', label: 'System And Services Acquisition', val: 'System And Services Acquisition'},
-    {attr: 'family', label: 'System And Communications Protection', val: 'System And Communications Protection'},
-    {attr: 'family', label: 'System And Information Integrity', val: 'System And Information Integrity'},
-    {attr: 'family', label: 'Program Management', val: 'Program Management'},
-    {attr: 'family', label: 'Enterprise Data Management', val: 'Enterprise Data Management'},
-    {attr: 'family', label: 'Enterprise System And Services Acquisition', val: 'Enterprise System And Services Acquisition'}
+/////////////////////////////////////////////
+// Controls Filters
+/////////////////////////////////////////////
+
+export const controlFamilies = [{
+        attr: 'family',
+        label: 'Access Control',
+        val: 'Access Control'
+    },
+    {
+        attr: 'family',
+        label: 'Awareness And Training',
+        val: 'Awareness And Training'
+    },
+    {
+        attr: 'family',
+        label: 'Audit And Accountability',
+        val: 'Audit And Accountability'
+    },
+    {
+        attr: 'family',
+        label: 'Security Assessment And Authorization',
+        val: 'Security Assessment And Authorization'
+    },
+    {
+        attr: 'family',
+        label: 'Configuration Management',
+        val: 'Configuration Management'
+    },
+    {
+        attr: 'family',
+        label: 'Contingency Planning',
+        val: 'Contingency Planning'
+    },
+    {
+        attr: 'family',
+        label: 'Identification And Authentication',
+        val: 'Identification And Authentication'
+    },
+    {
+        attr: 'family',
+        label: 'Incident Response',
+        val: 'Incident Response'
+    },
+    {
+        attr: 'family',
+        label: 'Maintenance',
+        val: 'Maintenance'
+    },
+    {
+        attr: 'family',
+        label: 'Media Protection',
+        val: 'Media Protection'
+    },
+    {
+        attr: 'family',
+        label: 'Physical And Environmental Protection',
+        val: 'Physical And Environmental Protection'
+    },
+    {
+        attr: 'family',
+        label: 'Planning',
+        val: 'Planning'
+    },
+    {
+        attr: 'family',
+        label: 'Personnel Security',
+        val: 'Personnel Security'
+    },
+    {
+        attr: 'family',
+        label: 'Risk Assessment',
+        val: 'Risk Assessment'
+    },
+    {
+        attr: 'family',
+        label: 'System And Services Acquisition',
+        val: 'System And Services Acquisition'
+    },
+    {
+        attr: 'family',
+        label: 'System And Communications Protection',
+        val: 'System And Communications Protection'
+    },
+    {
+        attr: 'family',
+        label: 'System And Information Integrity',
+        val: 'System And Information Integrity'
+    },
+    {
+        attr: 'family',
+        label: 'Program Management',
+        val: 'Program Management'
+    },
+    {
+        attr: 'family',
+        label: 'Enterprise Data Management',
+        val: 'Enterprise Data Management'
+    },
+    {
+        attr: 'family',
+        label: 'Enterprise System And Services Acquisition',
+        val: 'Enterprise System And Services Acquisition'
+    }
 ]
 
-export const controlFrequencies = [
-    {
+export const controlFrequencies = [{
         attr: 'frequency',
         label: 'Setup',
         val: 'Setup'
@@ -282,8 +362,118 @@ export const controlFrequencies = [
     },
 ];
 
-export const nistHeaders = [
+/////////////////////////////////////////////
+// END -> Controls Filters
+/////////////////////////////////////////////
+
+/////////////////////////////////////////////
+// Services Filters
+/////////////////////////////////////////////
+
+export const serviceGroupings = [
     {
+        attr: 'grouping',
+        label: 'Compute',
+        val: 'Compute'
+    },
+    {
+        attr: 'grouping',
+        label: 'Databases',
+        val: 'Databases'
+    },
+    {
+        attr: 'grouping',
+        label: 'Developer Tools',
+        val: 'Developer Tools'
+    },
+    {
+        attr: 'grouping',
+        label: 'IBM Cloud Platform Services',
+        val: 'IBM Cloud Platform Services'
+    },
+    {
+        attr: 'grouping',
+        label: 'Middleware',
+        val: 'Middleware'
+    },
+    {
+        attr: 'grouping',
+        label: 'Network',
+        val: 'Network'
+    },
+    {
+        attr: 'grouping',
+        label: 'SRE Tools',
+        val: 'SRE Tools'
+    },
+    {
+        attr: 'grouping',
+        label: 'Security & Identity',
+        val: 'Security & Identity'
+    },
+    {
+        attr: 'grouping',
+        label: 'Storage',
+        val: 'Storage'
+    },
+]
+
+export const serviceDeploymentMethods = [
+    {
+        attr: 'deployment_method',
+        label: 'Terraform',
+        val: 'terraform'
+    },
+    {
+        attr: 'deployment_method',
+        label: 'Helm',
+        val: 'Helm'
+    },
+    {
+        attr: 'deployment_method',
+        label: 'Managed Service',
+        val: 'Managed Service'
+    },
+    {
+        attr: 'deployment_method',
+        label: 'Operator',
+        val: 'Operator'
+    },
+    {
+        attr: 'deployment_method',
+        label: 'Platform',
+        val: 'Platform'
+    },
+    {
+        attr: 'deployment_method',
+        label: 'Custom Script',
+        val: 'Custom Script'
+    },
+]
+
+export const serviceProvisionMethods = [
+    {
+        attr: 'provision',
+        label: 'Terraform',
+        val: 'Terraform'
+    },
+    {
+        attr: 'provision',
+        label: 'GitOps',
+        val: 'GitOps'
+    },
+    {
+        attr: 'provision',
+        label: 'Operator',
+        val: 'Operator'
+    },
+]
+
+/////////////////////////////////////////////
+// END -> Services Filters
+/////////////////////////////////////////////
+
+export const nistHeaders = [{
         key: 'id',
         header: 'Control ID',
     },
@@ -305,8 +495,7 @@ export const nistHeaders = [
     }
 ];
 
-export const mappingHeaders = [
-    {
+export const mappingHeaders = [{
         key: 'control_id',
         header: 'Control ID',
     },
