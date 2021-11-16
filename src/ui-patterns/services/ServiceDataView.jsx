@@ -250,7 +250,7 @@ class ServiceDataView extends Component {
             filterData = filterData.filter(elt => {
                 let metFilters = 0;
                 for (const item of selectedFilters) {
-                    if (elt[item.attr] === item.val && (filterIsOr || ++metFilters === selectedFilters.length)) return true;
+                    if ((elt[item.attr] === item.val || (item.attr === "supported_platforms" && elt[item.attr]?.includes(item.val))) && (filterIsOr || ++metFilters === selectedFilters.length)) return true;
                 }
                 return false;
             });
