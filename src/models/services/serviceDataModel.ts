@@ -3,6 +3,7 @@ export interface ServiceDataModel {
     grouping: string;
     ibm_catalog_service: string;
     desc: string;
+    supported_platforms: string[];
     deployment_method: string;
     fs_validated: string;
     compliance_status: string;

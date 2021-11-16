@@ -16,7 +16,7 @@ import {
     Link
 } from "react-router-dom";
 
-import { serviceGroupings, serviceDeploymentMethods, serviceProvisionMethods } from '../data/data';
+import { servicePlatforms, serviceGroupings, serviceDeploymentMethods, serviceProvisionMethods } from '../data/data';
 
 import SlidingPane from "react-sliding-pane";
 
@@ -68,6 +68,21 @@ class ServiceFilterPane extends Component {
                                     labelText='Use AND operator'
                                     onChange={(value, id, event) => this.handleCheck('and', 1, value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'and' && elt.val === 1)}  />
+                            </AccordionItem>
+                            <AccordionItem title="Supported Platforms" open={this.props.selectedFilters.find((elt) => elt.attr === 'supported_platforms')}>
+                                <MultiSelect.Filterable
+                                    id='supported-platforms'
+                                    items={servicePlatforms}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'supported_platforms');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'supported_platforms')}
+                                    placeholder='Platform'
+                                    size='sm'
+                                />
                             </AccordionItem>
                             <AccordionItem title="Grouping" open={this.props.selectedFilters.find((elt) => elt.attr === 'grouping')}>
                                 <MultiSelect.Filterable

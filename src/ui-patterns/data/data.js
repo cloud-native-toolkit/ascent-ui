@@ -370,6 +370,29 @@ export const controlFrequencies = [{
 // Services Filters
 /////////////////////////////////////////////
 
+export const servicePlatforms = [
+    {
+        attr: 'supported_platforms',
+        label: 'IBM Cloud',
+        val: 'IBM Cloud'
+    },
+    {
+        attr: 'supported_platforms',
+        label: 'AWS',
+        val: 'AWS'
+    },
+    {
+        attr: 'supported_platforms',
+        label: 'GCP',
+        val: 'GCP'
+    },
+    {
+        attr: 'supported_platforms',
+        label: 'Azure',
+        val: 'Azure'
+    },
+]
+
 export const serviceGroupings = [
     {
         attr: 'grouping',
