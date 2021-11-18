@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, InlineNotification, Select, SelectItem, Button, 
     ButtonSet, ComposedModal, ModalBody, ModalFooter, ModalHeader, 
-    RadioButtonGroup, RadioButton, TextArea, TextInput, SelectSkeleton
+    RadioButtonGroup, RadioButton, TextArea, TextInput, SelectSkeleton,
+    MultiSelect
 } from 'carbon-components-react';
+
+import {
+    servicePlatforms,
+    serviceGroupings,
+    serviceDeploymentMethods,
+    serviceProvisionMethods
+} from '../data/data';
 
 import AceEditor from "react-ace";
 import "brace/mode/yaml";
@@ -18,6 +26,7 @@ class FormModal extends Component {
             fields: {
                 service_id: '',
                 ibm_catalog_service: '',
+                supported_platforms: [],
                 grouping: '',
                 fs_validated: false,
                 deployment_method: '',
@@ -33,6 +42,7 @@ class FormModal extends Component {
                 fields: {
                     service_id: jsonObject.service_id,
                     ibm_catalog_service: jsonObject.ibm_catalog_service,
+                    supported_platforms: jsonObject.supported_platforms,
                     grouping: jsonObject.grouping,
                     deployment_method: jsonObject.deployment_method,
                     fs_validated: jsonObject.fs_validated,
@@ -57,6 +67,9 @@ class FormModal extends Component {
             fields[field] = e;
         } else if (field === "fs_validated") {
             fields[field] = e.target.value === "false" ? false : true;
+        } else if (field === "supported_platforms") {
+            fields[field] = e.selectedItems?.map(item => item.val);
+            console.log(fields[field]);
         } else {
             fields[field] = e.target.value;
         }
@@ -123,6 +136,16 @@ class FormModal extends Component {
                                     placeholder="e.g. appid,atracker,cos"
                                     style={{ marginBottom: '1rem' }}
                                 />
+                                <FormGroup legendText="Supported Platforms" style={{marginBottom: '1rem'}}>
+                                    <MultiSelect.Filterable
+                                        id='supported-platforms-add'
+                                        items={servicePlatforms}
+                                        sortItems={(arr) => arr}
+                                        onChange={this.handleChange.bind(this, "supported_platforms")}
+                                        initialSelectedItems={servicePlatforms.filter(elt => this.state.fields.supported_platforms?.includes(elt.val))}
+                                        placeholder='Supported Platforms'
+                                        size='sm' />
+                                </FormGroup>
                                 <TextInput
                                     id="ibmService"
                                     name="ibm_catalog_service"
@@ -146,14 +169,9 @@ class FormModal extends Component {
                                         value="placeholder-item"
                                         text="Choose an option"
                                     />
-                                    <SelectItem value="Security & Identity" text="Security & Identity" />
-                                    <SelectItem value="Developer Tools" text="Developer Tools" />
-                                    <SelectItem value="SRE Tools" text="SRE Tools" />
-                                    <SelectItem value="Databases" text="Databases" />
-                                    <SelectItem value="Network" text="Network" />
-                                    <SelectItem value="Storage" text="Storage" />
-                                    <SelectItem value="Compute" text="Compute" />
-                                    <SelectItem value="IBM Cloud Platform Services" text="IBM Cloud Platform Services" />
+                                    {serviceGroupings.map(grouping => (
+                                        <SelectItem value={grouping.val} text={grouping.label} />
+                                    ))}
                                 </Select>
                                 <Select id="dplMethod"
                                     name="deployment_method"
@@ -168,10 +186,9 @@ class FormModal extends Component {
                                         value="placeholder-item"
                                         text="Choose an option"
                                     />
-                                    <SelectItem value="Managed Service" text="Managed Service" />
-                                    <SelectItem value="Platform" text="Platform" />
-                                    <SelectItem value="Operator" text="Operator" />
-                                    <SelectItem value="Helm" text="Helm" />
+                                    {serviceDeploymentMethods.map(deploymentMethod => (
+                                        <SelectItem value={deploymentMethod.val} text={deploymentMethod.label} />
+                                    ))}
                                 </Select>
                                 <Select id="fs_validated"
                                     name="fs_validated"
@@ -195,8 +212,9 @@ class FormModal extends Component {
                                         value="placeholder-item"
                                         text="Choose an option"
                                     />
-                                    <SelectItem value="Terraform" text="Terraform" />
-                                    <SelectItem value="GitOps" text="GitOps" />
+                                    {serviceProvisionMethods.map(provisionMethod => (
+                                        <SelectItem value={provisionMethod.val} text={provisionMethod.label} />
+                                    ))}
                                 </Select>
                                 {
                                     this.state.caids && this.state.caids.length > 0 ?

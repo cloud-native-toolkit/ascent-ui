@@ -69,6 +69,7 @@ class ServiceDetailsPane extends Component {
                             }
                             {this.props.data.service &&
                                 <>
+                                    {this.props.data.service.supported_platforms?.length ? <div><p><strong>Supported Platforms: </strong> {this.props.data.service.supported_platforms?.map(platform => (<Tag type="blue">{platform}</Tag>))}</p><br /></div> : <></>}
                                     {this.props.data.service.grouping ? <div><p><strong>Group: </strong> <Tag type="blue">{this.props.data.service.grouping}</Tag></p><br /></div> : <></>}
                                     {this.props.data.service.deployment_method ? <div><p><strong>Deployment Method: </strong> <Tag type="blue">{this.props.data.service.deployment_method}</Tag></p><br /></div> : <></>}
                                     {this.props.data.service.provision ? <div><p><strong>Provision: </strong> <Tag type="blue">{this.props.data.service.provision}</Tag></p><br /></div> : <></>}

@@ -207,6 +207,7 @@ class ServiceDetailsView extends Component {
                 }
                 {data &&
                   <>
+                    {data.supported_platforms?.length ? <div><p><strong>Supported Platforms: </strong> {data.supported_platforms?.map(platform => (<Tag type="blue">{platform}</Tag>))}</p><br /></div> : <></>}
                     {data.grouping ? <div><p><strong>Group: </strong> <Tag type="blue">{data.grouping}</Tag></p><br /></div> : <></>}
                     {data.deployment_method ? <div><p><strong>Deployment Method: </strong> <Tag type="blue">{data.deployment_method}</Tag></p><br /></div> : <></>}
                     {data.provision ? <div><p><strong>Provision: </strong> <Tag type="blue">{data.provision}</Tag></p><br /></div> : <></>}
