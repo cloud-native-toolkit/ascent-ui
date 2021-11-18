@@ -378,6 +378,11 @@ export const servicePlatforms = [
     },
     {
         attr: 'supported_platforms',
+        label: 'Azure',
+        val: 'Azure'
+    },
+    {
+        attr: 'supported_platforms',
         label: 'AWS',
         val: 'AWS'
     },
@@ -388,8 +393,8 @@ export const servicePlatforms = [
     },
     {
         attr: 'supported_platforms',
-        label: 'Azure',
-        val: 'Azure'
+        label: 'Other',
+        val: 'Other'
     },
 ]
 

@@ -73,6 +73,7 @@ class ServiceFilterPane extends Component {
                                 <MultiSelect.Filterable
                                     id='supported-platforms'
                                     items={servicePlatforms}
+                                    sortItems={(arr) => arr}
                                     onChange={async (event) => {
                                         const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'supported_platforms');
                                         event.selectedItems.forEach(item => selectedItems.push(item));
