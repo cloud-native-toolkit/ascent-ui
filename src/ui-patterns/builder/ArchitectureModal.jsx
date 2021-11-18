@@ -147,8 +147,12 @@ class ArchitectureModal extends Component {
                 }
             });
         } else if(this.state.fields.arch_id) {
+            console.log(this.state.fields);
             this.props.architectureService.updateArchitecture(this.props.data.arch_id, {
-                automation_variables: this.state.fields.automation_variables
+                name: this.state.fields.name,
+                short_desc: this.state.fields.short_desc,
+                long_desc: this.state.fields.long_desc,
+                public: this.state.fields.public,
             }).then(res => {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);

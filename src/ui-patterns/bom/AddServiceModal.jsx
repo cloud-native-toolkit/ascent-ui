@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Form, Select, SelectItem, ComposedModal, 
+    Form, Select, SelectItem, ComposedModal,
     ModalBody, ModalHeader, TextInput,
     ModalFooter, FormGroup
 } from 'carbon-components-react';
@@ -56,7 +56,7 @@ class ServiceModal extends Component {
                     this.props.handleClose();
                 }
             });
-        } else if(this.state.fields.service_id) {
+        } else if (this.state.fields.service_id) {
             this.props.service.doUpdateBOM(this.props.data.id, {
                 desc: this.state.fields.desc,
                 automation_variables: this.state.fields.automation_variables
@@ -101,7 +101,19 @@ class ServiceModal extends Component {
                                         value="placeholder-item"
                                         text="Choose an option"
                                     />
-                                    {this.props.services.map((rows, i) => (
+                                    {this.props.services.sort(function (a, b) {
+                                        var nameA = a.ibm_catalog_service.toUpperCase(); // ignore upper and lowercase
+                                        var nameB = b.ibm_catalog_service.toUpperCase(); // ignore upper and lowercase
+                                        if (nameA < nameB) {
+                                            return -1;
+                                        }
+                                        if (nameA > nameB) {
+                                            return 1;
+                                        }
+
+                                        // names must be equal
+                                        return 0;
+                                    }).map((rows, i) => (
                                         <SelectItem value={rows.service_id} text={rows.ibm_catalog_service || rows.service_id} />
                                     ))}
 
