@@ -1,6 +1,7 @@
 export interface ArchitectureDataModel {
     arch_id: string;
     name: string;
+    platform: string;
     short_desc: string;
     long_desc: string;
     public: boolean;

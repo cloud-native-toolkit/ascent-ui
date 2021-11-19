@@ -20,7 +20,11 @@ import {Redirect} from 'react-router-dom';
 import * as superagent from "superagent";
 
 import AceEditor from "react-ace";
-import "brace/mode/yaml"; 
+import "brace/mode/yaml";
+
+import {
+    servicePlatforms
+} from '../data/data';
 
 class SolutionModal extends Component {
     constructor(props) {
@@ -36,7 +40,8 @@ class SolutionModal extends Component {
                 name: "",
                 short_desc: "",
                 long_desc: "",
-                public: false
+                public: false,
+                platform: "",
             }
         };
         if (this.props.isUpdate) {
@@ -109,7 +114,8 @@ class SolutionModal extends Component {
             delete this.state.fields?.architectures;
             const body = {
                 solution: this.state.fields,
-                architectures: this.state.selectedArchs
+                architectures: this.state.selectedArchs,
+                platform: this.state.platform
             };
             this.props.toast("info", "Updating", `Updating solution ${body.solution.id}...`);
             const res = await (await fetch(`/api/solutions/${body.solution.id}`, {method: 'PATCH', body: JSON.stringify(body), headers: {"Content-type": "application/json"}})).json();
@@ -123,7 +129,8 @@ class SolutionModal extends Component {
             // POST new solution
             const body = {
                 solution: this.state.fields,
-                architectures: this.state.selectedArchs
+                architectures: this.state.selectedArchs,
+                platform: this.state.platform
             };
             this.props.toast("info", "Creating", `Creating solution ${body.solution.id}...`);
             const res = await (await fetch('/api/solutions', {method: 'POST', body: JSON.stringify(body), headers: {"Content-type": "application/json"}})).json();
@@ -203,6 +210,17 @@ class SolutionModal extends Component {
                                     rows={2}
                                     style={{ marginBottom: '1rem' }}
                                 />}
+                                {!this.props.isDuplicate && <Select id="platform" name="platform"
+                                    labelText="Platform"
+                                    required
+                                    defaultValue={this.state.fields.platform}
+                                    invalidText="A valid value is required"
+                                    onChange={this.handleChange.bind(this, "platform")}
+                                    style={{ marginBottom: '1rem' }}>
+                                    {servicePlatforms.map(platform => (
+                                        <SelectItem value={platform.val} text={platform.label} />
+                                    ))}
+                                </Select>}
                                 {!this.props.isDuplicate && <Select id="public" name="public"
                                     labelText="Public"
                                     required
