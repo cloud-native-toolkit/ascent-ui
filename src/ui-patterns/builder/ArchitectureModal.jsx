@@ -18,6 +18,10 @@ import {Redirect} from 'react-router-dom';
 import AceEditor from "react-ace";
 import "brace/mode/yaml";
 
+import {
+    servicePlatforms
+} from '../data/data';
+
 class ArchitectureModal extends Component {
     constructor(props) {
         super(props);
@@ -35,7 +39,8 @@ class ArchitectureModal extends Component {
                 long_desc: "",
                 public: false,
                 production_ready: false,
-                automation_variables: ""
+                automation_variables: "",
+                platform: "",
             }
         };
         if (this.props.isUpdate) {
@@ -153,6 +158,7 @@ class ArchitectureModal extends Component {
                 short_desc: this.state.fields.short_desc,
                 long_desc: this.state.fields.long_desc,
                 public: this.state.fields.public,
+                platform: this.state.fields.platform,
             }).then(res => {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
@@ -271,6 +277,17 @@ class ArchitectureModal extends Component {
                                     filenameStatus='edit'
                                     onChange={(event) => this.setState({diagramPng: event?.target?.files[0]})}
                                     onDelete={() => this.setState({diagramPng: undefined})} />}
+                                {!this.props.isImport && !this.props.isDuplicate && <Select id="platform" name="platform"
+                                    labelText="Platform"
+                                    required
+                                    defaultValue={this.state.fields.platform}
+                                    invalidText="A valid value is required"
+                                    onChange={this.handleChange.bind(this, "platform")}
+                                    style={{ marginBottom: '1rem' }}>
+                                    {servicePlatforms.map(platform => (
+                                        <SelectItem value={platform.val} text={platform.label} />
+                                    ))}
+                                </Select>}
                                 {!this.props.isImport && !this.props.isDuplicate && <Select id="public" name="public"
                                     labelText="Public"
                                     required

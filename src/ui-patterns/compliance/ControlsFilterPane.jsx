@@ -25,7 +25,16 @@ class ControlsFilterPane extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedItems: this.props.selectedFilters
+            selectedItems: this.props.selectedFilters,
+            accordionOpen: {
+                general: true,
+                family: false,
+                type: false,
+                frequency: false,
+                parameters: false,
+                scc: false,
+                document: false,
+            }
         };
         this.handleCheck = this.handleCheck.bind(this);
     }
@@ -62,7 +71,9 @@ class ControlsFilterPane extends Component {
                         </h4> */}
                         <br/>
                         <Accordion>
-                            <AccordionItem title="General" open>
+                            <AccordionItem title="General" 
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, general: !this.state.accordionOpen.general}})}
+                                open={this.state.accordionOpen.general}>
                                 <Checkbox
                                     id='controls-show-items'
                                     labelText='Show Control Items'
@@ -74,7 +85,9 @@ class ControlsFilterPane extends Component {
                                     onChange={(value, id, event) => this.handleCheck('and', 1, value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'and' && elt.val === 1)}  />
                             </AccordionItem>
-                            <AccordionItem title="Control Family" open={this.props.selectedFilters.find((elt) => elt.attr === 'family')}>
+                            <AccordionItem title="Control Family" 
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, family: !this.state.accordionOpen.family}})}
+                                open={this.state.accordionOpen.family}>
                                 <MultiSelect.Filterable
                                     id='control-families'
                                     items={controlFamilies}
@@ -96,7 +109,9 @@ class ControlsFilterPane extends Component {
                                     />
                                 ))} */}
                             </AccordionItem>
-                            <AccordionItem title="Control Type" open={this.props.selectedFilters.find((elt) => elt.attr === 'human_or_automated')}>
+                            <AccordionItem title="Control Type"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, type: !this.state.accordionOpen.type}})}
+                                open={this.state.accordionOpen.type}>
                                 <Checkbox
                                     id='control-type-human'
                                     labelText='Human'
@@ -118,7 +133,9 @@ class ControlsFilterPane extends Component {
                                     onChange={(value, id, event) => this.handleCheck('human_or_automated', 'Unknown', value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'human_or_automated' && elt.val === 'Unknown')} />
                             </AccordionItem>
-                            <AccordionItem title="Control Frequency" open={this.props.selectedFilters.find((elt) => elt.attr === 'frequency')}>
+                            <AccordionItem title="Control Frequency"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, frequency: !this.state.accordionOpen.frequency}})}
+                                open={this.state.accordionOpen.frequency}>
                                 <MultiSelect.Filterable
                                     id='control-frequencies'
                                     items={controlFrequencies}
@@ -133,7 +150,9 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                             </AccordionItem>
-                            <AccordionItem title="Parameters" open={this.props.selectedFilters.find((elt) => elt.attr === 'org_defined_parameter')}>
+                            <AccordionItem title="Parameters"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, parameters: !this.state.accordionOpen.parameters}})}
+                                open={this.state.accordionOpen.parameters}>
                                 <Checkbox
                                     id='control-org-defined-params'
                                     labelText='Organization Defined'
@@ -150,7 +169,9 @@ class ControlsFilterPane extends Component {
                                     onChange={(value, id, event) => this.handleCheck('org_defined_parameter', 'No', value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'org_defined_parameter' && elt.val === 'No')} />
                             </AccordionItem>
-                            <AccordionItem title="Security and Compliance" open={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals')}>
+                            <AccordionItem title="Security and Compliance"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, scc: !this.state.accordionOpen.scc}})}
+                                open={this.state.accordionOpen.scc}>
                                 <Checkbox
                                     id='control-scc-goals'
                                     labelText='Existing SCC Goals'
@@ -167,7 +188,9 @@ class ControlsFilterPane extends Component {
                                     onChange={(value, id, event) => this.handleCheck('existing_scc_goals', 'No', value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals' && elt.val === 'No')} />
                             </AccordionItem>
-                            <AccordionItem title="Evindencing" open={this.props.selectedFilters.find((elt) => elt.attr === 'create_document')}>
+                            <AccordionItem title="Evindencing"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, document: !this.state.accordionOpen.document}})}
+                                open={this.state.accordionOpen.document}>
                                 <Checkbox
                                     id='control-require-doc'
                                     labelText='Require Document'

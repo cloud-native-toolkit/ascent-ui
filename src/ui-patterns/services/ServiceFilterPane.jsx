@@ -25,7 +25,14 @@ class ServiceFilterPane extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedItems: this.props.selectedFilters
+            selectedItems: this.props.selectedFilters,
+            accordionOpen: {
+                general: true,
+                platform: false,
+                grouping: false,
+                deployment: false,
+                provision: false,
+            },
         };
         this.handleCheck = this.handleCheck.bind(this);
     }
@@ -57,19 +64,20 @@ class ServiceFilterPane extends Component {
             >
                 {
                     <div>
-                        {/* <h4>
-                            Filters
-                        </h4> */}
-                        <br/>
                         <Accordion>
-                            <AccordionItem title="General" open>
+                            <AccordionItem title="General" 
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, general: !this.state.accordionOpen.general}})}
+                                open={this.state.accordionOpen.general}>
                                 <Checkbox
                                     id='controls-and-operator'
                                     labelText='Use AND operator'
                                     onChange={(value, id, event) => this.handleCheck('and', 1, value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'and' && elt.val === 1)}  />
                             </AccordionItem>
-                            <AccordionItem title="Supported Platforms" open={this.props.selectedFilters.find((elt) => elt.attr === 'supported_platforms')}>
+                            <AccordionItem
+                                title="Supported Platforms"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, platform: !this.state.accordionOpen.platform}})}
+                                open={this.state.accordionOpen.platform}>
                                 <MultiSelect.Filterable
                                     id='supported-platforms'
                                     items={servicePlatforms}
@@ -85,7 +93,9 @@ class ServiceFilterPane extends Component {
                                     size='sm'
                                 />
                             </AccordionItem>
-                            <AccordionItem title="Grouping" open={this.props.selectedFilters.find((elt) => elt.attr === 'grouping')}>
+                            <AccordionItem title="Grouping"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, grouping: !this.state.accordionOpen.grouping}})}
+                                open={this.state.accordionOpen.grouping}>
                                 <MultiSelect.Filterable
                                     id='service-groupings'
                                     items={serviceGroupings}
@@ -100,7 +110,9 @@ class ServiceFilterPane extends Component {
                                     size='sm'
                                 />
                             </AccordionItem>
-                            <AccordionItem title="Deployment Method" open={this.props.selectedFilters.find((elt) => elt.attr === 'deployment_method')}>
+                            <AccordionItem title="Deployment Method"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, deployment: !this.state.accordionOpen.deployment}})}
+                                open={this.state.accordionOpen.deployment}>
                                 <MultiSelect.Filterable
                                     id='service-deployment-methods'
                                     items={serviceDeploymentMethods}
@@ -115,7 +127,9 @@ class ServiceFilterPane extends Component {
                                     size='sm'
                                 />
                             </AccordionItem>
-                            <AccordionItem title="Provisionning" open={this.props.selectedFilters.find((elt) => elt.attr === 'provision')}>
+                            <AccordionItem title="Provisionning"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, provision: !this.state.accordionOpen.provision}})}
+                                open={this.state.accordionOpen.provision}>
                                 <MultiSelect.Filterable
                                     id='service-provision-methods'
                                     items={serviceProvisionMethods}

@@ -346,7 +346,7 @@ class ArchitectureView extends Component {
                         </h2>
                         <br></br>
                         <p>
-                            Navigate to the reference architecture you are interested in and see the IBM Cloud bill of materials
+                            Navigate to the reference architecture you are interested in and see it's bill of materials.
                         </p>
 
                         {this.state.user?.roles?.includes("editor") && <ContentSwitcher
