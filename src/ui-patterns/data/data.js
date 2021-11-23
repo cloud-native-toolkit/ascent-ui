@@ -1,3 +1,10 @@
+import React from "react";
+import {
+    Tooltip,
+    UnorderedList,
+    ListItem
+} from 'carbon-components-react';
+
 export const serviceHeader = [{
         key: 'service',
         header: 'Service Name',
@@ -121,12 +128,16 @@ export const ctrlsHeaders = [{
         header: 'Control ID',
     },
     {
-        key: 'name',
-        header: 'Control Name',
+        key: 'focus_area',
+        header: 'Focus Area',
     },
     {
         key: 'family',
         header: 'Control Family',
+    },
+    {
+        key: 'name',
+        header: 'Control Name',
     },
     {
         key: 'parent_control',
@@ -136,14 +147,14 @@ export const ctrlsHeaders = [{
     //     key: 'existing_scc_goals',
     //     header: 'Existing SCC Goals',
     // },
-    {
-        key: 'human_or_automated',
-        header: 'Human / Automated',
-    },
-    {
-        key: 'frequency',
-        header: 'Frequency',
-    },
+    // {
+    //     key: 'human_or_automated',
+    //     header: 'Human / Automated',
+    // },
+    // {
+    //     key: 'frequency',
+    //     header: 'Frequency',
+    // },
     // {
     //     key: 'org_defined_parameter',
     //     header: 'Org. Defined Parameters',
@@ -158,209 +169,461 @@ export const ctrlsHeaders = [{
 // Controls Filters
 /////////////////////////////////////////////
 
-export const controlFamilies = [{
-        attr: 'family',
-        label: 'Access Control',
-        val: 'Access Control'
+export const controlFocusAreas = [
+    {
+        attr: 'focus_area',
+        label: '#1 - Focused Risk Management & Compliance',
+        val: '#1 - Focused Risk Management & Compliance​\r\n\r\n​'
     },
     {
-        attr: 'family',
-        label: 'Awareness And Training',
-        val: 'Awareness And Training'
+        attr: 'focus_area',
+        label: '#2 - Advanced Data Protection',
+        val: '#2 - Advanced Data Protection'
     },
     {
-        attr: 'family',
-        label: 'Audit And Accountability',
-        val: 'Audit And Accountability'
+        attr: 'focus_area',
+        label: '#3 - Enhanced Authentication & Access Management',
+        val: '#3 - Enhanced Authentication & Access Management'
     },
     {
-        attr: 'family',
-        label: 'Security Assessment And Authorization',
-        val: 'Security Assessment And Authorization'
+        attr: 'focus_area',
+        label: '#4 - Automated Application &  Workload Protection',
+        val: '#4 - Automated Application &  Workload Protection'
     },
     {
-        attr: 'family',
-        label: 'Configuration Management',
-        val: 'Configuration Management'
+        attr: 'focus_area',
+        label: '#5 - Unified Infrastructure Security  & Resilience',
+        val: '#5 - Unified Infrastructure Security  & Resilience'
     },
     {
-        attr: 'family',
-        label: 'Contingency Planning',
-        val: 'Contingency Planning'
+        attr: 'focus_area',
+        label: '#6 - Operational Excellence',
+        val: '#6 - Operational Excellence'
     },
     {
-        attr: 'family',
-        label: 'Identification And Authentication',
-        val: 'Identification And Authentication'
+        attr: 'focus_area',
+        label: '#7 - Active Monitoring & Response',
+        val: '#7 - Active Monitoring & Response'
     },
-    {
-        attr: 'family',
-        label: 'Incident Response',
-        val: 'Incident Response'
-    },
-    {
-        attr: 'family',
-        label: 'Maintenance',
-        val: 'Maintenance'
-    },
-    {
-        attr: 'family',
-        label: 'Media Protection',
-        val: 'Media Protection'
-    },
-    {
-        attr: 'family',
-        label: 'Physical And Environmental Protection',
-        val: 'Physical And Environmental Protection'
-    },
-    {
-        attr: 'family',
-        label: 'Planning',
-        val: 'Planning'
-    },
-    {
-        attr: 'family',
-        label: 'Personnel Security',
-        val: 'Personnel Security'
-    },
-    {
-        attr: 'family',
-        label: 'Risk Assessment',
-        val: 'Risk Assessment'
-    },
-    {
-        attr: 'family',
-        label: 'System And Services Acquisition',
-        val: 'System And Services Acquisition'
-    },
-    {
-        attr: 'family',
-        label: 'System And Communications Protection',
-        val: 'System And Communications Protection'
-    },
-    {
-        attr: 'family',
-        label: 'System And Information Integrity',
-        val: 'System And Information Integrity'
-    },
-    {
-        attr: 'family',
-        label: 'Program Management',
-        val: 'Program Management'
-    },
-    {
-        attr: 'family',
-        label: 'Enterprise Data Management',
-        val: 'Enterprise Data Management'
-    },
-    {
-        attr: 'family',
-        label: 'Enterprise System And Services Acquisition',
-        val: 'Enterprise System And Services Acquisition'
-    }
 ]
 
-export const controlFrequencies = [{
-        attr: 'frequency',
-        label: 'Setup',
-        val: 'Setup'
+export const controlFamilies = [
+    {
+        attr: 'family',
+        label: 'Access Control (AC)',
+        val: 'Access Control (AC)'
     },
     {
-        attr: 'frequency',
-        label: 'Event',
-        val: 'Event'
+        attr: 'family',
+        label: 'Audit & Accountability (AU)',
+        val: 'Audit & Accountability (AU)'
     },
     {
-        attr: 'frequency',
-        label: 'Setup, Event',
-        val: 'Setup, Event'
+        attr: 'family',
+        label: 'Awareness & Training (AT)​',
+        val: 'Awareness & Training (AT)​'
     },
     {
-        attr: 'frequency',
-        label: 'Every 3 years',
-        val: 'Every 3 years'
+        attr: 'family',
+        label: 'Configuration Management (CM)',
+        val: 'Configuration Management (CM)'
     },
     {
-        attr: 'frequency',
-        label: 'Annually',
-        val: 'Annually'
+        attr: 'family',
+        label: 'Contingency Planning (CP)',
+        val: 'Contingency Planning (CP)'
     },
     {
-        attr: 'frequency',
-        label: 'Annually, Event',
-        val: 'Annually, Event'
+        attr: 'family',
+        label: 'Enterprise Data Management (EDM)',
+        val: 'Enterprise Data Management (EDM)'
     },
     {
-        attr: 'frequency',
-        label: 'Setup, Annually, Event',
-        val: 'Setup, Annually, Event'
+        attr: 'family',
+        label: 'Enterprise System & Services Acquisition (ESA)​',
+        val: 'Enterprise System & Services Acquisition (ESA)​'
     },
     {
-        attr: 'frequency',
-        label: 'Quarterly',
-        val: 'Quarterly'
+        attr: 'family',
+        label: 'Identification & Authentication (IA)',
+        val: 'Identification & Authentication (IA)'
     },
     {
-        attr: 'frequency',
-        label: 'Quarterly and Annually',
-        val: 'Quarterly and Annually'
+        attr: 'family',
+        label: 'Incident Response (IR)',
+        val: 'Incident Response (IR)'
     },
     {
-        attr: 'frequency',
-        label: 'Monthly',
-        val: 'Monthly'
+        attr: 'family',
+        label: 'Information Security Program Management (PM)',
+        val: 'Information Security Program Management (PM)'
     },
     {
-        attr: 'frequency',
-        label: 'Monthly, Annually',
-        val: 'Monthly, Annually'
+        attr: 'family',
+        label: 'Maintenance (MA)',
+        val: 'Maintenance (MA)'
     },
     {
-        attr: 'frequency',
-        label: 'Weekly',
-        val: 'Weekly'
+        attr: 'family',
+        label: 'Media Protection (MP)',
+        val: 'Media Protection (MP)'
     },
     {
-        attr: 'frequency',
-        label: 'Weekly, Quarterly, Annually',
-        val: 'Weekly, Quarterly, Annually'
+        attr: 'family',
+        label: 'Personnel Security (PS)',
+        val: 'Personnel Security (PS)'
     },
     {
-        attr: 'frequency',
-        label: 'Daily',
-        val: 'Daily'
+        attr: 'family',
+        label: 'Physical and Environmental Protection (PE)',
+        val: 'Physical and Environmental Protection (PE)'
     },
     {
-        attr: 'frequency',
-        label: 'Hourly',
-        val: 'Hourly'
+        attr: 'family',
+        label: 'Privacy (AR/UL)',
+        val: 'Privacy (AR/UL)'
     },
     {
-        attr: 'frequency',
-        label: 'Daily, Hourly',
-        val: 'Daily, Hourly'
+        attr: 'family',
+        label: 'Risk Assessments (RA)​',
+        val: 'Risk Assessments (RA)​'
     },
     {
-        attr: 'frequency',
-        label: 'Continuous',
-        val: 'Continuous'
+        attr: 'family',
+        label: 'Security Assessment & Authorization (CA)',
+        val: 'Security Assessment & Authorization (CA)'
     },
     {
-        attr: 'frequency',
-        label: 'When Scanned',
-        val: 'WhenScanned'
+        attr: 'family',
+        label: 'Security Planning (PL)',
+        val: 'Security Planning (PL)'
     },
     {
-        attr: 'frequency',
-        label: 'Org Defined',
-        val: 'Org. Defined'
+        attr: 'family',
+        label: 'System & Communication Protection (SC)',
+        val: 'System & Communication Protection (SC)'
     },
     {
-        attr: 'frequency',
-        label: 'Mix',
-        val: 'Mix'
+        attr: 'family',
+        label: 'System & Service Acquisition (SA)',
+        val: 'System & Service Acquisition (SA)'
     },
-];
+    {
+        attr: 'family',
+        label: 'System and Information Integrity (SI)',
+        val: 'System and Information Integrity (SI)'
+    },
+]
+
+export const nistFunctions = [
+    {
+        attr: 'nist_functions',
+        label: 'Detect',
+        val: 'DETECT (DE)*'
+    },
+    {
+        attr: 'nist_functions',
+        label: 'Identify',
+        val: 'IDENTIFY (ID)*'
+    },
+    {
+        attr: 'nist_functions',
+        label: 'Protect',
+        val: 'PROTECT (PR)*'
+    },
+    {
+        attr: 'nist_functions',
+        label: 'Respond',
+        val: 'RESPOND (RS)*'
+    },
+    {
+        attr: 'nist_functions',
+        label: 'Recover',
+        val: 'RECOVER (RC)*'
+    },
+    {
+        attr: 'nist_functions',
+        label: 'Enable (IBM)',
+        val: 'Enable (IBM Function)**'
+    },
+]
+
+export const controlRiskRating = [
+    {
+        attr: 'risk_rating',
+        label: 'Low',
+        val: 'Low'
+    },
+    {
+        attr: 'risk_rating',
+        label: 'Medium',
+        val: 'Medium'
+    },
+    {
+        attr: 'risk_rating',
+        label: 'High',
+        val: 'High'
+    },
+]
+
+export const controlType1 = [
+    {
+        attr: 'control_type_1',
+        label: 'Detective',
+        val: 'Detective'
+    },
+    {
+        attr: 'control_type_1',
+        label: 'Preventative',
+        val: 'Preventative'
+    },
+    {
+        attr: 'control_type_1',
+        label: 'Corrective',
+        val: 'Corrective'
+    },
+    {
+        attr: 'control_type_1',
+        label: 'Preventative or Detective',
+        val: 'Preventative or Detective'
+    },
+    {
+        attr: 'control_type_1',
+        label: 'Detective or Corrective',
+        val: 'Detective or Corrective'
+    },
+    {
+        attr: 'control_type_1',
+        label: 'Preventative or Corrective',
+        val: 'Preventative or Corrective'
+    },
+]
+
+export const controlType2 = [
+    {
+        attr: 'control_type_2',
+        label: 'Administrative',
+        val: 'Administrative'
+    },
+    {
+        attr: 'control_type_2',
+        label: 'Physical',
+        val: 'Physical'
+    },
+    {
+        attr: 'control_type_2',
+        label: 'Technical',
+        val: 'Technical'
+    },
+    {
+        attr: 'control_type_2',
+        label: 'Administrative or Technical',
+        val: 'Administrative or Technical'
+    },
+    {
+        attr: 'control_type_2',
+        label: 'Physical or Technical',
+        val: 'Physical or Technical'
+    },
+]
+
+export const controlType3 = [
+    {
+        attr: 'control_type_3',
+        label: 'Automated',
+        val: 'Automated'
+    },
+    {
+        attr: 'control_type_3',
+        label: 'Automated or Manual, Prospectively Automated',
+        val: 'Automated or \r\nManual, Prospectively Automated'
+    },
+    {
+        attr: 'control_type_3',
+        label: 'Manual, Improbably Automated',
+        val: 'Manual, Improbably Automated'
+    },
+    {
+        attr: 'control_type_3',
+        label: 'Manual, Prospectively Automated',
+        val: 'Manual, Prospectively Automated'
+    },
+]
+
+export const controlIbmResp = [
+    {
+        attr: 'ibm_public_cloud_resp',
+        label: 'Responsible',
+        val: 'R'
+    },
+    {
+        attr: 'ibm_public_cloud_resp',
+        label: 'None',
+        val: 'None'
+    },
+]
+
+export const controlDevResp = [
+    {
+        attr: 'developer_resp',
+        label: 'Responsible',
+        val: 'R'
+    },
+    {
+        attr: 'developer_resp',
+        label: 'None',
+        val: 'None'
+    },
+]
+
+export const controlOperatorResp = [
+    {
+        attr: 'operator_resp',
+        label: 'Responsible',
+        val: 'R'
+    },
+    {
+        attr: 'operator_resp',
+        label: 'None',
+        val: 'None'
+    },
+]
+
+export const controlConsumerResp = [
+    {
+        attr: 'consumer_resp',
+        label: 'Responsible',
+        val: 'R'
+    },
+    {
+        attr: 'consumer_resp',
+        label: 'Consulted',
+        val: 'C'
+    },
+    {
+        attr: 'consumer_resp',
+        label: 'Informed',
+        val: 'I'
+    },
+    {
+        attr: 'consumer_resp',
+        label: 'None',
+        val: 'None'
+    },
+]
+
+export const controlResp = [
+    {
+        label: 'Informed',
+        val: 'I'
+    },
+    {
+        label: 'Responsible',
+        val: 'R'
+    },
+    {
+        label: 'Consulted',
+        val: 'C'
+    },
+    {
+        label: 'None',
+        val: 'None'
+    },
+    {
+        label: 'Accountable',
+        val: 'A'
+    },
+]
+
+export const controlTypeTooltip = {
+    Preventative: <Tooltip triggerText='Preventative'>
+        <p><strong>Preventative: </strong>Designed to avoid an unintended event or result at the time of initial occurrence (e.g., upon initially granting access).</p>
+    </Tooltip>,
+    Detective: <Tooltip triggerText='Detective'>
+        <p><strong>Detective: </strong>Designed to detect an unintended event or result after the initial processing has occurred, but before the ultimate objective has concluded (e.g., access is granted).</p>
+    </Tooltip>,
+    Corrective: <Tooltip triggerText='Corrective'>
+        <p><strong>Corrective: </strong>Designed to correct an unintended event or result after the initial processing has occurred, but before the ultimate objective has concluded (e.g., access is granted).</p>
+    </Tooltip>,
+    Administrative: <Tooltip triggerText='Administrative'>
+        <p><strong>Administrative: </strong>Controls that test policies, procedures, or guidelines that define personnel or business practices in accordance with the organization's security goals.</p>
+    </Tooltip>,
+    Technical: <Tooltip triggerText='Technical'>
+        <p><strong>Technical: </strong>Controls that use technology as a basis for controlling the access and usage of sensitive data throughout a physical structure and over a network.</p>
+    </Tooltip>,
+    Physical: <Tooltip triggerText='Physical'>
+        <p><strong>Physical: </strong>Controls that describe anything tangible that’s used to prevent or detect unauthorized access to physical areas, systems, or assets.</p>
+    </Tooltip>,
+    Automated: <Tooltip triggerText='Automated'>
+        <p><strong>Automated: </strong>Controls wholly performed through technology.</p>
+    </Tooltip>,
+    'Manual, Improbably Automated': <Tooltip triggerText='Manual, Improbably Automated'>
+        <p><strong>Manual, Improbably Automated: </strong>Controls performed manually and having a low possibility of automation.</p>
+    </Tooltip>,
+    'Manual, Prospectively Automated': <Tooltip triggerText='Manual, Prospectively Automated'>
+        <p><strong>Manual, Prospectively Automated: </strong>Controls performed manually, but having a high possibility of automation.</p>
+    </Tooltip>
+}
+
+export const controlRiskRatingTooltip = {
+    Low: <Tooltip>
+        <strong>Low: </strong>
+            <UnorderedList nested>
+                <ListItem>High level of precision (e.g. includes end users vs. overall groups, includes all types of relevant data/users, etc.)</ListItem>
+                <ListItem>No judgement required (e.g. control is automated; control does not require specific SMEs to operate, etc.)</ListItem>
+                <ListItem>Low volume of data / simple data (e.g. a limited number of admin users, rare changes made to the environment, etc.)</ListItem>
+                <ListItem>Low likelihood of changes impacting control design (e.g. non-critical policy and procedures updates, etc.)</ListItem>
+                <ListItem>Repetitive controls (e.g. same risk is covered by multiple controls)</ListItem>
+            </UnorderedList>
+    </Tooltip>,
+    Medium: <Tooltip>
+        <strong>Medium: </strong>
+        <UnorderedList nested>
+            <ListItem>Moderate level of precision (e.g. includes all end users vs. overall groups, includes all types of relevant data/users, etc.)</ListItem>
+            <ListItem>Limited judgement required (e.g. control is partially automated, requires some SME time to operate, etc.)</ListItem>
+            <ListItem>Moderate volume of data (e.g. occasional maintenance changes made to the environment, new user access for large systems, etc.)</ListItem>
+            <ListItem>Moderate likelihood of changes impacting control design (e.g. changes made expectations noted in the critical policy, changes made to groups of users reviewed during the access review, etc.)</ListItem>
+            <ListItem>Controls executed periodically, but with manual input (e.g. user access review where access is to be modified manually, etc.)</ListItem>
+        </UnorderedList>
+    </Tooltip>,
+    High: <Tooltip>
+        <strong>High: </strong>
+        <UnorderedList nested>
+            <ListItem>Low level of precision (e.g. includes overall groups instead of end users, includes sampled or undefined types of relevant data/users, etc.)</ListItem>
+            <ListItem>Non-routine (e.g. highly unique control, etc.)</ListItem>
+            <ListItem>Significant degree of judgement required (e.g. operated only by highly skilled SMEs)</ListItem>
+            <ListItem>High likelihood of changes impacting control design (e.g. changes to groups of access that are considered "privileged", etc.)</ListItem>
+            <ListItem>Controls operating on an ad hoc basis (e.g. controls where an event has to happen first, etc.)</ListItem>
+        </UnorderedList>
+    </Tooltip>,
+}
+
+export const infoTooltips = {
+    focus_area: <Tooltip>The IBM Cloud Framework for Financial Services was built by the industry for the industry. The Framework identifies seven primary focus areas built on cloud best practices, initially based upon NIST-800-53 as well as feedback from leading industry partners. These focus areas provide a roadmap to design and implement controls that meet the unique requirements of the Financial Services industry.</Tooltip>,
+    family: <Tooltip>The grouping of the controls in the broad areas in which the controls fall.</Tooltip>,
+    nist_functions: <Tooltip>The core Functions of the NIST Cybersecurity Framework when performed concurrently and continuously form an operational culture that addresses the dynamic cybersecurity risk. The functions are categorized as follows:
+        <UnorderedList nested>
+            <ListItem>Identify (ID)* - The Identify Function assists in developing an organizational understanding to managing cybersecurity risk to systems, people, assets, data, and capabilities.</ListItem>
+            <ListItem>Protect (PR)*  - The Protect Function outlines appropriate safeguards to ensure delivery of critical infrastructure services. The Protect Function supports the ability to limit or contain the impact of a potential cybersecurity event.</ListItem>
+            <ListItem>Detect (DE)* - The Detect Function defines the appropriate activities to identify the occurrence of a cybersecurity event. The Detect Function enables timely discovery of cybersecurity events.</ListItem>
+            <ListItem>Respond (RS)* - The Respond Function includes appropriate activities to take action regarding a detected cybersecurity incident. The Respond Function supports the ability to contain the impact of a potential cybersecurity incident.</ListItem>
+            <ListItem>Recover (RC)* - The Recover Function identifies appropriate activities to maintain plans for resilience and to restore any capabilities or services that were impaired due to a cybersecurity incident. The Recover Function supports timely recovery to normal operations to reduce the impact from a cybersecurity incident.</ListItem>
+            <ListItem>Enable (IBM Function)** - The Enable function allows IBM to cater specifically to the financial services needs and requirements as it relates to risk management and governance requirements.</ListItem>
+        </UnorderedList>
+        *Source: https://www.nist.gov/cyberframework/online-learning/five-functions
+        **The IBM Enable function is a custom IBM function and not a part of the NIST Cybersecurity domains.
+    </Tooltip>,
+    risk_desc: <Tooltip>The Risk Description attribute provides preliminary inherent risks for the processes and operations that threaten the achievement of the control objectives or trust services criteria as identified by management.</Tooltip>,
+    objective: <Tooltip>A control objective is the intent defined for a set of controls at a service organization with the primary aim to address risks that the controls are designed to mitigate.</Tooltip>,
+    ibm_public_cloud_scope: <Tooltip>Indicates the scope of IBM Public Cloud.</Tooltip>,
+    ibm_public_cloud_resp: <Tooltip>Indicates whether IBM Public Cloud is responsible for the performance of the control.</Tooltip>,
+    developer_scope: <Tooltip>Indicates the scope of Organization that develops the software to be utilized in IBM public Cloud.</Tooltip>,
+    developer_resp: <Tooltip>Indicates whether Organization that develops software is responsible for the performance of the control.</Tooltip>,
+    operator_scope: <Tooltip>Indicates the scope of Organization that operates the software on IBM Public Cloud.</Tooltip>,
+    operator_resp: <Tooltip>Indicates whether Organization that operates the software is responsible for the performance of the control.</Tooltip>,
+    consumer_scope: <Tooltip>Indicates the scope of the Organization that utilizes IBM Public Cloud  i.e. Bank.</Tooltip>,
+    consumer_resp: <Tooltip>Indicates whether Client using  Independent Software Vendor provided software is responsible for the performance of a control.</Tooltip>,
+}
 
 /////////////////////////////////////////////
 // END -> Controls Filters

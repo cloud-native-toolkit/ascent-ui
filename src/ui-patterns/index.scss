@@ -29,7 +29,15 @@ div.notif {
   z-index: 10000;
 }
 
-.control-details ul li {
+div.control-details div.bx--accordion__title {
+  font-size: 1rem;
+}
+
+.bx--accordion__content > p {
+  font-size: 1rem;
+}
+
+.control-details ul:not(.bx--list--unordered, .bx--accordion) li {
   list-style: inside disc;
   font-size: 1rem;
   font-weight: 400;
@@ -38,6 +46,14 @@ div.notif {
 }
 .control-details p {
   margin-bottom: 0.5rem;
+}
+
+.control-details div.bx--accordion__title div.bx--tooltip__label {
+  margin-left: 1rem;
+}
+
+div.bx--tooltip__content ul.bx--list--unordered li.bx--list__item {
+  color: white;
 }
 
 .slide-pane__title-wrapper {
