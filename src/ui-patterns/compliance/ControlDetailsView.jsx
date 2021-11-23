@@ -9,19 +9,24 @@ import {
   SearchSkeleton,
   ContentSwitcher,
   Switch,
-  Pagination
+  Pagination,
 } from 'carbon-components-react';
-import ReactMarkdown from 'react-markdown';
 import {
   Link
 } from "react-router-dom";
 import {
   Launch16
 } from '@carbon/icons-react';
-import MappingTable from "../mapping/MappingTable"
-import { mappingHeaders as headers } from '../data/data';
-
 import { ToastNotification } from "carbon-components-react";
+
+
+import MappingTable from "../mapping/MappingTable"
+import ControlDetails from './ControlDetails';
+
+
+import {
+  mappingHeaders as headers
+} from '../data/data';
 
 class ControlDetailsView extends Component {
   constructor(props) {
@@ -63,8 +68,8 @@ class ControlDetailsView extends Component {
 
   async loadTable() {
     console.log(this.props.controlId);
-    const mappingData = await this.props.mapping.getMappings({ where : {control_id: this.props.controlId}, include: ["profile", "control", "service"] });
-    this.props.mapping.getMappings({ where : {control_id: this.props.controlId}, include: ["profile", "goals", "control", "service"] }).then((mappings) => {
+    const mappingData = await this.props.mapping.getMappings({ where: { control_id: this.props.controlId }, include: ["profile", "control", "service"] });
+    this.props.mapping.getMappings({ where: { control_id: this.props.controlId }, include: ["profile", "goals", "control", "service"] }).then((mappings) => {
       this.setState({
         mappingData: mappings,
         filterData: mappings,
@@ -83,20 +88,20 @@ class ControlDetailsView extends Component {
   }
 
   async filterTable(searchValue) {
-      if (searchValue) {
-          const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt?.service_id?.includes(searchValue) || elt?.service?.ibm_catalog_service?.includes(searchValue));
-          this.setState({
-              filterData: filterData,
-              firstRowIndex: 0,
-              totalItems: filterData.length
-          });
-      } else {
-          this.setState({
-              filterData: this.state.mappingData,
-              firstRowIndex: 0,
-              totalItems: this.state.mappingData.length
-          });
-      }
+    if (searchValue) {
+      const filterData = this.state.mappingData.filter(elt => elt?.scc_profile?.includes(searchValue) || elt?.service_id?.includes(searchValue) || elt?.service?.ibm_catalog_service?.includes(searchValue));
+      this.setState({
+        filterData: filterData,
+        firstRowIndex: 0,
+        totalItems: filterData.length
+      });
+    } else {
+      this.setState({
+        filterData: this.state.mappingData,
+        firstRowIndex: 0,
+        totalItems: this.state.mappingData.length
+      });
+    }
   }
 
   async componentDidMount() {
@@ -117,7 +122,7 @@ class ControlDetailsView extends Component {
       });
   }
 
-  async componentWillReceiveProps(newProps){
+  async componentWillReceiveProps(newProps) {
     if (newProps.controlId && newProps.controlId !== this.state.controlId) {
       this.loadControl(newProps.controlId);
     }
@@ -132,14 +137,14 @@ class ControlDetailsView extends Component {
         {
           message: message || "Notification",
           detail: detail || "Notification text",
-          severity: type || "info"
+          severity: type || "info"
         }
       ]
     }));
   }
 
   renderNotifications() {
-  return this.state.notifications.map(notification => {
+    return this.state.notifications.map(notification => {
       return (
         <ToastNotification
           title={notification.message}
@@ -154,76 +159,90 @@ class ControlDetailsView extends Component {
 
   /** Notifications END */
 
-  
+
   render() {
     const data = this.state.data;
     const nistData = this.state.nistData;
     const mappingData = this.state.filterData;
-    let breadcrumb;
-    let title;
-    let comment = <></>;
 
-    // NIST controls details
-    let nist = <></>;
-    let family = <></>;
-    let priority = <></>;
-    let supplemental_guidance = <></>;
-    let parent_control = <></>;
-    let related = <></>;
-    let baseline_impact = <></>;
-    let references = <></>;
-    if (!data.id) {
-      breadcrumb = <BreadcrumbSkeleton />;
-      title = <SearchSkeleton />;
-    } else {
-      breadcrumb = <>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            {this.state.user?.roles?.includes("fs-viewer") ?
-              <Link to="/controls">Controls</Link>
+    return (
+      <>
+        <div class='notif'>
+          {this.state.notifications.length !== 0 && this.renderNotifications()}
+        </div>
+        <div className="bx--grid">
+
+          {data.id ?
+            <Breadcrumb>
+              <BreadcrumbItem>
+                {this.state.user?.roles?.includes("fs-viewer") ?
+                  <Link to="/controls">Controls</Link>
+                  :
+                  <Link to="/nists">NIST</Link>
+                }
+              </BreadcrumbItem>
+              <BreadcrumbItem href="#">{this.props.controlId}</BreadcrumbItem>
+            </Breadcrumb>
             :
-              <Link to="/nists">NIST</Link>
-            }
-          </BreadcrumbItem>
-          <BreadcrumbItem href="#">{this.props.controlId}</BreadcrumbItem>
-        </Breadcrumb>
-      </>;
-      title = <div className="bx--row">
-                <div className="bx--col-lg-16">
-                  <br></br>
-                  <h2>
-                    {(data.name && (data.id + ": " + data.name)) || data.id}
-                  </h2>
-                  <br></br>
-                </div>
-              </div>;
-    }
-    if (nistData.number) {
-      nist = <div className="bx--row">
+            <BreadcrumbSkeleton />
+          }
+
+          {data.id ?
+            <div className="bx--row">
               <div className="bx--col-lg-16">
                 <br></br>
-                <h3 >
-                  Official NIST description
-                </h3>
-                <br></br>
-                <h4 >{nistData.title && nistData.title.toLowerCase()}</h4>
-                <br></br>
-                <p>{nistData.statement && nistData.statement.description}</p>
-                {nistData.statement && nistData.statement.statement ? <>
-                      <UnorderedList>
-                        {nistData.statement.statement.map((statement) => (
-                          <ListItem>
-                            <p>{statement.description}</p>
-                          </ListItem>
-                        ))}
-                      </UnorderedList>
-                    </> : <></>}
+                <h2>
+                  {(data.name && (data.id + ": " + data.name)) || data.id}
+                </h2>
                 <br></br>
               </div>
-            </div>;
-    }
-    if (nistData.family) {
-      family = <div className="bx--row">
+            </div>
+            :
+            <SearchSkeleton />
+          }
+
+          {data.id &&
+            <ContentSwitcher
+              size='xl'
+              onChange={(e) => { this.setState({ show: e.name }) }} >
+              {this.state.user?.roles?.includes("fs-viewer") ? <Switch name="fs-cloud-desc" text="Description" /> : <></>}
+              <Switch className={this.state.show === "nist-desc" && !this.state.user?.roles?.includes("fs-viewer") ? "bx--content-switcher--selected" : ""} name="nist-desc" text="Additional NIST Information" />
+              <Switch name="mapping" text="Impacted Components" />
+            </ContentSwitcher>
+          }
+
+
+          {data?.controlDetails && this.state.show === "fs-cloud-desc" && <div className="control-details">
+            {data.id && <ControlDetails data={data} />}
+          </div>}
+
+          {this.state.show === "nist-desc" && <div>
+            { /* NIST Description */
+              nistData.number && <div className="bx--row">
+                <div className="bx--col-lg-16">
+                  <br></br>
+                  <h3 >
+                    Official NIST description
+                  </h3>
+                  <br></br>
+                  <h4 >{nistData.title && nistData.title.toLowerCase()}</h4>
+                  <br></br>
+                  <p>{nistData.statement && nistData.statement.description}</p>
+                  {nistData.statement && nistData.statement.statement ? <>
+                    <UnorderedList>
+                      {nistData.statement.statement.map((statement) => (
+                        <ListItem>
+                          <p>{statement.description}</p>
+                        </ListItem>
+                      ))}
+                    </UnorderedList>
+                  </> : <></>}
+                  <br></br>
+                </div>
+              </div>
+            }
+            { /* NIST Family */
+              nistData.family && <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
                   <h4 >Family</h4>
@@ -233,10 +252,10 @@ class ControlDetailsView extends Component {
                   </p>
                   <br></br>
                 </div>
-              </div>;
-    }
-    if (nistData.priority) {
-      priority = <div className="bx--row">
+              </div>
+            }
+            { /* NIST Priority */
+              nistData.priority && <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
                   <h4 >Priority</h4>
@@ -244,10 +263,10 @@ class ControlDetailsView extends Component {
                   <Tag type="red">{nistData.priority}</Tag>
                   <br></br>
                 </div>
-              </div>;
-    }
-    if (nistData.supplemental_guidance && nistData.supplemental_guidance.description) {
-      supplemental_guidance = <div className="bx--row">
+              </div>
+            }
+            { /* NIST Supplemental Guidance */
+              nistData?.supplemental_guidance?.description && <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
                   <h4 >Supplemental Guidance</h4>
@@ -257,25 +276,25 @@ class ControlDetailsView extends Component {
                   </p>
                   <br></br>
                 </div>
-              </div>;
-    }
-    if (nistData.parent_control) {
-      parent_control = <div className="bx--row">
+              </div>
+            }
+            { /* NIST Parent Control */
+              nistData?.parent_control && <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
                   <h4 >Parent Control</h4>
                   <br></br>
-                    <Tag type="blue">
-                      <Link to={"/nists/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
-                        {nistData.parent_control}
-                      </Link>
-                    </Tag>
+                  <Tag type="blue">
+                    <Link to={"/nists/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
+                      {nistData.parent_control}
+                    </Link>
+                  </Tag>
                   <br></br>
                 </div>
-              </div>;
-    }
-    if (nistData.supplemental_guidance && nistData.supplemental_guidance.related) {
-      related = <div className="bx--row">
+              </div>
+            }
+            { /* NIST Related Controls */
+              nistData?.supplemental_guidance?.related && <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
                   <h4 >Related NIST Controls</h4>
@@ -289,10 +308,10 @@ class ControlDetailsView extends Component {
                   ))}
                   <br></br>
                 </div>
-              </div>;
-    }
-    if (nistData.baseline_impact) {
-      baseline_impact = <div className="bx--row">
+              </div>
+            }
+            { /* NIST Baseline Impact */
+              nistData?.baseline_impact && <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
                   <h4 >Baseline Impact</h4>
@@ -302,98 +321,30 @@ class ControlDetailsView extends Component {
                   ))}
                   <br></br>
                 </div>
-              </div>;
-    }
-    if (nistData.references && nistData.references.reference) {
-      references = <div className="bx--row">
+              </div>
+            }
+            { /* NIST References */
+              nistData?.references?.reference && <div className="bx--row">
                 <div className="bx--col-lg-16">
                   <br></br>
                   <h4 >References</h4>
                   <br></br>
                   <UnorderedList>
-                  {nistData.references.reference.map((ref) => (
-                    <ListItem>
-                      <a href={ref.item["@href"]} target="_blank">
-                        {ref.item["#text"]}
-                        <Launch16 style={{"margin-left": "5px"}}/>
-                      </a>
-                    </ListItem>
-                  ))}
+                    {nistData.references.reference.map((ref) => (
+                      <ListItem>
+                        <a href={ref.item["@href"]} target="_blank">
+                          {ref.item["#text"]}
+                          <Launch16 style={{ "margin-left": "5px" }} />
+                        </a>
+                      </ListItem>
+                    ))}
                   </UnorderedList>
                   <br></br>
                 </div>
-              </div>;
-    }
-    return (
-      <>
-        <div class='notif'>
-          {this.state.notifications.length !== 0 && this.renderNotifications()}
-        </div>
-        <div className="bx--grid">
-          {breadcrumb}
-          {title}
-
-          {data.id && 
-            <ContentSwitcher
-              size='xl'
-              onChange={(e) => {this.setState({show:e.name})}} >
-              {this.state.user?.roles?.includes("fs-viewer") ? <Switch name="fs-cloud-desc" text="Description" /> : <></>}
-              <Switch className={this.state.show === "nist-desc" && !this.state.user?.roles?.includes("fs-viewer") ? "bx--content-switcher--selected" : ""} name="nist-desc" text="Additional NIST Information" />
-              <Switch name="mapping" text="Impacted Components" />
-            </ContentSwitcher>
-          }
-          
-
-          {data?.controlDetails && this.state.show === "fs-cloud-desc" && <div className="control-details">
-            {data.id && 
-              <>
-                <br />
-                <h3>Description</h3>
-                <br />
-                <ReactMarkdown>{data?.controlDetails?.description}</ReactMarkdown>
-                {data.parent_control && <>
-                  <br />
-                  <p>Parent control: <Tag type="blue">
-                      <Link to={"/controls/" + data.parent_control.toLowerCase().replace(' ', '_')} >
-                        {data.parent_control}
-                      </Link>
-                    </Tag></p>
-                </>}
-                <br />
-                {data?.controlDetails?.fs_guidance.replace(/[ \n]/gi, '') && <>
-                  <h3>Additional FS Cloud Guidance</h3>
-                  <br />
-                  <ReactMarkdown>{data?.controlDetails?.fs_guidance}</ReactMarkdown>
-                  <br />
-                </>}
-                <br />
-                {data?.controlDetails?.parameters.replace(/[ \n]/gi, '') && <>
-                  <h3>Parameters</h3>
-                  <br />
-                  <ReactMarkdown>{data?.controlDetails?.parameters}</ReactMarkdown>
-                  <br />
-                </>}
-                <h3>Solution and Implementation</h3>
-                <br />
-                <ReactMarkdown>{data?.controlDetails?.implementation}</ReactMarkdown>
-                <br />
-              </>
+              </div>
             }
-            
-            {comment}
           </div>}
-          
-          {this.state.show === "nist-desc" && <div>
-            {nist}
-            {family}
-            {priority}
-            {supplemental_guidance}
-            {parent_control}
-            {related}
-            {baseline_impact}
-            {references}
-          </div>}
-          
+
           {this.state.show === "mapping" && <div>
             {data.id &&
               <>
@@ -437,7 +388,7 @@ class ControlDetailsView extends Component {
               </>
             }
           </div>}
-          
+
         </div >
       </>
     );

@@ -47,13 +47,33 @@ class ControlsView extends Component {
         else filterData = this.state.data.filter(elt => !elt?.control_item);
         const selectedFilters = selFilters.filter(elt => elt.attr !== 'control_item' && elt.attr !== 'and');
         if (event?.target || searchValue) {
-            filterData = filterData.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.nist?.family?.includes(searchValue));
+            filterData = filterData.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.family?.includes(searchValue) || elt?.controlDetails?.focus_area?.includes(searchValue));
         }
         if (selectedFilters.length) {
             filterData = filterData.filter(elt => {
                 let metFilters = 0;
                 for (const item of selectedFilters) {
-                    if (elt[item.attr] === item.val && (filterIsOr || ++metFilters === selectedFilters.length)) return true;
+                    if (
+                        (
+                            [
+                                'scc',
+                                'control_type_1',
+                                'control_type_2',
+                                'control_type_3',
+                                'risk_rating',
+                            ].includes(item.attr) && elt?.controlDetails?.requirements?.find(req => req[item.attr] === item.val) ||
+                            [
+                                'ibm_public_cloud_resp',
+                                'developer_resp',
+                                'operator_resp',
+                                'consumer_resp'
+                            ].includes(item.attr) && elt?.controlDetails?.requirements?.find(req => req[item.attr]?.includes(item.val)) ||
+                            item.attr === 'nist_functions' && elt?.controlDetails[item.attr]?.includes(item.val) ||
+                            item.attr === 'focus_area' && elt?.controlDetails[item.attr] === item.val ||
+                            elt[item.attr] === item.val
+                        ) 
+                        && (filterIsOr || ++metFilters === selectedFilters.length)
+                    ) return true;
                 }
                 return false;
             });
@@ -82,6 +102,7 @@ class ControlsView extends Component {
         for (let index = 0; index < data.length; index++) {
             let row = data[index];
             row.family = row?.family || row?.nist?.family
+            row.focus_area = row?.focus_area || row?.controlDetails?.focus_area
         } 
         const headers = this.state.headerData;
         let table;

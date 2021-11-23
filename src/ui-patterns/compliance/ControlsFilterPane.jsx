@@ -16,7 +16,19 @@ import {
     Link
 } from "react-router-dom";
 
-import { controlFrequencies, controlFamilies } from '../data/data';
+import {
+    controlFocusAreas,
+    controlFamilies,
+    nistFunctions,
+    controlRiskRating,
+    controlType1,
+    controlType2,
+    controlType3,
+    controlIbmResp,
+    controlDevResp,
+    controlOperatorResp,
+    controlConsumerResp
+} from '../data/data';
 
 import SlidingPane from "react-sliding-pane";
 
@@ -30,10 +42,8 @@ class ControlsFilterPane extends Component {
                 general: true,
                 family: false,
                 type: false,
-                frequency: false,
-                parameters: false,
-                scc: false,
-                document: false,
+                risk: false,
+                resp: false,
             }
         };
         this.handleCheck = this.handleCheck.bind(this);
@@ -66,28 +76,43 @@ class ControlsFilterPane extends Component {
             >
                 {
                     <div>
-                        {/* <h4>
-                            Filters
-                        </h4> */}
-                        <br/>
                         <Accordion>
                             <AccordionItem title="General" 
                                 onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, general: !this.state.accordionOpen.general}})}
                                 open={this.state.accordionOpen.general}>
                                 <Checkbox
-                                    id='controls-show-items'
-                                    labelText='Show Control Items'
-                                    onChange={(value, id, event) => this.handleCheck('control_item', undefined, value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'control_item' && elt.val === undefined)}  />
-                                <Checkbox
                                     id='controls-and-operator'
                                     labelText='Use AND operator'
                                     onChange={(value, id, event) => this.handleCheck('and', 1, value)}
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'and' && elt.val === 1)}  />
+                                <Checkbox
+                                    id='controls-base-control'
+                                    labelText='Base Controls'
+                                    onChange={(value, id, event) => this.handleCheck('base_control', true, value)}
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'base_control' && elt.val)}  />
+                                <Checkbox
+                                    id='controls-scc'
+                                    labelText='Security and Compliance Center'
+                                    onChange={(value, id, event) => this.handleCheck('scc', 'Y', value)}
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'scc' && elt.val)}  />
                             </AccordionItem>
-                            <AccordionItem title="Control Family" 
+                            <AccordionItem title="Category" 
                                 onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, family: !this.state.accordionOpen.family}})}
                                 open={this.state.accordionOpen.family}>
+                                <MultiSelect.Filterable
+                                    id='focus-areas'
+                                    items={controlFocusAreas}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'focus_area');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'focus_area')}
+                                    placeholder='Focus Area'
+                                    size='sm'
+                                />
+                                <div style={{marginBottom: '0.5rem'}}></div>
                                 <MultiSelect.Filterable
                                     id='control-families'
                                     items={controlFamilies}
@@ -98,114 +123,144 @@ class ControlsFilterPane extends Component {
                                         this.props.filterTable(this.state);
                                     }}
                                     initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'family')}
-                                    placeholder='Control Families'
+                                    placeholder='Control Family'
                                     size='sm'
                                 />
-                                {/* {ctrlsFamilies.map((family, ix) => (
-                                    <Checkbox
-                                        id={`control-family-${ix}`}
-                                        labelText={family.label}
-                                        onChange={(value, id, event) => console.log({value, id, event})}
-                                    />
-                                ))} */}
                             </AccordionItem>
-                            <AccordionItem title="Control Type"
+                            <AccordionItem title="Type" 
                                 onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, type: !this.state.accordionOpen.type}})}
                                 open={this.state.accordionOpen.type}>
-                                <Checkbox
-                                    id='control-type-human'
-                                    labelText='Human'
-                                    onChange={(value, id, event) => this.handleCheck('human_or_automated', 'Human', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'human_or_automated' && elt.val === 'Human')} />
-                                <Checkbox
-                                    id='control-type-auto'
-                                    labelText='Automated'
-                                    onChange={(value, id, event) => this.handleCheck('human_or_automated', 'Automated', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'human_or_automated' && elt.val === 'Automated')} />
-                                <Checkbox
-                                    id='control-type-mix'
-                                    labelText='Partly Both'
-                                    onChange={(value, id, event) => this.handleCheck('human_or_automated', 'Mix', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'human_or_automated' && elt.val === 'Mix')} />
-                                <Checkbox
-                                    id='control-type-unknown'
-                                    labelText='Unknown'
-                                    onChange={(value, id, event) => this.handleCheck('human_or_automated', 'Unknown', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'human_or_automated' && elt.val === 'Unknown')} />
-                            </AccordionItem>
-                            <AccordionItem title="Control Frequency"
-                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, frequency: !this.state.accordionOpen.frequency}})}
-                                open={this.state.accordionOpen.frequency}>
                                 <MultiSelect.Filterable
-                                    id='control-frequencies'
-                                    items={controlFrequencies}
+                                    id='control-type-3'
+                                    items={controlType3}
                                     onChange={async (event) => {
-                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'frequency');
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'control_type_3');
                                         event.selectedItems.forEach(item => selectedItems.push(item));
                                         await this.setState({selectedItems: selectedItems});
-                                        this.props.filterTable({selectedItems: this.state.selectedItems});
+                                        this.props.filterTable(this.state);
                                     }}
-                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'frequency')}
-                                    placeholder='Control Frequencies'
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'control_type_3')}
+                                    placeholder='Manual / Automated'
+                                    size='sm'
+                                />
+                                <div style={{marginBottom: '0.5rem'}}></div>
+                                <MultiSelect.Filterable
+                                    id='control-type-1'
+                                    items={controlType1}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'control_type_1');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'control_type_1')}
+                                    placeholder='Preventative / Detective / Corrective'
+                                    size='sm'
+                                />
+                                <div style={{marginBottom: '0.5rem'}}></div>
+                                <MultiSelect.Filterable
+                                    id='control-type-2'
+                                    items={controlType2}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'control_type_2');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'control_type_2')}
+                                    placeholder='Administrative / Physical / Technical'
+                                    size='sm'
+                                />
+                                <div style={{marginBottom: '0.5rem'}}></div>
+                                <MultiSelect.Filterable
+                                    id='nist-functions'
+                                    items={nistFunctions}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'nist_functions');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'nist_functions')}
+                                    placeholder='NIST Functions'
                                     size='sm'
                                 />
                             </AccordionItem>
-                            <AccordionItem title="Parameters"
-                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, parameters: !this.state.accordionOpen.parameters}})}
-                                open={this.state.accordionOpen.parameters}>
-                                <Checkbox
-                                    id='control-org-defined-params'
-                                    labelText='Organization Defined'
-                                    onChange={(value, id, event) => this.handleCheck('org_defined_parameter', 'Yes', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'org_defined_parameter' && elt.val === 'Yes')} />
-                                <Checkbox
-                                    id='control-org-defined-params-mix'
-                                    labelText='Partly Organization Defined'
-                                    onChange={(value, id, event) => this.handleCheck('org_defined_parameter', 'Mix', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'org_defined_parameter' && elt.val === 'Mix')} />
-                                <Checkbox
-                                    id='control-not-org-defined-params'
-                                    labelText='Other'
-                                    onChange={(value, id, event) => this.handleCheck('org_defined_parameter', 'No', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'org_defined_parameter' && elt.val === 'No')} />
+                            <AccordionItem title="Risk" 
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, risk: !this.state.accordionOpen.risk}})}
+                                open={this.state.accordionOpen.risk}>
+                                <MultiSelect.Filterable
+                                    id='control-risk-rating'
+                                    items={controlRiskRating}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'risk_rating');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'risk_rating')}
+                                    placeholder='Risk Rating'
+                                    size='sm'
+                                />
                             </AccordionItem>
-                            <AccordionItem title="Security and Compliance"
-                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, scc: !this.state.accordionOpen.scc}})}
-                                open={this.state.accordionOpen.scc}>
-                                <Checkbox
-                                    id='control-scc-goals'
-                                    labelText='Existing SCC Goals'
-                                    onChange={(value, id, event) => this.handleCheck('existing_scc_goals', 'Yes', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals' && elt.val === 'Yes')} />
-                                <Checkbox
-                                    id='control-scc-goals-mix'
-                                    labelText='Partly Existing SCC Goals'
-                                    onChange={(value, id, event) => this.handleCheck('existing_scc_goals', 'Mix', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals' && elt.val === 'Mix')} />
-                                <Checkbox
-                                    id='control-no-scc-goals'
-                                    labelText='No Existing SCC Goals'
-                                    onChange={(value, id, event) => this.handleCheck('existing_scc_goals', 'No', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'existing_scc_goals' && elt.val === 'No')} />
-                            </AccordionItem>
-                            <AccordionItem title="Evindencing"
-                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, document: !this.state.accordionOpen.document}})}
-                                open={this.state.accordionOpen.document}>
-                                <Checkbox
-                                    id='control-require-doc'
-                                    labelText='Require Document'
-                                    onChange={(value, id, event) => this.handleCheck('create_document', 'Yes', value)} 
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'create_document' && elt.val === 'Yes')}/>
-                                <Checkbox
-                                    id='control-require-doc-mix'
-                                    labelText='Partly Require Document'
-                                    onChange={(value, id, event) => this.handleCheck('create_document', 'Mix', value)} 
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'create_document' && elt.val === 'Mix')}/>
-                                <Checkbox
-                                    id='control-no-require-doc'
-                                    labelText="Don't Require Document"
-                                    onChange={(value, id, event) => this.handleCheck('create_document', 'No', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'create_document' && elt.val === 'No')}/>
+                            <AccordionItem title="Responsibility" 
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, resp: !this.state.accordionOpen.resp}})}
+                                open={this.state.accordionOpen.resp}>
+                                <MultiSelect.Filterable
+                                    id='ibm-public-cloud-resp'
+                                    items={controlIbmResp}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'ibm_public_cloud_resp');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'ibm_public_cloud_resp')}
+                                    placeholder='IBM Cloud'
+                                    size='sm'
+                                />
+                                <div style={{marginBottom: '0.5rem'}}></div>
+                                <MultiSelect.Filterable
+                                    id='developer-resp'
+                                    items={controlDevResp}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'developer_resp');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'developer_resp')}
+                                    placeholder='Developer'
+                                    size='sm'
+                                />
+                                <div style={{marginBottom: '0.5rem'}}></div>
+                                <MultiSelect.Filterable
+                                    id='operator-resp'
+                                    items={controlOperatorResp}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'operator_resp');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'operator_resp')}
+                                    placeholder='Operator'
+                                    size='sm'
+                                />
+                                <div style={{marginBottom: '0.5rem'}}></div>
+                                <MultiSelect.Filterable
+                                    id='consumer-resp'
+                                    items={controlConsumerResp}
+                                    onChange={async (event) => {
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'consumer_resp');
+                                        event.selectedItems.forEach(item => selectedItems.push(item));
+                                        await this.setState({selectedItems: selectedItems});
+                                        this.props.filterTable(this.state);
+                                    }}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'consumer_resp')}
+                                    placeholder='Consumer'
+                                    size='sm'
+                                />
                             </AccordionItem>
                         </Accordion>
                     </div>
