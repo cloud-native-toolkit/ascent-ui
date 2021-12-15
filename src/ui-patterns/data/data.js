@@ -5,62 +5,23 @@ import {
     ListItem
 } from 'carbon-components-react';
 
-export const serviceHeader = [{
+export const serviceHeader = [
+    {
         key: 'service',
-        header: 'Service Name',
+        header: 'Service',
     },
     {
-        key: 'id',
-        header: 'Service ID',
+        key: 'description',
+        header: 'Description',
     },
     {
-        key: 'grouping',
-        header: 'Grouping',
-    },
-    // {
-    //     key: 'desc',
-    //     header: 'Description',
-    // },
-    {
-        key: 'deployment_method',
-        header: 'Deployment Method',
-    },
-    // {
-    //     key: 'fs_validated',
-    //     header: 'FS Validated',
-    // },
-    // {
-    //     key: 'compliance_status',
-    //     header: 'Compliance Status',
-    // },
-    // {
-    //     key: 'quarter',
-    //     header: 'Quarter',
-    // },
-    // {
-    //     key: 'date',
-    //     header: 'Date',
-    // },
-    {
-        key: 'provision',
-        header: 'Provision',
+        key: 'provider',
+        header: 'Provider',
     },
     {
         key: 'fs_validated',
         header: 'FS Validated',
     },
-    {
-        key: 'automation_id',
-        header: 'Automation ID',
-    },
-    // {
-    //     key: 'cloud_automation_id',
-    //     header: 'CA-ID',
-    // },
-    // {
-    //     key: 'hybrid_automation_id',
-    //     header: 'HA-ID',
-    // }
 ];
 
 export const bomHeader = [
@@ -634,30 +595,50 @@ export const infoTooltips = {
 /////////////////////////////////////////////
 
 export const servicePlatforms = [
+    // {
+    //     attr: 'supported_platforms',
+    //     label: 'IBM Cloud',
+    //     val: 'IBM Cloud'
+    // },
+    // {
+    //     attr: 'supported_platforms',
+    //     label: 'Azure',
+    //     val: 'Azure'
+    // },
+    // {
+    //     attr: 'supported_platforms',
+    //     label: 'AWS',
+    //     val: 'AWS'
+    // },
+    // {
+    //     attr: 'supported_platforms',
+    //     label: 'GCP',
+    //     val: 'GCP'
+    // },
+    // {
+    //     attr: 'supported_platforms',
+    //     label: 'Other',
+    //     val: 'Other'
+    // },
     {
-        attr: 'supported_platforms',
-        label: 'IBM Cloud',
-        val: 'IBM Cloud'
+        attr: 'platform',
+        label: 'Kubernetes',
+        val: 'kubernetes'
     },
     {
-        attr: 'supported_platforms',
-        label: 'Azure',
-        val: 'Azure'
+        attr: 'platform',
+        label: 'OpenShift 3.x',
+        val: 'ocp3'
     },
     {
-        attr: 'supported_platforms',
-        label: 'AWS',
-        val: 'AWS'
+        attr: 'platform',
+        label: 'OpenShift 4.x',
+        val: 'ocp4'
     },
     {
-        attr: 'supported_platforms',
-        label: 'GCP',
-        val: 'GCP'
-    },
-    {
-        attr: 'supported_platforms',
-        label: 'Other',
-        val: 'Other'
+        attr: 'platform',
+        label: 'VPC',
+        val: 'vpc'
     },
 ]
 
@@ -707,6 +688,44 @@ export const serviceGroupings = [
         label: 'Storage',
         val: 'Storage'
     },
+]
+
+export const serviceProviders = [
+    {
+        attr: 'provider',
+        label: 'IBM',
+        val: 'ibm'
+    },
+    {
+        attr: 'provider',
+        label: 'Kubernetes',
+        val: 'k8s'
+    },
+    {
+        attr: 'provider',
+        label: 'OpenShift',
+        val: 'ocp'
+    },
+    {
+        attr: 'provider',
+        label: 'Tools',
+        val: 'tools'
+    },
+    {
+        attr: 'provider',
+        label: 'VSI',
+        val: 'vsi'
+    },
+    {
+        attr: 'provider',
+        label: 'GitOps',
+        val: 'gitops'
+    },
+    {
+        attr: 'provider',
+        label: 'Util',
+        val: 'util'
+    }
 ]
 
 export const serviceDeploymentMethods = [

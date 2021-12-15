@@ -1,22 +1,15 @@
 import React, { Component } from "react";
 import {
-    UnorderedList, ListItem, BreadcrumbSkeleton, SearchSkeleton, Tag, 
-    CodeSnippet,
     Accordion,
     AccordionItem,
     MultiSelect,
     Checkbox
 } from 'carbon-components-react';
 import {
-    WarningAlt16,
-    Launch16,
     Close32 as Close
 } from '@carbon/icons-react';
-import {
-    Link
-} from "react-router-dom";
 
-import { servicePlatforms, serviceGroupings, serviceDeploymentMethods, serviceProvisionMethods } from '../data/data';
+import { servicePlatforms, serviceProviders } from '../data/data';
 
 import SlidingPane from "react-sliding-pane";
 
@@ -29,9 +22,8 @@ class ServiceFilterPane extends Component {
             accordionOpen: {
                 general: true,
                 platform: false,
-                grouping: false,
-                deployment: false,
-                provision: false,
+                provider: false,
+                tags: false,
             },
         };
         this.handleCheck = this.handleCheck.bind(this);
@@ -75,7 +67,7 @@ class ServiceFilterPane extends Component {
                                     defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'and' && elt.val === 1)}  />
                             </AccordionItem>
                             <AccordionItem
-                                title="Supported Platforms"
+                                title="Platform"
                                 onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, platform: !this.state.accordionOpen.platform}})}
                                 open={this.state.accordionOpen.platform}>
                                 <MultiSelect.Filterable
@@ -83,64 +75,47 @@ class ServiceFilterPane extends Component {
                                     items={servicePlatforms}
                                     sortItems={(arr) => arr}
                                     onChange={async (event) => {
-                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'supported_platforms');
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'platform');
                                         event.selectedItems.forEach(item => selectedItems.push(item));
                                         await this.setState({selectedItems: selectedItems});
                                         this.props.filterTable(this.state);
                                     }}
-                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'supported_platforms')}
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'platform')}
                                     placeholder='Platform'
                                     size='sm'
                                 />
                             </AccordionItem>
                             <AccordionItem title="Grouping"
-                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, grouping: !this.state.accordionOpen.grouping}})}
-                                open={this.state.accordionOpen.grouping}>
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, provider: !this.state.accordionOpen.provider}})}
+                                open={this.state.accordionOpen.provider}>
                                 <MultiSelect.Filterable
-                                    id='service-groupings'
-                                    items={serviceGroupings}
+                                    id='service-providers'
+                                    items={serviceProviders}
                                     onChange={async (event) => {
-                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'grouping');
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'provider');
                                         event.selectedItems.forEach(item => selectedItems.push(item));
                                         await this.setState({selectedItems: selectedItems});
                                         this.props.filterTable(this.state);
                                     }}
-                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'grouping')}
-                                    placeholder='Service Grouping'
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'provider')}
+                                    placeholder='Service Provider'
                                     size='sm'
                                 />
                             </AccordionItem>
-                            <AccordionItem title="Deployment Method"
-                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, deployment: !this.state.accordionOpen.deployment}})}
-                                open={this.state.accordionOpen.deployment}>
+                            <AccordionItem title="Tags"
+                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, tags: !this.state.accordionOpen.tags}})}
+                                open={this.state.accordionOpen.tags}>
                                 <MultiSelect.Filterable
-                                    id='service-deployment-methods'
-                                    items={serviceDeploymentMethods}
+                                    id='service-tags'
+                                    items={this.props.tags}
                                     onChange={async (event) => {
-                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'deployment_method');
+                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'tags');
                                         event.selectedItems.forEach(item => selectedItems.push(item));
                                         await this.setState({selectedItems: selectedItems});
                                         this.props.filterTable(this.state);
                                     }}
-                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'deployment_method')}
-                                    placeholder='Deployment Method'
-                                    size='sm'
-                                />
-                            </AccordionItem>
-                            <AccordionItem title="Provisionning"
-                                onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, provision: !this.state.accordionOpen.provision}})}
-                                open={this.state.accordionOpen.provision}>
-                                <MultiSelect.Filterable
-                                    id='service-provision-methods'
-                                    items={serviceProvisionMethods}
-                                    onChange={async (event) => {
-                                        const selectedItems = this.state.selectedItems.filter((elt) => elt.attr !== 'provision');
-                                        event.selectedItems.forEach(item => selectedItems.push(item));
-                                        await this.setState({selectedItems: selectedItems});
-                                        this.props.filterTable(this.state);
-                                    }}
-                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'provision')}
-                                    placeholder='Provisionning'
+                                    initialSelectedItems={this.props.selectedFilters.filter((elt) => elt.attr === 'tags')}
+                                    placeholder='Tag'
                                     size='sm'
                                 />
                             </AccordionItem>

@@ -25,31 +25,20 @@ class FormModal extends Component {
             notif: false,
             fields: {
                 service_id: '',
-                ibm_catalog_service: '',
-                supported_platforms: [],
-                grouping: '',
-                fs_validated: false,
-                deployment_method: '',
-                provision: '',
-                cloud_automation_id: '',
-                desc: '',
-                default_automation_variables: ''
+                name: '',
+                ibm_catalog_id: '',
+                fs_validated: false
             }
         };
         if (this.props.isUpdate) {
             let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/\"id\":/g, "\"service_id\":"));
+            console.log(jsonObject);
             this.state = {
                 fields: {
                     service_id: jsonObject.service_id,
-                    ibm_catalog_service: jsonObject.ibm_catalog_service,
-                    supported_platforms: jsonObject.supported_platforms,
-                    grouping: jsonObject.grouping,
-                    deployment_method: jsonObject.deployment_method,
-                    fs_validated: jsonObject.fs_validated,
-                    provision: jsonObject.provision,
-                    cloud_automation_id: jsonObject.cloud_automation_id,
-                    desc: jsonObject.desc,
-                    default_automation_variables: jsonObject.default_automation_variables
+                    name: jsonObject.serviceDetails?.name,
+                    ibm_catalog_id: jsonObject.serviceDetails?.ibm_catalog_id,
+                    fs_validated: jsonObject.serviceDetails?.fs_validated
                 }
             }
         }
@@ -63,13 +52,8 @@ class FormModal extends Component {
     }
     handleChange(field, e) {
         let fields = this.state.fields;
-        if (field === "default_automation_variables") {
-            fields[field] = e;
-        } else if (field === "fs_validated") {
+        if (field === "fs_validated") {
             fields[field] = e.target.value === "false" ? false : true;
-        } else if (field === "supported_platforms") {
-            fields[field] = e.selectedItems?.map(item => item.val);
-            console.log(fields[field]);
         } else {
             fields[field] = e.target.value;
         }
@@ -78,7 +62,7 @@ class FormModal extends Component {
 
     validateForm() {
         let fields = this.state.fields
-        return fields.service_id && fields.ibm_catalog_service && fields.grouping && fields.deployment_method && fields.provision ? true: false;
+        return fields.service_id ? true: false;
     }
 
     handleSubmit = (event) => {
@@ -118,12 +102,11 @@ class FormModal extends Component {
                         open={this.props.show}
                         onClose={this.props.handleClose}>
                         <ModalHeader >
-                            <h3 className="bx--modal-header__heading">Add a Service</h3>
+                            <h3 className="bx--modal-header__heading">{this.props.isUpdate ? "Update a Service": "Add a Service"}</h3>
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
                             <Form name="serviceform">
-
                                 <TextInput
                                     data-modal-primary-focus
                                     id="seviceId"
@@ -136,60 +119,28 @@ class FormModal extends Component {
                                     placeholder="e.g. appid,atracker,cos"
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <FormGroup legendText="Supported Platforms" style={{marginBottom: '1rem'}}>
-                                    <MultiSelect.Filterable
-                                        id='supported-platforms-add'
-                                        items={servicePlatforms}
-                                        sortItems={(arr) => arr}
-                                        onChange={this.handleChange.bind(this, "supported_platforms")}
-                                        initialSelectedItems={servicePlatforms.filter(elt => this.state.fields.supported_platforms?.includes(elt.val))}
-                                        placeholder='Supported Platforms'
-                                        size='sm' />
-                                </FormGroup>
                                 <TextInput
-                                    id="ibmService"
-                                    name="ibm_catalog_service"
+                                    id="serviceName"
+                                    name="name"
                                     invalidText="Please Enter The Value"
 
-                                    value={this.state.fields.ibm_catalog_service}
-                                    onChange={this.handleChange.bind(this, "ibm_catalog_service")}
+                                    value={this.state.fields.name}
+                                    onChange={this.handleChange.bind(this, "name")}
                                     labelText="Service Name"
                                     placeholder="e.g. App ID,Databases for Redis ect..."
                                     style={{ marginBottom: '1rem' }}
                                 />
-                                <Select id="group" name="grouping"
-                                    labelText="Grouping"
-                                    defaultValue={!this.state.fields.grouping ? 'placeholder-item' : this.state.fields.grouping}
-                                    invalidText="A valid value is required"
-                                    onChange={this.handleChange.bind(this, "grouping")}
-                                    style={{ marginBottom: '1rem' }}>
-                                    <SelectItem
-                                        disabled
-                                        hidden
-                                        value="placeholder-item"
-                                        text="Choose an option"
-                                    />
-                                    {serviceGroupings.map(grouping => (
-                                        <SelectItem value={grouping.val} text={grouping.label} />
-                                    ))}
-                                </Select>
-                                <Select id="dplMethod"
-                                    name="deployment_method"
+                                <TextInput
+                                    id="serviceCatalogId"
+                                    name="ibm_catalog_id"
                                     invalidText="Please Enter The Value"
-                                    labelText="Deployment Method"
-                                    defaultValue={!this.state.fields.deployment_method ? 'placeholder-item' : this.state.fields.deployment_method}
-                                    onChange={this.handleChange.bind(this, "deployment_method")}
-                                    style={{ marginBottom: '1rem' }}>
-                                    <SelectItem
-                                        disabled
-                                        hidden
-                                        value="placeholder-item"
-                                        text="Choose an option"
-                                    />
-                                    {serviceDeploymentMethods.map(deploymentMethod => (
-                                        <SelectItem value={deploymentMethod.val} text={deploymentMethod.label} />
-                                    ))}
-                                </Select>
+
+                                    value={this.state.fields.ibm_catalog_id}
+                                    onChange={this.handleChange.bind(this, "ibm_catalog_id")}
+                                    labelText="IBM Catalog ID"
+                                    placeholder="e.g. kms, openshift, ..."
+                                    style={{ marginBottom: '1rem' }}
+                                />
                                 <Select id="fs_validated"
                                     name="fs_validated"
                                     invalidText="Please Enter The Value"
@@ -200,83 +151,6 @@ class FormModal extends Component {
                                     <SelectItem value={false} text="False" />
                                     <SelectItem value={true} text="True" />
                                 </Select>
-                                <Select id="provision" name="provision"
-                                    labelText="Provision"
-                                    defaultValue={!this.state.fields.provision ? 'placeholder-item' : this.state.fields.provision}
-                                    invalidText="Please Select The Value"
-                                    onChange={this.handleChange.bind(this, "provision")}
-                                    style={{ marginBottom: '1rem' }}>
-                                    <SelectItem
-                                        disabled
-                                        hidden
-                                        value="placeholder-item"
-                                        text="Choose an option"
-                                    />
-                                    {serviceProvisionMethods.map(provisionMethod => (
-                                        <SelectItem value={provisionMethod.val} text={provisionMethod.label} />
-                                    ))}
-                                </Select>
-                                {
-                                    this.state.caids && this.state.caids.length > 0 ?
-                                        <>
-                                        <Select id="caId" name="cloud_automation_id"
-                                            labelText="Automation ID"
-                                            defaultValue={!this.state.fields.cloud_automation_id ? 'placeholder-item' : this.state.fields.cloud_automation_id}
-                                            invalidText="Please Select The Value"
-                                            onChange={this.handleChange.bind(this, "cloud_automation_id")}
-                                            style={{ marginBottom: '1rem' }}>
-                                            <SelectItem
-                                                disabled
-                                                hidden
-                                                value="placeholder-item"
-                                                text="Choose an option"
-                                            />
-                                            {this.state.caids.map(caid => (
-                                                <SelectItem value={caid.name} text={caid.name} />
-                                            ))}
-                                        </Select>
-                                        </> : <SelectSkeleton style={{ marginBottom: '1rem' }}/>
-                                }
-                                <TextArea
-                                    cols={50}
-                                    id="desc"
-                                    name="desc"
-                                    value={this.state.fields.desc}
-                                    onChange={this.handleChange.bind(this, "desc")}
-                                    invalidText="A valid value is required"
-                                    labelText="Description"
-                                    placeholder="Service description"
-                                    rows={2}
-                                    style={{ marginBottom: '1rem' }}
-                                />
-                                <FormGroup legendText="Default Automation Variables">
-                                    <AceEditor
-                                        focus
-                                        style={{ width: "100%" }}
-                                        mode="yaml"
-                                        // theme="github"
-                                        height="200px"
-                                        id="default_automation_variables"
-                                        name="default_automation_variables"
-                                        placeholder="alias: example"
-                                        value={this.state.fields.default_automation_variables}
-                                        onChange={this.handleChange.bind(this, "default_automation_variables")}
-                                        labelText="Default Automation Variables"
-                                        ref="editorInput"
-                                        // fontSize={20}
-                                        showPrintMargin
-                                        showGutter={true}
-                                        highlightActiveLine
-                                        setOptions={{
-                                            enableBasicAutocompletion: false,
-                                            enableLiveAutocompletion: false,
-                                            enableSnippets: false,
-                                            showLineNumbers: true,
-                                            tabSize: 2
-                                        }}
-                                        editorProps={{ $blockScrolling: true }}
-                                    />
-                                </FormGroup>
                             </Form>
                         </ModalBody>
                         <ModalFooter onRequestSubmit={this.handleSubmit} primaryButtonText={this.props.isUpdate ? "Update" : "Add"} secondaryButtonText="Cancel" />

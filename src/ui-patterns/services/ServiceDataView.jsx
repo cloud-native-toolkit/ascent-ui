@@ -68,11 +68,11 @@ class ServiceDataView extends Component {
         const serviceDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"service_id\":/g, "\"id\":"));
         for (let index = 0; index < serviceDetails.length; index++) {
             let row = serviceDetails[index];
+            row.id = row.name;
             row.service = {
-                service_name: row.ibm_catalog_service || row.service_id,
-                service_id: row.id
+                service_name: row.name,
+                service_id: row.name
             };
-            row.automation_id = row.cloud_automation_id || '';
         }
         this.props.service.getServicesComposite().then((res) => {
             if(res && res.length) {
@@ -80,12 +80,12 @@ class ServiceDataView extends Component {
                 for (let ix in res) {
                     compositeData[res[ix].service_id] = res[ix];
                 }
-                console.log(compositeData);
                 this.setState({
                     compositeData: compositeData
                 })
             }
         });
+        console.log(serviceDetails);
         if (this.state.searchValue || this.state.selectedFilters.length) {
             this.setState({
                 data: serviceDetails
@@ -122,12 +122,9 @@ class ServiceDataView extends Component {
             });
             let serviceDetails = await this.props.service.getServiceDetails(serviceId);
             let catalog = await this.props.service.getServiceCatalog(serviceId);
-            if (serviceDetails.cloud_automation_id) {
-                let automation = await this.props.automationService.getAutomation(serviceDetails.cloud_automation_id);
-                serviceDetails.automation = automation;
-            }
             serviceDetails.service = serviceDetails;
             serviceDetails.catalog = catalog;
+            console.log(serviceDetails);
             this.setState({
                 dataDetails: serviceDetails
             });
@@ -244,13 +241,13 @@ class ServiceDataView extends Component {
         let filterData = this.state.data;
         const selectedFilters = selFilters.filter(elt => elt.attr !== 'and');
         if (event?.target || searchValue) {
-            filterData = this.state.data.filter(elt => elt.grouping === searchValue || elt.deployment_method === searchValue || elt.provision === searchValue || elt?.service?.service_name?.includes(searchValue) || elt?.service?.service_id?.includes(searchValue));
+            filterData = this.state.data.filter(elt => elt?.service?.service_name?.includes(searchValue) || elt?.service?.service_id?.includes(searchValue) || elt?.provider?.includes(searchValue) || elt?.description?.includes(searchValue));
         }
         if (selectedFilters.length) {
             filterData = filterData.filter(elt => {
                 let metFilters = 0;
                 for (const item of selectedFilters) {
-                    if ((elt[item.attr] === item.val || (item.attr === "supported_platforms" && elt[item.attr]?.includes(item.val))) && (filterIsOr || ++metFilters === selectedFilters.length)) return true;
+                    if ((elt[item.attr] === item.val || (item.attr === "platform" && elt.versions[0]?.platforms?.includes(item.val)) || (item.attr === "tags" && elt[item.attr]?.includes(item.val))) && (filterIsOr || ++metFilters === selectedFilters.length)) return true;
                 }
                 return false;
             });
@@ -308,15 +305,6 @@ class ServiceDataView extends Component {
                             }) => (
                                     <TableContainer>
                                         <TableToolbar>
-                                            {this.state.user?.role === "admin" && <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
-                                                <TableBatchAction
-                                                    tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
-                                                    renderIcon={Delete}
-                                                    onClick={() => this.deleteServices(selectedRows)}>
-                                                    Delete
-                                                </TableBatchAction>
-
-                                            </TableBatchActions>}
                                             <TableToolbarContent>
                                                 <TableToolbarSearch onChange={(event) => this.filterTable(event)} />
                                                 <TableToolbarMenu
@@ -324,18 +312,11 @@ class ServiceDataView extends Component {
                                                     renderIcon={Filter32}
                                                     onClick={() => this.openFilterPane()}
                                                     />
-                                                {this.state.user?.role === "admin" && <Button
-                                                    tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
-                                                    size="small"
-                                                    kind="primary"
-                                                    onClick={this.showModal}>Add</Button>}
-                                                
                                             </TableToolbarContent>
                                         </TableToolbar>
                                         <Table {...getTableProps()}>
                                             <TableHead>
                                                 <TableRow>
-                                                    {this.state.user?.role === "admin" && <TableSelectAll {...getSelectionProps()} />}
                                                     {headers.map((header) => (
                                                         <TableHeader key={header.key} {...getHeaderProps({ header })}>
                                                             {header.header}
@@ -347,7 +328,6 @@ class ServiceDataView extends Component {
                                             <TableBody>
                                                 {rows.map((row, i) => (
                                                     <TableRow key={row.id} {...getRowProps({ row })}>
-                                                        {this.state.user?.role === "admin" && <TableSelectRow {...getSelectionProps({ row })} />}
                                                         {row.cells.map((cell) => (
                                                             <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
                                                                 {
@@ -356,21 +336,12 @@ class ServiceDataView extends Component {
                                                                             <Link to={"/services/" + cell.value.service_id} >
                                                                             {cell.value.service_name}
                                                                             </Link>
-                                                                        </Tag> 
-                                                                    : cell.info && cell.info.header === "automation_id" && !cell.value ?
-                                                                        <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag>
-                                                                    : cell.info && cell.info.header === "automation_id" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].automation ?
-                                                                        <Tag type="blue">
-                                                                            <a href={"https://" + this.state.compositeData[row.id].automation.id} target="_blank">
-                                                                                {this.state.compositeData[row.id].automation.name}
-                                                                                <Launch16 style={{"margin-left": "3px"}}/>
-                                                                            </a>
                                                                         </Tag>
                                                                     : cell.info && cell.info.header === "fs_validated" && (this?.state?.compositeData[row.id]?.fs_validated || this?.state?.compositeData[row.id]?.catalog?.tags?.includes("fs_ready")) ?
                                                                         <Tag type="green">
                                                                             FS Validated
                                                                         </Tag>
-                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.deployment_method === "Operator" ?
+                                                                    : cell.info && cell.info.header === "fs_validated" && ["gitops","tools","ocp"].includes(this?.state?.compositeData[row.id]?.automation?.provider) ?
                                                                         <Tag style={{"background-color": "#F5606D"}}>
                                                                             OpenShift Software
                                                                         </Tag>
@@ -379,8 +350,6 @@ class ServiceDataView extends Component {
                                                                             Not yet
                                                                         </Tag>
                                                                     : cell.info && cell.info.header === "fs_validated" ?
-                                                                        <TagSkeleton></TagSkeleton>
-                                                                    : cell.info && cell.info.header === "automation_id" ?
                                                                         <TagSkeleton></TagSkeleton>
                                                                     :
                                                                         cell.value
@@ -486,7 +455,14 @@ class ServiceDataView extends Component {
                         open={this.state.isFilterPaneOpen}
                         onRequestClose={this.hideFilterPane}
                         filterTable={this.filterTable}
-                        selectedFilters={this.state.selectedFilters}/>
+                        selectedFilters={this.state.selectedFilters}
+                        tags={[... new Set(this.state.data.map(s => s.tags).flat(1))].map(tag => {
+                            return {
+                                attr: 'tags',
+                                label: tag,
+                                val: tag
+                            }
+                        })}/>
                 </div>
             </>
         );
