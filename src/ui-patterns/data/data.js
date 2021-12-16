@@ -31,29 +31,41 @@ export const bomHeader = [
         header: 'IBM Service',
     },
     {
-        key: 'desc',
+        key: 'description',
         header: 'Description',
     },
     {
-        key: 'grouping',
-        header: 'Grouping',
-    },
-    {
-        key: 'deployment_method',
-        header: 'Deployment Method',
-    },
-    {
-        key: 'provision',
-        header: 'Provision',
+        key: 'provider',
+        header: 'Provider',
     },
     {
         key: 'fs_validated',
         header: 'FS Validated',
     },
-    {
-        key: 'automation_id',
-        header: 'Automation ID',
-    },
+    // {
+    //     key: 'desc',
+    //     header: 'Description',
+    // },
+    // {
+    //     key: 'grouping',
+    //     header: 'Grouping',
+    // },
+    // {
+    //     key: 'deployment_method',
+    //     header: 'Deployment Method',
+    // },
+    // {
+    //     key: 'provision',
+    //     header: 'Provision',
+    // },
+    // {
+    //     key: 'fs_validated',
+    //     header: 'FS Validated',
+    // },
+    // {
+    //     key: 'automation_id',
+    //     header: 'Automation ID',
+    // },
     // {
     //     key: 'deployment_method',
     //     header: 'Dep Method',

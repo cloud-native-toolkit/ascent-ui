@@ -6,19 +6,14 @@ import {
 } from "react-router-dom";
 
 import {
-    Delete16 as Delete,
-    WarningAlt16,
-    Launch16,
     Filter32
 } from '@carbon/icons-react';
 import {
     DataTable, DataTableSkeleton, TableContainer, Table, Tag, TagSkeleton,
     TableToolbar, OverflowMenu, OverflowMenuItem, ToastNotification,
-    TableSelectAll, TableSelectRow, TableBatchActions, TableBatchAction, 
     TableToolbarContent, TableToolbarSearch, TableHead, TableRow, TableHeader, 
     TableBody, TableCell, TableToolbarMenu
 } from 'carbon-components-react';
-import { Button } from 'carbon-components-react';
 import { Pagination } from 'carbon-components-react';
 import { serviceHeader } from '../data/data';
 import FormModal from './AddDataModal';
@@ -64,13 +59,13 @@ class ServiceDataView extends Component {
     }
 
     async loadTable() {
-        const jsonData = await this.props.service.getServices();
-        const serviceDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"service_id\":/g, "\"id\":"));
+        const serviceDetails = await this.props.service.getServices();
         for (let index = 0; index < serviceDetails.length; index++) {
             let row = serviceDetails[index];
+            row.module_id = row.id;
             row.id = row.name;
             row.service = {
-                service_name: row.name,
+                service_name: row.fullname || row.name,
                 service_id: row.name
             };
         }
@@ -124,7 +119,6 @@ class ServiceDataView extends Component {
             let catalog = await this.props.service.getServiceCatalog(serviceId);
             serviceDetails.service = serviceDetails;
             serviceDetails.catalog = catalog;
-            console.log(serviceDetails);
             this.setState({
                 dataDetails: serviceDetails
             });
@@ -295,13 +289,8 @@ class ServiceDataView extends Component {
                                 rows,
                                 headers,
                                 getHeaderProps,
-                                getSelectionProps,
-                                getToolbarProps,
-                                getBatchActionProps,
                                 getRowProps,
                                 getTableProps,
-                                selectedRows
-
                             }) => (
                                     <TableContainer>
                                         <TableToolbar>
@@ -430,7 +419,7 @@ class ServiceDataView extends Component {
                     <div className="bx--row">
                         <div className="bx--col-lg-16">
                             <br></br>
-                            <h2 className="landing-page__subheading">
+                            <h2>
                                 Services
                             </h2>
                             <br></br>

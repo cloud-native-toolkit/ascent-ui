@@ -175,7 +175,7 @@ class MappingTable extends Component {
       let row = this.props.rows[index];
       row.component_id = {
         val: row.service_id || row.arch_id,
-        serviceName: row?.service?.ibm_catalog_service,
+        serviceName: row?.service?.service_id,
         arch: row.arch_id ? true : false,
         service: row.service_id ? true : false,
         details: {
