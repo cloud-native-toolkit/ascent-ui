@@ -82,18 +82,22 @@ class BillofMaterialsView extends Component {
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
         const jsonData = await this.props.bomService.getBOM(this.props.archId, {"include":["service"]});
         const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
-        let service_list = await this.props.bomService.getServices();
+        let services = await this.props.bomService.getServices();
         // Reformat data to augment BOM details with service details
+        const conflicts = [];
         for (let index = 0; index < bomDetails.length; index++) {
             let row = bomDetails[index];
+            row.service = services?.find(s => s.service_id === row.service_id);
+            if (!row.service) conflicts.push(row.service_id);
+            row.description = row.service?.description;
+            row.provider = row.service?.provider;
             row.ibm_service = {
-                ibm_service: (row.service && row.service.ibm_catalog_service) || row.service_id,
+                ibm_service: row.service?.fullname || row.service_id,
                 service_id: row.service_id
             };
-            row.automation_id = (row.service && row.service.cloud_automation_id) || '';
-            row.deployment_method = (row.service && row.service.deployment_method) || '';
-            row.provision = (row.service && row.service.provision) || '';
-            row.grouping = (row.service && row.service.grouping) || '';
+        }
+        if (conflicts.length > 0) {
+            this.addNotification('error', 'Conflicts', `Services ${conflicts.join(', ')} could not be found in automation catalog, please update this Bill of Material.`)
         }
         this.props.bomService.getBomComposite(this.props.archId).then((res) => { 
             if(res && res.length) {
@@ -112,7 +116,7 @@ class BillofMaterialsView extends Component {
             filterData: bomDetails,
             architecture: arch,
             totalItems: bomDetails.length,
-            serviceNames: service_list
+            services: services
         });
     }
     async componentDidMount() {
@@ -348,7 +352,7 @@ class BillofMaterialsView extends Component {
 
     async filterTable(searchValue) {
         if (searchValue) {
-            const filterData = this.state.data.filter(elt => elt.service.grouping === searchValue || elt.service.deployment_method === searchValue || elt.service.provision === searchValue || elt.service?.ibm_catalog_service?.includes(searchValue) || elt?.desc?.includes(searchValue) || elt?.service_id?.includes(searchValue));
+            const filterData = this.state.data.filter(elt => elt?.desc?.includes(searchValue) || elt?.service_id?.includes(searchValue));
             this.setState({
                 filterData: filterData,
                 firstRowIndex: 0,
@@ -416,7 +420,7 @@ class BillofMaterialsView extends Component {
                                 service={this.props.bomService}
                                 isUpdate={this.state.isUpdate}
                                 data={this.state.serviceRecord}
-                                services={this.state.serviceNames}
+                                services={this.state.services}
                             />
                         }
                         {showArchitectureModal &&
@@ -609,28 +613,15 @@ class BillofMaterialsView extends Component {
                                                                                     cell.info && cell.info.header === "ibm_service"?
                                                                                         <Tag type="blue">
                                                                                             <Link to={"/services/" + cell.value.service_id} >
-                                                                                            {cell.value.ibm_service}
+                                                                                                {cell.value.ibm_service}
                                                                                             </Link>
-                                                                                        </Tag> 
-                                                                                    : cell.info && cell.info.header === "automation_id" && !cell.value ?
-                                                                                        <Tag type="red"><WarningAlt16 style={{'margin-right': '3px'}} /> No Automation ID</Tag>
-                                                                                    : cell.info && cell.info.header === "automation_id" && this.state.compositeData && this.state.compositeData[row.id] && this.state.compositeData[row.id].automation ?
-                                                                                        <Tag type="blue">
-                                                                                            <a href={"https://" + this.state.compositeData[row.id].automation.id} target="_blank">
-                                                                                                {this.state.compositeData[row.id].automation.name}
-                                                                                                <Launch16 style={{"margin-left": "3px"}}/>
-                                                                                            </a>
                                                                                         </Tag>
-                                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.catalog?.tags?.length > 0 && this.state.compositeData[row.id].catalog.tags.includes("fs_ready") ?
+                                                                                    : cell.info && cell.info.header === "fs_validated" && (this?.state?.compositeData[row.id]?.fs_validated || this?.state?.compositeData[row.id]?.catalog?.tags?.includes("fs_ready")) ?
                                                                                         <Tag type="green">
                                                                                             FS Validated
                                                                                         </Tag>
-                                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.service?.grouping === "Network" ?
-                                                                                        <Tag type="green">
-                                                                                            VPC
-                                                                                        </Tag>
-                                                                                    : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id]?.service?.deployment_method === "Operator" ?
-                                                                                        <Tag type="green">
+                                                                                    : cell.info && cell.info.header === "fs_validated" && ["gitops","tools","ocp"].includes(this?.state?.compositeData[row.id]?.automation?.provider) ?
+                                                                                        <Tag style={{"background-color": "#F5606D"}}>
                                                                                             OpenShift Software
                                                                                         </Tag>
                                                                                     : cell.info && cell.info.header === "fs_validated" && this?.state?.compositeData[row.id] ?
@@ -638,8 +629,6 @@ class BillofMaterialsView extends Component {
                                                                                             Not yet
                                                                                         </Tag>
                                                                                     : cell.info && cell.info.header === "fs_validated" ?
-                                                                                        <TagSkeleton></TagSkeleton>
-                                                                                    : cell.info && cell.info.header === "automation_id" ?
                                                                                         <TagSkeleton></TagSkeleton>
                                                                                     : cell.value
                                                                                 }

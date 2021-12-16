@@ -23,6 +23,8 @@ import {
   ToastNotification, ContentSwitcher, Switch
 } from "carbon-components-react";
 
+import ServiceDetails from './ServiceDetails';
+
 class ServiceDetailsView extends Component {
   constructor(props) {
     super(props);
@@ -85,6 +87,7 @@ class ServiceDetailsView extends Component {
   async componentDidMount() {
     const serviceData = await this.props.service.getServiceDetails(this.props.serviceId);
     let catalog = await this.props.service.getServiceCatalog(this.props.serviceId);
+    serviceData.service = serviceData;
     serviceData.catalog = catalog;
     this.setState({
       data: serviceData
@@ -134,7 +137,6 @@ class ServiceDetailsView extends Component {
 
   render() {
     const data = this.state.data;
-    const automationData = this.state.automationData;
     const mappingData = this.state.filterData;
     let breadcrumb;
     let content;
@@ -158,17 +160,14 @@ class ServiceDetailsView extends Component {
                   <br></br>
                   <h2 style={{ display: 'flex' }}>
                     {
-                      data.catalog && data.catalog.overview_ui && data.catalog.overview_ui.en ?
+                      data?.catalog?.overview_ui?.en ?
                         data.catalog.overview_ui.en.display_name
-                        : data ?
-                          data.ibm_catalog_service || this.state.dataDetails.service.service_id
-                          :
-                          data.ibm_service || data.service_id
+                        : data?.fullname || data.name
                     }
                     {
                       data?.fs_validated || data?.catalog?.tags?.includes("fs_ready")
                       ? <Tag type="green" style={{ marginLeft: "auto" }}>FS Validated</Tag>
-                      : data?.deployment_method === "Operator"
+                      : ["gitops","tools","ocp"].includes(data?.provider)
                       && <Tag style={{"background-color": "#F5606D", marginLeft: "auto"}}> OpenShift Software </Tag>
                     }
                   </h2>
@@ -178,153 +177,7 @@ class ServiceDetailsView extends Component {
       content = <div className="bx--row">
         <div className="bx--col-lg-16">
           <br />
-          <br />
-          {
-            data ?
-              <div>
-                <p>
-                  <strong>Description: </strong>
-                  {
-                    data.catalog && data.catalog.overview_ui && data.catalog.overview_ui.en ?
-                      data.catalog.overview_ui.en.long_description || data.catalog.overview_ui.en.description
-                      : data ?
-                        data.desc
-                        :
-                        data.desc
-                  }
-                </p>
-                <br />
-                {data.catalog && data.catalog.provider &&
-                  <>
-                    <div >
-                      <p>
-                        <strong>Provider: </strong>
-                        <Tag type="blue">{data.catalog.provider.name}</Tag>
-                      </p>
-                    </div>
-                    <br />
-                  </>
-                }
-                {data &&
-                  <>
-                    {data.supported_platforms?.length ? <div><p><strong>Supported Platforms: </strong> {data.supported_platforms?.map(platform => (<Tag type="blue">{platform}</Tag>))}</p><br /></div> : <></>}
-                    {data.grouping ? <div><p><strong>Group: </strong> <Tag type="blue">{data.grouping}</Tag></p><br /></div> : <></>}
-                    {data.deployment_method ? <div><p><strong>Deployment Method: </strong> <Tag type="blue">{data.deployment_method}</Tag></p><br /></div> : <></>}
-                    {data.provision ? <div><p><strong>Provision: </strong> <Tag type="blue">{data.provision}</Tag></p><br /></div> : <></>}
-                    <div>
-                      <p>
-                        <strong>Automation id: </strong>
-                        {
-                          data.cloud_automation_id && automationData ?
-                            <Tag type="blue">
-                              <a href={"https://" + automationData.id} target="_blank">
-                                {automationData.name}
-                                <Launch16 style={{ "margin-left": "3px" }} />
-                              </a>
-                            </Tag>
-                            : data.cloud_automation_id ?
-                              <Tag type="blue">
-                                {data.cloud_automation_id}
-                              </Tag>
-                              :
-                              <Tag type="red">
-                                <WarningAlt16 style={{ 'margin-right': '3px' }} /> No Automation ID
-                                                        </Tag>
-                        }
-                      </p>
-                      <br />
-                    </div>
-                  </>
-                }
-                {data.catalog && data.catalog.geo_tags && data.catalog.geo_tags.length > 0 &&
-                  <>
-                    <div>
-                      <p>
-                        <strong>Geos: </strong>
-                        {data.catalog.geo_tags.map((geo) => (
-                          <Tag type="blue">{geo}</Tag>
-                        ))}
-                      </p>
-                      <br />
-                    </div>
-                  </>
-                }
-                {data && data.controls && data.controls.length > 0 &&
-                  <>
-                    <div>
-                      <p>
-                        <strong>Impacting controls: </strong>
-                        {data.controls.map((control) => (
-                          <Tag type="blue">
-                            <Link to={"/controls/" + control.id.toLowerCase().replace(' ', '_')} >
-                              {control.id}
-                            </Link>
-                          </Tag>
-                        ))}
-                      </p>
-                      <br />
-                    </div>
-                  </>
-                }
-                {data.catalog && data.catalog.metadata && data.catalog.metadata.ui && data.catalog.metadata.ui.urls &&
-                  <>
-                    <div>
-                      <p>
-                        <strong>Links: </strong>
-                        <UnorderedList nested>
-                          {data.catalog.metadata.ui.urls.catalog_details_url &&
-                            <ListItem href={data.catalog.metadata.ui.urls.catalog_details_url}>
-                              <a href={data.catalog.metadata.ui.urls.catalog_details_url} target="_blank">
-                                Catalog
-                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
-                              </a>
-                            </ListItem>
-                          }
-                          {data.catalog.metadata.ui.urls.apidocs_url &&
-                            <ListItem href={data.catalog.metadata.ui.urls.apidocs_url}>
-                              <a href={data.catalog.metadata.ui.urls.apidocs_url} target="_blank">
-                                API Docs
-                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
-                              </a>
-                            </ListItem>
-                          }
-                          {data.catalog.metadata.ui.urls.doc_url &&
-                            <ListItem href={data.catalog.metadata.ui.urls.doc_url}>
-                              <a href={data.catalog.metadata.ui.urls.doc_url} target="_blank">
-                                Documentation
-                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
-                              </a>
-                            </ListItem>
-                          }
-                          {data.catalog.metadata.ui.urls.instructions_url &&
-                            <ListItem >
-                              <a href={data.catalog.metadata.ui.urls.instructions_url} target="_blank">
-                                Instructions
-                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
-                              </a>
-                            </ListItem>
-                          }
-                          {data.catalog.metadata.ui.urls.terms_url &&
-                            <ListItem href={data.catalog.metadata.ui.urls.terms_url}>
-                              <a href={data.catalog.metadata.ui.urls.terms_url} target="_blank">
-                                Terms
-                                <Launch16 style={{ "margin-left": "3px", "padding-top": "1px" }} />
-                              </a>
-                            </ListItem>
-                          }
-                        </UnorderedList>
-                      </p>
-                    </div>
-                  </>
-                }
-              </div>
-              :
-              <div>
-                <BreadcrumbSkeleton />
-                <SearchSkeleton />
-              </div>
-          }
-          {/* {data.hybrid_automation_id ? <div class="attribute"><p><span class="name">Hybrid Automation id: </span> <Tag type="blue">{data.hybrid_automation_id}</Tag></p></div> : <></>} */}
+          <ServiceDetails data={data}/>
         </div>
       </div>;
     }

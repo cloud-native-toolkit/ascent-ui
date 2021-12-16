@@ -80,11 +80,13 @@ class ControlDetails extends Component {
                                 </Link>
                             </Tag></p>
                         </>}
-                        <br />
-                        <h3>Solution and Implementation</h3>
-                        <br />
-                        <ReactMarkdown>{data?.controlDetails?.implementation}</ReactMarkdown>
-                        <br />
+                        {data?.controlDetails?.implementation && <>
+                            <br />
+                            <h3>Solution and Implementation</h3>
+                            <br />
+                            <ReactMarkdown>{data?.controlDetails?.implementation}</ReactMarkdown>
+                            <br />
+                        </>}
                     </>
                 }
             </div>

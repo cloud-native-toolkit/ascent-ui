@@ -38,7 +38,7 @@ class ServiceModal extends Component {
         if (field === "automation_variables") {
             fields[field] = e;
         } else if (field === "service_id") {
-            fields["automation_variables"] = this.props.services.find((service) => service.service_id === e.target.value)?.default_automation_variables || "";
+            fields["automation_variables"] = "";
             fields[field] = e.target.value;
         } else {
             fields[field] = e.target.value;
@@ -102,8 +102,8 @@ class ServiceModal extends Component {
                                         text="Choose an option"
                                     />
                                     {this.props.services.sort(function (a, b) {
-                                        var nameA = a.ibm_catalog_service.toUpperCase(); // ignore upper and lowercase
-                                        var nameB = b.ibm_catalog_service.toUpperCase(); // ignore upper and lowercase
+                                        var nameA = a.service_id.toUpperCase(); // ignore upper and lowercase
+                                        var nameB = b.service_id.toUpperCase(); // ignore upper and lowercase
                                         if (nameA < nameB) {
                                             return -1;
                                         }
@@ -114,7 +114,7 @@ class ServiceModal extends Component {
                                         // names must be equal
                                         return 0;
                                     }).map((rows, i) => (
-                                        <SelectItem value={rows.service_id} text={rows.ibm_catalog_service || rows.service_id} />
+                                        <SelectItem value={rows.service_id} text={rows.service_id} />
                                     ))}
 
                                 </Select>
