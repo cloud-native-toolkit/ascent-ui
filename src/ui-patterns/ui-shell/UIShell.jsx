@@ -234,7 +234,7 @@ class UIShell extends Component {
                         <SideNavMenuItem>Overview</SideNavMenuItem>
                       </Link>
 
-                      <a target="_blank" href="https://github.com/cloud-native-toolkit/garage-terraform-modules/blob/main/MODULES.md" >
+                      <a target="_blank" href="https://modules.cloudnativetoolkit.dev" >
                         <SideNavMenuItem >
                           Terraform Modules
                           <Launch16 style={{"margin-left": "10px"}} />
