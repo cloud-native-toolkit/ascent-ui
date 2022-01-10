@@ -40,7 +40,7 @@ class OverView extends Component {
                         <p style={{ lineHeight: "20px" }}>
                             This application backend enables a collection of APIs that will support the relationship between a
                             Reference Architecture and its Bill of Materials (BOM, list of comprising services). The BOM relationship to
-                            the list of IBM Cloud services. The mapping between the cloud services and the regulatory controls. Finally you can
+                            the list of cloud services. The mapping between the cloud services and the regulatory controls. Finally you can
                             view the controls mapping to the cloud Services and the supporting reference architectures.
                             <p/>
                             Once we have this data model in place, we link it to the Automation Catalog that is being

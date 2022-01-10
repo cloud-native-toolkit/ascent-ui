@@ -504,7 +504,7 @@ class BillofMaterialsView extends Component {
                                 Bill Of Materials
                             </h3>
                             <p>
-                                List of IBM Cloud services that form the bill of materials for this reference architecture
+                                List of modules that form the bill of materials for this reference architecture
                             </p>
                             <br></br>
     
