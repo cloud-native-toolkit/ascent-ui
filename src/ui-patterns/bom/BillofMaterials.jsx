@@ -616,7 +616,7 @@ class BillofMaterialsView extends Component {
                                                                                                 {cell.value.ibm_service}
                                                                                             </Link>
                                                                                         </Tag>
-                                                                                    : cell.info && cell.info.header === "fs_validated" && (this?.state?.compositeData[row.id]?.fs_validated || this?.state?.compositeData[row.id]?.catalog?.tags?.includes("fs_ready")) ?
+                                                                                    : cell.info && cell.info.header === "fs_validated" && (this?.state?.compositeData[row.id]?.service?.fs_validated || this?.state?.compositeData[row.id]?.catalog?.tags?.includes("fs_ready")) ?
                                                                                         <Tag type="green">
                                                                                             FS Validated
                                                                                         </Tag>
