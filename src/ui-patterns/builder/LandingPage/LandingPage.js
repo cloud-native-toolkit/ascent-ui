@@ -445,7 +445,7 @@ oc pipeline`}
                   </h2>
                   <br></br>
                   <p>
-                    Use the following templates to configure GitOps and integrate IBM Cloud services into your
+                    Use the following templates to configure GitOps and integrate cloud services into your
                     applications
                   </p>
                   <br></br>

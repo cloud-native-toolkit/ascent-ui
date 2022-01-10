@@ -423,10 +423,6 @@ class ServiceDataView extends Component {
                                 Services
                             </h2>
                             <br></br>
-                            <p>
-                                List of IBM Cloud services
-                            </p>
-                            <br></br>
                         </div>
                     </div>
 

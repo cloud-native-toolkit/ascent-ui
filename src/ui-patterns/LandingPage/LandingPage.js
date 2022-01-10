@@ -134,7 +134,7 @@ class LandingPage extends Component {
 
           <InfoCard
             heading="Cloud Services"
-            body="Navigate to our IBM Cloud services and learn more about how they are impacted by our compliance controls. Add those services to your own reference architecture and automate the provisioning of your custom cloud architecture."
+            body="Navigate to our cloud services and learn more about how they are impacted by our compliance controls. Add those services to your own reference architecture and automate the provisioning of your custom cloud architecture."
             icon={this.state.user ? <Link to="/services" ><Cloud32  /></Link> : <Cloud32  />}
           />
         </InfoSection>

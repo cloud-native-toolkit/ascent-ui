@@ -3,32 +3,8 @@ $feature-flags: (
   grid-columns-16: true,
 );
 
-@import '~carbon-components/scss/globals/scss/styles.scss';
-
-// If you're including all the styles for Carbon
-@import '~carbon-components/scss/globals/scss/styles.scss';
-
-@import '~@carbon/colors/scss/colors';
-
-@import '~@carbon/grid/scss/grid';
-@import "./ui-patterns/builder/_ArchitectureView.scss";
-
-@import "./ui-patterns/builder/ArticleCard/article-card.scss";
-@import "./ui-patterns/builder/ResourceCard/resource-card.scss";
-@import "./ui-patterns/builder/ResourceCard/resource-card-group.scss";
-
-@import "./ui-patterns/builder/CodePatternCard/codepattern-card.scss";
-
-
-// Remove overrides once Carbon bugs are fixed upstream.
-
 /// The React <Content /> component uses the `main` element which IE11 doesn't recognize
 /// @link https://github.com/carbon-design-system/carbon/issues/2789
 main {
   display: block;
-
 }
-
-
-
-
