@@ -8,6 +8,7 @@ $feature-flags: (
 );
 
 // If you're including all the styles for Carbon
+@import 'carbon-addons-iot-react/scss/styles.scss';
 @import '~carbon-components/scss/globals/scss/styles.scss';
 @import '~@carbon/colors/scss/colors';
 @import '~@carbon/grid/scss/grid';
