@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./patterns.scss";
+
 class Header extends Component {
   render() {
     const { title, subtitle } = this.props;
