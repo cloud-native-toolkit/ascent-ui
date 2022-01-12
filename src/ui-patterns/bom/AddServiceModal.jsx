@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
     Form, Select, SelectItem, ComposedModal,
     ModalBody, ModalHeader, TextInput,
-    ModalFooter, FormGroup
+    ModalFooter, FormGroup,
+    Column, Grid, Row
 } from 'carbon-components-react';
 
 import AceEditor from "react-ace";
@@ -15,6 +16,8 @@ import {
     Add32 as Add
 } from '@carbon/icons-react';
 
+import CatalogFilter from './CatalogFilter';
+
 const CatalogContent = ({ icon, title, displayName, description }) => (
     <div className={`iot--sample-tile`}>
         {icon ? <div className={`iot--sample-tile-icon`}>{icon}</div> : null}
@@ -22,7 +25,7 @@ const CatalogContent = ({ icon, title, displayName, description }) => (
             <div className={`iot--sample-tile-title`}>
                 <span title={title}>{displayName}</span>
             </div>
-            <div className={`iot--sample-tile-description`}>{description ? `${description?.slice(0, 120)}${description?.length > 120 ? '...' : ''}` : title}</div>
+            <div className={`iot--sample-tile-description`}>{description ? `${description?.slice(0, 95)}${description?.length > 95 ? '...' : ''}` : title}</div>
         </div>
     </div>
 );
@@ -34,6 +37,14 @@ class ServiceModal extends Component {
         this.state = {
             show: this.props.show,
             onRequestClose: this.props.handleClose,
+            catalogFilters: {
+                cloudProvider: '',
+                softwareProvider: '',
+                moduleType: '',
+                status: '',
+                searchText: ''
+            },
+            filteredCatalog: this.props.services,
             step: 1,
             fields: {
                 service_id: '',
@@ -48,11 +59,12 @@ class ServiceModal extends Component {
                 fields: jsonObject
             }
         }
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.filterCatalog = this.filterCatalog.bind(this);
     }
 
-    handleChange(field, e) {
+    handleChange = (field, e) => {
         let fields = this.state.fields;
         if (field === "automation_variables") {
             fields[field] = e;
@@ -95,6 +107,20 @@ class ServiceModal extends Component {
         }
     }
 
+    filterCatalog = (filter, val) => {
+        const catalogFilters = this.state.catalogFilters;
+        catalogFilters[filter] = val;
+        let filteredCatalog = this.props.services;
+        if (catalogFilters.searchText) filteredCatalog = filteredCatalog.filter(m => m.name?.includes(catalogFilters.searchText) || m.service_id?.includes(catalogFilters.searchText) || m.description?.includes(catalogFilters.searchText));
+        if (catalogFilters.cloudProvider) filteredCatalog = filteredCatalog.filter(m => m.cloudProvider === catalogFilters.cloudProvider);
+        if (catalogFilters.softwareProvider) filteredCatalog = filteredCatalog.filter(m => m.softwareProvider === catalogFilters.softwareProvider);
+        if (catalogFilters.moduleType) filteredCatalog = filteredCatalog.filter(m => m.type === catalogFilters.moduleType);
+        this.setState({
+            catalogFilters: catalogFilters,
+            filteredCatalog: filteredCatalog
+        });
+    }
+
     render() {
         return (
             <div className="bx--grid">
@@ -109,33 +135,43 @@ class ServiceModal extends Component {
                         <ModalBody style={{paddingRight: '1rem'}}>
 
                             { !this.props.isUpdate && this.state.step === 1 &&
-                                <StatefulTileCatalog
-                                    title='Automation Catalog'
-                                    id='automation-catalog'
-                                    search={{
-                                        placeholder: 'Search a module'
-                                    }}
-                                    tiles={
-                                        this.props.services
-                                        .sort(function (a, b) { return a.service_id.toUpperCase() < b.service_id.toUpperCase() ? -1 : 1 })
-                                        .map((service) => (
-                                            {
-                                                id: service.service_id,
-                                                values: {
-                                                    title: service.service_id,
-                                                    displayName: service.displayName,
-                                                    description: service.description,
-                                                },
-                                                renderContent: tileRenderFunction,
-                                            }
-                                        ))
-                                    }
-                                    pagination={{ pageSize: 12 }}
-                                    isSelectedByDefault={false}
-                                    onSelection={(val) => this.setState({ fields: {
-                                        ...this.state.fields,
-                                        service_id: val
-                                    }})} />
+                                <Grid>
+                                    <Row>
+                                        <Column lg={{span: 2}} md={{span: 2}} sm={{span: 4}}>
+                                            <br />
+                                            <br />
+                                            <CatalogFilter
+                                                filterCatalog={this.filterCatalog}
+                                                catalogFilters={this.state.catalogFilters} />
+                                        </Column>
+                                        <Column lg={{span: 10}} md={{span: 6}} sm={{span: 4}}>
+                                            <StatefulTileCatalog
+                                                title='Automation Catalog'
+                                                id='automation-catalog'
+                                                tiles={
+                                                    this.state.filteredCatalog
+                                                    .sort(function (a, b) { return a.service_id.toUpperCase() < b.service_id.toUpperCase() ? -1 : 1 })
+                                                    .map((service) => (
+                                                        {
+                                                            id: service.service_id,
+                                                            values: {
+                                                                title: service.service_id,
+                                                                displayName: service.displayName,
+                                                                description: service.description,
+                                                            },
+                                                            renderContent: tileRenderFunction,
+                                                        }
+                                                    ))
+                                                }
+                                                pagination={{ pageSize: 9 }}
+                                                isSelectedByDefault={false}
+                                                onSelection={(val) => this.setState({ fields: {
+                                                    ...this.state.fields,
+                                                    service_id: val
+                                                }})} />
+                                        </Column>
+                                    </Row>
+                                </Grid>
                             }
                             
                             { (this.props.isUpdate || this.state.step > 1) &&

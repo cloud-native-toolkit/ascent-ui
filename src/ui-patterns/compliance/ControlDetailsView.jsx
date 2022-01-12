@@ -189,7 +189,7 @@ class ControlDetailsView extends Component {
 
           {data.id ?
             <div className="bx--row">
-              <div className="bx--col-lg-16">
+              <div className="bx--col-lg-12">
                 <br></br>
                 <h2>
                   {(data.name && (data.id + ": " + data.name)) || data.id}
@@ -219,7 +219,7 @@ class ControlDetailsView extends Component {
           {this.state.show === "nist-desc" && <div>
             { /* NIST Description */
               nistData.number && <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h3 >
                     Official NIST description
@@ -243,7 +243,7 @@ class ControlDetailsView extends Component {
             }
             { /* NIST Family */
               nistData.family && <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h4 >Family</h4>
                   <br></br>
@@ -256,7 +256,7 @@ class ControlDetailsView extends Component {
             }
             { /* NIST Priority */
               nistData.priority && <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h4 >Priority</h4>
                   <br></br>
@@ -267,7 +267,7 @@ class ControlDetailsView extends Component {
             }
             { /* NIST Supplemental Guidance */
               nistData?.supplemental_guidance?.description && <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h4 >Supplemental Guidance</h4>
                   <br></br>
@@ -280,7 +280,7 @@ class ControlDetailsView extends Component {
             }
             { /* NIST Parent Control */
               nistData?.parent_control && <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h4 >Parent Control</h4>
                   <br></br>
@@ -295,7 +295,7 @@ class ControlDetailsView extends Component {
             }
             { /* NIST Related Controls */
               nistData?.supplemental_guidance?.related && <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h4 >Related NIST Controls</h4>
                   <br></br>
@@ -312,7 +312,7 @@ class ControlDetailsView extends Component {
             }
             { /* NIST Baseline Impact */
               nistData?.baseline_impact && <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h4 >Baseline Impact</h4>
                   <br></br>
@@ -325,7 +325,7 @@ class ControlDetailsView extends Component {
             }
             { /* NIST References */
               nistData?.references?.reference && <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h4 >References</h4>
                   <br></br>

@@ -156,7 +156,7 @@ class ServiceDetailsView extends Component {
         </Breadcrumb>
       </>;
       title = <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h2 style={{ display: 'flex' }}>
                     {
@@ -175,7 +175,7 @@ class ServiceDetailsView extends Component {
                 </div>
               </div>;
       content = <div className="bx--row">
-        <div className="bx--col-lg-16">
+        <div className="bx--col-lg-12">
           <br />
           <ServiceDetails data={data}/>
         </div>

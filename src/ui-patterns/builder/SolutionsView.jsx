@@ -179,7 +179,7 @@ class SolutionsView extends Component {
                 </div>
 
                 <div className="bx--row">
-                    <div className="bx--col-lg-16">
+                    <div className="bx--col-lg-12">
                         <br></br>
                         <h2 style={{"display": "flex"}}>
                             Solutions

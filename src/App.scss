@@ -1,12 +1,3 @@
-$feature-flags: (
-  components-x: true,
-  ui-shell: true
-);
-
-$feature-flags: (
-    grid-columns-16: true,
-);
-
 @import "./ui-patterns/index.scss";
 @import "./ui-patterns/builder/_ArchitectureView.scss";
 

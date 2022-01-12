@@ -178,7 +178,7 @@ class SolutionDetailsView extends Component {
                     
                     }
                     <div className="bx--row">
-                        <div className="bx--col-lg-16">
+                        <div className="bx--col-lg-12">
                             <br></br>
                             {data?.name ? <h2 style={{ display: 'flex' }}>
                                 {data?.name}
