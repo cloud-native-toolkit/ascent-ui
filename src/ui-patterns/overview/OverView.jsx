@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import Header from "../ui-shell/Header";
-
 
 
 class OverView extends Component {
@@ -48,7 +46,7 @@ class OverView extends Component {
                             and output a package of consistent terraform that we can use to automate the provisionning of compliant reference architectures.
                             <br /> <br />
 
-                            <img src="/images/data-model.png"></img>
+                            <img src="/images/data-model.png" alt="Ascent data model"></img>
                             <br /> <br />
 
                         </p>

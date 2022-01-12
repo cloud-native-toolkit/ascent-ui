@@ -24,13 +24,15 @@ code {
 @import '~carbon-addons-iot-react/scss/components/TileCatalog/tile-catalog';
 @import '~carbon-addons-iot-react/scss/components/TileCatalog/tile-group';
 @import '~carbon-components/scss/globals/scss/styles.scss';
+
 @import "./ui-patterns/builder/ArticleCard/article-card.scss";
 @import "./ui-patterns/builder/ResourceCard/resource-card.scss";
 @import "./ui-patterns/builder/ResourceCard/resource-card-group.scss";
 
 @import './components/Info/info';
-@import './components/BuilderHeader/builder-header.scss';
-@import './ui-patterns/LandingPage/landing-page.scss';
+@import './components/BuilderHeader/builder-header';
+
+@import './ui-patterns/LandingPage/landing-page';
 
 @import "~bootstrap/scss/bootstrap";
 

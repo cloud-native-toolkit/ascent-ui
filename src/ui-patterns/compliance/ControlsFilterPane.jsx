@@ -1,21 +1,13 @@
 import React, { Component } from "react";
 import {
-    UnorderedList, ListItem, BreadcrumbSkeleton, SearchSkeleton, Tag, 
-    CodeSnippet,
     Accordion,
     AccordionItem,
     MultiSelect,
     Checkbox
 } from 'carbon-components-react';
 import {
-    WarningAlt16,
-    Launch16,
     Close32 as Close
 } from '@carbon/icons-react';
-import {
-    Link
-} from "react-router-dom";
-
 import {
     controlFocusAreas,
     controlFamilies,

@@ -353,7 +353,7 @@ class MappingTable extends Component {
                                         goal.goal_id.match(/^\d{7}$/) ?
                                           <>
                                             <Tag type="blue">
-                                              <a href={"https://cloud.ibm.com/security-compliance/goals/" + goal.goal_id} target="_blank" >
+                                              <a href={"https://cloud.ibm.com/security-compliance/goals/" + goal.goal_id} target="_blank" rel="noopener noreferrer" >
                                                 {goal.goal_id}
                                                 <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
                                               </a>

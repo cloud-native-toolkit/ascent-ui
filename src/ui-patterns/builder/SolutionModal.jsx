@@ -15,11 +15,8 @@ import {
     SelectItem
 } from 'carbon-components-react';
 
-import {Redirect} from 'react-router-dom';
-
 import * as superagent from "superagent";
 
-import AceEditor from "react-ace";
 import "brace/mode/yaml";
 
 import {

@@ -13,8 +13,6 @@ import {
     FileUploader
 } from 'carbon-components-react';
 
-import {Redirect} from 'react-router-dom';
-
 import AceEditor from "react-ace";
 import "brace/mode/yaml";
 
@@ -44,7 +42,7 @@ class ArchitectureModal extends Component {
             }
         };
         if (this.props.isUpdate) {
-            let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/\"id\":/g, "\"_id\":"));
+            let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/"id":/g, "\"_id\":"));
             console.log(jsonObject);
             this.state = {
                 fields: jsonObject

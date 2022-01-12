@@ -54,13 +54,13 @@ const NistTable = ({ rows, headers, filter }) => (
                 {row.cells.map((cell) => (
                   <TableCell key={cell.id}>
                     {
-                      cell.info && (cell.info.header === "id" || cell.info.header === "parent_control" && cell.value) ?
+                      (cell.info?.header === "id" || cell.info?.header === "parent_control") && cell.value ?
                         <Tag type="blue">
                           <Link to={"/nists/" + cell.value.toLowerCase().replace(' ', '_')} >
                             {cell.value}
                           </Link>
                         </Tag>
-                      : cell.info && (cell.info.header === "parent_control") ?
+                      : cell.info?.header === "parent_control" ?
                       <Tag>
                         Base Control
                       </Tag>

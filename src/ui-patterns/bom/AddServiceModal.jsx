@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Form, Select, SelectItem, ComposedModal,
+    Form, ComposedModal,
     ModalBody, ModalHeader, TextInput,
     ModalFooter, FormGroup,
     Column, Grid, Row
@@ -54,7 +54,7 @@ class ServiceModal extends Component {
             }
         };
         if (this.props.isUpdate) {
-            let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/\"id\":/g, "\"_id\":"));
+            let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/"id":/g, "\"_id\":"));
             this.state = {
                 fields: jsonObject
             }
@@ -79,7 +79,7 @@ class ServiceModal extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if (!this.props.isUpdate && this.state.step == 1) {
+        if (!this.props.isUpdate && this.state.step === 1) {
             this.setState({ step: this.state.step + 1});
         } else if (this.state.fields.service_id && !this.props.isUpdate) {
             this.props.service.doPostBOM(this.props.archId, this.state.fields).then(res => {

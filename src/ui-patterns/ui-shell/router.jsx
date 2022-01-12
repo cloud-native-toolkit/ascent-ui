@@ -32,7 +32,7 @@ function ServiceDetails() {
     );
 }
 function Services() {
-    let { path, url } = useRouteMatch();
+    let { path } = useRouteMatch();
     return (
         <Switch>
             <Route exact path={path}>
@@ -60,7 +60,7 @@ function ControlDetails() {
     );
 }
 function Controls() {
-    let { path, url } = useRouteMatch();
+    let { path } = useRouteMatch();
     return (
         <Switch>
             <Route exact path={path}>
@@ -88,7 +88,7 @@ function Controls() {
     );
 }
 function Nists() {
-    let { path, url } = useRouteMatch();
+    let { path } = useRouteMatch();
     return (
         <Switch>
             <Route exact path={path}>
@@ -111,7 +111,7 @@ function SolutionDetails() {
     );
 }
 function Solutions() {
-    let { path, url } = useRouteMatch();
+    let { path } = useRouteMatch();
     return (
         <Switch>
             <Route exact path={path}>

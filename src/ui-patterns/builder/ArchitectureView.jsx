@@ -196,10 +196,9 @@ class ArchitectureView extends Component {
 
                         <Link to={link}>
                             <img
-                                className="resource-img"
+                                className="article-img"
                                 src={`/api/architectures/${arch.arch_id}/diagram/png?small=true`}
                                 alt={arch.short_desc}
-                                className="article-img"
                             />
                         </Link>
 

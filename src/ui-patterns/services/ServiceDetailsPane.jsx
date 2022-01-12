@@ -1,16 +1,10 @@
 import React, { Component } from "react";
 import {
-    UnorderedList, ListItem, BreadcrumbSkeleton, SearchSkeleton, Tag, 
-    CodeSnippet
+    BreadcrumbSkeleton, SearchSkeleton, Tag,
 } from 'carbon-components-react';
 import {
-    WarningAlt16,
-    Launch16,
     Launch32
 } from '@carbon/icons-react';
-import {
-    Link
-} from "react-router-dom";
 
 import SlidingPane from "react-sliding-pane";
 import ServiceDetails from './ServiceDetails';
@@ -29,7 +23,7 @@ class ServiceDetailsPane extends Component {
                 {
                     this.props.data ?
                         <div>
-                            <a href={`https://${this.props.data?.service?.id}`} target="_blank">
+                            <a href={`https://${this.props.data?.service?.id}`} target="_blank" rel="noopener noreferrer">
                                 <h3 style={{ display: 'flex' }}>
                                     {
                                         this.props.data?.catalog?.overview_ui?.en ?

@@ -7,16 +7,11 @@ import {
   SearchSkeleton,
   InlineNotification,
   Pagination,
-  UnorderedList, ListItem
 } from 'carbon-components-react';
 import {
   Link
 } from "react-router-dom";
 import MappingTable from "../mapping/MappingTable"
-import {
-  Launch16,
-  WarningAlt16
-} from '@carbon/icons-react';
 import { mappingHeaders as headers } from '../data/data';
 
 import {

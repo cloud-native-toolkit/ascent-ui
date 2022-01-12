@@ -5,7 +5,6 @@ import {
     ProgressStep,
     ToastNotification,
     Button,
-    BreadcrumbSkeleton,
     SearchSkeleton,
     ProgressIndicatorSkeleton
 } from 'carbon-components-react';

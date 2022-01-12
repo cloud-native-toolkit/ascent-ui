@@ -9,8 +9,6 @@ import {
 
 import {
     Button,
-    OverflowMenu,
-    OverflowMenuItem,
     ToastNotification,
     SearchSkeleton
 } from 'carbon-components-react';
@@ -19,7 +17,9 @@ import {
     Edit16
 } from '@carbon/icons-react';
 
-import { Card, CardGroup, Container, Row, Col } from 'react-bootstrap';
+import {
+    Card, CardGroup
+} from 'react-bootstrap';
 
 import ValidateModal from '../ValidateModal';
 import SolutionModal from "./SolutionModal";
