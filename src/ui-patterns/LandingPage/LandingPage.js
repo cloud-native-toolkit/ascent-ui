@@ -74,7 +74,7 @@ class LandingPage extends Component {
               <Tab {...props.tab} label="About">
                 <div className="bx--grid bx--grid--no-gutter bx--grid--full-width">
                   <div className="bx--row landing-page__tab-content">
-                    <div className="bx--col-md-4 bx--col-lg-7">
+                    <div className="bx--col-md-4 bx--col-lg-6">
                       <h2 className="landing-page__subheading">
                         What is ASCENT?
                       </h2>
@@ -87,7 +87,7 @@ class LandingPage extends Component {
                       {this.state.user ? <Link to="/docs" ><Button>Learn more</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
 
                     </div>
-                    <div className="bx--col-md-4 bx--col-lg-8">
+                    <div className="bx--col-md-4 bx--col-lg-6">
                       <img
                         className="landing-page__illo"
                         src={`${process.env.PUBLIC_URL}/ascent.png`}
@@ -95,49 +95,31 @@ class LandingPage extends Component {
                       />
                     </div>
                   </div>
-                </div>
-              </Tab>
-              <Tab {...props.tab} label="Design">
-                <div className="bx--grid bx--grid--no-gutter bx--grid--full-width">
                   <div className="bx--row landing-page__tab-content">
-                    <div className="bx--col-lg-16">
-                      Rapidly build beautiful and accessible experiences. The
-                      Carbon kit contains all resources you need to get started.
-                    </div>
-                  </div>
-                </div>
-              </Tab>
-              <Tab {...props.tab} label="Develop">
-                <div className="bx--grid bx--grid--no-gutter bx--grid--full-width">
-                  <div className="bx--row landing-page__tab-content">
-                    <div className="bx--col-lg-16">
-                      Carbon provides styles and components in Vanilla, React,
-                      Angular, and Vue for anyone building on the web.
-                    </div>
+                    <InfoSection heading="The Principles" className="landing-page__r3">
+                      <InfoCard
+                        heading="Security Controls"
+                        body="The IBM Cloud Framework for Financial Services provides a set of pre-configured compliance controls that are adhered to by the entire ecosystem — financial institutions, cloud services, and the digital supply chain of ISVs and SaaS providers."
+                        icon={this.state.user ? <Link to={this.state.user?.roles?.includes("fs-viewer") ? "/controls" : "/nists"} ><SankeyDiagramAlt32  /></Link> : <SankeyDiagramAlt32  />}
+                      />
+                      <InfoCard
+                        heading="Reference Architectures"
+                        body="Set up your compliant cloud environment using our pre-defined reference architectures for the IBM Cloud. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
+                        icon={this.state.user ? <Link to="/architectures" ><ModelBuilder32  /></Link> : <ModelBuilder32  />}
+                      />
+
+                      <InfoCard
+                        heading="Cloud Services"
+                        body="Navigate to our cloud services and learn more about how they are impacted by our compliance controls. Add those services to your own reference architecture and automate the provisioning of your custom cloud architecture."
+                        icon={this.state.user ? <Link to="/services" ><Cloud32  /></Link> : <Cloud32  />}
+                      />
+                    </InfoSection>
                   </div>
                 </div>
               </Tab>
             </Tabs>
           </div>
         </div>
-        <InfoSection heading="The Principles" className="landing-page__r3">
-          <InfoCard
-            heading="Security Controls"
-            body="The IBM Cloud Framework for Financial Services provides a set of pre-configured compliance controls that are adhered to by the entire ecosystem — financial institutions, cloud services, and the digital supply chain of ISVs and SaaS providers."
-            icon={this.state.user ? <Link to={this.state.user?.roles?.includes("fs-viewer") ? "/controls" : "/nists"} ><SankeyDiagramAlt32  /></Link> : <SankeyDiagramAlt32  />}
-          />
-          <InfoCard
-            heading="Reference Architectures"
-            body="Set up your compliant cloud environment using our pre-defined reference architectures for the IBM Cloud. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
-            icon={this.state.user ? <Link to="/architectures" ><ModelBuilder32  /></Link> : <ModelBuilder32  />}
-          />
-
-          <InfoCard
-            heading="Cloud Services"
-            body="Navigate to our cloud services and learn more about how they are impacted by our compliance controls. Add those services to your own reference architecture and automate the provisioning of your custom cloud architecture."
-            icon={this.state.user ? <Link to="/services" ><Cloud32  /></Link> : <Cloud32  />}
-          />
-        </InfoSection>
       </div>
     );
   }

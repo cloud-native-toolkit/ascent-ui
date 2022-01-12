@@ -587,7 +587,7 @@ class BillofMaterialsView extends Component {
                                                                 renderIcon={Add16}
                                                                 onClick={this.showServiceModal}
                                                             >
-                                                                Add Service
+                                                                Add Module
                                                             </Button>}
                                                         </TableToolbarContent>
                                                     </TableToolbar>
