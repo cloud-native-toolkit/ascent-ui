@@ -5,6 +5,30 @@ import {
     ListItem
 } from 'carbon-components-react';
 
+export const catalogFilters = {
+    cloudProviderValues: [
+        { text: 'All providers', value: '' },
+        { text: 'IBM', value: 'ibm' },
+        { text: 'AWS', value: 'aws' },
+        { text: 'Azure', value: 'azure' }
+    ],
+    moduleTypeValues: [
+        { text: 'All types', value: '' },
+        { text: 'Terraform', value: 'terraform' },
+        { text: 'GitOps', value: 'gitops' }
+    ],
+    statusValues: [
+        { text: 'All statuses', value: '' },
+        { text: 'Released', value: 'released' },
+        { text: 'Beta', value: 'beta' },
+        { text: 'Pending', value: 'pending' }
+    ],
+    softwareProviderValues: [
+        { text: 'All providers', value: '' },
+        { text: 'IBM Cloud Pak', value: 'ibm-cp' }
+    ]
+}
+
 export const serviceHeader = [
     {
         key: 'service',
@@ -113,25 +137,25 @@ export const bomHeader = [
 ];
 
 export const ctrlsHeaders = [{
-        key: 'id',
-        header: 'Control ID',
-    },
-    {
-        key: 'focus_area',
-        header: 'Focus Area',
-    },
-    {
-        key: 'family',
-        header: 'Control Family',
-    },
-    {
-        key: 'name',
-        header: 'Control Name',
-    },
-    {
-        key: 'parent_control',
-        header: 'Parent Control',
-    },
+    key: 'id',
+    header: 'Control ID',
+},
+{
+    key: 'focus_area',
+    header: 'Focus Area',
+},
+{
+    key: 'family',
+    header: 'Control Family',
+},
+{
+    key: 'name',
+    header: 'Control Name',
+},
+{
+    key: 'parent_control',
+    header: 'Parent Control',
+},
     // {
     //     key: 'existing_scc_goals',
     //     header: 'Existing SCC Goals',
@@ -557,13 +581,13 @@ export const controlTypeTooltip = {
 export const controlRiskRatingTooltip = {
     Low: <Tooltip>
         <strong>Low: </strong>
-            <UnorderedList nested>
-                <ListItem>High level of precision (e.g. includes end users vs. overall groups, includes all types of relevant data/users, etc.)</ListItem>
-                <ListItem>No judgement required (e.g. control is automated; control does not require specific SMEs to operate, etc.)</ListItem>
-                <ListItem>Low volume of data / simple data (e.g. a limited number of admin users, rare changes made to the environment, etc.)</ListItem>
-                <ListItem>Low likelihood of changes impacting control design (e.g. non-critical policy and procedures updates, etc.)</ListItem>
-                <ListItem>Repetitive controls (e.g. same risk is covered by multiple controls)</ListItem>
-            </UnorderedList>
+        <UnorderedList nested>
+            <ListItem>High level of precision (e.g. includes end users vs. overall groups, includes all types of relevant data/users, etc.)</ListItem>
+            <ListItem>No judgement required (e.g. control is automated; control does not require specific SMEs to operate, etc.)</ListItem>
+            <ListItem>Low volume of data / simple data (e.g. a limited number of admin users, rare changes made to the environment, etc.)</ListItem>
+            <ListItem>Low likelihood of changes impacting control design (e.g. non-critical policy and procedures updates, etc.)</ListItem>
+            <ListItem>Repetitive controls (e.g. same risk is covered by multiple controls)</ListItem>
+        </UnorderedList>
     </Tooltip>,
     Medium: <Tooltip>
         <strong>Medium: </strong>
@@ -812,43 +836,43 @@ export const serviceProvisionMethods = [
 /////////////////////////////////////////////
 
 export const nistHeaders = [{
-        key: 'id',
-        header: 'Control ID',
-    },
-    {
-        key: 'title',
-        header: 'Title',
-    },
-    {
-        key: 'family',
-        header: 'Control Family',
-    },
-    {
-        key: 'priority',
-        header: 'Priority',
-    },
-    {
-        key: 'parent_control',
-        header: 'Parent Control',
-    }
+    key: 'id',
+    header: 'Control ID',
+},
+{
+    key: 'title',
+    header: 'Title',
+},
+{
+    key: 'family',
+    header: 'Control Family',
+},
+{
+    key: 'priority',
+    header: 'Priority',
+},
+{
+    key: 'parent_control',
+    header: 'Parent Control',
+}
 ];
 
 export const mappingHeaders = [{
-        key: 'control_id',
-        header: 'Control ID',
-    },
-    {
-        key: 'component_id',
-        header: 'Component ID',
-    },
-    {
-        key: 'control_subsections',
-        header: 'Control Item(s)',
-    },
-    {
-        key: 'scc_profile',
-        header: 'SCC Profile',
-    },
+    key: 'control_id',
+    header: 'Control ID',
+},
+{
+    key: 'component_id',
+    header: 'Component ID',
+},
+{
+    key: 'control_subsections',
+    header: 'Control Item(s)',
+},
+{
+    key: 'scc_profile',
+    header: 'SCC Profile',
+},
     // {
     //     key: 'compliant',
     //     header: 'Compliant',
