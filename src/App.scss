@@ -7,21 +7,8 @@ $feature-flags: (
     grid-columns-16: true,
 );
 
-// If you're including all the styles for Carbon
-@import '~carbon-components/scss/globals/scss/styles.scss';
-@import '~@carbon/colors/scss/colors';
-@import '~@carbon/grid/scss/grid';
 @import "./ui-patterns/index.scss";
 @import "./ui-patterns/builder/_ArchitectureView.scss";
-@import "./ui-patterns/builder/ArticleCard/article-card.scss";
-@import "./ui-patterns/builder/ResourceCard/resource-card.scss";
-@import "./ui-patterns/builder/ResourceCard/resource-card-group.scss";
-
-@import './components/Info/info.scss';
-@import './components/BuilderHeader/builder-header.scss';
-@import './ui-patterns/LandingPage/landing-page.scss';
-
-@import "~bootstrap/scss/bootstrap";
 
 .App {
   font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
