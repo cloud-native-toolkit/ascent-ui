@@ -64,9 +64,8 @@ class ServiceDataView extends Component {
             let row = serviceDetails[index];
             row.module_id = row.id;
             row.id = row.name;
-            row.provider = row.cloudProvider || row.softwareProvider || row.provider;
             row.service = {
-                service_name: row.displayName || row.fullname || row.name,
+                service_name: row.fullname || row.name,
                 service_id: row.name
             };
         }
@@ -81,6 +80,7 @@ class ServiceDataView extends Component {
                 })
             }
         });
+        console.log(serviceDetails);
         if (this.state.searchValue || this.state.selectedFilters.length) {
             this.setState({
                 data: serviceDetails
@@ -235,7 +235,7 @@ class ServiceDataView extends Component {
         let filterData = this.state.data;
         const selectedFilters = selFilters.filter(elt => elt.attr !== 'and');
         if (event?.target || searchValue) {
-            filterData = this.state.data.filter(elt => elt?.displayName?.includes(searchValue) || elt?.service?.service_id?.includes(searchValue) || elt?.cloudProvider?.includes(searchValue) || elt?.description?.includes(searchValue));
+            filterData = this.state.data.filter(elt => elt?.service?.service_name?.includes(searchValue) || elt?.service?.service_id?.includes(searchValue) || elt?.provider?.includes(searchValue) || elt?.description?.includes(searchValue));
         }
         if (selectedFilters.length) {
             filterData = filterData.filter(elt => {

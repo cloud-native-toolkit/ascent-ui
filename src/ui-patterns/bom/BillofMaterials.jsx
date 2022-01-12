@@ -90,11 +90,9 @@ class BillofMaterialsView extends Component {
             row.service = services?.find(s => s.service_id === row.service_id);
             if (!row.service) conflicts.push(row.service_id);
             row.description = row.service?.description;
-            row.group = row.service?.group;
-            row.type = row.service?.type;
-            row.provider = row.service?.cloudProvider || row.service?.softwareProvider || row.service?.provider;
+            row.provider = row.service?.provider;
             row.ibm_service = {
-                ibm_service: row.service?.displayName || row.service?.fullname || row.service_id,
+                ibm_service: row.service?.fullname || row.service_id,
                 service_id: row.service_id
             };
         }

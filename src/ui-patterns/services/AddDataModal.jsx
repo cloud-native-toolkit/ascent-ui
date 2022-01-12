@@ -25,6 +25,7 @@ class FormModal extends Component {
             notif: false,
             fields: {
                 service_id: '',
+                fullname: '',
                 ibm_catalog_id: '',
                 fs_validated: false
             }
@@ -35,6 +36,7 @@ class FormModal extends Component {
             this.state = {
                 fields: {
                     service_id: jsonObject.service_id,
+                    fullname: jsonObject.serviceDetails?.fullname,
                     ibm_catalog_id: jsonObject.serviceDetails?.ibm_catalog_id,
                     fs_validated: jsonObject.serviceDetails?.fs_validated
                 }
@@ -115,6 +117,17 @@ class FormModal extends Component {
                                     value={this.state.fields.service_id}
                                     labelText="Service ID"
                                     placeholder="e.g. appid,atracker,cos"
+                                    style={{ marginBottom: '1rem' }}
+                                />
+                                <TextInput
+                                    id="serviceName"
+                                    name="fullname"
+                                    invalidText="Please Enter The Value"
+
+                                    value={this.state.fields.fullname}
+                                    onChange={this.handleChange.bind(this, "fullname")}
+                                    labelText="Service Name"
+                                    placeholder="e.g. App ID,Databases for Redis ect..."
                                     style={{ marginBottom: '1rem' }}
                                 />
                                 <TextInput

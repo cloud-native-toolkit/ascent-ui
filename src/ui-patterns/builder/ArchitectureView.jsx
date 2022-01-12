@@ -76,6 +76,7 @@ class ArchitectureView extends Component {
             fetch(`/api/users/${encodeURIComponent(this.state?.user?.email)}/architectures`)
                 .then(response => response.json())
                 .then(userArchitectures => {
+                    console.log(userArchitectures)
                     this.setState({
                         userArchitectures: userArchitectures,
                         architectures: architectures,
@@ -151,6 +152,7 @@ class ArchitectureView extends Component {
         fetch('/api/architectures/public/sync', { method: "POST" })
             .then(res => res.json())
             .then(res => {
+                console.log(res);
                 const upToDate = res?.error?.message?.includes('up to date');
                 if (res.error) this.addNotification(upToDate ? 'success' : 'error', upToDate ? 'Up to date' : 'Error', res?.error?.message);
                 else if (res.release && res?.refArchs?.length > 0) {
