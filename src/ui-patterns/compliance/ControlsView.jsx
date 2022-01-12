@@ -148,7 +148,7 @@ class ControlsView extends Component {
             <>
             <div className="bx--grid">
                 <div className="bx--row">
-                    <div className="bx--col-lg-16">
+                    <div className="bx--col-lg-12">
                         <br></br>
                         <h2 className="landing-page__subheading">
                             Controls
@@ -162,7 +162,7 @@ class ControlsView extends Component {
                 </div>
                 
                 <div className="bx--row">
-                    <div className="bx--col-lg-16">
+                    <div className="bx--col-lg-12">
                         {table}
                     </div>
                 </div>

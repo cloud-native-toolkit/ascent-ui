@@ -57,7 +57,7 @@ class LandingPage extends Component {
     return (
       <div className="bx--grid bx--grid--full-width landing-page">
         <div className="bx--row landing-page__banner">
-          <div className="bx--col-lg-16">
+          <div className="bx--col-lg-12">
             <Breadcrumb noTrailingSlash aria-label="Page navigation">
               <BreadcrumbItem>
                 <Link to="/docs" >Documentation</Link>
@@ -87,7 +87,7 @@ class LandingPage extends Component {
                       {this.state.user ? <Link to="/docs" ><Button>Learn more</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
 
                     </div>
-                    <div className="bx--col-md-4 bx--col-lg-6">
+                    <div className="bx--col-md-4 bx--col-lg-5">
                       <img
                         className="landing-page__illo"
                         src={`${process.env.PUBLIC_URL}/ascent.png`}

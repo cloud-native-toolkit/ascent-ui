@@ -62,7 +62,7 @@ class NistDetailsView extends Component {
         </Breadcrumb>
       </>;
       title = <div className="bx--row">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
                   <br></br>
                   <h2>
                     {nistData.number}
@@ -85,7 +85,7 @@ class NistDetailsView extends Component {
               </div>;
       if (nistData.family) {
         family = <div className="bx--row">
-                  <div className="bx--col-lg-16">
+                  <div className="bx--col-lg-12">
                     <br></br>
                     <h3 >Family</h3>
                     <br></br>
@@ -98,7 +98,7 @@ class NistDetailsView extends Component {
       }
       if (nistData.priority) {
         priority = <div className="bx--row">
-                  <div className="bx--col-lg-16">
+                  <div className="bx--col-lg-12">
                     <br></br>
                     <h3 >Priority</h3>
                     <br></br>
@@ -109,7 +109,7 @@ class NistDetailsView extends Component {
       }
       if (nistData.supplemental_guidance) {
         supplemental_guidance = <div className="bx--row">
-                  <div className="bx--col-lg-16">
+                  <div className="bx--col-lg-12">
                     <br></br>
                     <h3 >Supplemental Guidance</h3>
                     <br></br>
@@ -122,7 +122,7 @@ class NistDetailsView extends Component {
       }
       if (nistData.parent_control) {
         parent_control = <div className="bx--row">
-                  <div className="bx--col-lg-16">
+                  <div className="bx--col-lg-12">
                     <br></br>
                     <h3 >Parent Control</h3>
                     <br></br>
@@ -137,7 +137,7 @@ class NistDetailsView extends Component {
       }
       if (nistData.supplemental_guidance && nistData.supplemental_guidance.related) {
         related = <div className="bx--row">
-                  <div className="bx--col-lg-16">
+                  <div className="bx--col-lg-12">
                     <br></br>
                     <h3 >Related NIST Controls</h3>
                     <br></br>
@@ -154,7 +154,7 @@ class NistDetailsView extends Component {
       }
       if (nistData.baseline_impact) {
         baseline_impact = <div className="bx--row">
-                  <div className="bx--col-lg-16">
+                  <div className="bx--col-lg-12">
                     <br></br>
                     <h3 >Baseline Impact</h3>
                     <br></br>
@@ -167,7 +167,7 @@ class NistDetailsView extends Component {
       }
       if (nistData.references && nistData.references.reference) {
         references = <div className="bx--row">
-                  <div className="bx--col-lg-16">
+                  <div className="bx--col-lg-12">
                     <br></br>
                     <h3 >References</h3>
                     <br></br>

@@ -460,7 +460,7 @@ class BillofMaterialsView extends Component {
                     <div className="bx--grid">
                         {this.breadCrumbs(title)}
                         <div className="bx--row">
-                            <div className="bx--col-lg-16">
+                            <div className="bx--col-lg-12">
                                 <br></br>
                                 <h2>
                                     {
@@ -511,7 +511,7 @@ class BillofMaterialsView extends Component {
                             <br></br>
     
                             <div className="bx--row">
-                                <div className="bx--col-lg-16">
+                                <div className="bx--col-lg-12">
                                     {this.state.archid === false ?
                                         <DataTableSkeleton
                                             columnCount={headers.length + 1}

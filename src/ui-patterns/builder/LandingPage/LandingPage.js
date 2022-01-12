@@ -246,7 +246,7 @@ render() {
 
   return <div className="bx--grid bx--grid--full-width landing-page">
     <div className="bx--row landing-page__banner">
-      <div className="bx--col-lg-16">
+      <div className="bx--col-lg-12">
 
          <div class="clusterInfo">
             <AccordionItem
@@ -277,7 +277,7 @@ render() {
             <div className="bx--grid bx--grid--no-gutter bx--grid--full-width">
 
                 <div className="bx--row">
-                    <div className="bx--col-lg-16">
+                    <div className="bx--col-lg-12">
                         <br></br>
                         <h2 className="landing-page__subheading">
                             Tools
@@ -307,7 +307,7 @@ render() {
           <Tab {...props.tab} label="Activation">
             <div className="bx--grid bx--grid--no-gutter bx--grid--full-width">
               <div className="bx--row landing-page__tab-content">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
 
                   <h2 className="landing-page__subheading">
                     Containers and Kubernetes
@@ -366,7 +366,7 @@ render() {
           <Tab {...props.tab} label="Starter Kits">
             <div className="bx--grid bx--grid--no-gutter bx--grid--full-width">
               <div className="bx--row landing-page__tab-content">
-                <div className="bx--col-lg-16">
+                <div className="bx--col-lg-12">
 
                   <h2 className="landing-page__subheading">
                     Starter Kit Git Repositories

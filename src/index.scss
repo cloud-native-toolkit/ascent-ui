@@ -1,6 +1,6 @@
 $feature-flags: (
-  ui-shell: true,
-  grid-columns-16: true,
+  components-x: true,
+  ui-shell: true
 );
 
 body {
@@ -24,8 +24,6 @@ code {
 @import '~carbon-addons-iot-react/scss/components/TileCatalog/tile-catalog';
 @import '~carbon-addons-iot-react/scss/components/TileCatalog/tile-group';
 @import '~carbon-components/scss/globals/scss/styles.scss';
-@import '~@carbon/colors/scss/colors';
-@import '~@carbon/grid/scss/grid';
 @import "./ui-patterns/builder/ArticleCard/article-card.scss";
 @import "./ui-patterns/builder/ResourceCard/resource-card.scss";
 @import "./ui-patterns/builder/ResourceCard/resource-card-group.scss";

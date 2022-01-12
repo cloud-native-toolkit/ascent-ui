@@ -91,7 +91,7 @@ class NistView extends Component {
         return (
             <div className="bx--grid">
                 <div className="bx--row">
-                    <div className="bx--col-lg-16">
+                    <div className="bx--col-lg-12">
                         <br></br>
                         <h2 className="landing-page__subheading">
                             NIST
@@ -104,7 +104,7 @@ class NistView extends Component {
                     </div>
                 </div>
                 <div className="bx--row">
-                    <div className="bx--col-lg-16">
+                    <div className="bx--col-lg-12">
                         {table}
                     </div>
                 </div>

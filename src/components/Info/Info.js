@@ -17,7 +17,7 @@ const InfoCard = props => {
   const splitHeading = createArrayFromPhrase(props.heading);
 
   return (
-    <div className="info-card bx--col-md-4 bx--col-lg-4 bx--col-xlg-3 bx--offset-xlg-1">
+    <div className="info-card bx--col-md-3 bx--col-lg-3 bx--col-xlg-3" style={{padding: '1rem'}}>
       <h4 className="info-card__heading">
         {`${splitHeading[0]} `}
         <strong>{splitHeading[1]}</strong>

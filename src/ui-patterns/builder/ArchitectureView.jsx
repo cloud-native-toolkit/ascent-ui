@@ -169,7 +169,7 @@ class ArchitectureView extends Component {
         var archTiles = []
 
         if (!architectures.length) archTiles.push(
-            <div className="bx--col-lg-16">
+            <div className="bx--col-lg-12">
                 {userArch ? 
                     <p>You have no architectures at the moment. To create one, duplicate an existing public architecture or click <strong>Add</strong> or <strong>Import BOM</strong> in the top right menu.</p>
                 :
@@ -184,7 +184,7 @@ class ArchitectureView extends Component {
             var link = "/bom/"+arch.arch_id;
 
             archTiles.push(
-                <div className="bx--col-md-4 bx--col-lg-4" key={arch.arch_id}>
+                <div className="bx--col-md-3 bx--col-lg-3" key={arch.arch_id}>
                     <ArticleCard
                         title={arch.name}
                         author={arch.short_desc}
@@ -311,7 +311,7 @@ class ArchitectureView extends Component {
                 }
 
                 <div className="bx--row">
-                    <div className="bx--col-lg-16">
+                    <div className="bx--col-lg-12">
                         <br></br>
                         <h2 style={{"display": "flex"}}>
                             Architectures
