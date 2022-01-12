@@ -8,12 +8,33 @@ import {
 import AceEditor from "react-ace";
 import "brace/mode/yaml";
 
+import {
+    StatefulTileCatalog
+} from 'carbon-addons-iot-react';
+import {
+    Add32 as Add
+} from '@carbon/icons-react';
+
+const CatalogContent = ({ icon, title, displayName, description }) => (
+    <div className={`iot--sample-tile`}>
+        {icon ? <div className={`iot--sample-tile-icon`}>{icon}</div> : null}
+        <div className={`iot--sample-tile-contents`}>
+            <div className={`iot--sample-tile-title`}>
+                <span title={title}>{displayName}</span>
+            </div>
+            <div className={`iot--sample-tile-description`}>{description ? `${description?.slice(0, 120)}${description?.length > 120 ? '...' : ''}` : title}</div>
+        </div>
+    </div>
+);
+const tileRenderFunction = ({ values }) => <CatalogContent {...values} icon={<Add />} />;
+
 class ServiceModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
             show: this.props.show,
             onRequestClose: this.props.handleClose,
+            step: 1,
             fields: {
                 service_id: '',
                 arch_id: this.props.archId,
@@ -31,9 +52,7 @@ class ServiceModal extends Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-
     handleChange(field, e) {
-        console.log(e)
         let fields = this.state.fields;
         if (field === "automation_variables") {
             fields[field] = e;
@@ -45,9 +64,12 @@ class ServiceModal extends Component {
         }
         this.setState({ fields });
     }
+
     handleSubmit = (event) => {
         event.preventDefault();
-        if (this.state.fields.service_id && !this.props.isUpdate) {
+        if (!this.props.isUpdate && this.state.step == 1) {
+            this.setState({ step: this.state.step + 1});
+        } else if (this.state.fields.service_id && !this.props.isUpdate) {
             this.props.service.doPostBOM(this.props.archId, this.state.fields).then(res => {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", "Error", `${res.body.error.message}${res.body.error?.details?.reason && " Reason: " + res.body.error.details.reason}`);
@@ -71,102 +93,102 @@ class ServiceModal extends Component {
         } else {
             this.props.toast("error", "INVALID INPUT", "You must set a service ID.");
         }
-
     }
+
     render() {
         return (
             <div className="bx--grid">
-                <div className="bx--row">
-
+                <div className="bx--row modal-wizard">
                     <ComposedModal
                         open={this.props.show}
                         onClose={this.props.handleClose}>
                         <ModalHeader >
-                            <h3 className="bx--modal-header__heading">{this.props.isUpdate ? "Update" : "Add"} a Service</h3>
+                            <h3 className="bx--modal-header__heading">{this.props.isUpdate ? "Update" : "Add"} Module</h3>
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
-                        <ModalBody>
-                            <Form name="serviceform" onSubmit={this.handleSubmit.bind(this)}>
+                        <ModalBody style={{paddingRight: '1rem'}}>
 
-                                <Select id="service_id" name="service_id"
-                                    labelText="Service ID"
-                                    required
-                                    disabled={this.props.isUpdate}
-                                    defaultValue={!this.state.fields.service_id ? 'placeholder-item' : this.state.fields.service_id}
-                                    invalidText="A valid value is required"
-                                    onChange={this.handleChange.bind(this, "service_id")}>
-                                    <SelectItem
-                                        disabled
-                                        hidden
-                                        value="placeholder-item"
-                                        text="Choose an option"
+                            { !this.props.isUpdate && this.state.step === 1 &&
+                                <StatefulTileCatalog
+                                    title='Automation Catalog'
+                                    id='automation-catalog'
+                                    search={{
+                                        placeholder: 'Search a module'
+                                    }}
+                                    tiles={
+                                        this.props.services
+                                        .sort(function (a, b) { return a.service_id.toUpperCase() < b.service_id.toUpperCase() ? -1 : 1 })
+                                        .map((service) => (
+                                            {
+                                                id: service.service_id,
+                                                values: {
+                                                    title: service.service_id,
+                                                    displayName: service.displayName,
+                                                    description: service.description,
+                                                },
+                                                renderContent: tileRenderFunction,
+                                            }
+                                        ))
+                                    }
+                                    pagination={{ pageSize: 12 }}
+                                    isSelectedByDefault={false}
+                                    onSelection={(val) => this.setState({ fields: {
+                                        ...this.state.fields,
+                                        service_id: val
+                                    }})} />
+                            }
+                            
+                            { (this.props.isUpdate || this.state.step > 1) &&
+                                <Form name="serviceform" onSubmit={this.handleSubmit.bind(this)}>
+                                    <TextInput
+                                        id="desc"
+                                        name="desc"
+                                        value={this.state.fields.desc}
+                                        onChange={this.handleChange.bind(this, "desc")}
+                                        invalidText="A valid value is required"
+                                        labelText="Description"
+                                        placeholder="Service description"
+                                        rows={4}
+                                        style={{ marginBottom: '1rem' }}
                                     />
-                                    {this.props.services.sort(function (a, b) {
-                                        var nameA = a.service_id.toUpperCase(); // ignore upper and lowercase
-                                        var nameB = b.service_id.toUpperCase(); // ignore upper and lowercase
-                                        if (nameA < nameB) {
-                                            return -1;
-                                        }
-                                        if (nameA > nameB) {
-                                            return 1;
-                                        }
-
-                                        // names must be equal
-                                        return 0;
-                                    }).map((rows, i) => (
-                                        <SelectItem value={rows.service_id} text={rows.service_id} />
-                                    ))}
-
-                                </Select>
-                                <br />
-                                <TextInput
-                                    id="desc"
-                                    name="desc"
-                                    value={this.state.fields.desc}
-                                    onChange={this.handleChange.bind(this, "desc")}
-                                    invalidText="A valid value is required"
-                                    labelText="Description"
-                                    placeholder="Service description"
-                                    rows={4}
-                                    style={{ marginBottom: '1rem' }}
-                                />
-                                <FormGroup legendText="Automation Variables">
-                                    <AceEditor
-                                        focus
-                                        style={{ width: "100%" }}
-                                        mode="yaml"
-                                        // theme="github"
-                                        height="200px"
-                                        id="automation_variables"
-                                        name="automation_variables"
-                                        placeholder="alias: example"
-                                        value={this.state.fields.automation_variables}
-                                        onChange={this.handleChange.bind(this, "automation_variables")}
-                                        labelText="Automation Variables"
-                                        ref="editorInput"
-                                        // fontSize={20}
-                                        showPrintMargin
-                                        showGutter={true}
-                                        highlightActiveLine
-                                        setOptions={{
-                                            enableBasicAutocompletion: false,
-                                            enableLiveAutocompletion: false,
-                                            enableSnippets: false,
-                                            showLineNumbers: true,
-                                            tabSize: 2
-                                        }}
-                                        editorProps={{ $blockScrolling: true }}
-                                    />
-                                </FormGroup>
-                            </Form>
+                                    <FormGroup legendText="Automation Variables">
+                                        <AceEditor
+                                            focus
+                                            style={{ width: "100%" }}
+                                            mode="yaml"
+                                            // theme="github"
+                                            height="200px"
+                                            id="automation_variables"
+                                            name="automation_variables"
+                                            placeholder="alias: example"
+                                            value={this.state.fields.automation_variables}
+                                            onChange={this.handleChange.bind(this, "automation_variables")}
+                                            labelText="Automation Variables"
+                                            ref="editorInput"
+                                            // fontSize={20}
+                                            showPrintMargin
+                                            showGutter={true}
+                                            highlightActiveLine
+                                            setOptions={{
+                                                enableBasicAutocompletion: false,
+                                                enableLiveAutocompletion: false,
+                                                enableSnippets: false,
+                                                showLineNumbers: true,
+                                                tabSize: 2
+                                            }}
+                                            editorProps={{ $blockScrolling: true }}
+                                        />
+                                    </FormGroup>
+                                </Form>
+                            }
                         </ModalBody>
-                        <ModalFooter primaryButtonText={this.props.isUpdate ? "Update" : "Add"} onRequestSubmit={this.handleSubmit} secondaryButtonText="Cancel" />
+                        <ModalFooter primaryButtonText={this.props.isUpdate ? "Update" : this.state.step === 1 ? "Next" : "Add"} primaryButtonDisabled={!this.props.isUpdate && this.state.step === 1 && !this.state.fields.service_id} onRequestSubmit={this.handleSubmit} secondaryButtonText="Cancel" />
                     </ComposedModal>
 
                 </div>
             </div>
         );
     }
-
 }
+
 export default ServiceModal;

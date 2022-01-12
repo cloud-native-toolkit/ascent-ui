@@ -3,6 +3,39 @@ $feature-flags: (
   grid-columns-16: true,
 );
 
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  monospace;
+}
+
+
+// If you're including all the styles for Carbon
+@import '~carbon-addons-iot-react/scss/components/SimplePagination/simple-pagination';
+@import '~carbon-addons-iot-react/scss/components/TileCatalog/catalog-content';
+@import '~carbon-addons-iot-react/scss/components/TileCatalog/tile-catalog';
+@import '~carbon-addons-iot-react/scss/components/TileCatalog/tile-group';
+@import '~carbon-components/scss/globals/scss/styles.scss';
+@import '~@carbon/colors/scss/colors';
+@import '~@carbon/grid/scss/grid';
+@import "./ui-patterns/builder/ArticleCard/article-card.scss";
+@import "./ui-patterns/builder/ResourceCard/resource-card.scss";
+@import "./ui-patterns/builder/ResourceCard/resource-card-group.scss";
+
+@import './components/Info/info.scss';
+@import './components/BuilderHeader/builder-header.scss';
+@import './ui-patterns/LandingPage/landing-page.scss';
+
+@import "~bootstrap/scss/bootstrap";
+
 /// The React <Content /> component uses the `main` element which IE11 doesn't recognize
 /// @link https://github.com/carbon-design-system/carbon/issues/2789
 main {

@@ -11,8 +11,16 @@ export const serviceHeader = [
         header: 'Service',
     },
     {
-        key: 'description',
-        header: 'Description',
+        key: 'name',
+        header: 'Name',
+    },
+    {
+        key: 'group',
+        header: 'Group',
+    },
+    {
+        key: 'type',
+        header: 'type',
     },
     {
         key: 'provider',
@@ -33,6 +41,14 @@ export const bomHeader = [
     {
         key: 'description',
         header: 'Description',
+    },
+    {
+        key: 'group',
+        header: 'Group',
+    },
+    {
+        key: 'type',
+        header: 'Type',
     },
     {
         key: 'provider',
