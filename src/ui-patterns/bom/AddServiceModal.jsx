@@ -38,13 +38,14 @@ class ServiceModal extends Component {
             show: this.props.show,
             onRequestClose: this.props.handleClose,
             catalogFilters: {
+                category: '',
                 cloudProvider: '',
                 softwareProvider: '',
                 moduleType: '',
                 status: '',
                 searchText: ''
             },
-            filteredCatalog: this.props.services,
+            filteredCatalog: [],
             step: 1,
             fields: {
                 service_id: '',
@@ -62,6 +63,10 @@ class ServiceModal extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.filterCatalog = this.filterCatalog.bind(this);
+    }
+
+    componentDidMount() {
+        this.filterCatalog('searchText', '');
     }
 
     handleChange = (field, e) => {
@@ -110,11 +115,13 @@ class ServiceModal extends Component {
     filterCatalog = (filter, val) => {
         const catalogFilters = this.state.catalogFilters;
         catalogFilters[filter] = val;
-        let filteredCatalog = this.props.services;
+        let filteredCatalog = this.props.services.filter(m => m.status !== 'pending');
         if (catalogFilters.searchText) filteredCatalog = filteredCatalog.filter(m => m.name?.includes(catalogFilters.searchText) || m.service_id?.includes(catalogFilters.searchText) || m.description?.includes(catalogFilters.searchText));
+        if (catalogFilters.category) filteredCatalog = filteredCatalog.filter(m => m.category === catalogFilters.category);
         if (catalogFilters.cloudProvider) filteredCatalog = filteredCatalog.filter(m => m.cloudProvider === catalogFilters.cloudProvider);
         if (catalogFilters.softwareProvider) filteredCatalog = filteredCatalog.filter(m => m.softwareProvider === catalogFilters.softwareProvider);
         if (catalogFilters.moduleType) filteredCatalog = filteredCatalog.filter(m => m.type === catalogFilters.moduleType);
+        if (catalogFilters.status) filteredCatalog = filteredCatalog.filter(m => m.status === catalogFilters.status);
         this.setState({
             catalogFilters: catalogFilters,
             filteredCatalog: filteredCatalog
@@ -163,7 +170,7 @@ class ServiceModal extends Component {
                                                         }
                                                     ))
                                                 }
-                                                pagination={{ pageSize: 9 }}
+                                                pagination={{ pageSize: 12 }}
                                                 isSelectedByDefault={false}
                                                 onSelection={(val) => this.setState({ fields: {
                                                     ...this.state.fields,

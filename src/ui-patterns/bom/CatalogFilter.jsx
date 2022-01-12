@@ -11,15 +11,26 @@ import { catalogFilters } from '../data/data';
 class CatalogFilter extends Component {
 
   constructor(props) {
-      super(props);
-      this.state = {
-        searchText: this.props.catalogFilters?.searchText || '',
-      };
+    super(props);
+    this.state = {
+      searchText: this.props.catalogFilters?.searchText || '',
+    };
   }
 
   render() {
     return (
       <div className="CatalogFilter">
+        <div className="FormElement">
+          <Select
+            defaultValue={this.props.catalogFilters?.category || ''}
+            helperText="Filter by module category"
+            id="categories"
+            labelText="Category"
+            onChange={(e) => this.props.filterCatalog('category', e.target.value)}
+          >
+            {this.selectItems(catalogFilters.categoryValues)}
+          </Select>
+        </div>
         <div className="FormElement">
           <Select
             defaultValue={this.props.catalogFilters?.cloudProvider || ''}
@@ -53,7 +64,7 @@ class CatalogFilter extends Component {
             {this.selectItems(catalogFilters.moduleTypeValues)}
           </Select>
         </div>
-        {/* <div className="FormElement">
+        <div className="FormElement">
           <Select
             defaultValue={this.props.catalogFilters?.status || ''}
             helperText="Filter by status"
@@ -63,11 +74,11 @@ class CatalogFilter extends Component {
           >
             {this.selectItems(catalogFilters.statusValues)}
           </Select>
-        </div> */}
+        </div>
         <div className="FormElement">
-          <Grid style={{paddingRight: '0', paddingLeft: '0'}}>
+          <Grid style={{ paddingRight: '0', paddingLeft: '0' }}>
             <Row>
-              <Column lg={{span: 9}} style={{paddingRight: '.5rem'}}>
+              <Column lg={{ span: 9 }} style={{ paddingRight: '.5rem' }}>
                 <TextInput
                   id="searchText"
                   labelText="Module search"
@@ -75,10 +86,10 @@ class CatalogFilter extends Component {
                   onChange={(e) => this.setState({ searchText: e.target.value })}
                 />
               </Column>
-              <Column lg={{span: 3}} style={{display: 'flex', paddingLeft: '.5rem'}}>
+              <Column lg={{ span: 3 }} style={{ display: 'flex', paddingLeft: '.5rem' }}>
                 <Button
                   className="SearchButton"
-                  style={{display: 'inline-block', alignSelf: 'flex-end'}}
+                  style={{ display: 'inline-block', alignSelf: 'flex-end' }}
                   size={"field"}
                   onClick={(e) => this.props.filterCatalog('searchText', this.state.searchText)}
                   iconDescription="Search Modules"

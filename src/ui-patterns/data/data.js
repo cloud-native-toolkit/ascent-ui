@@ -6,6 +6,23 @@ import {
 } from 'carbon-components-react';
 
 export const catalogFilters = {
+    categoryValues: [
+        { text: 'All categories', value: '' },
+        { text: 'AI/ML', value: 'ai-ml' },
+        { text: 'Cluster', value: 'cluster' },
+        { text: 'Databases', value: 'databases' },
+        { text: 'Dev Tools', value: 'dev-tool' },
+        { text: 'GitOps', value: 'gitops' },
+        { text: 'IAM', value: 'iam' },
+        { text: 'Image Registry', value: 'image-registry' },
+        { text: 'Software Infrastructure', value: 'infrastructure' },
+        { text: 'Middleware', value: 'middleware' },
+        { text: 'Network', value: 'network' },
+        { text: 'Source Control', value: 'source-control' },
+        { text: 'SRE tools', value: 'sre' },
+        { text: 'Storage', value: 'storage' },
+        { text: 'multiple', value: 'util' }
+    ],
     cloudProviderValues: [
         { text: 'All providers', value: '' },
         { text: 'IBM', value: 'ibm' },
@@ -21,7 +38,7 @@ export const catalogFilters = {
         { text: 'All statuses', value: '' },
         { text: 'Released', value: 'released' },
         { text: 'Beta', value: 'beta' },
-        { text: 'Pending', value: 'pending' }
+        //{ text: 'Pending', value: 'pending' }
     ],
     softwareProviderValues: [
         { text: 'All providers', value: '' },
