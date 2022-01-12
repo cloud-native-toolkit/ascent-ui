@@ -23,7 +23,7 @@ class NistView extends Component {
 
     async componentDidMount() {
         const jsonData = await this.props.nist.getNist();
-        const nistDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"number\":/g, "\"id\":"));
+        const nistDetails = JSON.parse(JSON.stringify(jsonData).replace(/"number":/g, '"id":'));
         this.setState({
             data: nistDetails,
             filterData: nistDetails,

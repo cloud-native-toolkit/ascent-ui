@@ -13,13 +13,10 @@ import {
 
 import {
     Delete16 as Delete,
-    Save16 as Save,
     Download16 as Download,
     ViewFilled16 as View,
     Edit16,
     Add16,
-    WarningAlt16,
-    Launch16,
     DocumentExport16 as DocumentExport
 } from '@carbon/icons-react';
 import {
@@ -81,7 +78,7 @@ class BillofMaterialsView extends Component {
     async loadTable() {
         const arch = await this.props.archService.getArchitectureById(this.props.archId);
         const jsonData = await this.props.bomService.getBOM(this.props.archId, {"include":["service"]});
-        const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/\"_id\":/g, "\"id\":"));
+        const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/"_id":/g, "\"id\":"));
         let services = await this.props.bomService.getServices();
         // Reformat data to augment BOM details with service details
         const conflicts = [];
@@ -182,7 +179,7 @@ class BillofMaterialsView extends Component {
         }
 
         // Create File name from Name of Architecture
-        var filename = archname.replace(/[^a-z0-9_\-]/gi, '-').replace(/_{2,}/g, '_').toLowerCase()
+        var filename = archname.replace(/[^a-z0-9_-]/gi, '-').replace(/_{2,}/g, '_').toLowerCase()
         var url = "/api/automation/" + archid;
         filename = filename + "-automation.zip";
         console.log(url, filename)
@@ -498,7 +495,7 @@ class BillofMaterialsView extends Component {
                                     Description
                                 </h3>
                                 {
-                                    this.state.architecture && this.state.architecture.long_desc || this.state.architecture.short_desc
+                                    this.state.architecture?.long_desc || this.state.architecture?.short_desc
                                 }
                             </p>
                             <br />

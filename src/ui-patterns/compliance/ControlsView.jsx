@@ -55,21 +55,21 @@ class ControlsView extends Component {
                 for (const item of selectedFilters) {
                     if (
                         (
-                            [
+                            ([
                                 'scc',
                                 'control_type_1',
                                 'control_type_2',
                                 'control_type_3',
                                 'risk_rating',
-                            ].includes(item.attr) && elt?.controlDetails?.requirements?.find(req => req[item.attr] === item.val) ||
-                            [
+                            ].includes(item.attr) && elt?.controlDetails?.requirements?.find(req => req[item.attr] === item.val)) ||
+                            ([
                                 'ibm_public_cloud_resp',
                                 'developer_resp',
                                 'operator_resp',
                                 'consumer_resp'
-                            ].includes(item.attr) && elt?.controlDetails?.requirements?.find(req => req[item.attr]?.includes(item.val)) ||
-                            item.attr === 'nist_functions' && elt?.controlDetails[item.attr]?.includes(item.val) ||
-                            item.attr === 'focus_area' && elt?.controlDetails[item.attr] === item.val ||
+                            ].includes(item.attr) && elt?.controlDetails?.requirements?.find(req => req[item.attr]?.includes(item.val))) ||
+                            (item.attr === 'nist_functions' && elt?.controlDetails[item.attr]?.includes(item.val)) ||
+                            (item.attr === 'focus_area' && elt?.controlDetails[item.attr] === item.val) ||
                             elt[item.attr] === item.val
                         ) 
                         && (filterIsOr || ++metFilters === selectedFilters.length)

@@ -46,7 +46,7 @@ class ImportProfileModal extends Component {
             onRequestSubmit={this.uploadProfile}
             onSecondarySubmit={this.props.onSecondarySubmit}>
             <p style={{ marginBottom: '1rem' }}>
-                Import a profile from <a href="https://cloud.ibm.com/security-compliance/profiles" target="_blank">IBM Security and Compliance</a>.
+                Import a profile from <a href="https://cloud.ibm.com/security-compliance/profiles" target="_blank" rel="noopener noreferrer">IBM Security and Compliance</a>.
             </p>
             <FileUploader 
               accept={['.csv']}

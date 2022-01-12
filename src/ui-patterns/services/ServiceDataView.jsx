@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Header from "../ui-shell/Header";
 
 import {
     Link
@@ -441,7 +440,7 @@ class ServiceDataView extends Component {
                         onRequestClose={this.hideFilterPane}
                         filterTable={this.filterTable}
                         selectedFilters={this.state.selectedFilters}
-                        tags={[... new Set(this.state.data.map(s => s.tags).flat(1))].map(tag => {
+                        tags={[...new Set(this.state.data.map(s => s.tags).flat(1))].map(tag => {
                             return {
                                 attr: 'tags',
                                 label: tag,

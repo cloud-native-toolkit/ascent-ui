@@ -1,12 +1,8 @@
 import React, { Component } from "react";
 import {
-    UnorderedList, ListItem, BreadcrumbSkeleton, SearchSkeleton, Tag, 
+    BreadcrumbSkeleton, SearchSkeleton,
     Button
 } from 'carbon-components-react';
-import {
-    WarningAlt16,
-    Launch16
-} from '@carbon/icons-react';
 import {
     Link
 } from "react-router-dom";

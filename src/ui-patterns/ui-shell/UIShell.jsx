@@ -9,17 +9,13 @@ import {
   HeaderName,
   HeaderNavigation,
   HeaderGlobalBar,
-  HeaderMenu,
-  HeaderSideNavItems,
   HeaderPanel, Switcher, SwitcherItem, SwitcherDivider,
-  HeaderMenuItem,
   SkipToContent,
   SideNav,
   SideNavItems,
   SideNavMenu,
   SideNavMenuItem,
-  HeaderContainer,
-  Link as LinkComponent
+  HeaderContainer
 } from 'carbon-components-react';
 
 import {
@@ -234,13 +230,13 @@ class UIShell extends Component {
                         <SideNavMenuItem>Overview</SideNavMenuItem>
                       </Link>
 
-                      <a target="_blank" href="https://modules.cloudnativetoolkit.dev" >
+                      <a target="_blank" href="https://modules.cloudnativetoolkit.dev" rel="noopener noreferrer" >
                         <SideNavMenuItem >
                           Terraform Modules
                           <Launch16 style={{"margin-left": "10px"}} />
                         </SideNavMenuItem>
                       </a>
-                      <a target="_blank" href="https://github.com/cloud-native-toolkit/iascable" >
+                      <a target="_blank" href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" >
                         <SideNavMenuItem>
                           CLI
                           <Launch16 style={{"margin-left": "10px"}} />

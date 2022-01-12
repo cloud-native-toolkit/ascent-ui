@@ -1,18 +1,8 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, InlineNotification, Select, SelectItem, Button, 
-    ButtonSet, ComposedModal, ModalBody, ModalFooter, ModalHeader, 
-    RadioButtonGroup, RadioButton, TextArea, TextInput, SelectSkeleton,
-    MultiSelect
+import { Form, Select, SelectItem, ComposedModal, ModalBody, 
+    ModalFooter, ModalHeader, TextInput
 } from 'carbon-components-react';
 
-import {
-    servicePlatforms,
-    serviceGroupings,
-    serviceDeploymentMethods,
-    serviceProvisionMethods
-} from '../data/data';
-
-import AceEditor from "react-ace";
 import "brace/mode/yaml";
 
 class FormModal extends Component {
@@ -30,7 +20,7 @@ class FormModal extends Component {
             }
         };
         if (this.props.isUpdate) {
-            let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/\"id\":/g, "\"service_id\":"));
+            let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/"id":/g, "\"service_id\":"));
             console.log(jsonObject);
             this.state = {
                 fields: {

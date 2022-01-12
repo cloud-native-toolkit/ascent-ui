@@ -12,11 +12,6 @@ import {
   Link
 } from "react-router-dom";
 
-import {
-    OverflowMenu,
-    OverflowMenuItem
-} from 'carbon-components-react';
-
 const { prefix } = settings;
 
 export default class ArticleCard extends React.Component {
@@ -93,7 +88,6 @@ export default class ArticleCard extends React.Component {
       link,
       title,
       subTitle,
-      desc,
       author,
       date,
       readTime,

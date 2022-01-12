@@ -174,7 +174,7 @@ class NistDetailsView extends Component {
                     <UnorderedList>
                     {nistData.references.reference.map((ref) => (
                       <ListItem>
-                        <a href={ref.item["@href"]} target="_blank">
+                        <a href={ref.item["@href"]} target="_blank" rel="noopener noreferrer">
                           {ref.item["#text"]}
                           <Launch16 style={{"margin-left": "5px"}}/>
                         </a>

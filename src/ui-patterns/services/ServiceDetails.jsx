@@ -4,7 +4,6 @@ import {
 } from 'carbon-components-react';
 import {
     Launch16,
-    Launch32
 } from '@carbon/icons-react';
 import {
     Link
@@ -85,7 +84,7 @@ class ServiceDetails extends Component {
                                     <UnorderedList nested>
                                         {this.props.data.catalog.metadata.ui.urls.catalog_details_url && 
                                             <ListItem href={this.props.data.catalog.metadata.ui.urls.catalog_details_url}>
-                                                <a href={this.props.data.catalog.metadata.ui.urls.catalog_details_url} target="_blank">
+                                                <a href={this.props.data.catalog.metadata.ui.urls.catalog_details_url} target="_blank" rel="noopener noreferrer">
                                                     Catalog
                                                     <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
                                                 </a>
@@ -93,7 +92,7 @@ class ServiceDetails extends Component {
                                         }
                                         {this.props.data.catalog.metadata.ui.urls.apidocs_url && 
                                             <ListItem href={this.props.data.catalog.metadata.ui.urls.apidocs_url}>
-                                                <a href={this.props.data.catalog.metadata.ui.urls.apidocs_url} target="_blank">
+                                                <a href={this.props.data.catalog.metadata.ui.urls.apidocs_url} target="_blank" rel="noopener noreferrer">
                                                     API Docs
                                                     <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
                                                 </a>
@@ -101,7 +100,7 @@ class ServiceDetails extends Component {
                                         }
                                         {this.props.data.catalog.metadata.ui.urls.doc_url && 
                                             <ListItem href={this.props.data.catalog.metadata.ui.urls.doc_url}>
-                                                <a href={this.props.data.catalog.metadata.ui.urls.doc_url} target="_blank">
+                                                <a href={this.props.data.catalog.metadata.ui.urls.doc_url} target="_blank" rel="noopener noreferrer">
                                                     Documentation
                                                     <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
                                                 </a>
@@ -109,7 +108,7 @@ class ServiceDetails extends Component {
                                         }
                                         {this.props.data.catalog.metadata.ui.urls.instructions_url && 
                                             <ListItem >
-                                                <a href={this.props.data.catalog.metadata.ui.urls.instructions_url} target="_blank">
+                                                <a href={this.props.data.catalog.metadata.ui.urls.instructions_url} target="_blank" rel="noopener noreferrer">
                                                     Instructions
                                                     <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
                                                 </a>
@@ -117,7 +116,7 @@ class ServiceDetails extends Component {
                                         }
                                         {this.props.data.catalog.metadata.ui.urls.terms_url && 
                                             <ListItem href={this.props.data.catalog.metadata.ui.urls.terms_url}>
-                                                <a href={this.props.data.catalog.metadata.ui.urls.terms_url} target="_blank">
+                                                <a href={this.props.data.catalog.metadata.ui.urls.terms_url} target="_blank" rel="noopener noreferrer">
                                                     Terms
                                                     <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
                                                 </a>

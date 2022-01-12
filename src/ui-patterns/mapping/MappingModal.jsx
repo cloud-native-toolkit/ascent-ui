@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Form, FormGroup, Button, ButtonSet, ComposedModal, ModalBody, ModalFooter,
+    Form, FormGroup, ComposedModal, ModalBody, ModalFooter,
     ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput, 
     TextInputSkeleton, Select, SelectItem, SelectSkeleton
 } from 'carbon-components-react';

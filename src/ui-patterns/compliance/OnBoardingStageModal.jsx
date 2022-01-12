@@ -9,8 +9,6 @@ import {
     TextInput
 } from 'carbon-components-react';
 
-import {Redirect} from 'react-router-dom';
-
 import AceEditor from "react-ace";
 import "brace/mode/yaml";
 

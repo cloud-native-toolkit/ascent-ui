@@ -15,8 +15,6 @@ import {
     Download16
 } from '@carbon/icons-react';
 
-import ReactMarkdown from 'react-markdown';
-
 import SolutionModal from "./SolutionModal";
 
 import marked from 'marked';
