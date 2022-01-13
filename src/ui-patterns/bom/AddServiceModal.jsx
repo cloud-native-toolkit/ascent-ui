@@ -3,7 +3,7 @@ import {
     Form, ComposedModal,
     ModalBody, ModalHeader, TextInput,
     ModalFooter, FormGroup,
-    Column, Grid, Row
+    Column, Grid, Row, Tag
 } from 'carbon-components-react';
 
 import AceEditor from "react-ace";
@@ -16,14 +16,20 @@ import {
     Add32 as Add
 } from '@carbon/icons-react';
 
+import { catalogFilters } from '../data/data';
 import CatalogFilter from './CatalogFilter';
 
-const CatalogContent = ({ icon, title, displayName, description }) => (
+const CatalogContent = ({ icon, title, displayName, status, description }) => (
     <div className={`iot--sample-tile`}>
         {icon ? <div className={`iot--sample-tile-icon`}>{icon}</div> : null}
         <div className={`iot--sample-tile-contents`}>
             <div className={`iot--sample-tile-title`}>
                 <span title={title}>{displayName}</span>
+                {(status === 'beta' || status === 'pending') && <Tag
+                    style={{marginLeft: '1rem'}}
+                    type={status === 'beta' ? 'teal' : 'magenta'} >
+                    {catalogFilters.statusValues.find(v => v.value === status)?.text}
+                </Tag>}
             </div>
             <div className={`iot--sample-tile-description`}>{description ? `${description?.slice(0, 95)}${description?.length > 95 ? '...' : ''}` : title}</div>
         </div>
@@ -115,7 +121,7 @@ class ServiceModal extends Component {
     filterCatalog = (filter, val) => {
         const catalogFilters = this.state.catalogFilters;
         catalogFilters[filter] = val;
-        let filteredCatalog = this.props.services.filter(m => m.status !== 'pending');
+        let filteredCatalog = this.props.services;
         if (catalogFilters.searchText) filteredCatalog = filteredCatalog.filter(m => m.name?.includes(catalogFilters.searchText) || m.service_id?.includes(catalogFilters.searchText) || m.description?.includes(catalogFilters.searchText));
         if (catalogFilters.category) filteredCatalog = filteredCatalog.filter(m => m.category === catalogFilters.category);
         if (catalogFilters.cloudProvider) filteredCatalog = filteredCatalog.filter(m => m.cloudProvider === catalogFilters.cloudProvider);
@@ -164,6 +170,7 @@ class ServiceModal extends Component {
                                                             values: {
                                                                 title: service.service_id,
                                                                 displayName: service.displayName,
+                                                                status: service.status,
                                                                 description: service.description,
                                                             },
                                                             renderContent: tileRenderFunction,

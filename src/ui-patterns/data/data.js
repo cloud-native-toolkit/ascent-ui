@@ -5,6 +5,7 @@ import {
     ListItem
 } from 'carbon-components-react';
 
+
 export const catalogFilters = {
     categoryValues: [
         { text: 'All categories', value: '' },
@@ -38,7 +39,7 @@ export const catalogFilters = {
         { text: 'All statuses', value: '' },
         { text: 'Released', value: 'released' },
         { text: 'Beta', value: 'beta' },
-        //{ text: 'Pending', value: 'pending' }
+        { text: 'Pending', value: 'pending' }
     ],
     softwareProviderValues: [
         { text: 'All providers', value: '' },
