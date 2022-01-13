@@ -1,25 +1,30 @@
 import React, { Component } from "react";
-import FormLabel from 'carbon-components-react/lib/components/FormLabel';
-import Tooltip from 'carbon-components-react/lib/components/Tooltip';
-import ArticleCard from './ArticleCard';
 
 import {
     Link
 } from "react-router-dom";
 
 import {
-    LogoGithub16 as LogoGitHub,
+    CheckmarkFilled16,
+    AppConnectivity32
 } from '@carbon/icons-react';
+
+import {
+    StatefulTileGallery
+} from 'carbon-addons-iot-react';
 
 import {
     OverflowMenu,
     OverflowMenuItem,
     ToastNotification,
     SearchSkeleton,
-    ContentSwitcher,
-    Switch,
-    Tag
+    Button,
 } from 'carbon-components-react';
+
+import { spacing07 } from '@carbon/layout';
+import { green40 } from '@carbon/colors';
+
+import ImageWithStatus from './ImageWithStatus';
 
 import ArchitectureModal from './ArchitectureModal';
 
@@ -53,7 +58,23 @@ class ArchitectureView extends Component {
         this.hideArchModal = this.hideArchModal.bind(this);
         this.addNotification = this.addNotification.bind(this);
         this.deleteArchitecture = this.deleteArchitecture.bind(this);
+        this.handleImageLoaded = this.handleImageLoaded.bind(this);
+        this.handleImageErrored = this.handleImageErrored.bind(this);
         this.syncIascable = this.syncIascable.bind(this);
+    }
+
+    handleImageLoaded(archid) {
+        const images = this.state.images;
+        const imgIx = images?.findIndex(i => i.archid === archid);
+        if (imgIx >= 0) images[imgIx].status = 'loaded';
+        this.setState({ images: images });
+    }
+
+    handleImageErrored(archid) {
+        const images = this.state.images;
+        const imgIx = images?.findIndex(i => i.archid === archid);
+        if (imgIx >= 0) images[imgIx].status = 'error';
+        this.setState({ images: images });
     }
 
     async loadArchitectures() {
@@ -71,20 +92,20 @@ class ArchitectureView extends Component {
         }
 
         fetch("/api/architectures")
-        .then(response => response.json())
-        .then(architectures => {
-            fetch(`/api/users/${encodeURIComponent(this.state?.user?.email)}/architectures`)
-                .then(response => response.json())
-                .then(userArchitectures => {
-                    this.setState({
-                        userArchitectures: userArchitectures,
-                        architectures: architectures,
-                        archLoaded: true,
-                        iascableRelease: iascableRelease
+            .then(response => response.json())
+            .then(architectures => {
+                fetch(`/api/users/${encodeURIComponent(this.state?.user?.email)}/architectures`)
+                    .then(response => response.json())
+                    .then(userArchitectures => {
+                        this.setState({
+                            userArchitectures: userArchitectures,
+                            architectures: architectures,
+                            archLoaded: true,
+                            iascableRelease: iascableRelease
+                        });
                     });
-                });
-        });
-        
+            });
+
     }
 
     async showArchModal(isImport) {
@@ -111,7 +132,7 @@ class ArchitectureView extends Component {
             .then((res) => {
                 if (res?.body?.error) this.addNotification("error", res?.status === 401 ? "Unauthorized" : "Error", res?.body?.error?.message);
                 else {
-                    this.addNotification("success", "Success", `Architecture ${arch_id} deleted!`);
+                    this.addNotification("success", "Success", `Bill of Materials ${arch_id} deleted!`);
                     this.setState({
                         showValidate: false,
                         curArch: undefined
@@ -134,7 +155,7 @@ class ArchitectureView extends Component {
             .then(res => res.json())
             .then(user => {
                 if (user.name) {
-                    this.setState({ user: user || undefined });
+                    this.setState({ user: user || undefined });
                     this.loadArchitectures();
                 } else {
                     // Redirect to login page
@@ -164,116 +185,93 @@ class ArchitectureView extends Component {
             });
     }
 
-    getArchitectures(architectures, userArch) {
-
-        var archTiles = []
-
-        if (!architectures.length) archTiles.push(
-            <div className="bx--col-lg-12">
-                {userArch ? 
-                    <p>You have no architectures at the moment. To create one, duplicate an existing public architecture or click <strong>Add</strong> or <strong>Import BOM</strong> in the top right menu.</p>
-                :
-                    <p>No architecture available yet.</p>
-                }
-            </div>
-        );
-        
-        for (var i = 0; i < architectures.length; i++) {
-            const arch = architectures[i];
-
-            var link = "/bom/"+arch.arch_id;
-
-            archTiles.push(
-                <div className="bx--col-md-3 bx--col-lg-3" key={arch.arch_id}>
-                    <ArticleCard
-                        title={arch.name}
-                        author={arch.short_desc}
-                        desc={arch.long_desc}
-                        date=""
-                        readTime=""
-                        link={link}
-                        color="dark">
-
-                        <Link to={link}>
-                            <img
-                                className="article-img"
-                                src={`/api/architectures/${arch.arch_id}/diagram/png?small=true`}
-                                alt={arch.short_desc}
-                            />
-                        </Link>
-
-                        <div className="labels" style={{"display": "flex"}}>
-                            <FormLabel style={{"padding-top": "0.5rem"}}>
-                                <Tooltip direction="right" triggerText="Terraform">This architecture supports Terraform.</Tooltip>
-                            </FormLabel>
-                            {this.state.user?.roles.includes("editor") ? <FormLabel style={{"margin-left": "auto", "margin-bottom": "0px"}}>
-                                <OverflowMenu light flipped>
-                                    <OverflowMenuItem itemText="Duplicate" onClick={() => this.setState({
-                                        showArchModal: true,
-                                        isDuplicate: arch.arch_id
-                                    })}/>
-                                    {(this.state.user?.role === "admin" || userArch || arch?.owners?.find(user => user.email === this.state.user?.email)) && <OverflowMenuItem itemText="Delete" onClick={() => this.setState({
-                                        showValidate: true,
-                                        curArch: arch
-                                    })} isDelete/>}
-                                </OverflowMenu>
-                            </FormLabel> : <></>}
-                        </div>
-                    
-
-                    </ArticleCard>
-
-                </div>
-            );
-        }
-
-        return archTiles;
-
-    }
-
     /** Notifications */
 
     addNotification(type, message, detail) {
         this.setState(prevState => ({
-          notifications: [
-            ...prevState.notifications,
-            {
-              message: message || "Notification",
-              detail: detail || "Notification text",
-              severity: type || "info"
-            }
-          ]
+            notifications: [
+                ...prevState.notifications,
+                {
+                    message: message || "Notification",
+                    detail: detail || "Notification text",
+                    severity: type || "info"
+                }
+            ]
         }));
     }
 
     renderNotifications() {
         return this.state.notifications.map(notification => {
             return (
-            <ToastNotification
-                title={notification.message}
-                subtitle={notification.detail}
-                kind={notification.severity}
-                timeout={10000}
-                caption={false}
-            />
+                <ToastNotification
+                    title={notification.message}
+                    subtitle={notification.detail}
+                    kind={notification.severity}
+                    timeout={10000}
+                    caption={false}
+                />
             );
         });
     }
 
     /** Notifications END */
 
+    overflowComponent = (arch, userArch) => (
+        this.state.user?.roles.includes("editor") && <OverflowMenu style={{ height: spacing07 }}>
+            <OverflowMenuItem itemText="Duplicate" onClick={() => this.setState({
+                showArchModal: true,
+                isDuplicate: arch.arch_id
+            })} />
+            {(this.state.user?.role === "admin" || userArch || arch?.owners?.find(user => user.email === this.state.user?.email)) && <OverflowMenuItem itemText="Delete" onClick={() => this.setState({
+                showValidate: true,
+                curArch: arch
+            })} isDelete />}
+        </OverflowMenu>
+    );
+
 
     render() {
 
+        const galleryData = [];
+
+        if (this.state.userArchitectures?.length > 0) galleryData.push({
+            id: 'user-boms',
+            sectionTitle: 'Your Bills Of Materials',
+            isOpen: this.state.userArchitectures?.length>0,
+            galleryItems: this.state.userArchitectures.map(arch => {
+                return {
+                    title: arch.name,
+                    description: <Link to={`/bom/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
+                    icon: <Link to={`/bom/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
+                    afterContent: this.overflowComponent(arch, true),
+                    thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
+                }
+            }),
+        });
+
+        galleryData.push({
+            id: 'public-boms',
+            sectionTitle: 'Public Bills Of Materials',
+            galleryItems: this.state.architectures.map(arch => {
+                return {
+                    title: arch.name,
+                    description: <Link to={`/bom/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
+                    icon: <Link to={`/bom/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
+                    afterContent: this.overflowComponent(arch, false),
+                    thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
+                }
+            }),
+        });
+
         return (
 
-            <div className="bx--grid"  >
+            <div className="bx--grid bills-of-materials" >
 
                 <div class='notif'>
                     {this.state.notifications.length !== 0 && this.renderNotifications()}
                 </div>
 
-                {this.state.showArchModal && 
+                {this.state.showArchModal &&
                     <ArchitectureModal
                         show={this.state.showArchModal}
                         handleClose={this.hideArchModal}
@@ -286,7 +284,7 @@ class ArchitectureView extends Component {
                     />
                 }
 
-                {this.state.showValidate && this.state.curArch && 
+                {this.state.showValidate && this.state.curArch &&
                     <ValidateModal
                         danger
                         submitText="Delete"
@@ -299,8 +297,8 @@ class ArchitectureView extends Component {
                                 showValidate: false,
                                 curArch: undefined
                             });
-                        }} 
-                        onRequestSubmit={this.deleteArchitecture} 
+                        }}
+                        onRequestSubmit={this.deleteArchitecture}
                         onSecondarySubmit={() => {
                             this.setState({
                                 showValidate: false,
@@ -309,72 +307,30 @@ class ArchitectureView extends Component {
                         }} />
                 }
 
-                <div className="bx--row">
-                    <div className="bx--col-lg-12">
-                        <br></br>
-                        <h2 style={{"display": "flex"}}>
-                            Architectures
-                            <div style={{"margin-left": "auto", "display": "flex"}}>
-                                {
-                                    this.state.user?.role === "admin" && 
-                                    <Tag
-                                        key='tag1'
-                                        renderIcon={LogoGitHub}
-                                        type="high-contrast"
-                                        title="Sync"
-                                        onClick={this.syncIascable}
-                                    >
-                                        iascable: {this.state.iascableRelease ? this.state.iascableRelease.tagName : "unknown"}
-                                    </Tag>
-                                }
+                <br />
 
-                                {this.state.user?.roles?.includes("editor") && <OverflowMenu
-                                    size='lg'
-                                    flipped>
-                                    <OverflowMenuItem
-                                        itemText="Add"
-                                        onClick={() => this.showArchModal(false)}/>
-                                    <OverflowMenuItem
-                                        kind="primary"
-                                        itemText="Import BOM"
-                                        onClick={() => this.showArchModal(true)}/>
-                                </OverflowMenu>}
-                            </div>
-                        </h2>
-                        <br></br>
-                        <p>
-                            Navigate to the reference architecture you are interested in and see it's bill of materials.
-                        </p>
-
-                        {this.state.user?.roles?.includes("editor") && <ContentSwitcher
-                            size='xl'
-                            onChange={(e) => {this.setState({show:e.name})}} >
-                                <Switch name="public-archs" text="Public Architectures" />
-                                <Switch name="user-archs" text="Your Architectures" />
-                        </ContentSwitcher>}
-                        <br></br>
-
+                <h2 style={{"display": "flex"}}>
+                    Bills of Materials
+                    <div style={{"margin-left": "auto", "display": "flex"}}>
+                        <Button onClick={() => this.showArchModal(false)} size='small'>Create +</Button>
+                        <Button onClick={() => this.showArchModal(true)} style={{marginLeft: '1.5rem', marginRight: '1.5rem'}} size='small'>Import +</Button>
                     </div>
-                </div>
+                </h2>
 
-                
+                <br />
 
-                    {
-                        this.state.archLoaded && this.state.show === "public-archs" ?
-                            <div className="bx--row">
-                                {this.getArchitectures(this.state.architectures, false)}
-                            </div>
-                            
-                        : this.state.archLoaded && this.state.show === "user-archs" ?
-                            <div className="bx--row">
-                                {this.getArchitectures(this.state.userArchitectures, true)}
-                            </div>
-                        :
-                            <div className="bx--row">
-                                <SearchSkeleton />
-                            </div>
-                    }
+                {
+                    this.state.archLoaded ?
+                        <StatefulTileGallery
+                            hasSearch
+                            hasSwitcher
+                            galleryData={galleryData}
+                        />
+                    :
+                        <SearchSkeleton />
+                }
 
+                {!this.state.archLoaded && <SearchSkeleton />}
 
             </div>
 
