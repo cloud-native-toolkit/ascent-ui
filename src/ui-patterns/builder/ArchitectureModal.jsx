@@ -132,7 +132,7 @@ class ArchitectureModal extends Component {
             .then((res) => {
                 if (res?.body?.error) this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res?.body?.error?.message);
                 else {
-                    this.props.toast("success", "Success", `Architecture ${this.props.isDuplicate} duplicated!`);
+                    this.props.toast("success", "Success", `Bill of Materials ${this.props.isDuplicate} duplicated!`);
                     this.props.handleClose();
                 }
             })
@@ -144,7 +144,7 @@ class ArchitectureModal extends Component {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                 } else {
-                    this.props.toast("success", "Success", `Architecture ${res.arch_id} successfully added!`);
+                    this.props.toast("success", "Success", `Bill of Materials ${res.arch_id} successfully added!`);
                     
                     this.uploadDiagrams(res.arch_id);
                 }
@@ -161,7 +161,7 @@ class ArchitectureModal extends Component {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                 } else {
-                    this.props.toast("success", "Success", `Architecture ${res.arch_id} successfully updated!`);
+                    this.props.toast("success", "Success", `Bill of Materials ${res.arch_id} successfully updated!`);
                     this.uploadDiagrams(res.arch_id);
                 }
             });
@@ -179,7 +179,7 @@ class ArchitectureModal extends Component {
                         open={this.props.show}
                         onClose={this.props.handleClose}>
                         <ModalHeader >
-                            <h3 className="bx--modal-header__heading">{this.props.isUpdate ? "Update" : this.props.isDuplicate ? "Duplicate" : "Add"} Architecture</h3>
+                            <h3 className="bx--modal-header__heading">{this.props.isUpdate ? "Update" : this.props.isDuplicate ? "Duplicate" : "Add"} Bill of Materials</h3>
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
@@ -195,7 +195,7 @@ class ArchitectureModal extends Component {
                                     invalidText="Please Enter The Value"
                                     onChange={this.handleChange.bind(this, "arch_id")}
                                     value={this.state.fields.arch_id}
-                                    labelText={this.props.data ? "" : "Architecture ID"}
+                                    labelText={this.props.data ? "" : "ID"}
                                     placeholder="e.g. common-services"
                                     style={{ marginBottom: '1rem' }}
                                 />
@@ -207,7 +207,7 @@ class ArchitectureModal extends Component {
                                     invalidText="Please Enter The Value"
                                     onChange={this.handleChange.bind(this, "name")}
                                     value={this.state.fields.name}
-                                    labelText="Architecture Name"
+                                    labelText="Bill of Materials Name"
                                     placeholder="e.g. Common Services"
                                     style={{ marginBottom: '1rem' }}
                                 />}
@@ -232,7 +232,7 @@ class ArchitectureModal extends Component {
                                     onChange={this.handleChange.bind(this, "long_desc")}
                                     invalidText="A valid value is required"
                                     labelText="Long Description"
-                                    placeholder="Architecture long description"
+                                    placeholder="Long description"
                                     rows={2}
                                     style={{ marginBottom: '1rem' }}
                                 />}
