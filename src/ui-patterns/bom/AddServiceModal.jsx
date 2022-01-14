@@ -19,14 +19,19 @@ import {
 import { catalogFilters } from '../data/data';
 import CatalogFilter from './CatalogFilter';
 
-const CatalogContent = ({ icon, title, displayName, status, description }) => (
+const CatalogContent = ({ icon, title, displayName, status, type, description }) => (
     <div className={`iot--sample-tile`}>
         {icon ? <div className={`iot--sample-tile-icon`}>{icon}</div> : null}
         <div className={`iot--sample-tile-contents`}>
             <div className={`iot--sample-tile-title`}>
                 <span title={title}>{displayName}</span>
+                {(type === 'terraform' || type === 'gitops') && <Tag
+                    style={{marginLeft: '.5rem'}}
+                    type='gray' >
+                    {catalogFilters.moduleTypeValues.find(v => v.value === type)?.text}
+                </Tag>}
                 {(status === 'beta' || status === 'pending') && <Tag
-                    style={{marginLeft: '1rem'}}
+                    style={{marginLeft: '.5rem'}}
                     type={status === 'beta' ? 'teal' : 'magenta'} >
                     {catalogFilters.statusValues.find(v => v.value === status)?.text}
                 </Tag>}
@@ -171,6 +176,7 @@ class ServiceModal extends Component {
                                                                 title: service.service_id,
                                                                 displayName: service.displayName,
                                                                 status: service.status,
+                                                                type: service.type,
                                                                 description: service.description,
                                                             },
                                                             renderContent: tileRenderFunction,
