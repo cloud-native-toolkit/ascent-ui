@@ -236,13 +236,13 @@ class ArchitectureView extends Component {
 
         if (this.state.userArchitectures?.length > 0) galleryData.push({
             id: 'user-boms',
-            sectionTitle: 'Your Bills Of Materials',
+            sectionTitle: 'Your BOMs',
             isOpen: this.state.userArchitectures?.length>0,
             galleryItems: this.state.userArchitectures.map(arch => {
                 return {
                     title: arch.name,
-                    description: <Link to={`/bom/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
-                    icon: <Link to={`/bom/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
+                    description: <Link to={`/boms/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
+                    icon: <Link to={`/boms/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
                     afterContent: this.overflowComponent(arch, true),
                     thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
                 }
@@ -251,12 +251,12 @@ class ArchitectureView extends Component {
 
         galleryData.push({
             id: 'public-boms',
-            sectionTitle: 'Public Bills Of Materials',
+            sectionTitle: 'Public BOMs',
             galleryItems: this.state.architectures.map(arch => {
                 return {
                     title: arch.name,
-                    description: <Link to={`/bom/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
-                    icon: <Link to={`/bom/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
+                    description: <Link to={`/boms/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
+                    icon: <Link to={`/boms/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
                     afterContent: this.overflowComponent(arch, false),
                     thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
                 }

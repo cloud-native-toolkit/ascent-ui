@@ -168,12 +168,12 @@ class UIShell extends Component {
                       }
 
                       {this.state.user ?
-                        <Link to="/architectures">
-                          <SideNavMenuItem>Architectures</SideNavMenuItem>
+                        <Link to="/boms">
+                          <SideNavMenuItem>Bill of Materials</SideNavMenuItem>
                         </Link>
                         :
                         <SideNavMenuItem onClick={this.redirectToLogin} >
-                          Architectures
+                          Bill of Materials
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
