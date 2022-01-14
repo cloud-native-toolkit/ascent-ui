@@ -88,7 +88,7 @@ app.use(session({
   saveUninitialized: true,
   cookie: {
     // secure: true,
-    maxAge: 3600 * 1000 // Extend session duration to an hour
+    maxAge: 3600 * 2000 // Set session duration to 2 hours
   }
 }));
 app.use(passport.initialize());
