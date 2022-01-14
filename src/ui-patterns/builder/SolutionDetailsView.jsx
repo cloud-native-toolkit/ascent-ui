@@ -227,13 +227,13 @@ class SolutionDetailsView extends Component {
                                     <br />
                                     {data?.architectures?.length &&
                                         <div>
-                                            <h3>Architectures</h3>
+                                            <h3>BOMs</h3>
                                             <p>
                                                 <ul style={{listStyle:'inside'}}>
                                                     {
                                                         data?.architectures?.map((arch) => (
                                                             <li>
-                                                                <Link to={`/bom/${arch.arch_id}`}>
+                                                                <Link to={`/boms/${arch.arch_id}`}>
                                                                     {arch.name}
                                                                 </Link>
                                                             </li>

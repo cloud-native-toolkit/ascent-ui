@@ -44,7 +44,7 @@ class SolutionDetailsPane extends Component {
                                     {
                                         this.props.data?.architectures?.map((arch) => (
                                             <li>
-                                                <Link to={`/bom/${arch.arch_id}`}>
+                                                <Link to={`/boms/${arch.arch_id}`}>
                                                     {arch.name}
                                                 </Link>
                                             </li>

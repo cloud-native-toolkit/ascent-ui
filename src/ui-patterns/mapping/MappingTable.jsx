@@ -311,7 +311,7 @@ class MappingTable extends Component {
                                 </Tag>
                               : cell.info && cell.info.header === "component_id" && cell.value && cell.value.arch ?
                                 <Tag type="blue">
-                                  <Link to={"/bom/" + cell.value.val} >
+                                  <Link to={"/boms/" + cell.value.val} >
                                     {cell.value.val}
                                   </Link>
                                 </Tag>

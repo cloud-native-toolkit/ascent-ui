@@ -15,11 +15,28 @@ import ServiceComponent from "../../components/services/service";
 import MappingComponent from "../../components/mapping/Mapping";
 import OnBoardingComponent from "../../components/compliance/OnBoarding";
 
-function RenderBOM() {
+
+/**
+ * BOMs
+ */
+function BomDetails() {
     let { bomid } = useParams();
     return (
         <BillofMaterialsComponent data={bomid}></BillofMaterialsComponent>
     );
+}
+function Boms() {
+    let { path } = useRouteMatch();
+    return (
+        <Switch>
+            <Route exact path={path}>
+                <ArchitectureComponent />
+            </Route>
+            <Route path={`${path}/:bomid`}>
+                <BomDetails />
+            </Route>
+        </Switch>
+    )
 }
 
 /**
@@ -130,8 +147,7 @@ function Routes() {
         <Switch>
             <Route path="/" exact component={LandingPage} />
             <Route path="/" exact component={DetailsViewComponent} />
-            <Route path="/bom/:bomid" children={<RenderBOM></RenderBOM>}></Route>
-            <Route path="/architectures" component={ArchitectureComponent} />
+            <Route path="/boms" component={Boms} />
             <Route path="/solutions" component={Solutions} />
             <Route path="/mapping" component={MappingComponent} />
             <Route path="/controls" component={Controls} />

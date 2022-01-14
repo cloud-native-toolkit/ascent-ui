@@ -228,7 +228,7 @@ class SolutionModal extends Component {
                                     <SelectItem value={false} text="False" />
                                     <SelectItem value={true} text="True" />
                                 </Select>}
-                                {!this.props.isDuplicate && this.state.architectures ? <FormGroup legendText="Architectures" style={{ marginBottom: '1rem' }} ><MultiSelect.Filterable
+                                {!this.props.isDuplicate && this.state.architectures ? <FormGroup legendText="BOMs" style={{ marginBottom: '1rem' }} ><MultiSelect.Filterable
                                     id='ref-archs'
                                     items={this.state.architectures}
                                     itemToString={(item) => {return item.name}}

@@ -105,7 +105,7 @@ class LandingPage extends Component {
                       <InfoCard
                         heading="Reference Architectures"
                         body="Set up your compliant cloud environment using our pre-defined reference architectures for the IBM Cloud. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
-                        icon={this.state.user ? <Link to="/architectures" ><ModelBuilder32  /></Link> : <ModelBuilder32  />}
+                        icon={this.state.user ? <Link to="/boms" ><ModelBuilder32  /></Link> : <ModelBuilder32  />}
                       />
 
                       <InfoCard
