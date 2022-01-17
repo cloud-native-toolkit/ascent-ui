@@ -72,8 +72,9 @@ class ArchitectureModal extends Component {
                     this.props.toast("error", "Upload Error", res.body.error.message);
                 } else {
                     this.props.toast("success", "Success", `Diagrams upload successful!`);
+                    this.props.handleReload();
                 }
-                this.props.handleClose();
+                this.props.handleClose(true);
             });
         } else {
             this.props.handleClose();
@@ -134,6 +135,7 @@ class ArchitectureModal extends Component {
                 else {
                     this.props.toast("success", "Success", `Bill of Materials ${this.props.isDuplicate} duplicated!`);
                     this.props.handleClose();
+                    this.props.handleReload();
                 }
             })
             .catch((err) => {

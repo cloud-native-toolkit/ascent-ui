@@ -6,6 +6,9 @@ import {
 import NistTable from './NistTable';
 import { nistHeaders } from '../data/data';
 
+const b64 = require('../../utils/b64');
+
+const ASCENT_NIST_CACHE = "ASCENT_NIST_CACHE";
 
 class NistView extends Component {
     constructor(props) {
@@ -21,14 +24,35 @@ class NistView extends Component {
         this.filterTable = this.filterTable.bind(this);
     }
 
-    async componentDidMount() {
-        const jsonData = await this.props.nist.getNist();
-        const nistDetails = JSON.parse(JSON.stringify(jsonData).replace(/"number":/g, '"id":'));
+    async getNistControls() {
+        let nistDetails;
+        try {
+            const localData = sessionStorage.getItem(ASCENT_NIST_CACHE);
+            nistDetails = JSON.parse(b64.decode(JSON.parse(localData)?.data));
+        } catch (error) {
+            const jsonData = await this.props.nist.getNist();
+            nistDetails = JSON.parse(JSON.stringify(jsonData).replace(/"number":/g, '"id":'));
+            try {
+                sessionStorage.setItem(
+                    ASCENT_NIST_CACHE,
+                    JSON.stringify({
+                      data: b64.encode(JSON.stringify(nistDetails))
+                    })
+                )
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        
         this.setState({
             data: nistDetails,
             filterData: nistDetails,
             totalItems: nistDetails.length
         });
+    }
+
+    async componentDidMount() {
+        this.getNistControls();
     }
 
     async filterTable(searchValue) {

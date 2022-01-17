@@ -67,9 +67,7 @@ class ServiceModal extends Component {
         };
         if (this.props.isUpdate) {
             let jsonObject = JSON.parse(JSON.stringify(this.props.data).replace(/"id":/g, "\"_id\":"));
-            this.state = {
-                fields: jsonObject
-            }
+            this.state.fields = jsonObject;
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

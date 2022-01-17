@@ -30,7 +30,7 @@ class MappingView extends Component {
     this.setState({
       data: [],
       filterData: [],
-      totalItems: 0
+      totalItems: -1
     });
     let mappingDetails = await this.props.mapping.getMappings({ include: ['profile', "control", "service"] });
     mappingDetails = mappingDetails.sort((a, b) => b?.profile?.createdAt - a?.profile?.createdAt);
