@@ -9,7 +9,7 @@ import { ctrlsHeaders } from '../data/data';
 
 const b64 = require('../../utils/b64');
 
-const ASCENT_CONTROLS_CACHE = "ASCENT_CTRLS_CACHE"
+const ASCENT_CONTROLS_CACHE = "ASCENT_CTRLS_CACHE";
 
 class ControlsView extends Component {
     constructor(props) {

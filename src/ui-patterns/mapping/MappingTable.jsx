@@ -173,9 +173,10 @@ class MappingTable extends Component {
     const showValidateModal = this.state.showValidate;
     for (let index = 0; index < this.props.rows.length; index++) {
       let row = this.props.rows[index];
+      console.log(row?.service)
       row.component_id = {
         val: row.service_id || row.arch_id,
-        serviceName: row?.service?.service_id,
+        serviceName: row?.service?.fullname || row?.service?.service_id,
         arch: row.arch_id ? true : false,
         service: row.service_id ? true : false,
         details: {

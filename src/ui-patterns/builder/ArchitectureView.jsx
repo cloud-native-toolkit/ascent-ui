@@ -40,6 +40,7 @@ class ArchitectureView extends Component {
             archLoaded: false,
             architectures: [],
             userArchitectures: [],
+            galleryData: [],
             user: {
                 email: "example@example.com",
                 role: "editor"
@@ -54,6 +55,8 @@ class ArchitectureView extends Component {
             curArch: undefined,
             show: "public-archs"
         };
+        this.loadArchitectures = this.loadArchitectures.bind(this);
+        this.loadGallery = this.loadGallery.bind(this);
         this.showArchModal = this.showArchModal.bind(this);
         this.hideArchModal = this.hideArchModal.bind(this);
         this.addNotification = this.addNotification.bind(this);
@@ -75,6 +78,38 @@ class ArchitectureView extends Component {
         const imgIx = images?.findIndex(i => i.archid === archid);
         if (imgIx >= 0) images[imgIx].status = 'error';
         this.setState({ images: images });
+    }
+
+    async loadGallery() {
+        const galleryData = [];
+        if (this.state.userArchitectures?.length > 0) galleryData.push({
+            id: 'user-boms',
+            sectionTitle: 'Your BOMs',
+            isOpen: this.state.userArchitectures?.length>0,
+            galleryItems: this.state.userArchitectures.map(arch => {
+                return {
+                    title: arch.name,
+                    description: <Link to={`/boms/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
+                    icon: <Link to={`/boms/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
+                    afterContent: this.overflowComponent(arch, true),
+                    thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
+                }
+            }),
+        });
+        galleryData.push({
+            id: 'public-boms',
+            sectionTitle: 'Public BOMs',
+            galleryItems: this.state.architectures.map(arch => {
+                return {
+                    title: arch.name,
+                    description: <Link to={`/boms/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
+                    icon: <Link to={`/boms/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
+                    afterContent: this.overflowComponent(arch, false),
+                    thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
+                }
+            }),
+        });
+        this.setState({ galleryData: galleryData });
     }
 
     async loadArchitectures() {
@@ -102,7 +137,7 @@ class ArchitectureView extends Component {
                             architectures: architectures,
                             archLoaded: true,
                             iascableRelease: iascableRelease
-                        });
+                        }, () =>  this.loadGallery());
                     });
             });
 
@@ -123,7 +158,6 @@ class ArchitectureView extends Component {
             isImport: false,
             isDuplicate: false
         });
-        this.loadArchitectures();
     }
 
     async deleteArchitecture() {
@@ -232,37 +266,6 @@ class ArchitectureView extends Component {
 
     render() {
 
-        const galleryData = [];
-
-        if (this.state.userArchitectures?.length > 0) galleryData.push({
-            id: 'user-boms',
-            sectionTitle: 'Your BOMs',
-            isOpen: this.state.userArchitectures?.length>0,
-            galleryItems: this.state.userArchitectures.map(arch => {
-                return {
-                    title: arch.name,
-                    description: <Link to={`/boms/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
-                    icon: <Link to={`/boms/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
-                    afterContent: this.overflowComponent(arch, true),
-                    thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
-                }
-            }),
-        });
-
-        galleryData.push({
-            id: 'public-boms',
-            sectionTitle: 'Public BOMs',
-            galleryItems: this.state.architectures.map(arch => {
-                return {
-                    title: arch.name,
-                    description: <Link to={`/boms/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
-                    icon: <Link to={`/boms/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
-                    afterContent: this.overflowComponent(arch, false),
-                    thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
-                }
-            }),
-        });
-
         return (
 
             <div className="bx--grid bills-of-materials" >
@@ -281,6 +284,7 @@ class ArchitectureView extends Component {
                         architectureService={this.props.archService}
                         isImport={this.state.isImport}
                         isDuplicate={this.state.isDuplicate}
+                        handleReload={this.loadArchitectures}
                     />
                 }
 
@@ -324,7 +328,7 @@ class ArchitectureView extends Component {
                         <StatefulTileGallery
                             hasSearch
                             hasSwitcher
-                            galleryData={galleryData}
+                            galleryData={this.state.galleryData}
                         />
                     :
                         <SearchSkeleton />
