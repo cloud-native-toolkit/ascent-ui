@@ -7,6 +7,9 @@ import ControlsFilterPane from './ControlsFilterPane';
 import ControlsTable from './ControlsTable';
 import { ctrlsHeaders } from '../data/data';
 
+const b64 = require('../../utils/b64');
+
+const ASCENT_CONTROLS_CACHE = "ASCENT_CTRLS_CACHE"
 
 class ControlsView extends Component {
     constructor(props) {
@@ -27,15 +30,34 @@ class ControlsView extends Component {
         this.hideFilterPane = this.hideFilterPane.bind(this);
     }
 
-    async componentDidMount() {
-        const jsonData = await this.props.controls.getControls();
+    async getControls() {
+        let jsonData;
+        try {
+            const localData = sessionStorage.getItem(ASCENT_CONTROLS_CACHE);
+            jsonData = JSON.parse(b64.decode(JSON.parse(localData)?.data));
+        } catch (error) {
+            jsonData = await this.props.controls.getControls();
+            try {
+                sessionStorage.setItem(
+                    ASCENT_CONTROLS_CACHE,
+                    JSON.stringify({
+                      data: b64.encode(JSON.stringify(jsonData))
+                    })
+                )
+            } catch (error) {
+                console.log(error);
+            }
+        }
         const filterData = jsonData.filter(elt => elt.control_item === false);
-        console.log(filterData)
         this.setState({
             data: jsonData,
             filterData: filterData,
             totalItems: filterData.length
         });
+    }
+
+    async componentDidMount() {
+        this.getControls();
     }
 
     async filterTable(event) {
