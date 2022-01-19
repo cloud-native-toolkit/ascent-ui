@@ -6,7 +6,6 @@
 }
 
 .landing-page__banner {
-  padding-left: 18em;
   padding-top: $spacing-05;
   padding-bottom: $spacing-07 * 4;
   @include landing-page-background;
@@ -22,7 +21,6 @@
 
 .landing-page__tab-content {
   padding-bottom: $layout-05;
-  padding-left : 18em;
   padding-top  : 0;
 }
 
