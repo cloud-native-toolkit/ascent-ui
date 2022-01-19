@@ -99,7 +99,7 @@ class ArchitectureView extends Component {
         galleryData.push({
             id: 'public-boms',
             sectionTitle: 'Public BOMs',
-            galleryItems: this.state.architectures.map(arch => {
+            galleryItems: this.state.architectures?.map(arch => {
                 return {
                     title: arch.name,
                     description: <Link to={`/boms/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
