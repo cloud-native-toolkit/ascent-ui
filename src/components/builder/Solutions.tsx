@@ -17,9 +17,7 @@ class SolutionsComponent extends Component<any, any> {
 
     render() {
         return (
-            <div className="pattern-container">
-                <SolutionsView solutionService={this.solutionsDataAPI} />
-            </div>
+            <SolutionsView solutionService={this.solutionsDataAPI} />
         );
     }
 }

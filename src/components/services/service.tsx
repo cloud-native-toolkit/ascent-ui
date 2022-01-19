@@ -23,9 +23,7 @@ class ServiceComponent extends Component<any, any> {
 
     render() {
         return (
-            <div className="pattern-container">
-                <ServiceDataView service={this.serviceDataAPI} automationService={this.automationApi} />
-            </div>
+            <ServiceDataView service={this.serviceDataAPI} automationService={this.automationApi} />
         );
     }
 }

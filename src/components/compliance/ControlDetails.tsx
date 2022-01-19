@@ -38,9 +38,7 @@ class ControlDetailsComponent extends Component<any, any> {
 
     render() {
         return (
-            <div className="pattern-container">
-                <ControlDetailsView nist={this.nistDataAPI} mapping={this.mappingDataAPI} arch={this.archDataAPI} service={this.servicesDataAPI} controls={this.controlsDataAPI} controlId={this.props.data} />
-            </div>
+            <ControlDetailsView nist={this.nistDataAPI} mapping={this.mappingDataAPI} arch={this.archDataAPI} service={this.servicesDataAPI} controls={this.controlsDataAPI} controlId={this.props.data} />
         );
     }
 }

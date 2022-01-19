@@ -27,6 +27,7 @@ import ControlDetails from './ControlDetails';
 import {
   mappingHeaders as headers
 } from '../data/data';
+import NotFound from "../../components/NotFound";
 
 class ControlDetailsView extends Component {
   constructor(props) {
@@ -56,14 +57,20 @@ class ControlDetailsView extends Component {
       include: ['controlDetails', 'nist', 'services', 'architectures']
     }
     const controlData = await this.props.controls.getControlsDetails(controlId, filter);
-    if (controlData?.controlDetails?.description) controlData.controlDetails.description = controlData.controlDetails.description.replaceAll(/\n\n([a-z]\))/gi, '\n\n**$1**');
-    if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#### Part', '\n\n&nbsp;  \n#### Part');
-    if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#####', '\n\n&nbsp;  \n#####');
-    const nistData = controlData.nist;
-    this.setState({
-      data: controlData,
-      nistData: nistData
-    });
+    if (controlData.id) {
+      if (controlData?.controlDetails?.description) controlData.controlDetails.description = controlData.controlDetails.description.replaceAll(/\n\n([a-z]\))/gi, '\n\n**$1**');
+      if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#### Part', '\n\n&nbsp;  \n#### Part');
+      if (controlData?.controlDetails?.implementation) controlData.controlDetails.implementation = controlData.controlDetails.implementation.replaceAll('\n\n#####', '\n\n&nbsp;  \n#####');
+      const nistData = controlData.nist;
+      this.setState({
+        data: controlData,
+        nistData: nistData
+      });
+    } else {
+      this.setState({
+        error: controlData
+      });
+    }
   }
 
   async loadTable() {
@@ -166,6 +173,9 @@ class ControlDetailsView extends Component {
     const mappingData = this.state.filterData;
 
     return (
+      this.state.error ?
+        <NotFound />
+      :
       <>
         <div class='notif'>
           {this.state.notifications.length !== 0 && this.renderNotifications()}

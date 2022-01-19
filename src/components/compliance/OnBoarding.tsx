@@ -18,9 +18,7 @@ class OnBoardingComponent extends Component<any, any> {
 
     render() {
         return (
-            <div className="pattern-container">
-                <OnBoardingView controls={this.controlsDataAPI} />
-            </div>
+            <OnBoardingView controls={this.controlsDataAPI} />
         );
     }
 }

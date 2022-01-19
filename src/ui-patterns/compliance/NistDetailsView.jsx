@@ -14,6 +14,7 @@ import {
 import {
   Link
 } from "react-router-dom";
+import NotFound from "../../components/NotFound";
 
 class NistDetailsView extends Component {
   constructor(props) {
@@ -24,11 +25,17 @@ class NistDetailsView extends Component {
     };
   }
   async loadNist(number) {
-    const nistData = await this.props.nist.getNistDetails(number);
-    this.setState({
-      nistData: nistData,
-      number: this.props.number
-    });
+    try {
+      const nistData = await this.props.nist.getNistDetails(number);
+      this.setState({
+        nistData: nistData,
+        number: this.props.number
+      });
+    } catch (error) {
+      this.setState({
+        error: error
+      });
+    }
   }
   async componentDidMount() {
     this.loadNist(this.props.number);
@@ -187,6 +194,9 @@ class NistDetailsView extends Component {
       }
     }
     return (
+      this.state.error ?
+        <NotFound />
+      :
         <div className="bx--grid">
           {breadcrumb}
           {title}

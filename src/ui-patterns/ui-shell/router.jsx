@@ -1,19 +1,27 @@
-import React from "react";
-import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
-import BillofMaterialsComponent from "../../components/bom/BillofMaterials";
-import ArchitectureComponent from "../../components/builder/Architecture";
-import SolutionsComponent from "../../components/builder/Solutions";
-import SolutionDetailsComponent from "../../components/builder/SolutionDetails";
-import ControlsComponent from "../../components/compliance/Controls";
-import NistComponent from "../../components/compliance/Nist";
-import ControlDetailsComponent from "../../components/compliance/ControlDetails";
-import NistDetailsComponent from "../../components/compliance/NistDetails";
-import ServiceDetailsComponent from "../../components/services/ServiceDetails";
-import DetailsViewComponent from "../../components/overview/DetailsView";
-import LandingPage from "../LandingPage";
-import ServiceComponent from "../../components/services/service";
-import MappingComponent from "../../components/mapping/Mapping";
-import OnBoardingComponent from "../../components/compliance/OnBoarding";
+import React from 'react';
+
+import {
+    Route,
+    Switch,
+    useParams,
+    useRouteMatch,
+} from 'react-router-dom';
+
+import BillofMaterialsComponent from '../../components/bom/BillofMaterials';
+import ArchitectureComponent from '../../components/builder/Architecture';
+import SolutionsComponent from '../../components/builder/Solutions';
+import SolutionDetailsComponent from '../../components/builder/SolutionDetails';
+import ControlsComponent from '../../components/compliance/Controls';
+import NistComponent from '../../components/compliance/Nist';
+import ControlDetailsComponent from '../../components/compliance/ControlDetails';
+import NistDetailsComponent from '../../components/compliance/NistDetails';
+import ServiceDetailsComponent from '../../components/services/ServiceDetails';
+import DetailsViewComponent from '../../components/overview/DetailsView';
+import LandingPage from '../LandingPage';
+import ServiceComponent from '../../components/services/service';
+import MappingComponent from '../../components/mapping/Mapping';
+import OnBoardingComponent from '../../components/compliance/OnBoarding';
+import NotFound from '../../components/NotFound';
 
 
 /**
@@ -141,21 +149,23 @@ function Solutions() {
     )
 }
 
-
 function Routes() {
     return (
-        <Switch>
-            <Route path="/" exact component={LandingPage} />
-            <Route path="/" exact component={DetailsViewComponent} />
-            <Route path="/boms" component={Boms} />
-            <Route path="/solutions" component={Solutions} />
-            <Route path="/mapping" component={MappingComponent} />
-            <Route path="/controls" component={Controls} />
-            <Route path="/onboarding" component={OnBoardingComponent} />
-            <Route path="/nists" component={Nists} />
-            <Route path="/services" component={Services} />
-            <Route path="/docs" exact component={DetailsViewComponent} />
-        </Switch>
+        <div className='pattern-container'>
+            <Switch>
+                <Route path='/' exact component={LandingPage} />
+                <Route path='/' exact component={DetailsViewComponent} />
+                <Route path='/boms' component={Boms} />
+                <Route path='/solutions' component={Solutions} />
+                <Route path='/mapping' component={MappingComponent} />
+                <Route path='/controls' component={Controls} />
+                <Route path='/onboarding' component={OnBoardingComponent} />
+                <Route path='/nists' component={Nists} />
+                <Route path='/services' component={Services} />
+                <Route path='/docs' exact component={DetailsViewComponent} />
+                <Route path='*' component={NotFound} />
+            </Switch>
+        </div>
     )
 }
 

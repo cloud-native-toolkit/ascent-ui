@@ -32,6 +32,7 @@ import { bomHeader } from '../data/data';
 import ValidateModal from "../ValidateModal"
 
 import { ToastNotification } from "carbon-components-react";
+import NotFound from "../../components/NotFound";
 
 class BillofMaterialsView extends Component {
 
@@ -76,47 +77,53 @@ class BillofMaterialsView extends Component {
         this.downloadReport = this.downloadReport.bind(this);
     }
     async loadTable() {
-        const arch = await this.props.archService.getArchitectureById(this.props.archId);
-        const jsonData = await this.props.bomService.getBOM(this.props.archId, {"include":["service"]});
-        const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/"_id":/g, "\"id\":"));
-        let services = await this.props.bomService.getServices();
-        // Reformat data to augment BOM details with service details
-        const conflicts = [];
-        for (let index = 0; index < bomDetails.length; index++) {
-            let row = bomDetails[index];
-            row.service = services?.find(s => s.service_id === row.service_id);
-            if (!row.service) conflicts.push(row.service_id);
-            row.description = row.service?.description;
-            row.group = row.service?.group;
-            row.type = row.service?.type;
-            row.provider = row.service?.cloudProvider || row.service?.softwareProvider || row.service?.provider;
-            row.ibm_service = {
-                ibm_service: row.service?.displayName || row.service?.fullname || row.service_id,
-                service_id: row.service_id
-            };
-        }
-        if (conflicts.length > 0) {
-            this.addNotification('error', 'Conflicts', `Services ${conflicts.join(', ')} could not be found in automation catalog, please update this Bill of Material.`)
-        }
-        this.props.bomService.getBomComposite(this.props.archId).then((res) => { 
-            if(res && res.length) {
-                let compositeData = {};
-                for (let ix in res) {
-                    compositeData[res[ix]._id] = res[ix];
-                }
-                this.setState({
-                    compositeData: compositeData
-                })
+        try {
+            const arch = await this.props.archService.getArchitectureById(this.props.archId);
+            const jsonData = await this.props.bomService.getBOM(this.props.archId, {"include":["service"]});
+            const bomDetails = JSON.parse(JSON.stringify(jsonData).replace(/"_id":/g, "\"id\":"));
+            let services = await this.props.bomService.getServices();
+            // Reformat data to augment BOM details with service details
+            const conflicts = [];
+            for (let index = 0; index < bomDetails.length; index++) {
+                let row = bomDetails[index];
+                row.service = services?.find(s => s.service_id === row.service_id);
+                if (!row.service) conflicts.push(row.service_id);
+                row.description = row.service?.description;
+                row.group = row.service?.group;
+                row.type = row.service?.type;
+                row.provider = row.service?.cloudProvider || row.service?.softwareProvider || row.service?.provider;
+                row.ibm_service = {
+                    ibm_service: row.service?.displayName || row.service?.fullname || row.service_id,
+                    service_id: row.service_id
+                };
             }
-        });
-        this.setState({
-            archid: this.props.archId,
-            data: bomDetails,
-            filterData: bomDetails,
-            architecture: arch,
-            totalItems: bomDetails.length,
-            services: services
-        });
+            if (conflicts.length > 0) {
+                this.addNotification('error', 'Conflicts', `Services ${conflicts.join(', ')} could not be found in automation catalog, please update this Bill of Material.`)
+            }
+            this.props.bomService.getBomComposite(this.props.archId).then((res) => { 
+                if(res && res.length) {
+                    let compositeData = {};
+                    for (let ix in res) {
+                        compositeData[res[ix]._id] = res[ix];
+                    }
+                    this.setState({
+                        compositeData: compositeData
+                    })
+                }
+            });
+            this.setState({
+                archid: this.props.archId,
+                data: bomDetails,
+                filterData: bomDetails,
+                architecture: arch,
+                totalItems: bomDetails.length,
+                services: services
+            });
+        } catch (error) {
+            this.setState({
+                error: error
+            });
+        }
     }
     async componentDidMount() {
         fetch('/userDetails')
@@ -674,6 +681,8 @@ class BillofMaterialsView extends Component {
                         <ServiceDetailsPane data={this.state.dataDetails} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
                     </div>
                 </>
+            : this.state.error ?
+                <NotFound />
             :
                 <>
                     <BreadcrumbSkeleton />

@@ -7,9 +7,7 @@ class DetailsViewComponent extends Component<any, any> {
     }
     render() {
         return (
-            <div className="pattern-container">
-                <OverView />
-            </div>
+            <OverView />
         );
     }
 }
