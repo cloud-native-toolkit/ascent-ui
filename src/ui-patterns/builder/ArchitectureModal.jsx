@@ -78,6 +78,7 @@ class ArchitectureModal extends Component {
             });
         } else {
             this.props.handleClose();
+            this.props.handleReload();
         }
     }
 
@@ -147,7 +148,6 @@ class ArchitectureModal extends Component {
                     this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                 } else {
                     this.props.toast("success", "Success", `Bill of Materials ${res.arch_id} successfully added!`);
-                    
                     this.uploadDiagrams(res.arch_id);
                 }
             });

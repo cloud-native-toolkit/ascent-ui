@@ -463,8 +463,8 @@ class BillofMaterialsView extends Component {
                                     {
                                         this.state.architecture && this.state.architecture.name
                                     }
-                                    {this.state.architecture && this.state.architecture.confidential === "TRUE" && <Tag type="red" style={{"margin-left": "10px"}}>Confidential</Tag>}
-                                    {this.state.architecture && this.state.architecture.production_ready === "TRUE" && <Tag type="green" style={{"margin-left": "5px"}}>Production Ready</Tag> }
+                                    {this.state.architecture?.confidential === "TRUE" && <Tag type="red" style={{"margin-left": "10px"}}>Confidential</Tag>}
+                                    {this.state.architecture?.production_ready === "TRUE" && <Tag type="green" style={{"margin-left": "5px"}}>Production Ready</Tag> }
                                 </h2>
     
                                 <br />
@@ -473,7 +473,7 @@ class BillofMaterialsView extends Component {
                                     onChange={(e) => {this.setState({showContent:e.name})}} >
                                     <Switch name="arch-data" text="Reference Architecture Details" />
                                     <Switch name="arch-diagram" text="Reference Architecture Diagram" />
-                                    {this.state.architecture && this.state.architecture.automation_variables && <Switch name="automation-variables" text="Automation Variables" />}
+                                    {this.state.architecture?.automation_variables ? <Switch name="automation-variables" text="Automation Variables" /> : <></>}
                                 </ContentSwitcher>
                                 <br />
                             </div>
