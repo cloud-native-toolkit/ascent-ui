@@ -25,15 +25,15 @@ class ValidateModal extends Component {
                 <Modal
                     danger={this.props.danger || false}
                     open={this.props.show}
-                    modalHeading={this.props.heading || "Validate"}
-                    primaryButtonText={this.props.submitText || "Yes"}
-                    primaryButtonDisabled={this.props.inputRequired && !this.state.inputMatch}
+                    modalHeading={this.props.heading || "Validate"}
+                    primaryButtonText={this.props.submitText || "Yes"}
+                    primaryButtonDisabled={this.props.inputRequired && !this.state.inputMatch}
                     secondaryButtonText="Cancel"
                     onRequestClose={this.props.onClose}
                     onRequestSubmit={this.props.onRequestSubmit}
                     onSecondarySubmit={this.props.onSecondarySubmit}>
                     <p style={{ marginBottom: '1rem' }}>
-                        {this.props.message || "This action cannot be undone. Are you sure?"}
+                        {this.props.message || "This action cannot be undone. Are you sure?"}
                     </p>
                     {this.props.inputRequired && 
                         <TextInput

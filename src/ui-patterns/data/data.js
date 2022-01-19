@@ -251,8 +251,8 @@ export const controlFamilies = [
     },
     {
         attr: 'family',
-        label: 'Awareness & Training (AT)​',
-        val: 'Awareness & Training (AT)​'
+        label: 'Awareness & Training (AT)​',
+        val: 'Awareness & Training (AT)​'
     },
     {
         attr: 'family',
@@ -271,8 +271,8 @@ export const controlFamilies = [
     },
     {
         attr: 'family',
-        label: 'Enterprise System & Services Acquisition (ESA)​',
-        val: 'Enterprise System & Services Acquisition (ESA)​'
+        label: 'Enterprise System & Services Acquisition (ESA)​',
+        val: 'Enterprise System & Services Acquisition (ESA)​'
     },
     {
         attr: 'family',

@@ -36,7 +36,7 @@ export class BillofMaterialsService implements BillofMaterialsApi {
 
     async getBOM(archiId: string, filter:any): Promise<BillofMaterialsDataModel[]> {
         let url = this.baseUrl + archiId + '/boms';
-        if (filter) {
+        if (filter) {
             url = url + "?filter=" + encodeURIComponent(JSON.stringify(filter));
         }
         return superagent

@@ -123,7 +123,7 @@ class BillofMaterialsView extends Component {
         .then(res => res.json())
         .then(user => {
             if (user.name) {
-                this.setState({ user: user || undefined });
+                this.setState({ user: user || undefined });
             } else {
                 // Redirect to login page
                 window.location.href = "/login";
@@ -327,7 +327,7 @@ class BillofMaterialsView extends Component {
             {
               message: message || "Notification",
               detail: detail || "Notification text",
-              severity: type || "info"
+              severity: type || "info"
             }
           ]
         }));
@@ -375,7 +375,7 @@ class BillofMaterialsView extends Component {
                     let url = window.URL.createObjectURL(blob);
                     let a = document.createElement('a');
                     a.href = url;
-                    a.download = `${((this.state.architecture && this.state.architecture.name) || this.props.archId).toLowerCase().replace(/ /gi, '-')}-compliance-report.pdf`;;
+                    a.download = `${((this.state.architecture && this.state.architecture.name) || this.props.archId).toLowerCase().replace(/ /gi, '-')}-compliance-report.pdf`;;
                     a.click();
                 });
             } else {

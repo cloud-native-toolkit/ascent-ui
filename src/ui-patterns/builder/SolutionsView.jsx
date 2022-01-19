@@ -65,7 +65,7 @@ class SolutionsView extends Component {
             .then(res => res.json())
             .then(user => {
                 if (user.name) {
-                    this.setState({ user: user || undefined });
+                    this.setState({ user: user || undefined });
                     this.loadSolutions();
                 } else {
                     // Redirect to login page
@@ -146,7 +146,7 @@ class SolutionsView extends Component {
             {
               message: message || "Notification",
               detail: detail || "Notification text",
-              severity: type || "info"
+              severity: type || "info"
             }
           ]
         }));

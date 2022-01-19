@@ -60,7 +60,7 @@ class SolutionDetailsView extends Component {
             .then(res => res.json())
             .then(user => {
                 if (user.name) {
-                    this.setState({ user: user || undefined });
+                    this.setState({ user: user || undefined });
                     this.loadSolution();
                 } else {
                     // Redirect to login page

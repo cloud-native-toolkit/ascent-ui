@@ -54,7 +54,7 @@ class MappingView extends Component {
 
   async filterTable(searchValue) {
       if (searchValue) {
-          const filterData = this.state.data.filter(elt => elt?.scc_profile?.includes(searchValue) || elt?.control_id?.includes(searchValue) || elt?.service_id?.includes(searchValue) || elt?.service?.ibm_catalog_service?.includes(searchValue));
+          const filterData = this.state.data.filter(elt => elt?.scc_profile?.includes(searchValue) || elt?.control_id?.includes(searchValue) || elt?.service_id?.includes(searchValue) || elt?.service?.ibm_catalog_service?.includes(searchValue));
           this.setState({
               filterData: filterData,
               firstRowIndex: 0,
@@ -78,7 +78,7 @@ class MappingView extends Component {
         {
           message: message || "Notification",
           detail: detail || "Notification text",
-          severity: type || "info"
+          severity: type || "info"
         }
       ]
     }));
