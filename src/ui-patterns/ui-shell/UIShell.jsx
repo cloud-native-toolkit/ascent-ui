@@ -96,9 +96,7 @@ class UIShell extends Component {
           <BuilderHeader/>
           <HeaderContainer
             render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-              <Header aria-label="IBM Ecosystem Labs" onClick={
-                isSideNavExpanded === true ? onClickSideNavExpand : null
-              }>
+              <Header aria-label="IBM Ecosystem Labs">
                 <SkipToContent />
                 <HeaderMenuButton
                   aria-label="Open menu"

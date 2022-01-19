@@ -1,6 +1,12 @@
+
 .pattern-container {
   text-align: left;
   margin-left:18em;
+}
+@media (max-width: 65.98rem) {
+  .pattern-container {
+    margin-left:0;
+  }
 }
 .display-form-item {
   margin: 20px 0 20px 0;
