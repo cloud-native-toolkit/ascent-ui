@@ -133,11 +133,12 @@ passport.serializeUser(function(user, cb) {
 passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
 });
-app.get(CALLBACK_URL, passport.authenticate(AUTH_PROVIDER), (req, res, next) => {
+const redirectAfterLogin = (req, res, next) => {
   if (req.session) console.log(req.session.redirectUrl);
   res.redirect(req.session?.redirectUrl ? req.session.redirectUrl : '/');
-});
-app.get(LOGIN_URL, passport.authenticate(AUTH_PROVIDER));
+}
+app.get(CALLBACK_URL, passport.authenticate(AUTH_PROVIDER), redirectAfterLogin);
+app.get(LOGIN_URL, passport.authenticate(AUTH_PROVIDER), redirectAfterLogin);
 app.get(LOGOUT_URL, function(req, res, next) {
   try {
     req.session.destroy();
