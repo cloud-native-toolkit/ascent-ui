@@ -39,8 +39,8 @@ class ImportProfileModal extends Component {
           <Modal
             danger={this.props.danger || false}
             open={this.props.show}
-            modalHeading={this.props.heading || "Import Profile"}
-            primaryButtonText={this.props.submitText || "Yes"}
+            modalHeading={this.props.heading || "Import Profile"}
+            primaryButtonText={this.props.submitText || "Yes"}
             secondaryButtonText="Cancel"
             onRequestClose={this.props.onClose}
             onRequestSubmit={this.uploadProfile}

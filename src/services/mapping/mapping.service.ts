@@ -14,7 +14,7 @@ export class MappingData implements MappingDataApi {
 
     async getMappings(filter: any): Promise<ControlMappingModel[]> {
         let url = this.baseUrl;
-        if (filter) {
+        if (filter) {
             url = url + "?filter=" + encodeURIComponent(JSON.stringify(filter));
         }
         return superagent
@@ -78,7 +78,7 @@ export class MappingData implements MappingDataApi {
     }
     async getProfiles(filter: any): Promise<ProfileModel[]> {
         let url = "/api/mapping/profiles";
-        if (filter) {
+        if (filter) {
             url = url + "?filter=" + encodeURIComponent(JSON.stringify(filter));
         }
         return superagent

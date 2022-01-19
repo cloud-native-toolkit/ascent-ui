@@ -99,7 +99,7 @@ class ServiceDataView extends Component {
         .then(res => res.json())
         .then(user => {
             if (user.name) {
-                this.setState({ user: user || undefined });
+                this.setState({ user: user || undefined });
             } else {
                 // Redirect to login page
                 window.location.href = "/login";
@@ -203,7 +203,7 @@ class ServiceDataView extends Component {
             {
               message: message || "Notification",
               detail: detail || "Notification text",
-              severity: type || "info"
+              severity: type || "info"
             }
           ]
         }));

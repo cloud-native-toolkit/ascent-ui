@@ -128,7 +128,7 @@ class OnBoardingView extends Component {
             {
               message: message || "Notification",
               detail: detail || "Notification text",
-              severity: type || "info"
+              severity: type || "info"
             }
           ]
         }));

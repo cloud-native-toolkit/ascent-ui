@@ -69,7 +69,7 @@ class ControlsView extends Component {
         else filterData = this.state.data.filter(elt => !elt?.control_item);
         const selectedFilters = selFilters.filter(elt => elt.attr !== 'control_item' && elt.attr !== 'and');
         if (event?.target || searchValue) {
-            filterData = filterData.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.family?.includes(searchValue) || elt?.controlDetails?.focus_area?.includes(searchValue));
+            filterData = filterData.filter(elt => elt?.id?.includes(searchValue) || elt?.name?.includes(searchValue) || elt?.family?.includes(searchValue) || elt?.controlDetails?.focus_area?.includes(searchValue));
         }
         if (selectedFilters.length) {
             filterData = filterData.filter(elt => {

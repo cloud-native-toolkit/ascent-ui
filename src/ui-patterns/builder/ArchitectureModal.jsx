@@ -56,7 +56,7 @@ class ArchitectureModal extends Component {
         // Upload Diagrams
         const drawio = this.state.diagramDrawio;
         const png = this.state.diagramPng;
-        if (drawio || png) {
+        if (drawio || png) {
             this.props.toast("info", "Uploading Diagram", `Uploading diagrams for architecture ${arch_id}.`);
             console.log(drawio);
             console.log(png);
