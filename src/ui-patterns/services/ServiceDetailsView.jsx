@@ -19,6 +19,7 @@ import {
 } from "carbon-components-react";
 
 import ServiceDetails from './ServiceDetails';
+import NotFound from "../../components/NotFound";
 
 class ServiceDetailsView extends Component {
   constructor(props) {
@@ -80,23 +81,29 @@ class ServiceDetailsView extends Component {
   }
 
   async componentDidMount() {
-    const serviceData = await this.props.service.getServiceDetails(this.props.serviceId);
-    let catalog = await this.props.service.getServiceCatalog(this.props.serviceId);
-    serviceData.service = serviceData;
-    serviceData.catalog = catalog;
-    this.setState({
-      data: serviceData
-    });
-    this.props.automationService.getAutomation(serviceData.cloud_automation_id).then((res) => {
-      if (res && res.name) {
-        let automationData = this.state.automationData;
-        automationData = res;
-        this.setState({
-          automationData: automationData
-        });
-      }
-    })
-    this.loadTable();
+    try {
+      const serviceData = await this.props.service.getServiceDetails(this.props.serviceId);
+      let catalog = await this.props.service.getServiceCatalog(this.props.serviceId);
+      serviceData.service = serviceData;
+      serviceData.catalog = catalog;
+      this.setState({
+        data: serviceData
+      });
+      this.props.automationService.getAutomation(serviceData.cloud_automation_id).then((res) => {
+        if (res && res.name) {
+          let automationData = this.state.automationData;
+          automationData = res;
+          this.setState({
+            automationData: automationData
+          });
+        }
+      })
+      this.loadTable();
+    } catch (error) {
+      this.setState({
+        error: error
+      })
+    }
   }
 
   /** Notifications */
@@ -177,6 +184,9 @@ class ServiceDetailsView extends Component {
       </div>;
     }
     return (
+      this.state.error ?
+        <NotFound />
+      :
       <>
         <div class='notif'>
           {this.state.notifications.length !== 0 && this.renderNotifications()}

@@ -18,9 +18,7 @@ class NistDetailsComponent extends Component<any, any> {
 
     render() {
         return (
-            <div className="pattern-container">
-                <NistDetailsView nist={this.nistDataAPI} number={this.props.data} />
-            </div>
+            <NistDetailsView nist={this.nistDataAPI} number={this.props.data} />
         );
     }
 }

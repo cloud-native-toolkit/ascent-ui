@@ -4,11 +4,9 @@ import SolutionDetailsView from "../../ui-patterns/builder/SolutionDetailsView";
 class SolutionDetailsComponent extends Component<any, any> {
     render() {
         return (
-            <div className="pattern-container">
-                <SolutionDetailsView 
-                    solId={this.props.data}
-                />
-            </div>
+            <SolutionDetailsView 
+                solId={this.props.data}
+            />
         );
     }
 }

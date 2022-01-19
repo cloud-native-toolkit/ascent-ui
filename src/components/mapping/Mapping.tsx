@@ -33,9 +33,7 @@ class MappingComponent extends Component<any, any> {
 
     render() {
         return (
-            <div className="pattern-container">
-                <MappingView mapping={this.mappingDataAPI} controls={this.controlsDataAPI} services={this.servicesDataAPI} arch={this.archDataAPI} />
-            </div>
+            <MappingView mapping={this.mappingDataAPI} controls={this.controlsDataAPI} services={this.servicesDataAPI} arch={this.archDataAPI} />
         );
     }
 }

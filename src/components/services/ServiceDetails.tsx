@@ -37,16 +37,14 @@ class ServiceDetailsComponent extends Component<any, any> {
 
     render() {
         return (
-            <div className="pattern-container">
-                <ServiceDetailsView 
-                    mapping={this.mappingDataAPI}
-                    arch={this.archDataAPI}
-                    service={this.servicesDataAPI}
-                    controls={this.controlsDataAPI}
-                    automationService={this.automationApi}
-                    serviceId={this.props.data}
-                />
-            </div>
+            <ServiceDetailsView 
+                mapping={this.mappingDataAPI}
+                arch={this.archDataAPI}
+                service={this.servicesDataAPI}
+                controls={this.controlsDataAPI}
+                automationService={this.automationApi}
+                serviceId={this.props.data}
+            />
         );
     }
 }

@@ -25,11 +25,7 @@ class BillofMaterialsComponent extends Component<any, any> {
     }
     render() {
         return (
-
-            <div className="pattern-container">
-                <BillofMaterialsView archService={this.architectureDataApi} automationService={this.automationApi} bomService={this.billofMaterialsApi} archId={this.props.data} />
-            </div>
-
+            <BillofMaterialsView archService={this.architectureDataApi} automationService={this.automationApi} bomService={this.billofMaterialsApi} archId={this.props.data} />
         );
     }
 }

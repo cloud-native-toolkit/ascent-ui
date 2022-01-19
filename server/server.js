@@ -134,11 +134,10 @@ passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
 });
 app.get(CALLBACK_URL, passport.authenticate(AUTH_PROVIDER), (req, res, next) => {
-  res.redirect("/");
+  if (req.session) console.log(req.session.redirectUrl);
+  res.redirect(req.session?.redirectUrl ? req.session.redirectUrl : '/');
 });
-app.get(LOGIN_URL, passport.authenticate(AUTH_PROVIDER), function(req, res, next) {
-  res.redirect("/");
-});
+app.get(LOGIN_URL, passport.authenticate(AUTH_PROVIDER));
 app.get(LOGOUT_URL, function(req, res, next) {
   try {
     req.session.destroy();
@@ -203,17 +202,6 @@ app.get('/userDetails', (req, res) => {
 })
 app.use(express.static(path.join(__dirname, "../build")));
 
-// Redirect to home when manually entering know URLs
-app.get('/bom*', (req, res) => {res.redirect('/');});
-app.get('/architectures*', (req, res) => {res.redirect('/');});
-app.get('/solutions', (req, res) => {res.redirect('/');});
-app.get('/mapping*', (req, res) => {res.redirect('/');});
-app.get('/controls*', (req, res) => {res.redirect('/');});
-app.get('/nists*', (req, res) => {res.redirect('/');});
-app.get('/services*', (req, res) => {res.redirect('/');});
-app.get('/docs*', (req, res) => {res.redirect('/');});
-app.get('/onboarding*', (req, res) => {res.redirect('/');});
-
 const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
 app.use('/api', (req, res, next) => {
   if (  req.isAuthenticated() && (!protectedMethods.includes(req.method)
@@ -244,7 +232,21 @@ const serviceManager = require("./services/service-manager");
 require("./services/index")(app);
 require("./routers/index")(app, server);
 
-// Add your code here
+const loginEnpoints = ['/solutions*', '/bom*', '/services*', '/onboarding*', '/controls*', '/mapping*', '/nists*'];
+
+const ensureAuthenticated = (req, res, next) => {
+  if (!req.isAuthenticated() && req.session) {
+    req.session.redirectUrl = req.originalUrl
+    res.redirect(LOGIN_URL);
+  } else return next();
+}
+for (const loginEndpoint of loginEnpoints) {
+  app.get(loginEndpoint, ensureAuthenticated);
+}
+
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname, "../build/index.html"));
+});
 
 const port = process.env.PORT || conf.port;
 server.listen(port, function() {

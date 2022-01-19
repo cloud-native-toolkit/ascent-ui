@@ -18,9 +18,7 @@ class ControlsComponent extends Component<any, any> {
 
     render() {
         return (
-            <div className="pattern-container">
-                <ControlsView controls={this.controlsDataAPI} />
-            </div>
+            <ControlsView controls={this.controlsDataAPI} />
         );
     }
 }

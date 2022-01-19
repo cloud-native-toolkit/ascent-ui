@@ -22,6 +22,7 @@ import marked from 'marked';
 import {
     ToastNotification, ContentSwitcher, Switch
 } from "carbon-components-react";
+import NotFound from "../../components/NotFound";
 
 class SolutionDetailsView extends Component {
     constructor(props) {
@@ -45,12 +46,16 @@ class SolutionDetailsView extends Component {
         fetch(`/api/solutions/${this.props.solId}?filter=${encodeURIComponent(JSON.stringify({ include: ['architectures'] }))}`)
             .then((res) => res.json())
             .then(async (sol) => {
-                // Fetch README content if it exists
-                let readme = sol.files?.find(elt => elt.Key?.toLowerCase() === "readme.md");
-                if (readme) {
-                    readme = await (await fetch(`/api/solutions/${this.props.solId}/files/${readme.Key}`)).text();
+                if (sol.id) {
+                    // Fetch README content if it exists
+                    let readme = sol.files?.find(elt => elt.Key?.toLowerCase() === "readme.md");
+                    if (readme) {
+                        readme = await (await fetch(`/api/solutions/${this.props.solId}/files/${readme.Key}`)).text();
+                    }
+                    this.setState({ data: sol, readme: readme });
+                } else {
+                    this.setState({ error: sol });
                 }
-                this.setState({ data: sol, readme: readme });
             })
             .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${this.props.solId}`))
     }
@@ -148,6 +153,9 @@ class SolutionDetailsView extends Component {
         const diagram = data?.files?.find(elt => elt.Key?.toLowerCase() === "diagram.png");
         let notif = this.state.notif;
         return (
+            this.state.error ?
+                <NotFound />
+            :
             <>
                 <div class='notif'>
                     {this.state.notifications.length !== 0 && this.renderNotifications()}
