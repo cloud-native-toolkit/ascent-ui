@@ -62,6 +62,7 @@ class BillofMaterialsView extends Component {
             dataDetails: false,
             notifications: []
         };
+        this.loadTable = this.loadTable.bind(this);
         this.showServiceModal = this.showServiceModal.bind(this);
         this.hideServiceModal = this.hideServiceModal.bind(this);
         this.showArchitectureModal = this.showArchitectureModal.bind(this);
@@ -436,6 +437,7 @@ class BillofMaterialsView extends Component {
                                 data={this.state.architecture}
                                 show={this.state.showArchitectureModal}
                                 handleClose={this.hideArchitectureModal}
+                                handleReload={this.loadTable}
                                 isUpdate={this.state.isUpdate}
                             />
                         }
@@ -480,19 +482,19 @@ class BillofMaterialsView extends Component {
                                     onChange={(e) => {this.setState({showContent:e.name})}} >
                                     <Switch name="arch-data" text="Reference Architecture Details" />
                                     <Switch name="arch-diagram" text="Reference Architecture Diagram" />
-                                    {this.state.architecture?.automation_variables ? <Switch name="automation-variables" text="Automation Variables" /> : <></>}
+                                    {this.state.architecture?.yaml ? <Switch name="arch-yaml" text="YAML Configuration" /> : <></>}
                                 </ContentSwitcher>
                                 <br />
                             </div>
                         </div>
     
                         { this.state.showContent === "arch-diagram" && <img src={`/api/architectures/${this.state.architecture.arch_id}/diagram/png`} alt="Reference Architecture diagram" style={{'width': '100%'}}/>}
-                        { this.state.showContent === "automation-variables" && <p>
+                        { this.state.showContent === "arch-yaml" && <p>
                                     <h3 className="landing-page__subheading">
                                         Automation Variables
                                     </h3>
                                     <CodeSnippet type="multi" hideCopyButton>
-                                        {this.state.architecture.automation_variables}
+                                        {this.state.architecture.yaml}
                                     </CodeSnippet>
                                 <br />
                                 </p>}
