@@ -72,13 +72,16 @@ class OnBoardingView extends Component {
         this.setState({
             curStage: false
         });
-        const curStage = JSON.parse(JSON.stringify(this.state.stages[ix]));
-        curStage.content = await this.decorateTree(JSON.parse(curStage.content));
-        console.log(curStage.content)
-        this.setState({
-            curStageIx: ix,
-            curStage: curStage
-        });
+        try {
+            const curStage = JSON.parse(JSON.stringify(this.state.stages[ix]));
+            curStage.content = await this.decorateTree(JSON.parse(curStage.content));
+            this.setState({
+                curStageIx: ix,
+                curStage: curStage
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async loadStages() {
@@ -88,7 +91,7 @@ class OnBoardingView extends Component {
             curStage: false
         });
         // Get onboarding status
-        let userOnBoarding = await (await fetch(`/api/user/${encodeURIComponent(this.state.user.email)}/onboarding`)).json();
+        let userOnBoarding = await (await fetch(`/api/user/${encodeURIComponent(this.state.user?.email)}/onboarding`)).json();
         // Get stages
         let stages = await (await fetch('/api/on-boarding-stages')).json();
         stages = stages.sort((a,b) => {return a.position-b.position});
