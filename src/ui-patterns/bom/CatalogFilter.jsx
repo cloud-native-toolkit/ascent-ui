@@ -75,7 +75,7 @@ class CatalogFilter extends Component {
             {this.selectItems(catalogFilters.statusValues)}
           </Select>
         </div>
-        <div className="FormElement">
+        {!this.props.hideSearch && <div className="FormElement">
           <Grid style={{ paddingRight: '0', paddingLeft: '0' }}>
             <Row>
               <Column lg={{ span: 9 }} style={{ paddingRight: '.5rem' }}>
@@ -99,7 +99,7 @@ class CatalogFilter extends Component {
               </Column>
             </Row>
           </Grid>
-        </div>
+        </div>}
       </div>
     )
   }

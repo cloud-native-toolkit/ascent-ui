@@ -41,7 +41,6 @@ class ServiceDataView extends Component {
             isPaneOpen: false,
             dataDetails: false,
             searchValue: '',
-            selectedFilters: [],
             isFilterPaneOpen: false,
             notifications: []
         };
@@ -80,7 +79,7 @@ class ServiceDataView extends Component {
                 })
             }
         });
-        if (this.state.searchValue || this.state.selectedFilters.length) {
+        if (this.state.searchValue) {
             this.setState({
                 data: serviceDetails
             });
@@ -229,28 +228,20 @@ class ServiceDataView extends Component {
 
     async filterTable(event) {
         const searchValue = event?.target ? event?.target?.value : this.state.searchValue;
-        let selFilters = event.hasOwnProperty('selectedItems') ? event?.selectedItems: this.state.selectedFilters;
-        let filterIsOr = selFilters.find(elt => elt.attr === 'and') === undefined;
         let filterData = this.state.data;
-        const selectedFilters = selFilters.filter(elt => elt.attr !== 'and');
         if (event?.target || searchValue) {
             filterData = this.state.data.filter(elt => elt?.displayName?.includes(searchValue) || elt?.service?.service_id?.includes(searchValue) || elt?.cloudProvider?.includes(searchValue) || elt?.description?.includes(searchValue));
         }
-        if (selectedFilters.length) {
-            filterData = filterData.filter(elt => {
-                let metFilters = 0;
-                for (const item of selectedFilters) {
-                    if ((elt[item.attr] === item.val || (item.attr === "platform" && elt.versions[0]?.platforms?.includes(item.val)) || (item.attr === "tags" && elt[item.attr]?.includes(item.val))) && (filterIsOr || ++metFilters === selectedFilters.length)) return true;
-                }
-                return false;
-            });
-        }
+        if (event?.category) filterData = filterData.filter(m => m.category === event?.category);
+        if (event?.cloudProvider) filterData = filterData.filter(m => m.cloudProvider === event?.cloudProvider);
+        if (event?.softwareProvider) filterData = filterData.filter(m => m.softwareProvider === event?.softwareProvider);
+        if (event?.moduleType) filterData = filterData.filter(m => m.type === event?.moduleType);
+        if (event?.status) filterData = filterData.filter(m => m.status === event?.status);
         this.setState({
             filterData: filterData,
             firstRowIndex: 0,
             totalItems: filterData.length,
-            searchValue: searchValue,
-            selectedFilters: selFilters
+            searchValue: searchValue
         });
     }
 
