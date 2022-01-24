@@ -106,10 +106,9 @@ class ArchitectureModal extends Component {
                 this.props.toast("info", "Uploading BOM", `Uploading BOM yaml.`);
                 if (bom?.type !== "application/x-yaml" && bom?.type !== "text/yaml") return this.props.toast("error", "Wrong File Type", "Only .yaml is accepted.");
                 if (bom?.size > 409600) return this.props.toast("error", "Too Large", "YAML file too larde, max size: 400KiB.");
-                if (!this.state.fields.arch_id) return this.props.toast("error", "Missing values", "Please set an architecture ID.");
                 let data = new FormData();
                 data.append("bom", bom);
-                this.props.architectureService.importBomYaml(this.state.fields.arch_id, data, this.state.overwrite === "overwrite").then(res => {
+                this.props.architectureService.importBomYaml(data, this.state.overwrite === "overwrite", this.state.fields?.public).then(res => {
                     console.log(res);
                     if (res && res.body && res.body.error) {
                         this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
@@ -188,7 +187,7 @@ class ArchitectureModal extends Component {
                         <ModalBody>
 
                             <Form name="architectureform" onSubmit={this.handleSubmit.bind(this)}>
-                                <TextInput
+                                {!this.props.isImport && <TextInput
                                     data-modal-primary-focus
                                     id="arch_id"
                                     name="arch_id"
@@ -201,7 +200,7 @@ class ArchitectureModal extends Component {
                                     labelText={this.props.data ? "" : "ID"}
                                     placeholder="e.g. common-services"
                                     style={{ marginBottom: '1rem' }}
-                                />
+                                />}
                                 {!this.props.isImport && <TextInput
                                     data-modal-primary-focus
                                     id="name"
@@ -260,6 +259,16 @@ class ArchitectureModal extends Component {
                                     placeholder="overwrite"
                                     style={{ marginBottom: '1rem' }}
                                 /></>}
+                                {!this.props.isDuplicate && <Select id="public" name="public"
+                                    labelText="Public"
+                                    required
+                                    defaultValue={this.state.fields.public}
+                                    invalidText="A valid value is required"
+                                    onChange={this.handleChange.bind(this, "public")}
+                                    style={{ marginBottom: '1rem' }}>
+                                    <SelectItem value={false} text="False" />
+                                    <SelectItem value={true} text="True" />
+                                </Select>}
                                 {!this.props.isDuplicate && <FileUploader 
                                     accept={['.drawio']}
                                     labelText={"Drag and drop a .drawio file, or click to upload"}
@@ -288,16 +297,6 @@ class ArchitectureModal extends Component {
                                     {servicePlatforms.map(platform => (
                                         <SelectItem value={platform.val} text={platform.label} />
                                     ))}
-                                </Select>}
-                                {!this.props.isImport && !this.props.isDuplicate && <Select id="public" name="public"
-                                    labelText="Public"
-                                    required
-                                    defaultValue={this.state.fields.public}
-                                    invalidText="A valid value is required"
-                                    onChange={this.handleChange.bind(this, "public")}
-                                    style={{ marginBottom: '1rem' }}>
-                                    <SelectItem value={false} text="False" />
-                                    <SelectItem value={true} text="True" />
                                 </Select>}
                                 {!this.props.isImport && !this.props.isDuplicate && <Select id="production_ready" name="production_ready"
                                     labelText="Production Ready"

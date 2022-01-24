@@ -68,9 +68,9 @@ export class ArchitectureService implements ArchitectureDataApi {
             });
     }
 
-    async importBomYaml(arch_id: string, data: FormData, overwrite: boolean): Promise<object> {
+    async importBomYaml(data: FormData, overwrite: boolean, publicArch: boolean): Promise<object> {
         return superagent
-            .post(`${this.baseUrl}/${arch_id}/boms/import${overwrite ? "?overwrite=true" : ""}`)
+            .post(`${this.baseUrl}/boms/import?public=${publicArch ? 'true' : 'false'}${overwrite ? '&overwrite=true' : ''}`)
             .send(data)
             .set('accept', 'application/json')
             .then(res => {
