@@ -62,7 +62,7 @@ class ServiceModal extends Component {
                 service_id: '',
                 arch_id: this.props.archId,
                 desc: '',
-                automation_variables: ""
+                yaml: ""
             }
         };
         if (this.props.isUpdate) {
@@ -80,10 +80,10 @@ class ServiceModal extends Component {
 
     handleChange = (field, e) => {
         let fields = this.state.fields;
-        if (field === "automation_variables") {
+        if (field === "yaml") {
             fields[field] = e;
         } else if (field === "service_id") {
-            fields["automation_variables"] = "";
+            fields["yaml"] = "";
             fields[field] = e.target.value;
         } else {
             fields[field] = e.target.value;
@@ -107,7 +107,7 @@ class ServiceModal extends Component {
         } else if (this.state.fields.service_id) {
             this.props.service.doUpdateBOM(this.props.data.id, {
                 desc: this.state.fields.desc,
-                automation_variables: this.state.fields.automation_variables
+                yaml: this.state.fields.yaml
             }).then(res => {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", "Error", `${res.body.error.message}${res.body.error?.details?.reason && " Reason: " + res.body.error.details.reason}`);
@@ -205,19 +205,19 @@ class ServiceModal extends Component {
                                         rows={4}
                                         style={{ marginBottom: '1rem' }}
                                     />
-                                    <FormGroup legendText="Automation Variables">
+                                    <FormGroup legendText="YAML Configuration">
                                         <AceEditor
                                             focus
                                             style={{ width: "100%" }}
                                             mode="yaml"
                                             // theme="github"
                                             height="200px"
-                                            id="automation_variables"
-                                            name="automation_variables"
+                                            id="yaml"
+                                            name="yaml"
                                             placeholder="alias: example"
-                                            value={this.state.fields.automation_variables}
-                                            onChange={this.handleChange.bind(this, "automation_variables")}
-                                            labelText="Automation Variables"
+                                            value={this.state.fields.yaml}
+                                            onChange={this.handleChange.bind(this, "yaml")}
+                                            labelText="YAML Configuration"
                                             ref="editorInput"
                                             // fontSize={20}
                                             showPrintMargin

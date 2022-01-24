@@ -10,6 +10,5 @@ export interface ServiceDataModel {
     provision: string;
     cloud_automation_id: string;
     hybrid_automation_id: string;
-    default_automation_variables: string;
     controls: Array<Object>;
 }

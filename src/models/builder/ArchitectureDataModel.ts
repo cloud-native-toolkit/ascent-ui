@@ -6,7 +6,7 @@ export interface ArchitectureDataModel {
     long_desc: string;
     public: boolean;
     production_ready: boolean;
-    automation_variables: string;
+    yaml: string;
     boms: object[],
     owners: object[]
 }

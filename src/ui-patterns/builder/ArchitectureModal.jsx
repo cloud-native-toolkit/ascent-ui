@@ -37,7 +37,7 @@ class ArchitectureModal extends Component {
                 long_desc: "",
                 public: false,
                 production_ready: false,
-                automation_variables: "",
+                yaml: "",
                 platform: "",
             }
         };
@@ -88,7 +88,7 @@ class ArchitectureModal extends Component {
         let overwrite = "";
         if (field === "overwrite") {
             overwrite = e.target.value
-        } else if (field === "automation_variables") {
+        } else if (field === "yaml") {
             fields[field] = e;
         } else if (field === "public" || field === "production_ready") {
             fields[field] = e.target.value === "true";
@@ -159,6 +159,7 @@ class ArchitectureModal extends Component {
                 long_desc: this.state.fields.long_desc,
                 public: this.state.fields.public,
                 platform: this.state.fields.platform,
+                yaml: this.state.fields.yaml,
             }).then(res => {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
@@ -308,19 +309,19 @@ class ArchitectureModal extends Component {
                                     <SelectItem value={false} text="False" />
                                     <SelectItem value={true} text="True" />
                                 </Select>}
-                                {!this.props.isImport && !this.props.isDuplicate && <FormGroup legendText="Automation Variables">
+                                {!this.props.isImport && !this.props.isDuplicate && <FormGroup legendText="YAML Configuration">
                                     <AceEditor
                                         focus
                                         style={{ width: "100%" }}
                                         mode="yaml"
                                         // theme="github"
                                         height="200px"
-                                        id="automation_variables"
-                                        name="automation_variables"
+                                        id="yaml"
+                                        name="yaml"
                                         placeholder="alias: example"
-                                        value={this.state.fields.automation_variables}
-                                        onChange={this.handleChange.bind(this, "automation_variables")}
-                                        labelText="Automation Variables"
+                                        value={this.state.fields.yaml}
+                                        onChange={this.handleChange.bind(this, "yaml")}
+                                        labelText="YAML Configuration"
                                         ref="editorInput"
                                         // fontSize={20}
                                         showPrintMargin

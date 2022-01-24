@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
-    UnorderedList, ListItem, BreadcrumbSkeleton, SearchSkeleton, Tag
+    UnorderedList, ListItem, BreadcrumbSkeleton, SearchSkeleton, Tag,
+    CodeSnippet 
 } from 'carbon-components-react';
 import {
     Launch16,
@@ -13,6 +14,7 @@ import {
 class ServiceDetails extends Component {
 
     render () {
+        console.log(this.props.data)
         return (
             this.props.data ?
                 <div>
@@ -126,6 +128,15 @@ class ServiceDetails extends Component {
                                 </p>
                             </div>
                         </>
+                    }
+                    {this.props.data?.yaml &&
+                        <div>
+                            <br />
+                            <strong>YAML Configuration: </strong>
+                            <CodeSnippet type='multi'>
+                                {this.props.data?.yaml}
+                            </CodeSnippet>
+                        </div>
                     }
                 </div>
             :
