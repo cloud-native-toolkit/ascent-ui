@@ -76,13 +76,13 @@ class LandingPage extends Component {
                   <div className="bx--row landing-page__tab-content">
                     <div className="bx--col-md-4 bx--col-lg-6">
                       <h2 className="landing-page__subheading">
-                        What is ASCENT?
+                        What is Ascent?
                       </h2>
                       <p className="landing-page__p">
-                        ASCENT is a tool created by IBM to accelerate partner's journey to the IBM Cloud.
-                        Through automation and integration, ASCENT enables enterprises to deliver compliant cloud architectures which can be
+                        Ascent is a tool created by IBM to accelerate partner's journey to the IBM Cloud.
+                        Through automation and integration, Ascent enables enterprises to deliver compliant cloud architectures which can be
                         clearly evidenced and communicated with Governance, Risk and Compliance teams. Click on the links below to learn more
-                        about how ASCENT automates and integrates Security Controls, Reference Architectures and Cloud Services.
+                        about how Ascent automates and integrates Security Controls, Reference Architectures and Cloud Services.
                       </p>
                       {this.state.user ? <Link to="/docs" ><Button>Learn more</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
 

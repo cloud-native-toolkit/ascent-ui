@@ -104,8 +104,8 @@ class UIShell extends Component {
                   isActive={isSideNavExpanded}
                 />
                 <Link to="/">
-                  <HeaderName prefix="IBM">
-                    Ecosystem Labs - ASCENT
+                  <HeaderName prefix=''>
+                    Software Everywhere - ASCENT
                   </HeaderName>
                 </Link>
                 
