@@ -159,7 +159,7 @@ class UIShell extends Component {
                           <SideNavMenuItem>Solutions</SideNavMenuItem>
                         </Link>
                         :
-                        <SideNavMenuItem onClick={this.redirectToLogin} >
+                        <SideNavMenuItem href='/solutions'>
                           Solutions
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
@@ -170,7 +170,7 @@ class UIShell extends Component {
                           <SideNavMenuItem>Bill of Materials</SideNavMenuItem>
                         </Link>
                         :
-                        <SideNavMenuItem onClick={this.redirectToLogin} >
+                        <SideNavMenuItem href='/boms'>
                           Bill of Materials
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
@@ -181,7 +181,7 @@ class UIShell extends Component {
                           <SideNavMenuItem>Services</SideNavMenuItem>
                         </Link>
                         :
-                        <SideNavMenuItem onClick={this.redirectToLogin} >
+                        <SideNavMenuItem href='/services'>
                           Services
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
@@ -203,7 +203,7 @@ class UIShell extends Component {
                           <SideNavMenuItem>Mapping</SideNavMenuItem>
                         </Link>
                         :
-                          <SideNavMenuItem onClick={this.redirectToLogin} >
+                          <SideNavMenuItem href='/mapping'>
                             Mapping
                             <Locked16 style={{ marginLeft: "auto" }}  />
                           </SideNavMenuItem>
@@ -214,7 +214,7 @@ class UIShell extends Component {
                           <SideNavMenuItem>NIST 800-53</SideNavMenuItem>
                         </Link>
                         :
-                          <SideNavMenuItem onClick={this.redirectToLogin} >
+                          <SideNavMenuItem href='/nists'>
                             NIST 800-53
                             <Locked16 style={{ marginLeft: "auto" }}  />
                           </SideNavMenuItem>
