@@ -1,24 +1,10 @@
-<p align="center">
-    <a href="http://kitura.io/">
-        <img src="https://landscape.cncf.io/logos/ibm-member.svg" height="100" alt="IBM Cloud">
-    </a>
-</p>
+# Ascent UI
 
-<p align="center">
-    <a href="https://cloud.ibm.com">
-    <img src="https://img.shields.io/badge/IBM%20Cloud-powered-blue.svg" alt="IBM Cloud">
-    </a>
-    <img src="https://img.shields.io/badge/platform-node-lightgrey.svg?style=flat" alt="platform">
-    <img src="https://img.shields.io/badge/license-Apache2-blue.svg?style=flat" alt="Apache 2">
-</p>
+This repository contains the Front-End micro-service of the Ascent tool.
 
-# React UI Patterns with Node.js
+Ascent is a tool created by the IBM Ecosystem Lab to accelerate the adoption of IBM Software on Hybrid Cloud. Through automation and integration, Ascent enables enterprises to deliver compliant cloud architectures which can be clearly evidenced and communicated with Governance, Risk and Compliance teams.
 
-React is a popular framework for creating user interfaces in modular components. In this sample application, you will create a web application using Express, TypeScript and React to serve web pages in Node.js, complete with standard best practices, including a health check and application metric monitoring.
-
-This code pattern contains 12 popular UI patterns that make it very easy to construct a dashboard application.
-
-This app contains an opinionated set of components for modern web development, including:
+This app has been developped using an opinionated set of components for modern web development, including:
 
 * [React](https://facebook.github.io/react/)
 * [TypeScript](https://www.typescriptlang.org/)
@@ -48,32 +34,7 @@ oc pipeline
 
 Ensure you have the Cloud-Native Toolkit installed in your cluster to make this method of pipeline registry quick and easy [Cloud-Native Toolkit](https://cloudnativetoolkit.dev/)
 
-### Native Application Development
-
-Install the latest [Node.js](https://nodejs.org/en/download/) 6+ LTS version.
-
-Once the Node toolchain has been installed, you can download the project dependencies with:
-
-```bash
-npm install
-```
-
-Modern web applications require a compilation step to prepare your ES2015 JavaScript or Sass stylesheets into compressed Javascript ready for a browser. Webpack is used for bundling your JavaScript sources and styles into a `bundle.js` file that your `index.html` file can import. 
-
-***Webpack***
-
-For development mode, use `webpack -d` to leave the sources uncompress and with the symbols intact.
-
-For production mode, use `webpack -p` to compress and obfuscate your sources for development usage.
-
-***Gulp***
-
-Gulp is a task runner for JavaScript. You can run the above Webpack commands in by running:
-```bash
-gulp
-```
-
-### Run the application locally
+### Running locally
 
 ***Production like build***
 
@@ -168,28 +129,3 @@ oc adm groups new ascent-fs-viewers
 oc adm groups add-users <GROUP_NAME> <USER_NAME>
 ...
 ```
-
-##### Session Store
-
-You may see this warning when running `ibmcloud dev run`:
-```
-Warning: connect.session() MemoryStore is not
-designed for a production environment, as it will leak
-memory, and will not scale past a single process.
-```
-
-When deploying to production, it is best practice to configure sessions to be stored in an external persistence service.
-
-## Next Steps
-
-* Learn more about augmenting your Node.js applications on IBM Cloud with the [Node Programming Guide](https://cloud.ibm.com/docs/node?topic=nodejs-getting-started).
-* Explore other [sample applications](https://cloud.ibm.com/developer/appservice/starter-kits) on IBM Cloud.
-
-## License
-
-This sample application is licensed under the Apache License, Version 2. Separate third-party code objects invoked within this code pattern are licensed by their respective providers pursuant to their own separate licenses. Contributions are subject to the [Developer Certificate of Origin, Version 1.1](https://developercertificate.org/) and the [Apache License, Version 2](https://www.apache.org/licenses/LICENSE-2.0.txt).
-
-[Apache License FAQ](https://www.apache.org/foundation/license-faq.html#WhatDoesItMEAN)
-
-
-
