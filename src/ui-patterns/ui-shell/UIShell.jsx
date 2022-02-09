@@ -234,6 +234,12 @@ class UIShell extends Component {
                           <Launch16 style={{"margin-left": "10px"}} />
                         </SideNavMenuItem>
                       </a>
+                      <a target="_blank" href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map" rel="noopener noreferrer" >
+                        <SideNavMenuItem>
+                          IBM Software Map
+                          <Launch16 style={{"margin-left": "10px"}} />
+                        </SideNavMenuItem>
+                      </a>
                       <a target="_blank" href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" >
                         <SideNavMenuItem>
                           CLI

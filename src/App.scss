@@ -27,3 +27,14 @@ a:hover, a:visited, a:link, a:active
   padding-top: 1em;
   padding-right: 1em;
 }
+
+table.bx--data-table tbody tr td.bx--table-column-checkbox {
+  min-width: 2.5rem;
+}
+
+table.bx--data-table tbody tr td {
+  max-width: 700px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
