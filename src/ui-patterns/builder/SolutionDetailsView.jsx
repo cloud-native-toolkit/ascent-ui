@@ -52,7 +52,7 @@ class SolutionDetailsView extends Component {
                     if (readme) {
                         readme = await (await fetch(`/api/solutions/${this.props.solId}/files/${readme.Key}`)).text();
                     }
-                    this.setState({ data: sol, readme: readme });
+                    this.setState({ data: sol, readme: readme, showContent: readme ?  'solution-readme' : 'solution-details' });
                 } else {
                     this.setState({ error: sol });
                 }
@@ -214,8 +214,8 @@ class SolutionDetailsView extends Component {
                         <ContentSwitcher
                             size='xl'
                             onChange={(e) => { this.setState({ showContent: e.name }) }} >
-                            <Switch name="solution-details" text="Description" />
                             {this.state.readme ? <Switch name="solution-readme" text="Documentation" />: <></>}
+                            <Switch name="solution-details" text="Description" />
                             {diagram ? <Switch name="solution-diagram" text="Diagram" />: <></>}
                         </ContentSwitcher>
                     }

@@ -124,10 +124,10 @@ class ArchitectureModal extends Component {
             } else {
                 this.props.toast("error", "File Missing", "You must upload the BOM yaml file.");
             }
-        } else if (this.props.isDuplicate) {
+        } else if (this.state.fields.name && this.props.isDuplicate) {
             this.props.toast("info", "Duplicating", `Duplicating architecture ${this.props.isDuplicate}...`);
             this.props.architectureService.duplicateArchitecture(this.props.isDuplicate, {
-                arch_id: this.state.fields.arch_id,
+                arch_id: this.state.fields.name.replace(/[\s_]+/g, '-').replace(/[^0-9a-zA-Z-]+/g, '').toLowerCase(),
                 name: this.state.fields.name
             })
             .then((res) => {
@@ -141,8 +141,10 @@ class ArchitectureModal extends Component {
             .catch((err) => {
                 this.addNotification("error", "Error", err);
             })
-        } else if (this.state.fields.arch_id && !this.props.isUpdate) {
-            this.props.architectureService.addArchitecture(this.state.fields).then(res => {
+        } else if (this.state.fields.name && !this.props.isUpdate) {
+            const fields = this.state.fields;
+            fields.arch_id = this.state.fields.name.replace(/[\s_]+/g, '-').replace(/[^0-9a-zA-Z-]+/g, '').toLowerCase();
+            this.props.architectureService.addArchitecture(fields).then(res => {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                 } else {
@@ -150,8 +152,7 @@ class ArchitectureModal extends Component {
                     this.uploadDiagrams(res.arch_id);
                 }
             });
-        } else if(this.state.fields.arch_id) {
-            console.log(this.state.fields);
+        } else if(this.state.fields.name) {
             this.props.architectureService.updateArchitecture(this.props.data.arch_id, {
                 name: this.state.fields.name,
                 short_desc: this.state.fields.short_desc,
@@ -168,7 +169,7 @@ class ArchitectureModal extends Component {
                 }
             });
         } else {
-            this.props.toast("error", "INVALID INPUT", "You must set an architecture ID.");
+            this.props.toast("error", "INVALID INPUT", "You must set an architecture Name.");
         }
 
     }
@@ -187,20 +188,6 @@ class ArchitectureModal extends Component {
                         <ModalBody>
 
                             <Form name="architectureform" onSubmit={this.handleSubmit.bind(this)}>
-                                {!this.props.isImport && <TextInput
-                                    data-modal-primary-focus
-                                    id="arch_id"
-                                    name="arch_id"
-                                    required
-                                    disabled={this.props.isUpdate}
-                                    hidden={this.props.isUpdate}
-                                    invalidText="Please Enter The Value"
-                                    onChange={this.handleChange.bind(this, "arch_id")}
-                                    value={this.state.fields.arch_id}
-                                    labelText={this.props.data ? "" : "ID"}
-                                    placeholder="e.g. common-services"
-                                    style={{ marginBottom: '1rem' }}
-                                />}
                                 {!this.props.isImport && <TextInput
                                     data-modal-primary-focus
                                     id="name"
