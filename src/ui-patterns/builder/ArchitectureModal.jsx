@@ -101,24 +101,23 @@ class ArchitectureModal extends Component {
         event.preventDefault();
         if (this.props.isImport) {
             // Upload Diagrams
-            const bom = this.state.bomYaml;
-            if (bom) {
-                this.props.toast("info", "Uploading BOM", `Uploading BOM yaml.`);
-                if (bom?.type !== "application/x-yaml" && bom?.type !== "text/yaml") return this.props.toast("error", "Wrong File Type", "Only .yaml is accepted.");
-                if (bom?.size > 409600) return this.props.toast("error", "Too Large", "YAML file too larde, max size: 400KiB.");
+            const boms = this.state.bomYaml;
+            if (boms?.length > 0) {
+                this.props.toast("info", "Uploading BOM", `Uploading BOMs yaml.`);
                 let data = new FormData();
-                data.append("bom", bom);
+                let bomIx = 0;
+                for (const bom of boms) {
+                    if (bom?.type !== "application/x-yaml" && bom?.type !== "text/yaml") return this.props.toast("error", "Wrong File Type", "Only .yaml is accepted.");
+                    if (bom?.size > 409600) return this.props.toast("error", "Too Large", "YAML file too larde, max size: 400KiB.");
+                    data.append(`bom${bomIx}`, bom);
+                    bomIx = bomIx + 1;
+                }
                 this.props.architectureService.importBomYaml(data, this.state.overwrite === "overwrite", this.state.fields?.public).then(res => {
                     console.log(res);
                     if (res && res.body && res.body.error) {
                         this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                     } else {
-                        this.props.toast("success", "Success", `BOM successfully imported!`);
-                        
-                        if (res?.architectures?.length) {
-                            console.log(res?.architectures[0]?.arch_id);
-                            this.uploadDiagrams(res?.architectures[0]?.arch_id);
-                        }
+                        this.props.toast("success", "Success", `BOM(s) successfully imported!`);
                     }
                 });
             } else {
@@ -229,10 +228,11 @@ class ArchitectureModal extends Component {
                                     accept={['.yaml']}
                                     labelText={"Drag and drop a .yaml file, or click to upload"}
                                     labelTitle={"BOM Yaml"}
-                                    buttonLabel='Add file'
+                                    buttonLabel='Add file(s)'
+                                    multiple
                                     labelDescription={"Max file size is 400KiB. Only .yaml files are supported."}
                                     filenameStatus='edit'
-                                    onChange={(event) => this.setState({bomYaml: event?.target?.files[0]})}
+                                    onChange={(event) => this.setState({bomYaml: event?.target?.files})}
                                     onDelete={() => this.setState({bomYaml: undefined})} />}
                                 {this.props.isImport && <><strong>Overwrite</strong><TextInput
                                     data-modal-primary-focus
@@ -256,7 +256,7 @@ class ArchitectureModal extends Component {
                                     <SelectItem value={false} text="False" />
                                     <SelectItem value={true} text="True" />
                                 </Select>}
-                                {!this.props.isDuplicate && <FileUploader 
+                                {!this.props.isDuplicate && !this.props.isImport && <FileUploader 
                                     accept={['.drawio']}
                                     labelText={"Drag and drop a .drawio file, or click to upload"}
                                     labelTitle={"Diagram .drawio"}
@@ -265,7 +265,7 @@ class ArchitectureModal extends Component {
                                     filenameStatus='edit'
                                     onChange={(event) => this.setState({diagramDrawio: event?.target?.files[0]})}
                                     onDelete={() => this.setState({diagramDrawio: undefined})} />}
-                                {!this.props.isDuplicate && <FileUploader 
+                                {!this.props.isDuplicate && !this.props.isImport && <FileUploader 
                                     accept={['.png']}
                                     labelText={"Drag and drop a .png file, or click to upload"}
                                     labelTitle={"Diagram .png"}
