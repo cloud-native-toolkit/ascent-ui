@@ -193,7 +193,7 @@ class SolutionDetailsView extends Component {
                                     <Button
                                         renderIcon={Download16}
                                         onClick={() => this.downloadTerraform()} >
-                                        Terraform
+                                        Automation
                                     </Button>
                                     {data?.id && this.state.user?.role === "admin" && 
                                         <Button

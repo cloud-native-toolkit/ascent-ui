@@ -182,7 +182,7 @@ class BillofMaterialsView extends Component {
     downloadTerraform(archid, archname) {
 
         if (_.isNull(archid)) {
-            alert("Cannot Download Terraform at this time"); // FIx with a Notification
+            alert("Cannot Download Automation at this time"); // FIx with a Notification
             return
         }
 
@@ -210,7 +210,7 @@ class BillofMaterialsView extends Component {
     }
 
     viewDiagram() {
-        alert("Download Terraform");
+        alert("Download Automation");
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.data) {
@@ -558,7 +558,7 @@ class BillofMaterialsView extends Component {
                                                         </TableBatchActions>}
                                                         <TableToolbarContent>
                                                             <TableToolbarAction onClick={() => this.downloadTerraform(archid, title)}>
-                                                                <Download /> Terraform
+                                                                <Download /> Automation
                                                                         </TableToolbarAction>
                         
                                                         </TableToolbarContent>
