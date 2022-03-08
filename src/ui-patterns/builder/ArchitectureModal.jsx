@@ -107,7 +107,8 @@ class ArchitectureModal extends Component {
                 let data = new FormData();
                 let bomIx = 0;
                 for (const bom of boms) {
-                    if (bom?.type !== "application/x-yaml" && bom?.type !== "text/yaml") return this.props.toast("error", "Wrong File Type", "Only .yaml is accepted.");
+                    console.log(bom)
+                    if (bom?.type !== "application/x-yaml" && bom?.type !== "text/yaml" && !bom?.name.endsWith('.yaml')) return this.props.toast("error", "Wrong File Type", "Only .yaml is accepted.");
                     if (bom?.size > 409600) return this.props.toast("error", "Too Large", "YAML file too larde, max size: 400KiB.");
                     data.append(`bom${bomIx}`, bom);
                     bomIx = bomIx + 1;
