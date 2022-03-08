@@ -317,7 +317,7 @@ class ArchitectureView extends Component {
                     Bills of Materials
                     <div style={{"margin-left": "auto", "display": "flex"}}>
                         <Button onClick={() => this.showArchModal(false)} size='small'>Create +</Button>
-                        <Button onClick={() => this.showArchModal(true)} style={{marginLeft: '1.5rem', marginRight: '1.5rem'}} size='small'>Import +</Button>
+                        {this.state.user?.role === "admin" ? <Button onClick={() => this.showArchModal(true)} style={{marginLeft: '1.5rem', marginRight: '1.5rem'}} size='small'>Import +</Button> : <></>}
                     </div>
                 </h2>
 
