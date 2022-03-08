@@ -78,7 +78,7 @@ class SolutionsView extends Component {
     downloadTerraform(solution) {
 
         if (!solution) {
-            this.addNotification("error", "Error", "Cannot download Terraform at this time.");
+            this.addNotification("error", "Error", "Cannot download Automation at this time.");
             return
         }
 

@@ -230,7 +230,7 @@ class UIShell extends Component {
 
                       <a target="_blank" href="https://modules.cloudnativetoolkit.dev" rel="noopener noreferrer" >
                         <SideNavMenuItem >
-                          Terraform Modules
+                          Automation Modules
                           <Launch16 style={{"margin-left": "10px"}} />
                         </SideNavMenuItem>
                       </a>
