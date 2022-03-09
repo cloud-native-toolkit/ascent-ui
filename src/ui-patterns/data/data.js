@@ -47,6 +47,17 @@ export const catalogFilters = {
     ]
 }
 
+export const solutionBomsHeader = [
+    {
+        key: 'arch_id',
+        header: 'Name',
+    },
+    {
+        key: 'short_desc',
+        header: 'Description',
+    },
+];
+
 export const serviceHeader = [
     {
         key: 'service',
