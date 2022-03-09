@@ -5,7 +5,10 @@ import {
     BreadcrumbSkeleton,
     SearchSkeleton,
     InlineNotification,
-    Button
+    Button,
+    DataTableSkeleton, DataTable, TableContainer, Table, TableHead, TableRow,
+    TableHeader, TableBody, TableCell, Pagination, Tag,
+    ToastNotification, ContentSwitcher, Switch
 } from 'carbon-components-react';
 import {
     Link
@@ -15,14 +18,13 @@ import {
     Download16
 } from '@carbon/icons-react';
 
-import SolutionModal from "./SolutionModal";
-
 import marked from 'marked';
 
-import {
-    ToastNotification, ContentSwitcher, Switch
-} from "carbon-components-react";
+import SolutionModal from "./SolutionModal";
+import { solutionBomsHeader } from '../data/data';
+
 import NotFound from "../../components/NotFound";
+
 
 class SolutionDetailsView extends Component {
     constructor(props) {
@@ -32,7 +34,10 @@ class SolutionDetailsView extends Component {
             show: false,
             showContent: "solution-details",
             notif: false,
-            notifications: []
+            notifications: [],
+            totalItems: 0,
+            firstRowIndex: 0,
+            currentPageSize: 10,
         };
         this.loadSolution = this.loadSolution.bind(this);
         this.downloadTerraform = this.downloadTerraform.bind(this);
@@ -52,7 +57,7 @@ class SolutionDetailsView extends Component {
                     if (readme) {
                         readme = await (await fetch(`/api/solutions/${this.props.solId}/files/${readme.Key}`)).text();
                     }
-                    this.setState({ data: sol, readme: readme, showContent: readme ?  'solution-readme' : 'solution-details' });
+                    this.setState({ data: sol, totalItems: sol?.architectures?.length, readme: readme, showContent: readme ? 'solution-readme' : 'solution-details' });
                 } else {
                     this.setState({ error: sol });
                 }
@@ -78,7 +83,7 @@ class SolutionDetailsView extends Component {
     }
 
     getMarkdownText() {
-        var rawMarkup = marked(this.state.readme, {sanitize: true});
+        var rawMarkup = marked(this.state.readme, { sanitize: true });
         return { __html: rawMarkup };
     }
 
@@ -155,74 +160,80 @@ class SolutionDetailsView extends Component {
         return (
             this.state.error ?
                 <NotFound />
-            :
-            <>
-                <div class='notif'>
-                    {this.state.notifications.length !== 0 && this.renderNotifications()}
-                </div>
-                <div className="bx--grid">
-                    {notif &&
-                        <InlineNotification
-                            id={Date.now()}
-                            hideCloseButton lowContrast
-                            title={notif.title || "Notification title"}
-                            subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
-                            kind={notif.kind || "info"}
-                            caption={notif.caption || "Caption"}
-                        />
-                    }
-
-                    {this.state.data?.id ?
-                        <Breadcrumb>
-                            <BreadcrumbItem>
-                                <Link to="/solutions">Solutions</Link>
-                            </BreadcrumbItem>
-                            <BreadcrumbItem href="#">{data.name || data.id}</BreadcrumbItem>
-                        </Breadcrumb>
-                    :
-                        <BreadcrumbSkeleton />
-                    
-                    }
-                    <div className="bx--row">
-                        <div className="bx--col-lg-12">
-                            <br></br>
-                            {data?.name ? <h2 style={{ display: 'flex' }}>
-                                {data?.name}
-                                <div style={{marginLeft: 'auto'}}>
-
-                                    <Button
-                                        renderIcon={Download16}
-                                        onClick={() => this.downloadTerraform()} >
-                                        Automation
-                                    </Button>
-                                    {data?.id && this.state.user?.role === "admin" && 
-                                        <Button
-                                            style={{marginLeft: '1rem'}}    
-                                            renderIcon={Edit16}
-                                            onClick={() => {
-                                                this.showModal(true);
-                                            }}>
-                                            Edit
-                                        </Button>}
-                                </div>
-                            </h2> : <SearchSkeleton />}
-                            <br></br>
-                        </div>
+                :
+                <>
+                    <div class='notif'>
+                        {this.state.notifications.length !== 0 && this.renderNotifications()}
                     </div>
+                    <div className="bx--grid">
+                        {notif &&
+                            <InlineNotification
+                                id={Date.now()}
+                                hideCloseButton lowContrast
+                                title={notif.title || "Notification title"}
+                                subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
+                                kind={notif.kind || "info"}
+                                caption={notif.caption || "Caption"}
+                            />
+                        }
 
-                    {data?.id &&
-                        <ContentSwitcher
-                            size='xl'
-                            onChange={(e) => { this.setState({ showContent: e.name }) }} >
-                            {this.state.readme ? <Switch name="solution-readme" text="Documentation" />: <></>}
-                            <Switch name="solution-details" text="Description" />
-                            {diagram ? <Switch name="solution-diagram" text="Diagram" />: <></>}
-                        </ContentSwitcher>
-                    }
+                        {this.state.data?.id ?
+                            <Breadcrumb>
+                                <BreadcrumbItem>
+                                    <Link to="/solutions">Solutions</Link>
+                                </BreadcrumbItem>
+                                <BreadcrumbItem href="#">{data.name || data.id}</BreadcrumbItem>
+                            </Breadcrumb>
+                            :
+                            <BreadcrumbSkeleton />
 
-                    {this.state.showContent === "solution-details" &&
-                        <>
-                            {data && <div>
+                        }
+                        <div className="bx--row">
+                            <div className="bx--col-lg-12">
+                                <br></br>
+                                {data?.name ? <h2 style={{ display: 'flex' }}>
+                                    {data?.name}
+                                    <div style={{ marginLeft: 'auto' }}>
+
+                                        <Button
+                                            renderIcon={Download16}
+                                            onClick={() => this.downloadTerraform()} >
+                                            Automation
+                                        </Button>
+                                        {data?.files?.length ? <Button
+                                            style={{ marginLeft: '1rem' }}
+                                            renderIcon={Download16}
+                                            href={`/api/solutions/${data.id}/files.zip`} >
+                                            Files
+                                        </Button>: <></>}
+                                        {data?.id && this.state.user?.role === "admin" &&
+                                            <Button
+                                                style={{ marginLeft: '1rem' }}
+                                                renderIcon={Edit16}
+                                                onClick={() => {
+                                                    this.showModal(true);
+                                                }}>
+                                                Edit
+                                            </Button>}
+                                    </div>
+                                </h2> : <SearchSkeleton />}
+                                <br></br>
+                            </div>
+                        </div>
+
+                        {data?.id &&
+                            <ContentSwitcher
+                                size='xl'
+                                onChange={(e) => { this.setState({ showContent: e.name }) }} >
+                                {this.state.readme ? <Switch name="solution-readme" text="Documentation" /> : <></>}
+                                <Switch name="solution-details" text="Details" />
+                                {diagram ? <Switch name="solution-diagram" text="Diagram" /> : <></>}
+                            </ContentSwitcher>
+                        }
+
+                        {this.state.showContent === "solution-details" &&
+                            <>
+                                {data && <div>
                                     <br />
                                     {data?.long_desc && <div>
                                         <h3>Description</h3>
@@ -236,66 +247,112 @@ class SolutionDetailsView extends Component {
                                     {data?.architectures?.length &&
                                         <div>
                                             <h3>BOMs</h3>
-                                            <p>
-                                                <ul style={{listStyle:'inside'}}>
-                                                    {
-                                                        data?.architectures?.map((arch) => (
-                                                            <li>
-                                                                <Link to={`/boms/${arch.arch_id}`}>
-                                                                    {arch.name}
-                                                                </Link>
-                                                            </li>
-                                                        ))
-                                                    }
-                                                </ul>
-                                                
-                                            </p>
-                                        </div>
-                                    }
-                                    {data?.files?.length &&
-                                        <div>
-                                            <h3>Files</h3>
-                                            <p>
-                                                To update files, dowload them and edit them in your favorite text editor, then upload them again using the <strong>Edit</strong> Button in the top right corner.
-                                                <ul style={{listStyle:'inside'}}>
-                                                    {
-                                                        data?.files?.map((file) => (
-                                                            <li>
-                                                                <a href={`/api/solutions/${data.id}/files/${file.Key}`} >
-                                                                    {file.Key} ({`${(file.Size/1024).toFixed(2)} Kio`}) <Download16/>
-                                                                </a>
-                                                            </li>
-                                                        ))
-                                                    }
-                                                </ul>
-                                            </p>
+                                            {!data?.architectures?.length ?
+                                                <DataTableSkeleton
+                                                    columnCount={solutionBomsHeader.length}
+                                                    rowCount={10}
+                                                    showHeader={false}
+                                                    headers={null}
+                                                />
+                                                :
+                                                <>
+                                                    <DataTable rows={data?.architectures.map(arch => ({...arch, id: arch.arch_id})).slice(
+                                                        this.state.firstRowIndex,
+                                                        this.state.firstRowIndex + this.state.currentPageSize
+                                                    )} headers={solutionBomsHeader}>
+                                                        {({
+                                                            rows,
+                                                            headers,
+                                                            getHeaderProps,
+                                                            getRowProps,
+                                                            getTableProps,
+                                                            getTableContainerProps,
+                                                        }) => (
+                                                            <TableContainer
+                                                                {...getTableContainerProps()}>
+                                                                <Table {...getTableProps()}>
+                                                                    <TableHead>
+                                                                        <TableRow>
+                                                                            {headers.map((header, i) => (
+                                                                                <TableHeader key={i} {...getHeaderProps({ header })}>
+                                                                                    {header.header}
+                                                                                </TableHeader>
+                                                                            ))}
+                                                                        </TableRow>
+                                                                    </TableHead>
+
+                                                                    <TableBody>
+                                                                        {rows.map((row, i) => (
+                                                                            <>
+                                                                                <TableRow key={i} {...getRowProps({ row })} >
+                                                                                    {row.cells.map((cell) => (
+                                                                                        <TableCell key={cell.id} >
+                                                                                            {
+                                                                                                cell.info && cell.info.header === "arch_id" ?
+                                                                                                    <Tag type="blue">
+                                                                                                        <Link to={"/boms/" + cell.value} >
+                                                                                                            {data?.architectures.find(arch => arch.arch_id === cell.value)?.name}
+                                                                                                        </Link>
+                                                                                                    </Tag>
+                                                                                                    : cell.value
+                                                                                            }
+                                                                                        </TableCell>
+                                                                                    ))}
+                                                                                </TableRow>
+                                                                            </>
+                                                                        ))}
+                                                                    </TableBody>
+                                                                </Table>
+                                                            </TableContainer>
+                                                        )}
+                                                    </DataTable>
+
+                                                    <Pagination
+                                                        totalItems={this.state.totalItems}
+                                                        backwardText="Previous page"
+                                                        forwardText="Next page"
+                                                        pageSize={this.state.currentPageSize}
+                                                        pageSizes={[5, 10, 15, 25]}
+                                                        itemsPerPageText="Items per page"
+                                                        onChange={({ page, pageSize }) => {
+                                                            if (pageSize !== this.state.currentPageSize) {
+                                                                this.setState({
+                                                                    currentPageSize: pageSize
+                                                                });
+                                                            }
+                                                            this.setState({
+                                                                firstRowIndex: pageSize * (page - 1)
+                                                            });
+                                                        }} />
+                                                </>
+                                            }
                                         </div>
                                     }
                                 </div>}
-                        </>
-                    }
-                    {data?.id && this.state.readme && this.state.showContent === "solution-readme" &&
-                        <div className="markdown" dangerouslySetInnerHTML={this.getMarkdownText()} />
-                    }
-                    {data?.id && diagram && this.state.showContent === "solution-diagram" &&
-                        <img style={{ maxWidth: '100%' }}
-                            src={`/api/solutions/${this.props.solId}/files/${diagram.Key}`}
-                            alt={`Diagram of solution ${this.props.solId}`} />
-                    }
+                            </>
+                        }
+                        {data?.id && this.state.readme && this.state.showContent === "solution-readme" &&
+                            <div className="markdown" dangerouslySetInnerHTML={this.getMarkdownText()} />
+                        }
+                        {data?.id && diagram && this.state.showContent === "solution-diagram" &&
+                            <img style={{ maxWidth: '100%' }}
+                                src={`/api/solutions/${this.props.solId}/files/${diagram.Key}`}
+                                alt={`Diagram of solution ${this.props.solId}`} />
+                        }
 
-                    {this.state.showModal && 
-                        <SolutionModal
-                            show={this.state.showModal}
-                            handleClose={this.hideModal}
-                            isUpdate={this.state.updateModal}
-                            data={this.state.data}
-                            toast={this.addNotification}
-                            isDuplicate={this.state.isDuplicate}
-                            user={this.state.user}
-                        />
-                    }
-                </div >
-            </>
+                        {this.state.showModal &&
+                            <SolutionModal
+                                show={this.state.showModal}
+                                handleClose={this.hideModal}
+                                isUpdate={this.state.updateModal}
+                                data={this.state.data}
+                                toast={this.addNotification}
+                                isDuplicate={this.state.isDuplicate}
+                                user={this.state.user}
+                            />
+                        }
+                    </div >
+                </>
         );
     }
 }
