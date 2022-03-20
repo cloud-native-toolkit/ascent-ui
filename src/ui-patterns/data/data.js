@@ -89,7 +89,7 @@ export const bomHeader = [
 
     {
         key: 'ibm_service',
-        header: 'IBM Service',
+        header: 'Module/Service',
     },
     {
         key: 'description',
