@@ -39,13 +39,15 @@ class SolutionModal extends Component {
                 long_desc: "",
                 public: false,
                 platform: "",
-            }
+            },
+            acceptedFiles: ['.md','.png','.jpg','.jpeg','.pdf','.sh','.template','.drawio','.tfvars','.gitignore']
         };
         if (this.props.isUpdate) {
             let jsonObject = JSON.parse(JSON.stringify(this.props.data));
             this.state = {
                 fields: jsonObject,
-                selectedArchs: jsonObject.architectures || []
+                selectedArchs: jsonObject.architectures || [],
+                acceptedFiles: ['.md','.png','.jpg','.jpeg','.pdf','.sh','.template','.drawio','.tfvars','.gitignore']
             }
         }
         this.handleChange = this.handleChange.bind(this);
@@ -55,7 +57,9 @@ class SolutionModal extends Component {
 
     async componentDidMount() {
         this.setState({
-            architectures: [...(await (await fetch(`/api/users/${encodeURIComponent(this.props?.user?.email)}/architectures`)).json()),...(await (await fetch(`/api/architectures`)).json())]
+            architectures: [...(await (await fetch(`/api/users/${encodeURIComponent(this.props?.user?.email)}/architectures`)).json()),...(await (await fetch(`/api/architectures`)).json())].filter((value, index, self) => {
+                return self.findIndex(elt => elt.arch_id === value.arch_id) === index;
+            })
         });
     };
 
@@ -231,17 +235,17 @@ class SolutionModal extends Component {
                                 {!this.props.isDuplicate && this.state.architectures ? <FormGroup legendText="BOMs" style={{ marginBottom: '1rem' }} ><MultiSelect.Filterable
                                     id='ref-archs'
                                     items={this.state.architectures}
-                                    itemToString={(item) => {return item.name}}
+                                    itemToString={(item) => {return `${item.name} (${item.arch_id})`}}
                                     onChange={(event) => this.setState({selectedArchs: event.selectedItems})}
                                     initialSelectedItems={this.state.selectedArchs}
-                                    placeholder='Control Families'
+                                    placeholder='Bill(s) of materials'
                                     size='sm'/> </FormGroup>: <ButtonSkeleton />}
                                 {!this.props.isDuplicate && <FileUploader multiple
-                                    accept={['.md','.png','.jpg','.jpeg','.pdf','.sh','.template','.drawio','.tfvars']}
+                                    accept={this.state.acceptedFiles}
                                     labelText={"Drag and drop files, or click to upload"}
                                     labelTitle={"Attached Files"}
                                     buttonLabel='Add file(s)'
-                                    labelDescription={"Max file size is 2MiB."}
+                                    labelDescription={`Max file size is 2MiB. Accepted files: ${this.state.acceptedFiles.join(' ')} `}
                                     filenameStatus='edit'
                                     onChange={(event) => this.setState({solutionFiles: event?.target?.files})}
                                     onDelete={() => this.setState({solutionFiles: undefined})} />}
