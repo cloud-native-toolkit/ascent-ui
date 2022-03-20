@@ -79,10 +79,10 @@ class LandingPage extends Component {
                         What is Ascent?
                       </h2>
                       <p className="landing-page__p">
-                        Ascent is a tool created by IBM to accelerate partner's journey to the IBM Cloud.
+                        Ascent is a tool created by the IBM Ecosystem Labs to accelerate IBM partner's adoption of IBM Software on any cloud.
                         Through automation and integration, Ascent enables enterprises to deliver compliant cloud architectures which can be
                         clearly evidenced and communicated with Governance, Risk and Compliance teams. Click on the links below to learn more
-                        about how Ascent automates and integrates Security Controls, Reference Architectures and Cloud Services.
+                        about how Ascent automates and integrates Reference Architectures, Security Controls and Cloud Services.
                       </p>
                       {this.state.user ? <Link to="/docs" ><Button>Learn more</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
 
@@ -104,13 +104,13 @@ class LandingPage extends Component {
                       />
                       <InfoCard
                         heading="Reference Architectures"
-                        body="Set up your compliant cloud environment using our pre-defined reference architectures for the IBM Cloud. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
+                        body="Build your solutions using our pre-defined reference architectures for IBM Cloud, AWS and Azure. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
                         icon={this.state.user ? <Link to="/boms" ><ModelBuilder32  /></Link> : <ModelBuilder32  />}
                       />
 
                       <InfoCard
-                        heading="Cloud Services"
-                        body="Navigate to our cloud services and learn more about how they are impacted by our compliance controls. Add those services to your own reference architecture and automate the provisioning of your custom cloud architecture."
+                        heading="Cloud Infrastructures and Services"
+                        body="Navigate our modules catalog, assemble them into your own custom reference architectures and deploy them in minutes using the infrascture as code bundles built by our solution builder!"
                         icon={this.state.user ? <Link to="/services" ><Cloud32  /></Link> : <Cloud32  />}
                       />
                     </InfoSection>

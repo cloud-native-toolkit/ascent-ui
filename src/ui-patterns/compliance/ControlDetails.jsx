@@ -41,7 +41,7 @@ class ControlDetails extends Component {
                                             {controlTypeTooltip[req?.control_type_1]}
                                             {controlTypeTooltip[req?.control_type_2]}
                                             {controlTypeTooltip[req?.control_type_3]}
-                                            {req?.scc === 'Y' && <Tooltip triggerText='SCC'>One or more Goals in <a href="https://www.ibm.com/cloud/security-and-compliance-center" target="_blank" rel="noopener noreferrer">IBM Cloud Security and Compliance Center</a> provide evidence for this control requirement.</Tooltip>}
+                                            {req?.scc === 'Y' && <Tooltip triggerText='SCC'>One or more Goals in <a href="https://www.ibm.com/cloud/security-and-compliance-center" target="_blank" rel="noopener noreferrer">Security and Compliance Center</a> provide evidence for this control requirement.</Tooltip>}
                                         </div>}>
                                             <p>{req?.description}</p>
                                             <UnorderedList nested>

@@ -16,15 +16,16 @@ class OverView extends Component {
                                 fontSize: "20px"
                             }}
                         >
-                            IBM Cloud Architectures
+                            Ascent - Solution Builder & Security Controls
                         </h2>
 
                         <p style={{ lineHeight: "20px" }}>
-
-                            ASCENT's goal is to simplify the complexity of the data attributes that surround a
-                            reference architecture for the IBM Cloud and the IBM Cloud for Financial Services.
+                            ASCENT's goal is to accelerate adoption of IBM Software on Hybrid-Cloud. Ascent drastically reduces the time and effort it takes
+                            to deploy solutions leveraging IBM Software on any Cloud, by providing a modular automation framework allowing users to build their 
+                            custom solutions and automate their deployment using our solution builder features.
+                            Ascent also simplifies the complexity of the data attributes that surround a rereference architecture for enterprise workloads with regulatory compliance.
                             When we review the regulatory controls the number of cloud services and the possible reference
-                            architectures these can be assembled in. It has become clear a tool will help manage this wide range of attributes.
+                            architectures these can be assembled in, it has become clear a tool will help manage this wide range of attributes.
                         </p>
                         <h2
                             style={{
