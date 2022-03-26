@@ -162,6 +162,9 @@ app.get('/userDetails', (req, res) => {
       if (req.user?.groups?.includes("ascent-fs-viewers")) {
         roles.push("fs-viewer");
       }
+      if (req.user?.groups?.includes("ascent-ibm-cloud")) {
+        roles.push("ibm-cloud");
+      }
       if (req.user?.groups?.includes("ascent-editors")) {
         roles.push("editor");
       }
@@ -170,7 +173,7 @@ app.get('/userDetails', (req, res) => {
       }
       res.json({
         name: "OpenShift User",
-        email: req.user?.metadata?.name,
+        email: req.user?.metadata?.name?.replace('IAM#', ''),
         given_name: "OpenShift",
         family_name: "User",
         roles: roles,
@@ -180,6 +183,9 @@ app.get('/userDetails', (req, res) => {
     } else {
       if (AuthStrategy.hasScope(req, "view_controls")) {
         roles.push("fs-viewer");
+      }
+      if (AuthStrategy.hasScope(req, "ibm_cloud")) {
+        roles.push("ibm-cloud");
       }
       if (AuthStrategy.hasScope(req, "edit")) {
         roles.push("editor");

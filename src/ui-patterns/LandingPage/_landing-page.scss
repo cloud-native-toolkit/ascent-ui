@@ -6,7 +6,8 @@
 }
 
 .landing-page__banner {
-  padding-top: $spacing-05;
+  margin-top: -1rem;
+  padding-top: 2rem;
   padding-bottom: $spacing-07 * 4;
   @include landing-page-background;
 }
