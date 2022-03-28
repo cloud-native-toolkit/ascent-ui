@@ -12,9 +12,9 @@ export class ServiceData implements ServiceDataApi {
         this.baseUrl = baseUrl || '/api/services';
     }
 
-    async getServices(): Promise<ServiceDataModel[]> {
+    async getServices(filter?: string): Promise<ServiceDataModel[]> {
         return superagent
-            .get(this.baseUrl)
+            .get(`${this.baseUrl}${filter ? `?filter=${filter}` : ''}`)
             .set('accept', 'application/json')
             .then(res => {
                 return res.body || [];

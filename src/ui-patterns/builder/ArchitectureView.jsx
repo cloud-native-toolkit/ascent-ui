@@ -25,10 +25,9 @@ import { spacing07 } from '@carbon/layout';
 import { green40 } from '@carbon/colors';
 
 import ImageWithStatus from './ImageWithStatus';
-
 import ArchitectureModal from './ArchitectureModal';
-
 import ValidateModal from '../ValidateModal';
+
 
 class ArchitectureView extends Component {
 
@@ -85,7 +84,7 @@ class ArchitectureView extends Component {
         if (this.state.userArchitectures?.length > 0) galleryData.push({
             id: 'user-boms',
             sectionTitle: 'Your BOMs',
-            isOpen: this.state.userArchitectures?.length>0,
+            isOpen: false,
             galleryItems: this.state.userArchitectures.map(arch => {
                 return {
                     title: arch.name,
@@ -112,19 +111,23 @@ class ArchitectureView extends Component {
         this.setState({ galleryData: galleryData });
     }
 
-    async loadArchitectures() {
+    filterProvider(bom) {
+        const provider = bom.platform ?? bom.provider ?? '';
+        const restrictedProviders = [];
+        if (!this.state.user?.config?.ibmContent) {
+            restrictedProviders.push('ibm');
+            restrictedProviders.push('ibm-cp');
+        }
+        if (!this.state.user?.config?.azureContent) restrictedProviders.push('azure');
+        if (!this.state.user?.config?.awsContent) restrictedProviders.push('aws');
+        return !restrictedProviders.includes(provider);
+    }
 
+    async loadArchitectures() {
         this.setState({
             architectures: [],
             archLoaded: false
         });
-        let iascableRelease;
-        try {
-            iascableRelease = await (await fetch('/api/architectures/public/version')).json();
-            if (iascableRelease.error) iascableRelease = undefined;
-        } catch (error) {
-            console.log(error);
-        }
 
         fetch("/api/architectures")
             .then(response => response.json())
@@ -133,10 +136,9 @@ class ArchitectureView extends Component {
                     .then(response => response.json())
                     .then(userArchitectures => {
                         this.setState({
-                            userArchitectures: userArchitectures,
-                            architectures: architectures,
-                            archLoaded: true,
-                            iascableRelease: iascableRelease
+                            userArchitectures: userArchitectures.filter(this.filterProvider.bind(this)),
+                            architectures: architectures.filter(this.filterProvider.bind(this)),
+                            archLoaded: true
                         }, () =>  this.loadGallery());
                     });
             });
@@ -185,20 +187,16 @@ class ArchitectureView extends Component {
 
     // Load the Data into the Project
     componentDidMount() {
-        fetch('/userDetails')
-            .then(res => res.json())
-            .then(user => {
-                if (user.name) {
-                    this.setState({ user: user || undefined });
-                    this.loadArchitectures();
-                } else {
-                    // Redirect to login page
-                    window.location.href = "/login";
-                }
-            })
-            .catch(err => {
-                this.loadArchitectures();
-            });
+        this.setState({ user: this.props.user });
+        this.loadArchitectures();
+    };
+
+    // Load the Data into the Project
+    componentDidUpdate() {
+        if (this.props.user?.config !== this.state.user?.config) {
+            this.setState({ user: this.props.user });
+            this.loadArchitectures();
+        }
     };
 
     syncIascable() {

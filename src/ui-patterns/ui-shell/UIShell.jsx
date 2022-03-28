@@ -1,21 +1,10 @@
 import React, { Component } from "react";
 
-
 import {
-  Tag,
-  Content,
-  Header,
-  HeaderMenuButton,
-  HeaderName,
-  HeaderNavigation,
-  HeaderGlobalBar,
-  HeaderPanel, Switcher, SwitcherItem, SwitcherDivider,
-  SkipToContent,
-  SideNav,
-  SideNavItems,
-  SideNavMenu,
-  SideNavMenuItem,
-  HeaderContainer
+  Tag, Content, Header, HeaderMenuButton, HeaderName, HeaderNavigation,
+  HeaderGlobalBar, HeaderPanel, SwitcherItem, SwitcherDivider,
+  SkipToContent, SideNav, SideNavItems, SideNavMenu, SideNavMenuItem,
+  HeaderContainer, Toggle
 } from 'carbon-components-react';
 
 import {
@@ -30,8 +19,23 @@ import {
   UserAvatar20,
   Login20,
   Locked16,
-  ArrowRight16 as ArrowRight
+  Logout20 as Logout
 } from '@carbon/icons-react';
+
+const ibmCloudDefaultConfig = {
+  complianceFeatures: true,
+  builderFeatures: false,
+  ibmContent: true,
+  azureContent: false,
+  awsContent: false,
+}
+const defaultConfig = {
+  complianceFeatures: false,
+  builderFeatures: true,
+  ibmContent: true,
+  azureContent: true,
+  awsContent: true,
+}
 
 class UIShell extends Component {
   header = "Architecture Builder";
@@ -54,13 +58,13 @@ class UIShell extends Component {
     "Nist-800"
   ]
 
-
   constructor(props) {
     super(props);
     this.state = {
       user: undefined,
       patternName: "Overview",
-      profileExpanded: false
+      profileExpanded: false,
+      content: defaultConfig
     };
   }
 
@@ -68,16 +72,46 @@ class UIShell extends Component {
     window.location.href = "/login";
   }
 
+  async setContent(content) {
+    if (this.state?.user?.email) {
+      fetch(`/api/users/${this.state.user.email}`, {
+            method: "PATCH",
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ config: content })
+        })
+        .then(res => res.json())
+        .then(user => {if (user.email) this.setState({ content: user.config, user: {...this.state.user, config: user.config} })})
+        .catch(console.error)
+    }
+  }
+
   async componentDidMount() {
     fetch('/userDetails')
     .then(res => res.json())
     .then(user => {
-      if (user.name) {
+      if (user.email) {
         setTimeout(() => {
           // Session expired, redirecting to login
           window.location.reload(false);
         }, (new Date(user?.sessionExpire)).getTime()-Date.now());
         this.setState({ user: user || undefined });
+        fetch(`/api/users/${this.state.user.email}`)
+        .then(res => res.json())
+        .then(userInfo => {
+          if (userInfo.config) this.setState({ content: userInfo.config, user: {...user, config: userInfo.config} });
+          else if (user.roles?.includes('ibm-cloud')) {
+            this.setState({ user: {...user, config: ibmCloudDefaultConfig} });
+            this.setContent(ibmCloudDefaultConfig);
+          }
+          else {
+            this.setState({ user: {...user, config: defaultConfig} });
+            this.setContent(defaultConfig);
+          }
+        })
+        .catch(console.error);
       } else {
         console.log(user);
       }
@@ -104,8 +138,8 @@ class UIShell extends Component {
                   isActive={isSideNavExpanded}
                 />
                 <Link to="/">
-                  <HeaderName prefix=''>
-                    Software Everywhere - ASCENT
+                  <HeaderName prefix='Software Everywhere - '>
+                    ASCENT
                   </HeaderName>
                 </Link>
                 
@@ -130,19 +164,32 @@ class UIShell extends Component {
                     </HeaderGlobalAction>
                   }
                 </HeaderGlobalBar>
-                <HeaderPanel aria-label="Header Panel" expanded={this.state.profileExpanded} style={{'bottom': 'auto', 'padding-bottom': '1rem', 'list-style-type': 'none'}}>
-                  <li class="bx--switcher__item" style={{display: 'flex'}}>
-                    <strong style={{'margin': '0 1rem', 'font-size': '1.3rem'}}>{(this.state.user && this.state.user.name) || "Username"}</strong>
-                    <Tag style={{'margin-left': 'auto', 'margin-top': '0px', 'margin-bottom': '8px'}}>{(this.state.user?.role) || "role"}</Tag>
+                <HeaderPanel aria-label="Header Panel" className="user-profile" expanded={this.state.profileExpanded} style={{bottom: 'auto', paddingBottom: '1rem', listStyleType: 'none'}}>
+                  <li className="bx--switcher__item title">
+                    <strong>{(this.state.user && this.state.user.name) || "Username"}</strong>
+                    <Tag>{(this.state.user?.role) || "role"}</Tag>
                   </li>
-                  <li class="bx--switcher__item"><strong style={{'margin': '0 1rem'}}>{(this.state.user && this.state.user.email) || "example@ibm.com"}</strong></li>
-                  <Switcher aria-label="Switcher Container">
-                      <SwitcherDivider />
-                      <SwitcherItem aria-label="Logout" href="/logout" style={{display: 'flex'}}>
-                        <span>Logout</span>
-                        <ArrowRight style={{'margin-left': 'auto'}}/>
-                      </SwitcherItem>
-                    </Switcher>
+                  <li className="bx--switcher__item"><strong>{(this.state.user?.email) || "example@ibm.com"}</strong></li>
+                  <SwitcherDivider />
+                  <li className="bx--switcher__item">
+                    <Toggle labelText="Compliance features" size="md" id='compliance-toggle' toggled={this.state.content.complianceFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, complianceFeatures: checked })} />
+                  </li>
+                  <li className="bx--switcher__item">
+                    <Toggle labelText="Solution Builder features" size="md" id='builder-toggle' toggled={this.state.content.builderFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, builderFeatures: checked })} />
+                  </li>
+                  {this.state.content.builderFeatures ? <>
+                    <li className="bx--switcher__item">
+                      <Toggle labelText="Azure content" size="sm" id='azure-toggle' toggled={this.state.content.azureContent} onToggle={(checked) => this.setContent({ ...this.state.content, azureContent: checked })} />
+                    </li>
+                    <li className="bx--switcher__item">
+                      <Toggle labelText="AWS content" size="sm" id='aws-toggle' toggled={this.state.content.awsContent} onToggle={(checked) => this.setContent({ ...this.state.content, awsContent: checked })} />
+                    </li>
+                  </> : <></>}
+                  <SwitcherDivider />
+                  <SwitcherItem aria-label="Logout" className="logout" href="/logout">
+                    <span>Logout</span>
+                    <Logout/>
+                  </SwitcherItem>
                 </HeaderPanel>
                 <SideNav aria-label="Side navigation" expanded={isSideNavExpanded}>
 
@@ -152,7 +199,7 @@ class UIShell extends Component {
                       <SideNavMenuItem>Overview</SideNavMenuItem>
                     </Link>
 
-                    <SideNavMenu title="Solution Builder">
+                    {this.state.content.builderFeatures ? <SideNavMenu title="Solution Builder">
 
                       {this.state.user ?
                         <Link to="/solutions">
@@ -178,17 +225,17 @@ class UIShell extends Component {
 
                       {this.state.user ?
                         <Link to="/services">
-                          <SideNavMenuItem>Services</SideNavMenuItem>
+                          <SideNavMenuItem>Modules</SideNavMenuItem>
                         </Link>
                         :
                         <SideNavMenuItem href='/services'>
-                          Services
+                          Modules
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
-                    </SideNavMenu>
+                    </SideNavMenu> : <></>}
 
-                    <SideNavMenu title="Compliance" >
+                    {this.state.content.complianceFeatures ? <SideNavMenu title="Compliance" >
 
                       {this.state.user?.roles?.includes("fs-viewer") ? <Link to="/onboarding">
                         <SideNavMenuItem>On Boarding</SideNavMenuItem>
@@ -220,34 +267,23 @@ class UIShell extends Component {
                           </SideNavMenuItem>
                       }
 
-                    </SideNavMenu>
+                    </SideNavMenu> : <></>}
 
-                    <SideNavMenu title="Documentation">
-
-                      <Link to="/docs">
-                        <SideNavMenuItem>Overview</SideNavMenuItem>
-                      </Link>
-
-                      <a target="_blank" href="https://modules.cloudnativetoolkit.dev" rel="noopener noreferrer" >
-                        <SideNavMenuItem >
-                          Automation Modules
-                          <Launch16 style={{"margin-left": "10px"}} />
-                        </SideNavMenuItem>
-                      </a>
-                      <a target="_blank" href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map" rel="noopener noreferrer" >
-                        <SideNavMenuItem>
-                          IBM Software Map
-                          <Launch16 style={{"margin-left": "10px"}} />
-                        </SideNavMenuItem>
-                      </a>
-                      <a target="_blank" href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" >
-                        <SideNavMenuItem>
-                          CLI
-                          <Launch16 style={{"margin-left": "10px"}} />
-                        </SideNavMenuItem>
-                      </a>
-
-                    </SideNavMenu>
+                    {this.state?.user?.email?.endsWith('ibm.com') ? <Link to="/docs">
+                      <SideNavMenuItem>About</SideNavMenuItem>
+                    </Link> : <></> }
+                    <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev" target="_blank" rel="noopener noreferrer">
+                      Automation Modules
+                      <Launch16 style={{marginLeft: "10px"}} />
+                    </SideNavMenuItem>
+                    {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map" target="_blank" rel="noopener noreferrer">
+                      IBM Software Map
+                      <Launch16 style={{marginLeft: "10px"}} />
+                    </SideNavMenuItem> : <></>}
+                    <SideNavMenuItem href="https://github.com/cloud-native-toolkit/iascable" target="_blank" rel="noopener noreferrer">
+                      CLI
+                      <Launch16 style={{marginLeft: "10px"}} />
+                    </SideNavMenuItem>
 
                   </SideNavItems>
                 </SideNav>
@@ -258,7 +294,7 @@ class UIShell extends Component {
               if (this.state.profileExpanded) this.setState({profileExpanded: false})
             }}>
 
-            <Routes />
+            <Routes user={this.state.user} />
 
           </Content>
         </Router>

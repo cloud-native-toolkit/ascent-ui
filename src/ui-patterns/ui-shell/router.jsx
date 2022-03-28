@@ -33,19 +33,6 @@ function BomDetails() {
         <BillofMaterialsComponent data={bomid}></BillofMaterialsComponent>
     );
 }
-function Boms() {
-    let { path } = useRouteMatch();
-    return (
-        <Switch>
-            <Route exact path={path}>
-                <ArchitectureComponent />
-            </Route>
-            <Route path={`${path}/:bomid`}>
-                <BomDetails />
-            </Route>
-        </Switch>
-    )
-}
 
 /**
  * Services
@@ -55,19 +42,6 @@ function ServiceDetails() {
     return (
         <ServiceDetailsComponent data={serviceId}></ServiceDetailsComponent>
     );
-}
-function Services() {
-    let { path } = useRouteMatch();
-    return (
-        <Switch>
-            <Route exact path={path}>
-                <ServiceComponent />
-            </Route>
-            <Route path={`${path}/:serviceId`}>
-                <ServiceDetails />
-            </Route>
-        </Switch>
-    )
 }
 
 /**
@@ -135,38 +109,44 @@ function SolutionDetails() {
         <SolutionDetailsComponent data={id}></SolutionDetailsComponent>
     );
 }
-function Solutions() {
-    let { path } = useRouteMatch();
-    return (
-        <Switch>
-            <Route exact path={path}>
-                <SolutionsComponent />
-            </Route>
-            <Route path={`${path}/:id`}>
-                <SolutionDetails />
-            </Route>
-        </Switch>
-    )
-}
 
-function Routes() {
-    return (
-        <div className='pattern-container'>
-            <Switch>
-                <Route path='/' exact component={LandingPage} />
-                <Route path='/' exact component={DetailsViewComponent} />
-                <Route path='/boms' component={Boms} />
-                <Route path='/solutions' component={Solutions} />
-                <Route path='/mapping' component={MappingComponent} />
-                <Route path='/controls' component={Controls} />
-                <Route path='/onboarding' component={OnBoardingComponent} />
-                <Route path='/nists' component={Nists} />
-                <Route path='/services' component={Services} />
-                <Route path='/docs' exact component={DetailsViewComponent} />
-                <Route path='*' component={NotFound} />
-            </Switch>
-        </div>
-    )
+class Routes extends React.Component {
+    render() {
+        return (
+            <div className='pattern-container'>
+                <Switch>
+                    <Route path='/' exact component={LandingPage} />
+                    <Route exact path='/boms'>
+                        <ArchitectureComponent user={this.props.user} />
+                    </Route>
+                    <Route path={`/boms/:bomid`}>
+                        <BomDetails />
+                    </Route>
+                    <Route exact path='/solutions'>
+                        <SolutionsComponent user={this.props.user} />
+                    </Route>
+                    <Route path={'/solutions/:id'}>
+                        <SolutionDetails />
+                    </Route>
+                    <Route path='/mapping' component={MappingComponent} />
+                    <Route path='/controls' component={Controls} />
+                    <Route path='/onboarding' component={OnBoardingComponent} />
+                    <Route path='/nists' component={Nists} />
+                    <Route exact path='/services'>
+                        <ServiceComponent user={this.props.user} />
+                    </Route>
+                    <Route path='/services/ibm'>
+                        <ServiceComponent ibm={true} user={this.props.user} />
+                    </Route>
+                    <Route path={'/services/:serviceId'}>
+                        <ServiceDetails />
+                    </Route>
+                    <Route path='/docs' exact component={DetailsViewComponent} />
+                    <Route path='*' component={NotFound} />
+                </Switch>
+            </div>
+        )
+    }
 }
 
 export default Routes;

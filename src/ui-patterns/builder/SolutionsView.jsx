@@ -54,25 +54,41 @@ class SolutionsView extends Component {
         fetch('/api/solutions')
             .then(res => res.json())
             .then(solutions => {
-                this.setState({ solutions: solutions, dataLoaded: true });
+                this.setState({ solutions: solutions.filter(sol => {
+                    const solId = sol.id?.toLowerCase();
+                    const solName = sol.name?.toLowerCase();
+                    const solDesc = sol.short_desc?.toLowerCase();
+                    const provider = sol.platform ?? sol.provider ?? '';
+                    const restrictedProviders = [];
+                    if (!this.state.user?.config?.ibmContent) {
+                        if (solId?.includes('ibm') || solName.includes('ibm')) return false;
+                        restrictedProviders.push('ibm');
+                        restrictedProviders.push('ibm-cp');
+                    }
+                    if (!this.state.user?.config?.azureContent) {
+                        if (solId?.includes('azure') || solName.includes('azure') || solDesc.includes('azure')) return false;
+                        restrictedProviders.push('azure');
+                    }
+                    if (!this.state.user?.config?.awsContent) {
+                        if (solId?.includes('aws') || solName.includes('aws') || solDesc.includes('aws')) return false;
+                        restrictedProviders.push('aws');
+                    }
+                    return !restrictedProviders.includes(provider);
+                }), dataLoaded: true });
             })
             .catch(console.error);
     }
 
-    // Load the Data into the Project
     componentDidMount() {
-        fetch('/userDetails')
-            .then(res => res.json())
-            .then(user => {
-                if (user.name) {
-                    this.setState({ user: user || undefined });
-                    this.loadSolutions();
-                } else {
-                    // Redirect to login page
-                    window.location.href = "/login";
-                }
-            })
-            .catch(console.error);
+        this.setState({ user: this.props.user });
+        this.loadSolutions();
+    };
+
+    componentDidUpdate() {
+        if (this.props.user?.config !== this.state.user?.config) {
+            this.setState({ user: this.props.user });
+            this.loadSolutions();
+        }
     };
 
     downloadTerraform(solution) {

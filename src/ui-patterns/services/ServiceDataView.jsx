@@ -57,7 +57,19 @@ class ServiceDataView extends Component {
     }
 
     async loadTable() {
-        const serviceDetails = await this.props.service.getServices();
+        const filter = this.props.ibm ? encodeURIComponent('{"where": {"or": [{"ibm_catalog_id": {"nin": [null,""]}}, {"service_id": {"regexp":"/.*ibm.*/"}}]}}') : undefined;
+        let serviceDetails = await this.props.service.getServices(filter);
+        serviceDetails = serviceDetails.filter(service => {
+            const provider = service.cloudProvider || service.softwareProvider || service.provider || '';
+            const restrictedProviders = [];
+            if (!this.state.user?.config?.ibmContent) {
+                restrictedProviders.push('ibm');
+                restrictedProviders.push('ibm-cp');
+            }
+            if (!this.state.user?.config?.azureContent) restrictedProviders.push('azure');
+            if (!this.state.user?.config?.awsContent) restrictedProviders.push('aws');
+            return !restrictedProviders.includes(provider);
+        });
         for (let index = 0; index < serviceDetails.length; index++) {
             let row = serviceDetails[index];
             row.module_id = row.id;
@@ -94,17 +106,15 @@ class ServiceDataView extends Component {
     }
 
     async componentDidMount() {
-        fetch('/userDetails')
-        .then(res => res.json())
-        .then(user => {
-            if (user.name) {
-                this.setState({ user: user || undefined });
-            } else {
-                // Redirect to login page
-                window.location.href = "/login";
-            }
-        })
+        this.setState({ user: this.props.user });
         await this.loadTable();
+    }
+
+    async componentDidUpdate() {
+        if (this.props.user?.config !== this.state.user?.config) {
+            this.setState({ user: this.props.user });
+            await this.loadTable();
+        }
     }
 
     openPane = async (serviceId) => {
