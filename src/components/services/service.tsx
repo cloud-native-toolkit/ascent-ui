@@ -1,10 +1,16 @@
 import React, { Component } from "react";
-import ServiceDataView from "../../ui-patterns/services/ServiceDataView";
-
-import { ServiceDataApi, AutomationApi } from '../../services';
-
 import { Container } from "typescript-ioc";
-class ServiceComponent extends Component<any, any> {
+
+import ServiceDataView from "../../ui-patterns/services/ServiceDataView";
+import { ServiceDataApi, AutomationApi } from '../../services';
+import { User } from "../../models/user";
+
+interface ServiceComponentProps {
+    ibm?: boolean,
+    user: User,
+}
+
+class ServiceComponent extends Component<ServiceComponentProps, any> {
 
     serviceDataAPI: ServiceDataApi;
     automationApi: AutomationApi;
@@ -23,7 +29,7 @@ class ServiceComponent extends Component<any, any> {
 
     render() {
         return (
-            <ServiceDataView service={this.serviceDataAPI} automationService={this.automationApi} />
+            <ServiceDataView service={this.serviceDataAPI} automationService={this.automationApi} ibm={this.props.ibm} user={this.props.user} />
         );
     }
 }

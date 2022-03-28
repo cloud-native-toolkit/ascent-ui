@@ -1,10 +1,12 @@
 import React, { Component } from "react";
+import { Container } from "typescript-ioc";
+
 import ArchitectureView from "../../ui-patterns/builder/ArchitectureView";
-
 import { ArchitectureDataApi } from '../../services';
+import { User } from "../../models/user";
 
-import {Container} from "typescript-ioc";
-class ArchitectureComponent extends Component<any, any> {
+
+class ArchitectureComponent extends Component<{ user: User }, any> {
 
     architectureDataAPI: ArchitectureDataApi;
     constructor(props: any) {
@@ -17,7 +19,7 @@ class ArchitectureComponent extends Component<any, any> {
 
     render() {
         return (
-            <ArchitectureView archService={this.architectureDataAPI} />
+            <ArchitectureView archService={this.architectureDataAPI} user={this.props.user} />
         );
     }
 }

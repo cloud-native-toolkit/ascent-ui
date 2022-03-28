@@ -114,11 +114,12 @@ class ArchitectureModal extends Component {
                     bomIx = bomIx + 1;
                 }
                 this.props.architectureService.importBomYaml(data, this.state.overwrite === "overwrite", this.state.fields?.public).then(res => {
-                    console.log(res);
                     if (res && res.body && res.body.error) {
                         this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                     } else {
                         this.props.toast("success", "Success", `BOM(s) successfully imported!`);
+                        this.props.handleClose();
+                        this.props.handleReload();
                     }
                 });
             } else {

@@ -64,7 +64,6 @@ class UIShell extends Component {
       user: undefined,
       patternName: "Overview",
       profileExpanded: false,
-      contentLoading: false,
       content: defaultConfig
     };
   }
@@ -75,7 +74,6 @@ class UIShell extends Component {
 
   async setContent(content) {
     if (this.state?.user?.email) {
-      this.setState({ contentLoading: true });
       fetch(`/api/users/${this.state.user.email}`, {
             method: "PATCH",
             headers: {
@@ -85,7 +83,7 @@ class UIShell extends Component {
             body: JSON.stringify({ config: content })
         })
         .then(res => res.json())
-        .then(user => {if (user.email) this.setState({ contentLoading: false, content: user.config })})
+        .then(user => {if (user.email) this.setState({ content: user.config, user: {...this.state.user, config: user.config} })})
         .catch(console.error)
     }
   }
@@ -99,13 +97,19 @@ class UIShell extends Component {
           // Session expired, redirecting to login
           window.location.reload(false);
         }, (new Date(user?.sessionExpire)).getTime()-Date.now());
-        this.setState({ contentLoading: true, user: user || undefined });
+        this.setState({ user: user || undefined });
         fetch(`/api/users/${this.state.user.email}`)
         .then(res => res.json())
         .then(userInfo => {
-          if (userInfo.config) this.setState({ contentLoading: false, content: userInfo.config });
-          else if (user.roles?.includes('ibm-cloud')) this.setContent(ibmCloudDefaultConfig);
-          else this.setContent(ibmCloudDefaultConfig);
+          if (userInfo.config) this.setState({ content: userInfo.config, user: {...user, config: userInfo.config} });
+          else if (user.roles?.includes('ibm-cloud')) {
+            this.setState({ user: {...user, config: ibmCloudDefaultConfig} });
+            this.setContent(ibmCloudDefaultConfig);
+          }
+          else {
+            this.setState({ user: {...user, config: defaultConfig} });
+            this.setContent(defaultConfig);
+          }
         })
         .catch(console.error);
       } else {
@@ -175,9 +179,6 @@ class UIShell extends Component {
                   </li>
                   {this.state.content.builderFeatures ? <>
                     <li className="bx--switcher__item">
-                      <Toggle labelText="IBM content" size="sm" id='ibm-toggle' toggled={this.state.content.ibmContent} onToggle={(checked) => this.setContent({ ...this.state.content, ibmContent: checked })} />
-                    </li>
-                    <li className="bx--switcher__item">
                       <Toggle labelText="Azure content" size="sm" id='azure-toggle' toggled={this.state.content.azureContent} onToggle={(checked) => this.setContent({ ...this.state.content, azureContent: checked })} />
                     </li>
                     <li className="bx--switcher__item">
@@ -198,7 +199,7 @@ class UIShell extends Component {
                       <SideNavMenuItem>Overview</SideNavMenuItem>
                     </Link>
 
-                    <SideNavMenu title="Solution Builder">
+                    {this.state.content.builderFeatures ? <SideNavMenu title="Solution Builder">
 
                       {this.state.user ?
                         <Link to="/solutions">
@@ -224,17 +225,17 @@ class UIShell extends Component {
 
                       {this.state.user ?
                         <Link to="/services">
-                          <SideNavMenuItem>Services</SideNavMenuItem>
+                          <SideNavMenuItem>Modules</SideNavMenuItem>
                         </Link>
                         :
                         <SideNavMenuItem href='/services'>
-                          Services
+                          Modules
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
-                    </SideNavMenu>
+                    </SideNavMenu> : <></>}
 
-                    <SideNavMenu title="Compliance" >
+                    {this.state.content.complianceFeatures ? <SideNavMenu title="Compliance" >
 
                       {this.state.user?.roles?.includes("fs-viewer") ? <Link to="/onboarding">
                         <SideNavMenuItem>On Boarding</SideNavMenuItem>
@@ -266,7 +267,7 @@ class UIShell extends Component {
                           </SideNavMenuItem>
                       }
 
-                    </SideNavMenu>
+                    </SideNavMenu> : <></>}
 
                     {this.state?.user?.email?.endsWith('ibm.com') ? <Link to="/docs">
                       <SideNavMenuItem>About</SideNavMenuItem>
@@ -293,7 +294,7 @@ class UIShell extends Component {
               if (this.state.profileExpanded) this.setState({profileExpanded: false})
             }}>
 
-            <Routes />
+            <Routes user={this.state.user} />
 
           </Content>
         </Router>

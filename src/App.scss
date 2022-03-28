@@ -23,7 +23,6 @@ a:hover, a:visited, a:link, a:active {
 }
 
 .pattern-container {
-  padding-top: 1em;
   padding-right: 1em;
 }
 
@@ -36,4 +35,8 @@ table.bx--data-table tbody tr td {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.bx--breadcrumb {
+  padding-top: 1rem;
 }
