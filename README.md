@@ -7,10 +7,7 @@ Ascent is a tool created by the IBM Ecosystem Lab to accelerate the adoption of 
 This app has been developped using an opinionated set of components for modern web development, including:
 
 * [React](https://facebook.github.io/react/)
-* [TypeScript](https://www.typescriptlang.org/)
-* [Webpack](https://webpack.github.io/)
-* [Sass](http://sass-lang.com/) 
-* [gulp](http://gulpjs.com/)
+* [Sass](http://sass-lang.com/)
 * [Carbon](https://www.carbondesignsystem.com/)
 
 ### Deploying 

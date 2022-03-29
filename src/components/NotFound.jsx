@@ -5,22 +5,26 @@ import {
 } from 'react-router-dom';
 
 import {
-    ToastNotification,
+    ToastNotification, Grid, Row
 } from 'carbon-components-react';
 
 
 class NotFound extends Component {
     render() {
         return (
-            <ToastNotification
-                style={{
-                    width: 'fit-content',
-                    paddingRight: '1rem'
-                }}
-                title='404 Not Found'
-                subtitle={<span>This is not the web page you are looking for. <Link to='/'>Return Home</Link></span>}
-                hideCloseButton
-            />
+            <Grid>
+                <Row>
+                    <ToastNotification
+                        style={{
+                            width: 'fit-content',
+                            paddingRight: '1rem'
+                        }}
+                        title='404 Not Found'
+                        subtitle={<span>This is not the web page you are looking for. <Link to='/'>Return Home</Link></span>}
+                        hideCloseButton
+                    />
+                </Row>
+            </Grid>
         );
     }
 }
