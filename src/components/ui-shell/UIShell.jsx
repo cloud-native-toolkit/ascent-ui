@@ -4,7 +4,7 @@ import {
   Tag, Content, Header, HeaderMenuButton, HeaderName, HeaderNavigation,
   HeaderGlobalBar, HeaderPanel, SwitcherItem, SwitcherDivider,
   SkipToContent, SideNav, SideNavItems, SideNavMenu, SideNavMenuItem,
-  HeaderContainer, Toggle
+  HeaderContainer, Toggle, ToastNotification
 } from 'carbon-components-react';
 
 import {
@@ -66,7 +66,8 @@ class UIShell extends Component {
       user: undefined,
       patternName: "Overview",
       profileExpanded: false,
-      content: defaultConfig
+      content: defaultConfig,
+      notifications: []
     };
   }
 
@@ -88,6 +89,34 @@ class UIShell extends Component {
         .then(user => { if (user.email) this.setState({ content: user.config, user: { ...this.state.user, config: user.config } }) })
         .catch(console.error)
     }
+  }
+
+  addNotification(type, message, detail) {
+    console.log(message);
+    this.setState(prevState => ({
+      notifications: [
+        ...prevState.notifications,
+        {
+          message: message || "Notification",
+          detail: detail || "Notification text",
+          severity: type || "info"
+        }
+      ]
+    }));
+  }
+
+  renderNotifications() {
+    return this.state.notifications.map(notification => {
+      return (
+        <ToastNotification
+          title={notification.message}
+          subtitle={notification.detail}
+          kind={notification.severity}
+          timeout={10000}
+          caption={false}
+        />
+      );
+    });
   }
 
   async componentDidMount() {
@@ -293,7 +322,11 @@ class UIShell extends Component {
           if (this.state.profileExpanded) this.setState({ profileExpanded: false })
         }}>
 
-          <AppRoutes user={this.state.user} />
+          <div className='notif'>
+            {this.state.notifications.length !== 0 && this.renderNotifications()}
+          </div>
+
+          <AppRoutes user={this.state.user} addNotification={this.addNotification.bind(this)} />
 
         </Content>
       </BrowserRouter>

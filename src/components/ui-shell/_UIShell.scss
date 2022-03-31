@@ -79,3 +79,24 @@ div.bx--side-nav__link > .bx--side-nav__link-text {
 .bx--side-nav__link-text svg {
     margin-left: .5rem;
 }
+
+// Notifications
+
+div.notif {
+    position: fixed;
+    top: 3rem;
+    right: 1rem;
+    z-index: 10000;
+}
+
+// Grid
+
+div.bx--grid {
+    margin-left: unset;
+}
+
+// Breadcrumbs
+
+.bx--breadcrumb {
+  padding-top: 1rem;
+}
