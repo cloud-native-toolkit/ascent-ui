@@ -37,41 +37,6 @@
 
 // Side nav
 
-div.bx--side-nav__link {
-    outline: 2px solid transparent;
-    outline-offset: -2px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    line-height: 1.28572;
-    letter-spacing: 0.16px;
-    position: relative;
-    display: flex;
-    min-height: 2rem;
-    align-items: center;
-    padding: 0 1rem;
-    text-decoration: none;
-    transition: color 110ms, background-color 110ms, outline 110ms;
-}
-
-.bx--side-nav__menu div.bx--side-nav__link {
-    height: 2rem;
-    min-height: 2rem;
-    padding-left: 2rem;
-    font-weight: 400;
-}
-
-div.bx--side-nav__link > .bx--side-nav__link-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: #525252;
-    font-size: 0.875rem;
-    letter-spacing: 0.1px;
-    line-height: 1.25rem;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
 .bx--side-nav__link-text {
     display: flex;
     align-items: center;
