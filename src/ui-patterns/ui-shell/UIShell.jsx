@@ -15,11 +15,8 @@ import Routes from "./router";
 import BuilderHeader from "../../components/BuilderHeader/BuilderHeader";
 import {HeaderGlobalAction} from "carbon-components-react/lib/components/UIShell";
 import {
-  Launch16,
-  UserAvatar20,
-  Login20,
-  Locked16,
-  Logout20 as Logout
+  Launch16, UserAvatar20, Login20, Locked16, Logout20 as Logout, Copy20,
+  TaskComplete20
 } from '@carbon/icons-react';
 
 const ibmCloudDefaultConfig = {
@@ -61,6 +58,7 @@ class UIShell extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      copyTokenIcon: <Copy20 />,
       user: undefined,
       patternName: "Overview",
       profileExpanded: false,
@@ -121,6 +119,21 @@ class UIShell extends Component {
     });
   }
 
+  fetchToken() {
+    fetch('/api/token')
+      .then(res => res.json())
+      .then(res => {
+        if (!res.error) {
+          navigator.clipboard.writeText(res.token);
+          this.setState({copyTokenIcon: <TaskComplete20 />});
+          setTimeout(() => {
+            this.setState({copyTokenIcon: <Copy20 />});
+          }, 2000);
+        }
+      })
+      .catch(console.error);
+  }
+
   render() {
 
     return (
@@ -170,6 +183,7 @@ class UIShell extends Component {
                     <Tag>{(this.state.user?.role) || "role"}</Tag>
                   </li>
                   <li className="bx--switcher__item"><strong>{(this.state.user?.email) || "example@ibm.com"}</strong></li>
+                  {this.state.user?.role === 'admin' ? <div><SwitcherDivider /><SwitcherItem onClick={this.fetchToken.bind(this)}><span>API token</span>{this.state.copyTokenIcon}</SwitcherItem></div> : <></>}
                   <SwitcherDivider />
                   <li className="bx--switcher__item">
                     <Toggle labelText="Compliance features" size="md" id='compliance-toggle' toggled={this.state.content.complianceFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, complianceFeatures: checked })} />

@@ -209,6 +209,27 @@ app.get('/userDetails', (req, res) => {
 })
 app.use(express.static(path.join(__dirname, "../build")));
 
+
+app.use('/api/token', (req, res, next) => {
+  if (  req.isAuthenticated() &&
+      ((AUTH_PROVIDER === "appid" && AuthStrategy.hasScope(req, "super_edit"))
+      || (AUTH_PROVIDER === "openshift" && req.user.groups.includes("ascent-admins"))))
+  {
+    if (AUTH_PROVIDER === "openshift") {
+      res.json({token: `${req.user.token}`});
+    } else {
+      res.json({token: `${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`});
+    }
+    return next();
+  } else {
+    res.status(401).json({
+      error: {
+        message: "You cannot perform this request."
+      }
+    });
+  }
+});
+
 const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
 app.use('/api', (req, res, next) => {
   if (  req.isAuthenticated() && (!protectedMethods.includes(req.method)
