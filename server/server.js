@@ -216,9 +216,9 @@ app.use('/api/token', (req, res, next) => {
       || (AUTH_PROVIDER === "openshift" && req.user.groups.includes("ascent-admins"))))
   {
     if (AUTH_PROVIDER === "openshift") {
-      res.json({token: `${req.user.token}`});
+      res.json({token: Buffer.from(`${req.user.token}`).toString('base64')});
     } else {
-      res.json({token: `${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`});
+      res.json({token: Buffer.from(`${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`).toString('base64')});
     }
     return next();
   } else {

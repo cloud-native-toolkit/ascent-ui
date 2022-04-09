@@ -19,6 +19,8 @@ import {
   TaskComplete20
 } from '@carbon/icons-react';
 
+import b64 from "../../utils/b64";
+
 const ibmCloudDefaultConfig = {
   complianceFeatures: true,
   builderFeatures: false,
@@ -124,7 +126,7 @@ class UIShell extends Component {
       .then(res => res.json())
       .then(res => {
         if (!res.error) {
-          navigator.clipboard.writeText(res.token);
+          navigator.clipboard.writeText(b64.decode(res.token));
           this.setState({copyTokenIcon: <TaskComplete20 />});
           setTimeout(() => {
             this.setState({copyTokenIcon: <Copy20 />});
