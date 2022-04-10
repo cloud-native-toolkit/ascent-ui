@@ -7,6 +7,10 @@
     display: none;
 }
 
+.iot--sample-tile-icon .software-logo {
+    width: 100px;
+}
+
 label.bx--tile {
     max-height: 8rem;
 }
@@ -59,9 +63,30 @@ label.bx--tile {
     position: relative;
 }
 
+
+.plans .plan-content .coming-soon div {
+    background: beige;
+}
+
 .plans .plan .plan-content img {
     margin-right: 30px;
     height: 72px;
+}
+
+.arch img {
+    margin-right: 30px;
+    height: 72px;
+    display:flex;
+    align:right;
+}
+
+div .arch p  {
+    margin-bottom: 10px;
+    display: block;
+    font-size: 20px;
+    line-height: 24px;
+    color: #252f42;
+    align-items: top;
 }
 
 .plans .plan .plan-details span {
