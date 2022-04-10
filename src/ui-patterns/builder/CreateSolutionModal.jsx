@@ -556,6 +556,7 @@ class CreateSolutionModal extends Component {
                                         like the solution name and description. Dont worry you can edit you solution once its created to refine it so you client or partner is completely happy
                                         </div>
 
+                                        <br></br>
 
                                         <Grid>
                                             <Row>
@@ -670,6 +671,39 @@ class CreateSolutionModal extends Component {
 
                                 <PageWizardStep id="summary" key="summary" label="Summary">
                                     <PageWizardStepTitle>Summary: Is this the solution you want ?</PageWizardStepTitle>
+
+                                    <div className="arch">
+
+                                        <p>You have chosen to create an IBM Technology solution called "My rob Thomas demo"</p>
+
+                                        <p>You have select the <b>Demo</b> persona which is ideal for first experince</p>
+                                        <img loading="lazy" src={"/images/techsales_tammy.png"}
+                                             alt=""/>
+                                        <p>and the platform</p>
+                                        <img loading="lazy" src={"/images/azure.png"}
+                                             alt="" align={"top"}/>
+
+                                        <p>You have chosen the Quick Start reference archiecture which is very simple to setup</p>
+                                        <img loading="lazy" src={"/images/quick-start.png"}
+                                             alt="" align={"top"}/>
+                                        <p>This will install Red Hat OpenShift ARO/IPI with the following Storage Option </p>
+                                        <img loading="lazy" src={"/images/portworx.png"}
+                                             alt="" align={"top"}/>
+                                        <p>You have chosen the following IBM Software bundles to help get your solution started </p>
+                                        <ul>
+                                            <li>Maximo Application Suite</li>
+                                            <li>Integration</li>
+                                            <li>Data Fabric</li>
+                                        </ul>
+                                        <p>If you happy with this selection of content for your solution click on the Submit button below. You can always change the
+                                            content later by adding an removing your own bill of materials</p>
+
+                                    </div>
+
+
+
+
+
                                 </PageWizardStep>
 
 
