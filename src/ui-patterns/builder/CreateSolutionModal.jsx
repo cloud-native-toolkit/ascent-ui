@@ -206,7 +206,7 @@ class CreateSolutionModal extends Component {
                 image : "ibmcloud.png",
                 enabled : true,
                 boms: {
-                    quick_start:["",""],
+                    quick_start:["100-ibm-account","110-","120-"],
                     standard: ["",""],
                     advanced: ["",""]
                 }
@@ -225,7 +225,7 @@ class CreateSolutionModal extends Component {
                 }
             },
             {
-                title : "Power",
+                title : "IBM Cloud + Power",
                 desc  : "IBM Power 10 AIX environments with Red Hat OpenShift",
                 docs  : "",
                 image : "power.webp",
@@ -237,7 +237,7 @@ class CreateSolutionModal extends Component {
                 }
             },
             {
-                title : "Z Platform",
+                title : "IBM Cloud + Z Platform",
                 desc  : "IBM z/Linux and z/OS environment with Red Hat OpenShift",
                 docs  : "",
                 image : "zlogo.png",
@@ -284,6 +284,7 @@ class CreateSolutionModal extends Component {
                 status: "Released",
                 type: "",
                 description: "",
+                boms : ["",""]
             },
             {
                 title: "maximo",
