@@ -23,6 +23,8 @@ import {
 
 import ValidateModal from '../ValidateModal';
 import SolutionModal from "./SolutionModal";
+import CreateSolutionModal from "./CreateSolutionModal";
+
 import SolutionDetailsPane from './SolutionDetailsPane';
 
 let groupByN = (n, data) => {
@@ -41,9 +43,11 @@ class SolutionsView extends Component {
             solutions: [],
             notifications: [],
             showModal: false,
+            showCreateModal: false,
             user: {},
         };
         this.showModal = this.showModal.bind(this);
+        this.showCreateModal = this.showCreateModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.addNotification = this.addNotification.bind(this);
         this.deleteSolution = this.deleteSolution.bind(this);
@@ -137,6 +141,12 @@ class SolutionsView extends Component {
         }
     }
 
+    async showCreateModal() {
+        this.setState({
+            showCreateModal: true
+        });
+    }
+
     async showModal(updateModal) {
         this.setState({
             showModal: true,
@@ -146,6 +156,7 @@ class SolutionsView extends Component {
 
     async hideModal() {
         this.setState({
+            showCreateModal: false,
             showModal: false,
             isDuplicate: false,
             updateModal: false
@@ -190,7 +201,7 @@ class SolutionsView extends Component {
 
             <div className="bx--grid"  >
 
-                <div class='notif'> 
+                <div class='notif'>
                     {this.state.notifications.length !== 0 && this.renderNotifications()}
                 </div>
 
@@ -206,8 +217,17 @@ class SolutionsView extends Component {
                                 renderIcon={Add16} >
                                 Create
                             </Button>}
+                            &nbsp;
+                            {this.state.user?.role === "admin" && <Button
+                                size='sm'
+                                onClick={() => this.showCreateModal()}
+                                renderIcon={Add16} >
+                                Guided
+                            </Button>}
+
                         </h2>
                         <br></br>
+
                     </div>
                 </div>
                 {groupByN(4, this.state.solutions).map(solGroup => (
@@ -223,7 +243,7 @@ class SolutionsView extends Component {
                                             <Card.Text>{solution.short_desc}</Card.Text>
                                         </Card.Body>
                                         <Card.Footer>
-                                            <Card.Link href="#" 
+                                            <Card.Link href="#"
                                                 // onClick={() => {
                                                 //     this.setState({ isPaneOpen: true, dataDetails:undefined });
                                                 //     fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
@@ -256,8 +276,8 @@ class SolutionsView extends Component {
                         {/* </Row> */}
                 </CardGroup>
                 ))}
-                
-                {this.state.showModal && 
+
+                {this.state.showModal &&
                     <SolutionModal
                         show={this.state.showModal}
                         handleClose={this.hideModal}
@@ -269,7 +289,19 @@ class SolutionsView extends Component {
                     />
                 }
 
-                {this.state.showValidate && this.state.curSol && 
+                {this.state.showCreateModal &&
+                    <CreateSolutionModal
+                        show={this.state.showCreateModal}
+                        handleClose={this.hideModal}
+                        isUpdate={this.state.updateModal}
+                        data={this.state.dataDetails}
+                        toast={this.addNotification}
+                        isDuplicate={this.state.isDuplicate}
+                        user={this.state.user}
+                    />
+                }
+
+                {this.state.showValidate && this.state.curSol &&
                     <ValidateModal
                         danger
                         submitText="Delete"
@@ -282,7 +314,7 @@ class SolutionsView extends Component {
                                 showValidate: false,
                                 curSol: undefined
                             });
-                        }} 
+                        }}
                         onRequestSubmit={this.deleteSolution}
                         onSecondarySubmit={() => {
                             this.setState({
@@ -293,7 +325,7 @@ class SolutionsView extends Component {
                 }
 
                 <div>
-                    <SolutionDetailsPane 
+                    <SolutionDetailsPane
                         data={this.state.dataDetails}
                         open={this.state.isPaneOpen}
                         buttonClick={() => {
