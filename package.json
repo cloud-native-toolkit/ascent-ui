@@ -108,7 +108,7 @@
     "start": "node server/server.js",
     "start:dev": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "CI=true echo 'skipped'",
+    "test": "CI=true node scripts/test.js",
     "test:coverage": "CI=true node scripts/test.js --coverage",
     "tdd": "node scripts/test.js",
     "debug": "chmod +x run-debug && ./run-debug",
@@ -149,7 +149,7 @@
     "testEnvironment": "jsdom",
     "testURL": "http://localhost",
     "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
@@ -158,6 +158,7 @@
       "^.+\\.module\\.(css|sass|scss)$"
     ],
     "moduleNameMapper": {
+      "^lodash-es$": "lodash",
       "^react-native$": "react-native-web",
       "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
     },
