@@ -1,18 +1,49 @@
+.modal-wizard .arch {
+    width: 100%;
+    display: flex;
+}
+
+.modal-wizard .summary ul  {
+    list-style: inside;
+}
+
+.modal-wizard .summary ul li  {
+    font-weight: 600;
+}
+
+.modal-wizard p {
+    padding-right: 1rem;
+}
+
+.modal-wizard p img {
+    padding: .5rem;
+}
+
 .modal-wizard .iot-simple-pagination-container{
     border: 1px solid #e0e0e0;
 }
 
 .modal-wizard .iot--tile-catalog--header {
-    height: 0px;
-}
-
-.modal-wizard .iot--sample-tile-icon,
-.modal-wizard .iot--greedy-tile {
     display: none;
 }
 
-.iot--sample-tile-icon .software-logo {
-    width: 100px;
+.modal-wizard .bx--tile.iot--greedy-tile {
+    display: none;
+}
+
+.modal-wizard .iot--sample-tile-icon .software-logo,
+.modal-wizard .iot--sample-tile-icon svg {
+    width: 75px;
+    height: 75px;
+}
+
+.modal-wizard .plan-content.coming-soon {
+    background-color: rgb(230, 230, 230);
+    cursor:default;
+}
+
+.modal-wizard .flex-inline {
+    display: flex;
 }
 
 label.bx--tile {
@@ -40,13 +71,15 @@ label.bx--tile {
 .plans .plan input[type="radio"] {
     position: absolute;
     opacity: 0;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
 }
 
 .plans .plan {
     cursor: pointer;
-    width: 48.5%;
-    margin-bottom: 20px;
+    width: 48%;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    max-width: calc(100% - 3rem);
 }
 
 .plans .plan .plan-content {
@@ -77,14 +110,17 @@ label.bx--tile {
     height: 72px;
 }
 
-.arch img {
+.platform img {
+    padding: .5rem;
+}
+
+.arch img, .summary img {
     margin-right: 30px;
     height: 72px;
     display:flex;
-    align:right;
 }
 
-div .arch p  {
+div .arch p, div .summary p  {
     margin-bottom: 10px;
     display: block;
     font-size: 20px;
