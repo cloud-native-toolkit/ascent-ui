@@ -2,6 +2,10 @@
     border: 1px solid #e0e0e0;
 }
 
+.modal-wizard .iot--tile-catalog--header {
+    height: 0px;
+}
+
 .modal-wizard .iot--sample-tile-icon,
 .modal-wizard .iot--greedy-tile {
     display: none;
@@ -117,7 +121,7 @@ div .arch p  {
     box-shadow: 0px 3px 5px 0px #e8e8e8;
 }
 
-.plans .plan input[type="radio"]:checked + .plan-content:after {
+.plans .plan input[type="radio"].checked + .plan-content:after {
     content: "";
     position: absolute;
     height: 8px;
@@ -131,7 +135,7 @@ div .arch p  {
     box-shadow: 0px 0px 0px 2px #0066ff;
 }
 
-.plans .plan input[type="radio"]:checked + .plan-content {
+.plans .plan input[type="radio"].checked + .plan-content {
     border: 2px solid #216ee0;
     background: #eaf1fe;
     -webkit-transition: ease-in 0.3s;
@@ -165,7 +169,7 @@ div .arch p  {
         display: inline-block;
     }
 
-    .plans .plan input[type="radio"]:checked + .plan-content:after {
+    .plans .plan input[type="radio"].checked + .plan-content:after {
         top: 45%;
         -webkit-transform: translate(-50%);
         -ms-transform: translate(-50%);
@@ -189,7 +193,7 @@ div .arch p  {
         transition: height 0.4s;
     }
 
-    .plans .plan input[type="radio"]:checked + .plan-content:after {
+    .plans .plan input[type="radio"].checked + .plan-content:after {
         top: 20px;
         right: 10px;
     }

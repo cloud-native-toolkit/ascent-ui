@@ -24,7 +24,7 @@ const CatalogContent = ({ logo, icon, title, displayName, status, type, descript
     <div className={`iot--sample-tile`}>
         {icon ? <div className={`iot--sample-tile-icon`}>
             <img className="software-logo" loading="lazy" src={logo}
-                 alt="" />
+                alt="" />
         </div> : null}
         <div className={`iot--sample-tile-contents`}>
             <div className={`iot--sample-tile-title`}>
@@ -135,7 +135,7 @@ class CreateSolutionModal extends Component {
     }
 
     handleSubmit = (event) => {
-        console.log(event);
+      console.log(event);
     }
 
     solution_wizard = {
@@ -176,7 +176,7 @@ class CreateSolutionModal extends Component {
                 id: "aws",
                 title: "AWS",
                 desc: "Amazon Web Services infrastructure with Red Hat OpenShift ROSA",
-                docs: "https://aws.amazon.com/",
+                docs: "",
                 image: "aws.png",
                 enabled: true,
                 boms: {
@@ -512,10 +512,10 @@ class CreateSolutionModal extends Component {
                                                                     onClick={() => { if(platform.enabled) this.setState({ platform: platform.id }) }} />
                                                                 <div className={platform.enabled ? "plan-content" : "plan-content coming-soon"}>
                                                                     <img loading="lazy" src={"/images/" + platform.image}
-                                                                         alt="" />
+                                                                        alt="" />
                                                                     <div className="plan-details">
                                                                         <span>{platform.title}
-                                                                            {!platform.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
+                                                                        {!platform.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
                                                                         </span>
                                                                         <p>{platform.desc}</p>
                                                                     </div>
@@ -543,10 +543,10 @@ class CreateSolutionModal extends Component {
                                                 <div className="arch">
                                                     <p>You have select the <b>Demo</b> persona</p>
                                                     <img loading="lazy" src={"/images/techsales_tammy.png"}
-                                                         alt="" />
+                                                        alt="" />
                                                     <p>and the platform</p>
                                                     <img loading="lazy" src={"/images/azure.png"}
-                                                         alt="" align={"top"} />
+                                                        alt="" align={"top"} />
                                                     <p>We recommend you use the <b>Quick Start</b> reference architecture</p>
 
                                                 </div>
@@ -557,11 +557,11 @@ class CreateSolutionModal extends Component {
 
                                                             <label className="plan complete-plan" htmlFor={architecture.id} key={architecture.id}>
                                                                 <input type="radio" name={architecture.id} id={architecture.id}
-                                                                       className={this.state.architecture === architecture.id ? 'checked' : ''}
-                                                                       onClick={() => { this.setState({ architecture: architecture.id }) }} />
+                                                                    className={this.state.architecture === architecture.id ? 'checked' : ''}
+                                                                    onClick={() => { this.setState({ architecture: architecture.id }) }} />
                                                                 <div className="plan-content">
                                                                     <img loading="lazy" src={"/images/" + architecture.image}
-                                                                         alt="" />
+                                                                        alt="" />
 
                                                                     <div className="plan-details">
                                                                         <span>{architecture.title}
@@ -606,11 +606,11 @@ class CreateSolutionModal extends Component {
 
                                                             <label className="plan complete-plan" htmlFor={storage.id} key={storage.id}>
                                                                 <input type="radio" name={storage.id} id={storage.id}
-                                                                       className={this.state.storage === storage.id ? 'checked' : ''}
-                                                                       onClick={() => { this.setState({ storage: storage.id }) }} />
+                                                                    className={this.state.storage === storage.id ? 'checked' : ''}
+                                                                    onClick={() => { this.setState({ storage: storage.id }) }} />
                                                                 <div className="plan-content">
                                                                     <img loading="lazy" src={"/images/" + storage.image}
-                                                                         alt="" />
+                                                                        alt="" />
 
                                                                     <div className="plan-details">
                                                                         <span>{storage.title}
@@ -661,16 +661,16 @@ class CreateSolutionModal extends Component {
                                                         isMultiSelect
                                                         tiles={
                                                             this.solution_wizard.software.map((software) => (
-                                                                {
-                                                                    id: software.id,
-                                                                    values: {
-                                                                        title: software.id,
-                                                                        displayName: software.displayName,
-                                                                        description: software.description,
-                                                                    },
-                                                                    renderContent: tileRenderFunction,
-                                                                }
-                                                            ))
+                                                                    {
+                                                                        id: software.id,
+                                                                        values: {
+                                                                            title: software.id,
+                                                                            displayName: software.displayName,
+                                                                            description: software.description,
+                                                                        },
+                                                                        renderContent: tileRenderFunction,
+                                                                    }
+                                                                ))
                                                         }
                                                         pagination={{ pageSize: 10 }}
                                                         isSelectedByDefault={false}
@@ -743,12 +743,12 @@ class CreateSolutionModal extends Component {
                                                 style={{ marginBottom: '1rem' }}
                                             />}
                                             {!this.props.isDuplicate && <Select id="public" name="public"
-                                                                                labelText="Public"
-                                                                                required
-                                                                                defaultValue={this.state.fields.public}
-                                                                                invalidText="A valid value is required"
-                                                                                onChange={this.handleChange.bind(this, "public")}
-                                                                                style={{ marginBottom: '1rem' }}>
+                                                labelText="Public"
+                                                required
+                                                defaultValue={this.state.fields.public}
+                                                invalidText="A valid value is required"
+                                                onChange={this.handleChange.bind(this, "public")}
+                                                style={{ marginBottom: '1rem' }}>
                                                 <SelectItem value={false} text="False" />
                                                 <SelectItem value={true} text="True" />
                                             </Select>}
@@ -766,17 +766,17 @@ class CreateSolutionModal extends Component {
 
                                             <p>You have select the <b>Demo</b> persona which is ideal for first experince</p>
                                             <img loading="lazy" src={"/images/techsales_tammy.png"}
-                                                 alt="" />
+                                                alt="" />
                                             <p>and the platform</p>
                                             <img loading="lazy" src={"/images/azure.png"}
-                                                 alt="" align={"top"} />
+                                                alt="" align={"top"} />
 
                                             <p>You have chosen the Quick Start reference archiecture which is very simple to setup</p>
                                             <img loading="lazy" src={"/images/quick-start.png"}
-                                                 alt="" align={"top"} />
+                                                alt="" align={"top"} />
                                             <p>This will install Red Hat OpenShift ARO/IPI with the following Storage Option </p>
                                             <img loading="lazy" src={"/images/portworx.png"}
-                                                 alt="" align={"top"} />
+                                                alt="" align={"top"} />
                                             <p>You have chosen the following IBM Software bundles to help get your solution started </p>
                                             <ul>
                                                 <li>Maximo Application Suite</li>
