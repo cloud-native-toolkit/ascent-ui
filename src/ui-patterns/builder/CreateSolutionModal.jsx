@@ -339,7 +339,7 @@ class CreateSolutionModal extends Component {
                 description: "",
                 boms : [
                     "200-openshift-gitops",
-                    "202-ibmcloud-storage-class",
+                    "202-turbonomic-ibmcloud-storage-class",
                     "250-turbonomic-multicloud"
                 ]
 
@@ -399,6 +399,8 @@ class CreateSolutionModal extends Component {
                 type: "",
                 description: "",
                 boms : [
+                    "200-openshift-gitops",
+                    "700-cp4s-multicloud"
                 ]
             }
         ],
@@ -795,14 +797,14 @@ class CreateSolutionModal extends Component {
                                     <div className="summary">
 
                                         <p>You have chosen to create an IBM Technology solution called <strong>{this.state.fields?.name}</strong></p>
-                                        
+
                                         <div className='arch'>
                                             <p>You want to <strong>{persona?.title}</strong> <img loading="lazy" src={`/images/${persona?.image}`} alt={persona?.title ?? ""} /></p>
                                             <p>You chose to deploy you solution on <strong>{platform?.title}</strong> <img loading="lazy" src={`/images/${platform?.image}`} alt={platform?.title ?? ""} /></p>
                                             <p>You have chosen the <strong>{arch?.title}</strong> reference architecture <div className='flex-inline'><img loading="lazy" src={`/images/${arch?.image}`}  alt={arch?.title ?? ""} /> <img loading="lazy" src={`/images/openshift.png`}  alt="OpenShift" /></div></p>
                                             <p>It will install with the following Storage Option <img loading="lazy" src={`/images/${storage?.image}`}  alt={storage?.title ?? ""} /></p>
                                         </div>
-                                        
+
                                         <p>You have chosen the following IBM Software bundles to help get your solution started:
                                         <ul>
                                             {software?.map(sw => (
@@ -813,7 +815,7 @@ class CreateSolutionModal extends Component {
                                         <p>If you are happy with this selection of content for your solution click on the Submit button below. You can always change the
                                             content later by adding an removing your own bill of materials.</p>
                                     </div>
-                                    
+
                                 </PageWizardStep>
 
 
