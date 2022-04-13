@@ -96,7 +96,7 @@ class SolutionDetailsView extends Component {
                         let url = window.URL.createObjectURL(blob);
                         let a = document.createElement('a');
                         a.href = url;
-                        a.download = `${this.state.data?.id}.zip`;
+                        a.download = `${this.state.data?.name?.toLowerCase()?.replace(/[ /\\_?;.=:,+]/g,'-')}-automation.zip`;
                         a.click();
                     });
                 }

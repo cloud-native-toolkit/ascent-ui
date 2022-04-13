@@ -155,7 +155,7 @@ class CreateSolutionModal extends Component {
                 }
                 else {
                     this.props.toast("success", "OK", `Solution ${res.id} has been created!`)
-                    this.handleClose();
+                    this.props.handleClose();
                 }
             })
             .catch(console.error);
@@ -569,9 +569,9 @@ class CreateSolutionModal extends Component {
                                             </div>
 
                                             <div className="arch">
-                                            <p>You have selected the <strong>{persona?.id}</strong> persona <img loading="lazy" src={`/images/${persona?.image}`} alt="persona" /></p>
-                                            <p>and the platform <img loading="lazy" src={`/images/${platform?.image}`} alt="platform" align={"top"} /></p>
-                                            <p>We recommend you use the <strong>{persona?.recommendedArch}</strong> reference architecture</p>
+                                            <p>You want to <strong>{persona?.title}</strong> <img loading="lazy" src={`/images/${persona?.image}`} alt={persona?.title ?? ""} /></p>
+                                            <p>on the platform <img loading="lazy" src={`/images/${platform?.image}`} alt="platform" align={"top"} /></p>
+                                            <p>We recommend you use the <strong>{this.solution_wizard.architectures.find(a => a.id === persona?.recommendedArch)?.title}</strong> reference architecture</p>
 
                                             </div>
 
@@ -758,7 +758,7 @@ class CreateSolutionModal extends Component {
                                             required
                                             invalidText="Please Enter The Value"
                                             onChange={this.handleChange.bind(this, "short_desc")}
-                                            value={this.state.fields.short_desc}
+                                            defaultValue={`Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.title ?? sw.id}`)).join(', ')} on ${platform?.title}.`}
                                             labelText="Short Description"
                                             placeholder="e.g. FS Cloud single zone environment with OpenShift cluster and SRE tools."
                                             style={{ marginBottom: '1rem' }}
@@ -768,7 +768,7 @@ class CreateSolutionModal extends Component {
                                             // cols={50}
                                             id="long_desc"
                                             name="long_desc"
-                                            value={this.state.fields.long_desc}
+                                            defaultValue={`Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.title ?? sw.id}`)).join(', ')} in ${arch?.title} reference architecture deployed on ${platform?.title} with ${storage?.title} as storage option.`}
                                             onChange={this.handleChange.bind(this, "long_desc")}
                                             invalidText="A valid value is required"
                                             labelText="Long Description"

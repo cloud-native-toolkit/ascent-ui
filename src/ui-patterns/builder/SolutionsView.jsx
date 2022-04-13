@@ -110,7 +110,7 @@ class SolutionsView extends Component {
                         let url = window.URL.createObjectURL(blob);
                         let a = document.createElement('a');
                         a.href = url;
-                        a.download = `${solution.id}-automation.zip`;
+                        a.download = `${solution.name?.toLowerCase()?.replace(/[ /\\_?;.=:,+]/g,'-')}-automation.zip`;
                         a.click();
                     });
                 }
@@ -306,7 +306,7 @@ class SolutionsView extends Component {
                         danger
                         submitText="Delete"
                         heading="Delete Solution"
-                        message={`You are about to remove solution ${this.state.curSol.id}. This action cannot be undone. This will remove the solution record, as well as all associated files. If you are sure, type "${this.state.curSol.id}" and click Delete to confirm deletion.`}
+                        message={`You are about to remove solution "${this.state.curSol.name ?? this.state.curSol.id}". This action cannot be undone. This will remove the solution record, as well as all associated files. If you are sure, type "${this.state.curSol.id}" and click Delete to confirm deletion.`}
                         show={this.state.showValidate}
                         inputRequired={this.state.curSol.id}
                         onClose={() => {
