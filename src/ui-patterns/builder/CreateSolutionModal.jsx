@@ -458,6 +458,15 @@ class CreateSolutionModal extends Component {
             ...s,
             enabled: s.boms[this.state.platform]?.length > 0
         }));
+        const defaultShortDesc = this.state.fields.short_desc === "" && this.state.curStep === "details" ? `Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.title ?? sw.id}`)).join(', ')} on ${platform?.title}.` : '';
+        const defaultLongDesc = this.state.fields.long_desc === "" && this.state.curStep === "details" ? `Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.title ?? sw.id}`)).join(', ')} in ${arch?.title} reference architecture deployed on ${platform?.title} with ${storage?.title} as storage option.` : '';
+        if (defaultShortDesc || defaultLongDesc) this.setState({
+            fields: {
+                ...this.state.fields,
+                short_desc: defaultShortDesc,
+                long_desc: defaultLongDesc
+            }
+        });
 
         return (
             <Grid>
@@ -756,7 +765,7 @@ class CreateSolutionModal extends Component {
                                             required
                                             invalidText="Please Enter The Value"
                                             onChange={this.handleChange.bind(this, "short_desc")}
-                                            defaultValue={`Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.title ?? sw.id}`)).join(', ')} on ${platform?.title}.`}
+                                            defaultValue={defaultShortDesc}
                                             labelText="Short Description"
                                             placeholder="e.g. FS Cloud single zone environment with OpenShift cluster and SRE tools."
                                             style={{ marginBottom: '1rem' }}
@@ -766,7 +775,7 @@ class CreateSolutionModal extends Component {
                                             // cols={50}
                                             id="long_desc"
                                             name="long_desc"
-                                            defaultValue={`Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.title ?? sw.id}`)).join(', ')} in ${arch?.title} reference architecture deployed on ${platform?.title} with ${storage?.title} as storage option.`}
+                                            defaultValue={defaultLongDesc}
                                             onChange={this.handleChange.bind(this, "long_desc")}
                                             invalidText="A valid value is required"
                                             labelText="Long Description"
