@@ -300,6 +300,10 @@ class UIShell extends Component {
                       CLI
                       <Launch16 style={{marginLeft: "10px"}} />
                     </SideNavMenuItem>
+                    <SideNavMenuItem href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=NoeSamaille&labels=ascent&template=issue-bug-report-on-ascent-tool.md&title=Issue+on+Ascent%3A+%7Bissue%7D" target="_blank" rel="noopener noreferrer">
+                      An Issue?
+                      <Launch16 style={{marginLeft: "10px"}} />
+                    </SideNavMenuItem>
 
                   </SideNavItems>
                 </SideNav>
