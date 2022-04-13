@@ -243,7 +243,8 @@ class CreateSolutionModal extends Component {
                 boms: {
                     quickstart: [
                         "200-ibm-openshift-gitops",
-                        "105-ibm-vpc-openshift"
+                        "105-ibm-vpc-openshift",
+                        "220-dev-tools"
                     ],
                     standard: [
                         "000-ibm-account-setup",
@@ -251,6 +252,7 @@ class CreateSolutionModal extends Component {
                         "110-ibm-vpc-edge-standard",
                         "115-ibm-vpc-openshift-standard",
                         "200-ibm-openshift-gitops",
+                        "220-dev-tools"
                     ],
                     advanced: [
                         "000-ibm-account-setup",
