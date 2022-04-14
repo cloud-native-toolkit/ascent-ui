@@ -389,7 +389,58 @@ class CreateSolutionModal extends Component {
                 icon: true,
                 logo: "/images/integration.png",
                 boms : [
-                    "200-openshift-gitops",
+                    "300-integration-platform-multicloud"
+                ]
+            },
+            {
+                id: "app-connect",
+                title: "app-connect",
+                displayName: "App Connect",
+                status: "Released",
+                type: "Cloud Pak",
+                description: "Unlocks the value of your systems and your data by connecting business applications, integrating data, building APIs and acting on events.",
+                icon: true,
+                logo: "/images/integration.png",
+                boms : [
+                    "300-integration-platform-multicloud"
+                ]
+            },
+            {
+                id: "api-connect",
+                title: "api-connect",
+                displayName: "API Connect",
+                status: "Released",
+                type: "Cloud Pak",
+                description: "Complete, intuitive and scalable API platform that lets you create, expose, manage and monetize APIs across clouds.",
+                icon: true,
+                logo: "/images/integration.png",
+                boms : [
+                    "300-integration-platform-multicloud"
+                ]
+            },
+            {
+                id: "event-streams",
+                title: "event-streams",
+                displayName: "Event Streams",
+                status: "Released",
+                type: "Cloud Pak",
+                description: "Event-streaming platform that helps you build smart apps that can react to events as they happen.",
+                icon: true,
+                logo: "/images/integration.png",
+                boms : [
+                    "300-integration-platform-multicloud"
+                ]
+            },
+            {
+                id: "mq",
+                title: "mq",
+                displayName: "MQ",
+                status: "Released",
+                type: "Cloud Pak",
+                description: "Proven messaging for hybrid and multi-cloud that’s high-performance and security-rich.",
+                icon: true,
+                logo: "/images/integration.png",
+                boms : [
                     "300-integration-platform-multicloud"
                 ]
             },
@@ -679,7 +730,7 @@ class CreateSolutionModal extends Component {
 
                                 </PageWizardStep>
                                 <PageWizardStep id="software" key="software" label="Software">
-                                    <PageWizardStepTitle>Step 5: Select the Software bundles</PageWizardStepTitle>
+                                    <PageWizardStepTitle>Step 5: Select the Software</PageWizardStepTitle>
 
 
                                     <div className="title">We are getting close to create your custom solution for your client or partner, we need a few more details
@@ -710,7 +761,7 @@ class CreateSolutionModal extends Component {
                                                                 }
                                                             ))
                                                     }
-                                                    pagination={{ pageSize: 10 }}
+                                                    pagination={{ pageSize: 9 }}
                                                     isSelectedByDefault={false}
                                                     defaultSelectedIds={this.state.software}
                                                     onSelection={(val) => {
@@ -816,7 +867,7 @@ class CreateSolutionModal extends Component {
                                             <p>It will install with the following Storage Option <img loading="lazy" src={`/images/${storage?.image}`}  alt={storage?.title ?? ""} /></p>
                                         </div>
 
-                                        <p>You have chosen the following IBM Software bundles to help get your solution started:
+                                        <p>You have chosen the following IBM Software to help get your solution started:
                                         <ul>
                                             {software?.map(sw => (
                                                 <li>{sw.displayName ?? sw.title}</li>
