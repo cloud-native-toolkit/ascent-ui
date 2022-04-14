@@ -21,6 +21,8 @@ import {
     Button,
 } from 'carbon-components-react';
 
+import yaml from 'js-yaml';
+
 import { spacing07 } from '@carbon/layout';
 import { green40 } from '@carbon/colors';
 
@@ -50,6 +52,9 @@ class ArchitectureView extends Component {
             notifications: [],
             isImport: false,
             isDuplicate: false,
+            isUser: false,
+            isInfra: false,
+            isSoftware: false,
             showValidate: false,
             curArch: undefined,
             show: "public-archs"
@@ -84,7 +89,6 @@ class ArchitectureView extends Component {
         if (this.state.userArchitectures?.length > 0) galleryData.push({
             id: 'user-boms',
             sectionTitle: 'Your BOMs',
-            isOpen: false,
             galleryItems: this.state.userArchitectures.map(arch => {
                 return {
                     title: arch.name,
@@ -97,7 +101,7 @@ class ArchitectureView extends Component {
         });
         galleryData.push({
             id: 'public-boms',
-            sectionTitle: 'Public BOMs',
+            sectionTitle: `${this.props.isUser ? 'Your' : this.props.isInfra ? 'Infrastructure' : this.props.isSoftware ? 'Software' :  'Public' } BOMs`,
             galleryItems: this.state.architectures?.map(arch => {
                 return {
                     title: arch.name,
@@ -111,7 +115,18 @@ class ArchitectureView extends Component {
         this.setState({ galleryData: galleryData });
     }
 
-    filterProvider(bom) {
+    filterBom(bom) {
+        // Filter bom type
+        if (this.state.isInfra || this.state.isSoftware) {
+            try {
+                const bomYaml = yaml.load(bom.yaml);
+                if (this.state.isSoftware && bomYaml?.metadata.labels.type !== 'software') return false;
+                if (this.state.isInfra && bomYaml?.metadata.labels.type === 'software') return false;
+            } catch (error) {
+                return false;
+            }
+        }
+        // Filter based on provider
         const provider = bom.platform ?? bom.provider ?? '';
         const restrictedProviders = [];
         if (!this.state.user?.config?.ibmContent) {
@@ -128,19 +143,24 @@ class ArchitectureView extends Component {
             architectures: [],
             archLoaded: false
         });
+        console.log(this.state);
+        console.log(this.props);
 
-        fetch("/api/architectures")
+        if (this.state.isUser) fetch(`/api/users/${encodeURIComponent(this.state?.user?.email)}/architectures`)
+            .then(response => response.json())
+            .then(userArchitectures => {
+                if (!userArchitectures.error) this.setState({
+                    architectures: userArchitectures.filter(this.filterBom.bind(this)),
+                    archLoaded: true
+                }, () =>  this.loadGallery());
+            });
+        else fetch("/api/architectures")
             .then(response => response.json())
             .then(architectures => {
-                fetch(`/api/users/${encodeURIComponent(this.state?.user?.email)}/architectures`)
-                    .then(response => response.json())
-                    .then(userArchitectures => {
-                        this.setState({
-                            userArchitectures: userArchitectures.filter(this.filterProvider.bind(this)),
-                            architectures: architectures.filter(this.filterProvider.bind(this)),
-                            archLoaded: true
-                        }, () =>  this.loadGallery());
-                    });
+                if (!architectures.error) this.setState({
+                    architectures: architectures.filter(this.filterBom.bind(this)),
+                    archLoaded: true
+                }, () =>  this.loadGallery());
             });
 
     }
@@ -187,7 +207,12 @@ class ArchitectureView extends Component {
 
     // Load the Data into the Project
     componentDidMount() {
-        this.setState({ user: this.props.user });
+        this.setState({
+            user: this.props.user,
+            isUser: this.props.isUser,
+            isInfra: this.props.isInfra,
+            isSoftware: this.props.isSoftware,
+        });
         this.loadArchitectures();
     };
 
@@ -196,6 +221,15 @@ class ArchitectureView extends Component {
         if (this.props.user?.config !== this.state.user?.config) {
             this.setState({ user: this.props.user });
             this.loadArchitectures();
+        }
+        if (this.props.isUser !== this.state.isUser || this.props.isInfra !== this.state.isInfra || this.props.isSoftware !== this.state.isSoftware) {
+           this.setState({
+                isUser: this.props.isUser,
+                isInfra: this.props.isInfra,
+                isSoftware: this.props.isSoftware
+            }, () => {
+                this.loadArchitectures();
+            });
         }
     };
 
@@ -312,9 +346,10 @@ class ArchitectureView extends Component {
                 <br />
 
                 <h2 style={{"display": "flex"}}>
-                    Bills of Materials
+                    {`${this.props.isUser ? 'Your Reference Architectures' : this.props.isInfra ? 'Infrastructure' : this.props.isSoftware ? 'Software' :  'Reference Architectures' }`}
                     <div style={{"margin-left": "auto", "display": "flex"}}>
-                        <Button onClick={() => this.showArchModal(false)} size='small'>Create +</Button>
+                        {(this.state.user?.roles?.includes("editor") && this.props.isUser) || this.state.user?.roles?.includes("admin") ? 
+                            <Button onClick={() => this.showArchModal(false)} size='small'>Create +</Button> : <></>}
                         {this.state.user?.role === "admin" ? <Button onClick={() => this.showArchModal(true)} style={{marginLeft: '1.5rem', marginRight: '1.5rem'}} size='small'>Import +</Button> : <></>}
                     </div>
                 </h2>

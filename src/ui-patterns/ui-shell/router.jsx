@@ -119,6 +119,15 @@ class Routes extends React.Component {
                     <Route exact path='/boms'>
                         <ArchitectureComponent user={this.props.user} />
                     </Route>
+                    <Route exact path='/boms/user'>
+                        <ArchitectureComponent user={this.props.user} isUser />
+                    </Route>
+                    <Route exact path='/boms/infrastructure'>
+                        <ArchitectureComponent user={this.props.user} isInfra />
+                    </Route>
+                    <Route exact path='/boms/software'>
+                        <ArchitectureComponent user={this.props.user} isSoftware />
+                    </Route>
                     <Route path={`/boms/:bomid`}>
                         <BomDetails />
                     </Route>
