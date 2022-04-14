@@ -36,3 +36,13 @@
 .bx--header-panel--expanded.user-profile  .bx--switcher__item svg {
     margin-left: auto;
 }
+
+// Side nav
+
+.bx--side-nav__link-text {
+    display: flex;
+    align-items: center;
+}
+.bx--side-nav__link-text svg {
+    margin-left: .5rem;
+}

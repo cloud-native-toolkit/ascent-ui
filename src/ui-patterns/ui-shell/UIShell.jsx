@@ -152,11 +152,9 @@ class UIShell extends Component {
                   onClick={onClickSideNavExpand}
                   isActive={isSideNavExpanded}
                 />
-                <Link to="/">
-                  <HeaderName prefix='Software Everywhere - '>
-                    ASCENT
-                  </HeaderName>
-                </Link>
+                <HeaderName prefix='Software Everywhere - '>
+                  ASCENT
+                </HeaderName>
                 
                 <HeaderNavigation aria-label="Ecosystem Labs">
                 </HeaderNavigation>
@@ -211,16 +209,12 @@ class UIShell extends Component {
 
                   <SideNavItems>
 
-                    <Link to="/">
-                      <SideNavMenuItem>Overview</SideNavMenuItem>
-                    </Link>
+                  <SideNavMenuItem element={Link} to='/'>Overview</SideNavMenuItem>
 
-                    {this.state.content.builderFeatures ? <SideNavMenu title="Solution Builder">
+                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Solution Builder">
 
                       {this.state.user ?
-                        <Link to="/solutions">
-                          <SideNavMenuItem>Solutions</SideNavMenuItem>
-                        </Link>
+                        <SideNavMenuItem element={Link} to='/solutions'>Solutions</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/solutions'>
                           Solutions
@@ -229,42 +223,67 @@ class UIShell extends Component {
                       }
 
                       {this.state.user ?
-                        <Link to="/boms">
-                          <SideNavMenuItem>Bill of Materials</SideNavMenuItem>
-                        </Link>
+                        <SideNavMenuItem element={Link} to='/boms'>Reference Architectures</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/boms'>
-                          Bill of Materials
+                          Reference Architectures
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
 
                       {this.state.user ?
-                        <Link to="/services">
-                          <SideNavMenuItem>Modules</SideNavMenuItem>
-                        </Link>
+                        <SideNavMenuItem element={Link} to='/boms/user'>Your Architectures</SideNavMenuItem>
+                        :
+                        <SideNavMenuItem href='/boms/user'>
+                          Your Architectures
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
+
+                      {this.state.user ?
+                        <SideNavMenuItem element={Link} to='/boms/infrastructure'>Infrastructure</SideNavMenuItem>
+                        :
+                        <SideNavMenuItem href='/boms/infrastructure'>
+                          Infrastructure
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
+
+                      {this.state.user ?
+                        <SideNavMenuItem element={Link} to='/boms/software'>Software</SideNavMenuItem>
+                        :
+                        <SideNavMenuItem href='/boms/software'>
+                          Software
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
+
+                      {this.state.user ?
+                        <SideNavMenuItem element={Link} to='/services'>Modules</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/services'>
                           Modules
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
+
+
+                      {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map" target="_blank" rel="noopener noreferrer">
+                        IBM Software Portfolio
+                        <Launch16 />
+                      </SideNavMenuItem> : <></>}
                     </SideNavMenu> : <></>}
 
                     {this.state.content.complianceFeatures ? <SideNavMenu title="Compliance" >
 
-                      {this.state.user?.roles?.includes("fs-viewer") ? <Link to="/onboarding">
-                        <SideNavMenuItem>On Boarding</SideNavMenuItem>
-                      </Link> : <></>}
+                      {this.state.user?.roles?.includes("fs-viewer") ? 
+                        <SideNavMenuItem element={Link} to='/onboarding'>On Boarding</SideNavMenuItem> : <></>}
 
-                      {this.state.user?.roles?.includes("fs-viewer") ? <Link to="/controls">
-                        <SideNavMenuItem>Controls</SideNavMenuItem>
-                      </Link> : <></>}
+                      {this.state.user?.roles?.includes("fs-viewer") ? 
+                        <SideNavMenuItem element={Link} to='/controls'>Controls</SideNavMenuItem> : <></>}
 
                       {this.state.user ?
-                        <Link to="/mapping">
-                          <SideNavMenuItem>Mapping</SideNavMenuItem>
-                        </Link>
+                        <SideNavMenuItem element={Link} to='/mapping'>Mapping</SideNavMenuItem>
                         :
                           <SideNavMenuItem href='/mapping'>
                             Mapping
@@ -273,9 +292,7 @@ class UIShell extends Component {
                       }
 
                       {this.state.user ?
-                        <Link to="/nists">
-                          <SideNavMenuItem>NIST 800-53</SideNavMenuItem>
-                        </Link>
+                        <SideNavMenuItem element={Link} to='/nists'>NIST 800-53</SideNavMenuItem>
                         :
                           <SideNavMenuItem href='/nists'>
                             NIST 800-53
@@ -285,25 +302,67 @@ class UIShell extends Component {
 
                     </SideNavMenu> : <></>}
 
-                    {this.state?.user?.email?.endsWith('ibm.com') ? <Link to="/docs">
-                      <SideNavMenuItem>About</SideNavMenuItem>
-                    </Link> : <></> }
-                    <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev" target="_blank" rel="noopener noreferrer">
-                      Automation Modules
-                      <Launch16 style={{marginLeft: "10px"}} />
-                    </SideNavMenuItem>
-                    {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map" target="_blank" rel="noopener noreferrer">
-                      IBM Software Map
-                      <Launch16 style={{marginLeft: "10px"}} />
-                    </SideNavMenuItem> : <></>}
-                    <SideNavMenuItem href="https://github.com/cloud-native-toolkit/iascable" target="_blank" rel="noopener noreferrer">
-                      CLI
-                      <Launch16 style={{marginLeft: "10px"}} />
-                    </SideNavMenuItem>
-                    <SideNavMenuItem href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=NoeSamaille&labels=ascent&template=issue-bug-report-on-ascent-tool.md&title=Issue+on+Ascent%3A+%7Bissue%7D" target="_blank" rel="noopener noreferrer">
-                      An Issue?
-                      <Launch16 style={{marginLeft: "10px"}} />
-                    </SideNavMenuItem>
+                    <SideNavMenu title="Join Us">
+                      <SideNavMenuItem
+                        href="https://github.com/cloud-native-toolkit"
+                        target="_blank" rel="noopener noreferrer">
+                        Git Organization
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+                      <SideNavMenuItem
+                        href="https://discord.gg/UMCJdE4b"
+                        target="_blank" rel="noopener noreferrer">
+                        Discord Community
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+                      <SideNavMenuItem
+                        href="https://www.youtube.com/c/CloudNativeToolkit"
+                        target="_blank" rel="noopener noreferrer">
+                        Youtube Channel
+                        <Launch16 />
+                      </SideNavMenuItem>
+                    </SideNavMenu>
+
+                    <SideNavMenu title="Documentation">
+
+                      {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem element={Link} to='/docs'>About</SideNavMenuItem> : <></> }
+                      
+                      <SideNavMenuItem href="https://www.ibm.com/training/cloud/jobroles"
+                        target="_blank" rel="noopener noreferrer">
+                        Free IBM Cloud Training
+                        <Launch16 />
+                      </SideNavMenuItem>
+                      
+                      <SideNavMenuItem href="https://landscape.cncf.io/"
+                        target="_blank" rel="noopener noreferrer">
+                        Cloud-Native Landscape
+                        <Launch16 />
+                      </SideNavMenuItem>
+                      
+                      <SideNavMenuItem href="https://cloudnativetoolkit.dev/"
+                        target="_blank" rel="noopener noreferrer">
+                        Cloud-Native Toolkit
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev" target="_blank" rel="noopener noreferrer">
+                        Modules Catalog
+                        <Launch16 />
+                      </SideNavMenuItem>
+                      
+                      <SideNavMenuItem href="https://github.com/cloud-native-toolkit/iascable" target="_blank" rel="noopener noreferrer">
+                        Builder CLI
+                        <Launch16 />
+                      </SideNavMenuItem>
+                      
+                    </SideNavMenu>
+
+                  <SideNavMenuItem href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=NoeSamaille&labels=ascent&template=issue-bug-report-on-ascent-tool.md&title=Issue+on+Ascent%3A+%7Bissue%7D" target="_blank" rel="noopener noreferrer">
+                    An Issue?
+                    <Launch16 />
+                  </SideNavMenuItem>
 
                   </SideNavItems>
                 </SideNav>

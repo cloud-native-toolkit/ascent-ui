@@ -174,7 +174,7 @@ class BillofMaterialsView extends Component {
         return (
             <Breadcrumb {...this.bcprops}>
                 <BreadcrumbItem>
-                    <Link to="/boms">BOMs</Link>
+                    <Link to="/boms">Reference Architectures</Link>
                 </BreadcrumbItem>
                 <BreadcrumbItem href="#">{title}</BreadcrumbItem>
             </Breadcrumb>
