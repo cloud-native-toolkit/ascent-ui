@@ -131,8 +131,11 @@ class Routes extends React.Component {
                     <Route path={`/boms/:bomid`}>
                         <BomDetails />
                     </Route>
+                    <Route exact path='/solutions/user'>
+                        <SolutionsComponent user={this.props.user} isUser />
+                    </Route>
                     <Route exact path='/solutions'>
-                        <SolutionsComponent user={this.props.user} />
+                        <SolutionsComponent user={this.props.user} isUser={false} />
                     </Route>
                     <Route path={'/solutions/:id'}>
                         <SolutionDetails />

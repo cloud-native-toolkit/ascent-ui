@@ -40,7 +40,6 @@ class ArchitectureView extends Component {
         this.state = {
             archLoaded: false,
             architectures: [],
-            userArchitectures: [],
             galleryData: [],
             user: {
                 email: "example@example.com",
@@ -86,22 +85,9 @@ class ArchitectureView extends Component {
 
     async loadGallery() {
         const galleryData = [];
-        if (this.state.userArchitectures?.length > 0) galleryData.push({
-            id: 'user-boms',
-            sectionTitle: 'Your BOMs',
-            galleryItems: this.state.userArchitectures.map(arch => {
-                return {
-                    title: arch.name,
-                    description: <Link to={`/boms/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
-                    icon: <Link to={`/boms/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
-                    afterContent: this.overflowComponent(arch, true),
-                    thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
-                }
-            }),
-        });
         galleryData.push({
             id: 'public-boms',
-            sectionTitle: `${this.props.isUser ? 'Your' : this.props.isInfra ? 'Infrastructure' : this.props.isSoftware ? 'Software' :  'Public' } BOMs`,
+            sectionTitle: `${this.props.isUser ? 'Custom' : this.props.isInfra ? 'Infrastructure' : this.props.isSoftware ? 'Software' :  'Public' } Reference Architectures`,
             galleryItems: this.state.architectures?.map(arch => {
                 return {
                     title: arch.name,
@@ -120,8 +106,8 @@ class ArchitectureView extends Component {
         if (this.state.isInfra || this.state.isSoftware) {
             try {
                 const bomYaml = yaml.load(bom.yaml);
-                if (this.state.isSoftware && bomYaml?.metadata.labels.type !== 'software') return false;
-                if (this.state.isInfra && bomYaml?.metadata.labels.type === 'software') return false;
+                if (this.state.isSoftware && bomYaml?.metadata?.labels?.type !== 'software') return false;
+                if (this.state.isInfra && bomYaml?.metadata?.labels?.type === 'software') return false;
             } catch (error) {
                 return false;
             }
@@ -346,7 +332,7 @@ class ArchitectureView extends Component {
                 <br />
 
                 <h2 style={{"display": "flex"}}>
-                    {`${this.props.isUser ? 'Your Reference Architectures' : this.props.isInfra ? 'Infrastructure' : this.props.isSoftware ? 'Software' :  'Reference Architectures' }`}
+                    {`${this.props.isUser ? 'Custom Reference Architectures' : this.props.isInfra ? 'Infrastructures' : this.props.isSoftware ? 'Software' :  'Public Reference Architectures' }`}
                     <div style={{"margin-left": "auto", "display": "flex"}}>
                         {(this.state.user?.roles?.includes("editor") && this.props.isUser) || this.state.user?.roles?.includes("admin") ? 
                             <Button onClick={() => this.showArchModal(false)} size='small'>Create +</Button> : <></>}

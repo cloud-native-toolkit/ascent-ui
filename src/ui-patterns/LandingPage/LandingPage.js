@@ -5,6 +5,7 @@ import {
   Button,
   Tabs,
   Tab,
+  InlineNotification
 } from 'carbon-components-react';
 import { InfoSection, InfoCard } from '../../components/Info';
 
@@ -66,6 +67,14 @@ class LandingPage extends Component {
             <h1 className="landing-page__heading">
               Architecture and Security Controls Enterprise Tool (ASCENT)
             </h1>
+            <InlineNotification
+                id={Date.now()}
+                lowContrast
+                title={"Free Learning"}
+                subtitle={<span kind='error' hideCloseButton lowContrast>Did you know <a href='https://www.ibm.com/training/cloud/jobroles' target="_blank" rel="noopener noreferrer">IBM Cloud Training</a> is now free?</span>}
+                kind={"info"}
+                style={{marginBottom: '-64px'}}
+            />
           </div>
         </div>
         <div className="bx--row landing-page__r2">

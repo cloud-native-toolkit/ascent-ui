@@ -26,14 +26,13 @@ import {
     TableToolbarMenu, TableToolbarContent, TableToolbarSearch, TableHead, 
     TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
     OverflowMenu, OverflowMenuItem, ContentSwitcher, Switch, BreadcrumbSkeleton,
-    SearchSkeleton, CodeSnippet
+    SearchSkeleton, CodeSnippet, Button, Pagination, ToastNotification
 } from 'carbon-components-react';
-import { Button } from 'carbon-components-react';
-import { Pagination } from 'carbon-components-react';
+
+import yaml from 'js-yaml';
+
 import { bomHeader } from '../data/data';
 import ValidateModal from "../ValidateModal"
-
-import { ToastNotification } from "carbon-components-react";
 import NotFound from "../../components/NotFound";
 
 class BillofMaterialsView extends Component {
@@ -42,6 +41,7 @@ class BillofMaterialsView extends Component {
         super(props);
 
         this.state = {
+            isSoftware: false,
             user: undefined,
             archid: false,
             data: [],
@@ -114,11 +114,13 @@ class BillofMaterialsView extends Component {
                     })
                 }
             });
+            const bomYaml = yaml.load(arch.yaml);
             this.setState({
                 archid: this.props.archId,
                 data: bomDetails,
                 filterData: bomDetails,
                 architecture: arch,
+                isSoftware: bomYaml?.metadata?.labels?.type === 'software',
                 totalItems: bomDetails.length,
                 services: services
             });
@@ -174,7 +176,7 @@ class BillofMaterialsView extends Component {
         return (
             <Breadcrumb {...this.bcprops}>
                 <BreadcrumbItem>
-                    <Link to="/boms">Reference Architectures</Link>
+                    <Link to={`/boms/${this.state.isSoftware ? 'software' : 'infrastructure'}`}>Reference Architectures</Link>
                 </BreadcrumbItem>
                 <BreadcrumbItem href="#">{title}</BreadcrumbItem>
             </Breadcrumb>

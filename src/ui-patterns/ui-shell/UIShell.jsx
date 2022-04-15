@@ -211,31 +211,35 @@ class UIShell extends Component {
 
                   <SideNavMenuItem element={Link} to='/'>Overview</SideNavMenuItem>
 
-                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Solution Builder">
+                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Solutions">
 
                       {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/solutions'>Solutions</SideNavMenuItem>
+                        <SideNavMenuItem element={Link} to='/solutions/user'>Custom Solutions</SideNavMenuItem>
+                        :
+                        <SideNavMenuItem href='/solutions/user'>
+                          Custom Solutions
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
+
+                      {this.state.user ?
+                        <SideNavMenuItem element={Link} to='/solutions'>Public Solutions</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/solutions'>
-                          Solutions
+                          Public Solutions
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
 
-                      {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/boms'>Reference Architectures</SideNavMenuItem>
-                        :
-                        <SideNavMenuItem href='/boms'>
-                          Reference Architectures
-                          <Locked16 style={{ marginLeft: "auto" }}  />
-                        </SideNavMenuItem>
-                      }
+                    </SideNavMenu> : <></>}
+
+                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Reference Architectures">
 
                       {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/boms/user'>Your Architectures</SideNavMenuItem>
+                        <SideNavMenuItem element={Link} to='/boms/user'>Custom Architectures</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/boms/user'>
-                          Your Architectures
+                          Custom Architectures
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
@@ -302,29 +306,6 @@ class UIShell extends Component {
 
                     </SideNavMenu> : <></>}
 
-                    <SideNavMenu title="Join Us">
-                      <SideNavMenuItem
-                        href="https://github.com/cloud-native-toolkit"
-                        target="_blank" rel="noopener noreferrer">
-                        Git Organization
-                        <Launch16 />
-                      </SideNavMenuItem>
-
-                      <SideNavMenuItem
-                        href="https://discord.gg/UMCJdE4b"
-                        target="_blank" rel="noopener noreferrer">
-                        Discord Community
-                        <Launch16 />
-                      </SideNavMenuItem>
-
-                      <SideNavMenuItem
-                        href="https://www.youtube.com/c/CloudNativeToolkit"
-                        target="_blank" rel="noopener noreferrer">
-                        Youtube Channel
-                        <Launch16 />
-                      </SideNavMenuItem>
-                    </SideNavMenu>
-
                     <SideNavMenu title="Documentation">
 
                       {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem element={Link} to='/docs'>About</SideNavMenuItem> : <></> }
@@ -357,6 +338,29 @@ class UIShell extends Component {
                         <Launch16 />
                       </SideNavMenuItem>
                       
+                    </SideNavMenu>
+
+                    <SideNavMenu title="Join Us">
+                      <SideNavMenuItem
+                        href="https://github.com/cloud-native-toolkit"
+                        target="_blank" rel="noopener noreferrer">
+                        Git Organization
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+                      <SideNavMenuItem
+                        href="https://discord.gg/UMCJdE4b"
+                        target="_blank" rel="noopener noreferrer">
+                        Discord Community
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+                      <SideNavMenuItem
+                        href="https://www.youtube.com/c/CloudNativeToolkit"
+                        target="_blank" rel="noopener noreferrer">
+                        Youtube Channel
+                        <Launch16 />
+                      </SideNavMenuItem>
                     </SideNavMenu>
 
                   <SideNavMenuItem href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=NoeSamaille&labels=ascent&template=issue-bug-report-on-ascent-tool.md&title=Issue+on+Ascent%3A+%7Bissue%7D" target="_blank" rel="noopener noreferrer">

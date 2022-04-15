@@ -6,7 +6,7 @@ import { SolutionsDataApi } from '../../services';
 import { User } from "../../models/user";
 
 
-class SolutionsComponent extends Component<{ user: User }, any> {
+class SolutionsComponent extends Component<{ user: User, isUser: boolean }, any> {
 
     solutionsDataAPI: SolutionsDataApi;
     constructor(props: any) {
@@ -19,7 +19,7 @@ class SolutionsComponent extends Component<{ user: User }, any> {
 
     render() {
         return (
-            <SolutionsView solutionService={this.solutionsDataAPI} user={this.props.user} />
+            <SolutionsView solutionService={this.solutionsDataAPI} user={this.props.user} isUser={this.props.isUser} />
         );
     }
 }
