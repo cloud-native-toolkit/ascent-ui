@@ -4,14 +4,11 @@ import {
   BreadcrumbItem,
   Button,
   Tabs,
-  Tab,
-  InlineNotification
+  Tab
 } from 'carbon-components-react';
 import { InfoSection, InfoCard } from '../../components/Info';
 
-import ModelBuilder32 from '@carbon/icons-react/lib/model-builder/32';
-import SankeyDiagramAlt32 from '@carbon/icons-react/lib/sankey-diagram/32';
-import Cloud32 from "@carbon/icons-react/lib/cloud/32";
+import { ModelBuilder32, SankeyDiagramAlt32, Cloud32, Close32 } from '@carbon/icons-react';
 
 import {
   Login20,
@@ -40,7 +37,8 @@ class LandingPage extends Component {
       super(props);
 
       this.state = {
-          user: undefined
+        user: undefined,
+        hideBanner: false
       };
   }
 
@@ -59,6 +57,15 @@ class LandingPage extends Component {
       <div className="bx--grid bx--grid--full-width landing-page">
         <div className="bx--row landing-page__banner">
           <div className="bx--col-lg-12">
+            <form
+              class="genesis--MarketingBanner-marketingBannerOverview"
+              id="marketingBanner" name="marketingBanner"
+              style={{ margin: '0 -2rem' }} hidden={this.state.hideBanner}>
+              <span class="genesis--MarketingBanner-content">
+                Did you know <a href='https://www.ibm.com/training/cloud/jobroles' target="_blank" rel="noopener noreferrer">IBM Cloud Training</a> is now free?
+              </span>
+              <Close32 onClick={() => this.setState({ hideBanner: true })} />
+            </form>
             <Breadcrumb noTrailingSlash aria-label="Page navigation">
               <BreadcrumbItem>
                 <Link to="/docs" >Documentation</Link>
@@ -67,14 +74,6 @@ class LandingPage extends Component {
             <h1 className="landing-page__heading">
               Architecture and Security Controls Enterprise Tool (ASCENT)
             </h1>
-            <InlineNotification
-                id={Date.now()}
-                lowContrast
-                title={"Free Learning"}
-                subtitle={<span kind='error' hideCloseButton lowContrast>Did you know <a href='https://www.ibm.com/training/cloud/jobroles' target="_blank" rel="noopener noreferrer">IBM Cloud Training</a> is now free?</span>}
-                kind={"info"}
-                style={{marginBottom: '-64px'}}
-            />
           </div>
         </div>
         <div className="bx--row landing-page__r2">
