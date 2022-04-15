@@ -55,10 +55,11 @@ class SolutionsView extends Component {
 
     async loadSolutions() {
         this.setState({dataLoaded: false});
-        fetch('/api/solutions')
+        const uri = this.props.isUser ? `/api/users/${encodeURIComponent(this.props?.user?.email)}/solutions` : '/api/solutions';
+        fetch(uri)
             .then(res => res.json())
             .then(solutions => {
-                this.setState({ solutions: solutions.filter(sol => {
+                if (!solutions.error) this.setState({ solutions: solutions.filter(sol => {
                     const solId = sol.id?.toLowerCase();
                     const solName = sol.name?.toLowerCase();
                     const solDesc = sol.short_desc?.toLowerCase();
@@ -91,6 +92,10 @@ class SolutionsView extends Component {
     componentDidUpdate() {
         if (this.props.user?.config !== this.state.user?.config) {
             this.setState({ user: this.props.user });
+            this.loadSolutions();
+        }
+        if (this.props.isUser !== this.state.isUser) {
+            this.setState({ isUser: this.props.isUser });
             this.loadSolutions();
         }
     };
@@ -210,72 +215,66 @@ class SolutionsView extends Component {
                         <br></br>
                         <h2 style={{"display": "flex"}}>
                             Solutions
-                            {this.state.user?.role === "admin" && <Button
+                            {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Button
                                 size='sm'
                                 style={{"margin-left": "auto"}}
                                 onClick={() => this.showModal()}
                                 renderIcon={Add16} >
                                 Create
-                            </Button>}
+                            </Button> : <></>}
                             &nbsp;
-                            {this.state.user?.role === "admin" && <Button
+                            {this.state.user?.role === "admin" ? <Button
                                 size='sm'
                                 onClick={() => this.showCreateModal()}
                                 renderIcon={Add16} >
                                 Guided
-                            </Button>}
+                            </Button> : <></>}
 
                         </h2>
                         <br></br>
 
                     </div>
                 </div>
-                {groupByN(4, this.state.solutions).map(solGroup => (
+
+                {this.state.dataLoaded ? this.state.solutions?.length > 0 ? groupByN(4, this.state.solutions).map(solGroup => (
                     <CardGroup>
-                        {/* <Row sm={1} md={2} lg={3} xl={4} xxl={5} className="g-4"> */}
-                            {this.state.dataLoaded ?
-                                solGroup?.length ?
-                                solGroup.map((solution) => (
-                                    <Card style={{ marginBottom: '1rem', marginRight: '1rem', borderLeft: '1px solid rgba(0, 0, 0, 0.125)' }}>
-                                        <Card.Body>
-                                            <Card.Title>{solution.name}</Card.Title>
-                                            <Card.Subtitle className="mb-2 text-muted">{solution.id}</Card.Subtitle>
-                                            <Card.Text>{solution.short_desc}</Card.Text>
-                                        </Card.Body>
-                                        <Card.Footer>
-                                            <Card.Link href="#"
-                                                // onClick={() => {
-                                                //     this.setState({ isPaneOpen: true, dataDetails:undefined });
-                                                //     fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
-                                                //     .then((res) => res.json())
-                                                //     .then((sol) => {
-                                                //         this.setState({dataDetails: sol})
-                                                //     })
-                                                //     .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
-                                                // }}
-                                            >
-                                                <Link to={`/solutions/${solution.id}`} >
-                                                    Details
-                                                </Link>
-                                            </Card.Link>
-                                            <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
-                                            {this.state.user?.role === "admin" && <Card.Link style={{color: 'red', cursor: 'pointer'}} onClick={() => {
-                                                this.setState({
-                                                    showValidate: true,
-                                                    curSol: solution
-                                                });
-                                            }}>Delete</Card.Link>}
-                                        </Card.Footer>
-                                    </Card>
-                                ))
-                            :
-                                <p>No Solutions at the moment{this.state.user?.role === "admin" ? <>, click <strong>Create</strong> on the top right corner to create a new one.</>: <>.</>}</p>
-                            :
-                                <SearchSkeleton />
-                            }
-                        {/* </Row> */}
+                        {
+                            solGroup.map((solution) => (
+                                <Card style={{ marginBottom: '1rem', marginRight: '1rem', borderLeft: '1px solid rgba(0, 0, 0, 0.125)' }}>
+                                    <Card.Body>
+                                        <Card.Title>{solution.name}</Card.Title>
+                                        <Card.Subtitle className="mb-2 text-muted">{solution.id}</Card.Subtitle>
+                                        <Card.Text>{solution.short_desc}</Card.Text>
+                                    </Card.Body>
+                                    <Card.Footer>
+                                        <Card.Link href="#"
+                                            // onClick={() => {
+                                            //     this.setState({ isPaneOpen: true, dataDetails:undefined });
+                                            //     fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
+                                            //     .then((res) => res.json())
+                                            //     .then((sol) => {
+                                            //         this.setState({dataDetails: sol})
+                                            //     })
+                                            //     .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
+                                            // }}
+                                        >
+                                            <Link to={`/solutions/${solution.id}`} >
+                                                Details
+                                            </Link>
+                                        </Card.Link>
+                                        <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
+                                        {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Card.Link style={{color: 'red', cursor: 'pointer'}} onClick={() => {
+                                            this.setState({
+                                                showValidate: true,
+                                                curSol: solution
+                                            });
+                                        }}>Delete</Card.Link> : <></>}
+                                    </Card.Footer>
+                                </Card>
+                            ))
+                        }
                 </CardGroup>
-                ))}
+                )) : <p>No Solutions to display at the moment{this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <>, click <strong>Create</strong> on the top right corner to create a new one.</>: <>.</>}</p> : <SearchSkeleton /> }
 
                 {this.state.showModal &&
                     <SolutionModal

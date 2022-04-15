@@ -333,12 +333,22 @@ class CreateSolutionModal extends Component {
         ],
         software: [
             {
+                id: "custom-software",
+                title: "custom-software",
+                displayName: "Custom Software",
+                status: "Released",
+                type: "",
+                description: "Bring your own custom software components into your solution.",
+                boms : []
+
+            },
+            {
                 id: "turbo",
                 title: "turbo",
                 displayName: "Turbonomic",
                 status: "Released",
                 type: "",
-                description: "",
+                description: "Assure application performance with smarter resource management.",
                 boms : [
                     "200-openshift-gitops",
                     "202-turbonomic-ibmcloud-storage-class",
@@ -352,20 +362,10 @@ class CreateSolutionModal extends Component {
                 displayName: "Maximo Application Core",
                 status: "Released",
                 type: "",
-                description: "",
+                description: "Intelligent asset management, monitoring, predictive maintenance and reliability in a single platform.",
                 boms : [
                     "200-openshift-gitops",
                     "400-mas-core-multicloud"
-                ]
-            },
-            {
-                id: "maximo-plugins",
-                title: "maximo-plugins",
-                displayName: "Maximo Applications",
-                status: "Released",
-                type: "",
-                description: "",
-                boms : [
                 ]
             },
             {
@@ -374,7 +374,7 @@ class CreateSolutionModal extends Component {
                 displayName: "Data Fabric",
                 status: "Released",
                 type: "",
-                description: "",
+                description: "Use the right data architecture so employees can access quality data, wherever and whenever it’s needed.",
                 boms : [
                     "600-datafabric-multicloud"
                 ]
@@ -450,7 +450,7 @@ class CreateSolutionModal extends Component {
                 displayName: "Security",
                 status: "Beta",
                 type: "",
-                description: "",
+                description: "Work smarter with an open security platform to advance your zero trust strategy.",
                 boms : [
                     "200-openshift-gitops",
                     "700-cp4s-multicloud"
@@ -838,7 +838,7 @@ class CreateSolutionModal extends Component {
                                             rows={2}
                                             style={{ marginBottom: '1rem' }}
                                         />}
-                                        {!this.props.isDuplicate && <Select id="public" name="public"
+                                        {!this.props.isDuplicate && this.props.user?.roles?.includes('admin') && <Select id="public" name="public"
                                             labelText="Public"
                                             required
                                             defaultValue={this.state.fields.public}
