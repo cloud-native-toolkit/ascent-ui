@@ -40,3 +40,26 @@ table.bx--data-table tbody tr td {
 .bx--breadcrumb {
   padding-top: 1rem;
 }
+
+.genesis--MarketingBanner-marketingBannerOverview {
+  font-size: 1rem;
+  height: 4rem;
+  padding-left: 1.5rem;
+}
+.genesis--MarketingBanner-marketingBanner, .genesis--MarketingBanner-marketingBannerList, .genesis--MarketingBanner-marketingBannerOrderSummary, .genesis--MarketingBanner-marketingBannerOverview {
+  align-items: center;
+  background: linear-gradient(90deg,#8a3ffc,#0062ff 50%,#0530ad);
+  color: var(--cds-ui-02,#fff);
+  display: flex;
+  font-weight: 600;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  padding-right: 2rem;
+  padding-top: 0.75rem;
+}
+.genesis--MarketingBanner-marketingBannerOverview a {
+  color: #89b2ff;
+}
+.genesis--MarketingBanner-marketingBannerOverview svg {
+  cursor: pointer;
+}
