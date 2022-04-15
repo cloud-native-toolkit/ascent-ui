@@ -349,7 +349,7 @@ class UIShell extends Component {
                       </SideNavMenuItem>
 
                       <SideNavMenuItem
-                        href="https://discord.gg/UMCJdE4b"
+                        href="https://discord.gg/7sSY9W2cZf"
                         target="_blank" rel="noopener noreferrer">
                         Discord Community
                         <Launch16 />
