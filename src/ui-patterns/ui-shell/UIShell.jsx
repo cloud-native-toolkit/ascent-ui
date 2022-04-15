@@ -262,14 +262,10 @@ class UIShell extends Component {
                         </SideNavMenuItem>
                       }
 
-                      {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/services'>Modules</SideNavMenuItem>
-                        :
-                        <SideNavMenuItem href='/services'>
-                          Modules
-                          <Locked16 style={{ marginLeft: "auto" }}  />
-                        </SideNavMenuItem>
-                      }
+                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev" target="_blank" rel="noopener noreferrer">
+                        Module Catalog
+                        <Launch16 />
+                      </SideNavMenuItem>
 
 
                       {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map" target="_blank" rel="noopener noreferrer">
@@ -325,11 +321,6 @@ class UIShell extends Component {
                       <SideNavMenuItem href="https://cloudnativetoolkit.dev/"
                         target="_blank" rel="noopener noreferrer">
                         Cloud-Native Toolkit
-                        <Launch16 />
-                      </SideNavMenuItem>
-
-                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev" target="_blank" rel="noopener noreferrer">
-                        Modules Catalog
                         <Launch16 />
                       </SideNavMenuItem>
                       
