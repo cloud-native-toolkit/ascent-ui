@@ -245,19 +245,19 @@ class UIShell extends Component {
                       }
 
                       {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/boms/infrastructure'>Infrastructure</SideNavMenuItem>
+                        <SideNavMenuItem element={Link} to='/boms/software'>Software</SideNavMenuItem>
                         :
-                        <SideNavMenuItem href='/boms/infrastructure'>
-                          Infrastructure
+                        <SideNavMenuItem href='/boms/software'>
+                          Software
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
 
                       {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/boms/software'>Software</SideNavMenuItem>
+                        <SideNavMenuItem element={Link} to='/boms/infrastructure'>Infrastructure</SideNavMenuItem>
                         :
-                        <SideNavMenuItem href='/boms/software'>
-                          Software
+                        <SideNavMenuItem href='/boms/infrastructure'>
+                          Infrastructure
                           <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
