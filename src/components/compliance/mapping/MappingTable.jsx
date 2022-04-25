@@ -30,7 +30,7 @@ import {
   Link
 } from "react-router-dom";
 import {
-  Delete16 as Delete,
+  TrashCan16 as Delete,
   Add16,
   Launch16,
   DocumentImport16 as DocumentImport
@@ -155,17 +155,11 @@ class MappingTable extends Component {
     });
   }
 
-  async componentDidMount(){
-    fetch('/userDetails')
-      .then(res => res.json())
-      .then(user => {
-        if (user.name) {
-          this.setState({ user: user || undefined });
-        } else {
-          // Redirect to login page
-          window.location.href = "/login";
-        }
-      });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.user !== prevState.user) {
+      return ({ user: nextProps.user });
+    }
+    return null
   }
 
   render() {
@@ -173,7 +167,6 @@ class MappingTable extends Component {
     const showValidateModal = this.state.showValidate;
     for (let index = 0; index < this.props.rows.length; index++) {
       let row = this.props.rows[index];
-      console.log(row?.service)
       row.component_id = {
         val: row.service_id || row.arch_id,
         serviceName: row?.service?.fullname || row?.service?.service_id,
@@ -197,10 +190,6 @@ class MappingTable extends Component {
               handleClose={this.hideModal}
               isUpdate={this.state.isUpdate}
               data={this.state.mappingRecord}
-              mapping={this.props.mapping}
-              controls={this.props.controls}
-              services={this.props.services}
-              arch={this.props.arch}
               serviceId={this.props.serviceId} 
               controlId={this.props.controlId} />
           }
@@ -229,7 +218,6 @@ class MappingTable extends Component {
                 this.props.handleReload();
               }} 
               onSecondarySubmit={() => this.setState({showImportProfile: false})}
-              mapping={this.props.mapping}
               toast={this.props.toast} />
           }
         </div>
@@ -249,7 +237,7 @@ class MappingTable extends Component {
             <TableContainer
               {...getTableContainerProps()}>
               <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
-                {this.state.user?.role === "admin" && <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
+                {this.state.user?.role === "admin" && <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected > 0}>
                     <TableBatchAction
                         tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                         renderIcon={Delete}
@@ -324,56 +312,41 @@ class MappingTable extends Component {
                         {this.state.user?.role === "admin" && <TableCell>
                           <OverflowMenu light flipped>
                             <OverflowMenuItem itemText="Edit" onClick={() => this.updateMapping(row.id)} />
-                            {/* <OverflowMenuItem itemText="Archive Profile" onClick={async () => {
-                              const profileId = row.cells.find(cell => cell.info.header === 'scc_profile').value;
-                              const response = await fetch(`/api/mapping/profiles/${profileId}/archive`, {method: 'POST'});
-                              if (response.status === 204) {
-                                this.props.toast('success', 'Success', `Profile ${profileId} successfully archived!`)
-                                this.props.handleReload();
-                              } else {
-                                this.props.toast('error', 'Error', `Error archiving profile ${profileId}.`)
-                              }
-                            }} /> */}
                           </OverflowMenu>
                         </TableCell>}
                       </TableExpandRow>
                       <TableExpandedRow
+                        key={`ter-${row.id}`}
                         colSpan={headers.length + 3}
                         className="demo-expanded-td">
                         {row.cells && row.cells.length && row.cells.map((cell) => (
-                          <>
+                          <div key={cell.id}>
                             {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.desc &&
-                              <><h6 style={{'margin-top': '10px'}}>Description</h6><div>{cell.value.details.desc}</div></>}
+                              <><h6 key={`title-${cell.id}`} style={{marginTop: '10px'}}>Description</h6><div key={`div-${cell.id}`}>{cell.value.details.desc}</div></>}
                             {
                               cell.info && cell.info.header === "component_id" && cell.value && cell.value.details &&
                                 <>
-                                  <h6 style={{'margin-top': '10px'}}>SCC Goals</h6>
+                                  <h6 key={`title-${cell.id}`} style={{marginTop: '10px'}}>SCC Goals</h6>
                                   {
                                     cell.value.details.scc_goals !== undefined ?
                                       cell.value.details.scc_goals.map((goal) => (
-                                        goal.goal_id.match(/^\d{7}$/) ?
-                                          <>
-                                            <Tag type="blue">
-                                              <a href={"https://cloud.ibm.com/security-compliance/goals/" + goal.goal_id} target="_blank" rel="noopener noreferrer" >
-                                                {goal.goal_id}
-                                                <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
-                                              </a>
-                                            </Tag>
-                                          </>
-                                        :
-                                          goal.goal_id
-                                        ))
+                                      <Tag type="blue" key={goal.goal_id}>
+                                        <a href={"https://cloud.ibm.com/security-compliance/goals/" + goal.goal_id} target="_blank" rel="noopener noreferrer" >
+                                          {goal.goal_id}
+                                          <Launch16 style={{marginLeft: "3px", paddingTop: "1px"}}/>
+                                        </a>
+                                      </Tag>))
                                     :
-                                      <><TagSkeleton /><TagSkeleton /></>
+                                      <><TagSkeleton key={`tag-skeleton-${cell.id}`} /><TagSkeleton /></>
                                   }
                                   
                                 </>
                             }
                             {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.configuration &&
-                              <><h6 style={{'margin-top': '10px'}}>Configuration</h6><div>{cell.value.details.configuration}</div></>}
+                              <><h6 key={`title-${cell.id}`}  style={{marginTop: '10px'}}>Configuration</h6><div key={`div-${cell.id}`}>{cell.value.details.configuration}</div></>}
                             {cell.info && cell.info.header === "component_id" && cell.value && cell.value.details && cell.value.details.comment &&
-                              <><h6 style={{'margin-top': '10px'}}>Comment</h6><div>{cell.value.details.comment}</div></>}
-                          </>
+                              <><h6 key={`title-${cell.id}`}  style={{marginTop: '10px'}}>Comment</h6><div key={`div-${cell.id}`}>{cell.value.details.comment}</div></>}
+                          </div>
                         ))}
                       </TableExpandedRow>
                     </>

@@ -40,25 +40,6 @@ const defaultConfig = {
 }
 
 class UIShell extends Component {
-  header = "Architecture Builder";
-
-  menuItems = [
-    "Overview",
-    "Builder",
-    "Compliance"
-  ]
-  builderMenuItems = [
-    "Architecture",
-    "Services",
-    "Autmation",
-    "Provisioner"
-  ]
-  complianceMenuItems = [
-    "Controls",
-    "Mapping",
-    "Service",
-    "Nist-800"
-  ]
 
   constructor(props) {
     super(props);
@@ -96,7 +77,6 @@ class UIShell extends Component {
   }
 
   addNotification(type, message, detail) {
-    console.log(message);
     this.setState(prevState => ({
       notifications: [
         ...prevState.notifications,
@@ -226,51 +206,83 @@ class UIShell extends Component {
                         Overview
                       </SideNavMenuItem>
 
-                    {this.state.content.builderFeatures ? <SideNavMenu title="Solution Builder" defaultExpanded={this.state.builderExpended}
-                      isActive={['/solutions','/boms','/services'].includes(this.state.activeItem)}>
+                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Solutions">
+
+                      {this.state.user ?
+                        <SideNavMenuItem element={Link} to='/solutions/user'
+                          isActive={this.state.activeItem === '/solutions/user'}
+                          onClick={() => { this.setState({ activeItem: '/solutions/user' }) }}>Custom Solutions</SideNavMenuItem>
+                        :
+                        <SideNavMenuItem href='/solutions/user'>
+                          Custom Solutions
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/solutions'
                           isActive={this.state.activeItem === '/solutions'}
-                          onClick={() => { this.setState({ activeItem: '/solutions' }) }}>Solutions</SideNavMenuItem>
+                          onClick={() => { this.setState({ activeItem: '/solutions' }) }}>Public Solutions</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/solutions'>
-                          Solutions
-                          <Locked16 />
+                          Public Solutions
+                          <Locked16 style={{ marginLeft: "auto" }}  />
                         </SideNavMenuItem>
                       }
 
-                      {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/boms'
-                          isActive={this.state.activeItem === '/boms'}
-                          onClick={() => { this.setState({ activeItem: '/boms' }) }}>Bill of Materials</SideNavMenuItem>
-                        :
-                        <SideNavMenuItem href='/boms'>
-                          Bill of Materials
-                          <Locked16 />
-                        </SideNavMenuItem>
-                      }
-
-                      {this.state.user ?
-                          <SideNavMenuItem element={Link} to='/services'
-                            isActive={this.state.activeItem === '/services'}
-                            onClick={() => { this.setState({ activeItem: '/services' }) }}>Modules</SideNavMenuItem>
-                        :
-                        <SideNavMenuItem href='/services'>
-                          Modules
-                          <Locked16 />
-                        </SideNavMenuItem>
-                      }
                     </SideNavMenu> : <></>}
 
-                    {this.state.content.complianceFeatures ? <SideNavMenu title="Compliance" defaultExpanded={this.state.complianceExpended}
-                      isActive={['/onboarding','/controls','/mapping','/nists'].includes(this.state.activeItem)} >
+                    {this.state.content.builderFeatures ? <SideNavMenu title="Reference Architectures" defaultExpanded
+                      isActive={['/solutions','/boms','/services'].includes(this.state.activeItem)}>
 
-                      {this.state.user?.roles?.includes("fs-viewer") ?
-                        <SideNavMenuItem element={Link} to='/onboarding'
-                          isActive={this.state.activeItem === '/onboarding'}
-                          onClick={() => { this.setState({ activeItem: '/onboarding' }) }}>On Boarding</SideNavMenuItem>
-                      : <></>}
+                      {this.state.user ?
+                        <SideNavMenuItem element={Link} to='/boms/user'
+                          isActive={this.state.activeItem === '/boms/user'}
+                          onClick={() => { this.setState({ activeItem: '/boms/user' }) }}>Custom Architectures</SideNavMenuItem>
+                        :
+                        <SideNavMenuItem href='/boms/user'>
+                          Custom Architectures
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
+
+                      {this.state.user ?
+                        <SideNavMenuItem element={Link} to='/boms/software'
+                          isActive={this.state.activeItem === '/boms/software'}
+                          onClick={() => { this.setState({ activeItem: '/boms/software' }) }}>Software</SideNavMenuItem>
+                        :
+                        <SideNavMenuItem href='/boms/software'>
+                          Software
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
+
+                      {this.state.user ?
+                        <SideNavMenuItem element={Link} to='/boms/infrastructure'
+                          isActive={this.state.activeItem === '/boms/infrastructure'}
+                          onClick={() => { this.setState({ activeItem: '/boms/infrastructure' }) }}>Infrastructure</SideNavMenuItem>
+                        :
+                        <SideNavMenuItem href='/boms/infrastructure'>
+                          Infrastructure
+                          <Locked16 style={{ marginLeft: "auto" }}  />
+                        </SideNavMenuItem>
+                      }
+
+                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
+                        target="_blank" rel="noopener noreferrer">
+                        Module Catalog
+                        <Launch16 />
+                      </SideNavMenuItem>
+                      {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
+                        href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
+                        target="_blank" rel="noopener noreferrer">
+                        IBM Software Portfolio
+                        <Launch16 />
+                      </SideNavMenuItem> : <></>}
+                    </SideNavMenu> : <></>}
+
+                    {this.state.content.complianceFeatures ? <SideNavMenu title="Compliance" defaultExpanded
+                      isActive={['/onboarding','/controls','/mapping','/nists'].includes(this.state.activeItem)} >
 
                       {this.state.user?.roles?.includes("fs-viewer") ?
                         <SideNavMenuItem element={Link} to='/controls'
@@ -304,40 +316,18 @@ class UIShell extends Component {
 
                     </SideNavMenu> : <></>}
 
-                    <SideNavMenu title="Join Us" defaultExpanded={false} >
-                      <SideNavMenuItem
-                        href="https://github.com/cloud-native-toolkit"
-                        target="_blank" rel="noopener noreferrer">
-                        Git Organization
-                        <Launch16 />
-                      </SideNavMenuItem>
-
-                      <SideNavMenuItem
-                        href="https://discord.gg/UMCJdE4b"
-                        target="_blank" rel="noopener noreferrer">
-                        Discord Community
-                        <Launch16 />
-                      </SideNavMenuItem>
-
-                      <SideNavMenuItem
-                        href="https://www.youtube.com/c/CloudNativeToolkit"
-                        target="_blank" rel="noopener noreferrer">
-                        Youtube Channel
-                        <Launch16 />
-                      </SideNavMenuItem>
-                    </SideNavMenu>
-                    <SideNavMenu title="Docs"
+                    <SideNavMenu title="Documentation"
                       isSideNavExpanded={isSideNavExpanded}
                       defaultExpanded={['/docs'].includes(this.state.activeItem)}
                       isActive={['/docs'].includes(this.state.activeItem)} >
                       {this.state?.user?.email?.endsWith('ibm.com') ?
                         <SideNavMenuItem element={Link} to='/docs'
                           isActive={this.state.activeItem === '/docs'}
-                          onClick={() => { this.setState({ activeItem: '/docs', docsExpended: true }) }}>More About Ascent</SideNavMenuItem>
+                          onClick={() => { this.setState({ activeItem: '/docs', docsExpended: true }) }}>About</SideNavMenuItem>
                       : <></>}
-                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
+                      <SideNavMenuItem href="https://www.ibm.com/training/cloud/jobroles"
                         target="_blank" rel="noopener noreferrer">
-                        Software Everywhere Catalog
+                        Free IBM Cloud Training
                         <Launch16 />
                       </SideNavMenuItem>
                       <SideNavMenuItem href="https://landscape.cncf.io/"
@@ -350,16 +340,33 @@ class UIShell extends Component {
                         Cloud-Native Toolkit
                         <Launch16 />
                       </SideNavMenuItem>
-                      {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
-                        href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
-                        target="_blank" rel="noopener noreferrer">
-                        IBM Software Map
-                        <Launch16 />
-                      </SideNavMenuItem> : <></>}
                       <SideNavMenuItem
                         href="https://github.com/cloud-native-toolkit/iascable"
                         target="_blank" rel="noopener noreferrer">
                         Builder CLI
+                        <Launch16 />
+                      </SideNavMenuItem>
+                    </SideNavMenu>
+
+                    <SideNavMenu title="Join Us" >
+                      <SideNavMenuItem
+                        href="https://github.com/cloud-native-toolkit"
+                        target="_blank" rel="noopener noreferrer">
+                        Git Organization
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+                      <SideNavMenuItem
+                        href="https://discord.gg/7sSY9W2cZf"
+                        target="_blank" rel="noopener noreferrer">
+                        Discord Community
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+                      <SideNavMenuItem
+                        href="https://www.youtube.com/c/CloudNativeToolkit"
+                        target="_blank" rel="noopener noreferrer">
+                        Youtube Channel
                         <Launch16 />
                       </SideNavMenuItem>
                     </SideNavMenu>

@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import {
-  DataTableSkeleton,
-  Pagination
+  DataTableSkeleton, Pagination
 } from 'carbon-components-react';
 import MappingTable from './MappingTable';
-import { mappingHeaders } from '../data/data';
 
-import { ToastNotification } from "carbon-components-react";
+import { mappingHeaders } from '../../../data/data';
+import { getMappings } from "../../../services/mappings";
 
 
 class MappingView extends Component {
@@ -22,7 +21,6 @@ class MappingView extends Component {
       notifications: []
     };
     this.loadTable = this.loadTable.bind(this);
-    this.addNotification = this.addNotification.bind(this);
     this.filterTable = this.filterTable.bind(this);
   }
 
@@ -32,16 +30,23 @@ class MappingView extends Component {
       filterData: [],
       totalItems: -1
     });
-    let mappingDetails = await this.props.mapping.getMappings({ include: ['profile', "control", "service"] });
+    let mappingDetails = [];
+    try {
+      mappingDetails = await getMappings({ include: ['profile', "control", "service"] });
+    } catch (error) {
+      this.props.addNotification('error', `${error.statusCode ? `${error.statusCode} ${error.name}` : 'Error'}`, `${error.message ? `${error.message}` : 'Error fetching mapping data.'}`);
+    }
     mappingDetails = mappingDetails.sort((a, b) => b?.profile?.createdAt - a?.profile?.createdAt);
-    this.props.mapping.getMappings({ include: ['profile', "goals", "control", "service"] }).then((mappings) => {
-      mappings = mappings.sort((a, b) => b?.profile?.createdAt - a?.profile?.createdAt)
-      this.setState({
-        data: mappings,
-        filterData: mappings,
-        totalItems: mappings.length
-      });
-    });
+   getMappings({ include: ['profile', "goals", "control", "service"] })
+      .then((mappings) => {
+        mappings = mappings.sort((a, b) => b?.profile?.createdAt - a?.profile?.createdAt)
+        this.setState({
+          data: mappings,
+          filterData: mappings,
+          totalItems: mappings.length
+        });
+      })
+      .catch(console.error);
     this.setState({
       data: mappingDetails,
       filterData: mappingDetails,
@@ -69,109 +74,66 @@ class MappingView extends Component {
       }
   }
 
-  /** Notifications */
-
-  addNotification(type, message, detail) {
-    this.setState(prevState => ({
-      notifications: [
-        ...prevState.notifications,
-        {
-          message: message || "Notification",
-          detail: detail || "Notification text",
-          severity: type || "info"
-        }
-      ]
-    }));
-  }
-
-  renderNotifications() {
-  return this.state.notifications.map(notification => {
-      return (
-        <ToastNotification
-          title={notification.message}
-          subtitle={notification.detail}
-          kind={notification.severity}
-          timeout={10000}
-          caption={false}
-        />
-      );
-    });
-  }
-
-  /** Notifications END */
-
   render() {
     const data = this.state.filterData;
     const headers = this.state.headerData;
     return (
-      <>
-        <div class='notif'>
-          {this.state.notifications.length !== 0 && this.renderNotifications()}
+      <div className="bx--grid">
+        <div className="bx--row">
+          <div className="bx--col-lg-12">
+            <h2>Control Mapping</h2>
+            <p>
+              Mapping list showing the relationship between FS controls, cloud services and reference architectures for the FS Cloud.
+            </p>
+            <br></br>
+          </div>
         </div>
-        <div className="bx--grid">
-          <div className="bx--row">
-            <div className="bx--col-lg-12">
-              <br></br>
-              <h2 className="landing-page__subheading">
-                Control Mapping
-                          </h2>
-              <br></br>
-              <p>
-                Mapping list showing the relationship between FS controls, cloud services and reference architectures for the FS Cloud.
-              </p>
-              <br></br>
-            </div>
-          </div>
-          <div className="bx--row">
-            <div className="bx--col-lg-12">
-              {this.state.totalItems < 0 ?
-                <DataTableSkeleton
-                  columnCount={headers.length + 1}
-                  rowCount={15}
-                  showHeader={false}
-                  headers={null}
+        <div className="bx--row">
+          <div className="bx--col-lg-12">
+            {this.state.totalItems < 0 ?
+              <DataTableSkeleton
+                columnCount={headers.length + 1}
+                rowCount={15}
+                showHeader={false}
+                headers={null}
+              />
+              :
+              <>
+                <MappingTable
+                  user={this.props.user}
+                  toast={this.props.addNotification}
+                  headers={headers}
+                  data={data}
+                  rows={data.slice(
+                    this.state.firstRowIndex,
+                    this.state.firstRowIndex + this.state.currentPageSize
+                  )}
+                  handleReload={this.loadTable}
+                  filterTable={this.filterTable}
                 />
-                :
-                <>
-                  <MappingTable
-                    toast={this.addNotification}
-                    headers={headers}
-                    data={data}
-                    rows={data.slice(
-                      this.state.firstRowIndex,
-                      this.state.firstRowIndex + this.state.currentPageSize
-                    )}
-                    handleReload={this.loadTable}
-                    mapping={this.props.mapping}
-                    controls={this.props.controls}
-                    services={this.props.services}
-                    arch={this.props.arch}
-                    filterTable={this.filterTable}
-                  />
-                  <Pagination
-                    totalItems={this.state.totalItems}
-                    backwardText="Previous page"
-                    forwardText="Next page"
-                    pageSize={this.state.currentPageSize}
-                    pageSizes={[5, 10, 15, 25]}
-                    itemsPerPageText="Items per page"
-                    onChange={({ page, pageSize }) => {
-                      if (pageSize !== this.state.currentPageSize) {
-                        this.setState({
-                          currentPageSize: pageSize
-                        });
-                      }
+                <Pagination
+                  totalItems={this.state.totalItems}
+                  backwardText="Previous page"
+                  forwardText="Next page"
+                  pageSize={this.state.currentPageSize}
+                  pageSizes={[5, 10, 15, 25]}
+                  itemsPerPageText="Items per page"
+                  onChange={({ page, pageSize }) => {
+                    if (pageSize !== this.state.currentPageSize) {
                       this.setState({
-                        firstRowIndex: pageSize * (page - 1)
+                        currentPageSize: pageSize
                       });
-                    }}
-                  />
-                </>
-              }
-            </div>
+                    }
+                    this.setState({
+                      firstRowIndex: pageSize * (page - 1)
+                    });
+                  }}
+                />
+              </>
+            }
           </div>
-        </div >
-      </>
+        </div>
+      </div >
     );
 
   }

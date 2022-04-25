@@ -1,6 +1,6 @@
 const baseUrl = '/api/control-mapping';
 
-export function getMappings(filter, notify) {
+export function getMappings(filter) {
     return new Promise((resolve, reject) => {
         let url = baseUrl;
         if (filter) {
@@ -8,7 +8,10 @@ export function getMappings(filter, notify) {
         }
         fetch(url)
             .then(res => res.json())
-            .then(res => resolve(res || []))
-            .catch(err => notify('error', 'Error', 'Error fetching mapping data.'));
+            .then(res => {
+                if (res.error) reject(res.error);
+                else resolve(res || []);
+            })
+            .catch(err => reject(err));
     });
 }

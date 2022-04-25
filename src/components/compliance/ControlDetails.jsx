@@ -19,9 +19,7 @@ class ControlDetails extends Component {
             <div>
                 {data.id &&
                     <>
-                        <br />
                         <h3>Overview</h3>
-                        <br />
                         <UnorderedList nested>
                             {data.controlDetails?.focus_area && <ListItem style={{ fontSize: '1rem' }}><strong>Focus Area{infoTooltips.focus_area}: </strong>{data.controlDetails?.focus_area}</ListItem>}
                             {data.controlDetails?.family && <ListItem style={{ fontSize: '1rem' }}><strong>Family{infoTooltips.family}: </strong>{data.controlDetails?.family}</ListItem>}
@@ -29,9 +27,7 @@ class ControlDetails extends Component {
                             {data.controlDetails?.risk_desc && <ListItem style={{ fontSize: '1rem' }}><strong>Risk{infoTooltips.risk_desc}: </strong>{data.controlDetails?.risk_desc}</ListItem>}
                             {/* {data.controlDetails?.nist_functions && <ListItem style={{ fontSize: '1rem' }}><strong>NIST Cybersecurity Functions{infoTooltips.nist_functions}: </strong>{data.controlDetails?.nist_functions}</ListItem>} */}
                         </UnorderedList>
-                        <br />
                         <h3>Requirements</h3>
-                        <br />
                         <div>
                             <Accordion>
                                 {data.controlDetails?.requirements?.map(req => (
@@ -67,13 +63,11 @@ class ControlDetails extends Component {
                         }
                         {data.controlDetails?.fs_params && data.controlDetails?.fs_params !== 'None' &&
                             <>
-                                <br />
                                 <h4>FS Parameters</h4>
                                 <p>{data.controlDetails?.fs_params}</p>
                             </>
                         }
                         {data.parent_control && <>
-                            <br />
                             <p>Parent control: <Tag type="blue">
                                 <Link to={"/controls/" + data.parent_control.toLowerCase().replace(' ', '_')} >
                                     {data.parent_control}
@@ -81,11 +75,8 @@ class ControlDetails extends Component {
                             </Tag></p>
                         </>}
                         {data?.controlDetails?.implementation && <>
-                            <br />
                             <h3>Solution and Implementation</h3>
-                            <br />
-                            <ReactMarkdown>{data?.controlDetails?.implementation}</ReactMarkdown>
-                            <br />
+                            <ReactMarkdown>{data?.controlDetails?.implementation?.replaceAll('\n&nbsp;', '')}</ReactMarkdown>
                         </>}
                     </>
                 }

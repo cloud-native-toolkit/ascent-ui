@@ -1,12 +1,8 @@
-const baseUrl = '/api/controls';
+const baseUrl = '/api/nist';
 
-export function getControls(filter) {
-    let url = baseUrl;
-    if (filter) {
-        url = url + "?filter=" + encodeURIComponent(JSON.stringify(filter));
-    }
+export function getNist() {
     return new Promise((resolve, reject) => {
-        fetch(url)
+        fetch(baseUrl)
             .then(res => res.json())
             .then(res => {
                 if (res.error) reject(res.error);
@@ -16,13 +12,9 @@ export function getControls(filter) {
     });
 }
 
-export function getControlDetails(id, filter) {
-    let url = `${baseUrl}/${id}`;
-    if (filter) {
-        url = url + "?filter=" + encodeURIComponent(JSON.stringify(filter));
-    }
+export function getNistDetails(id) {
     return new Promise((resolve, reject) => {
-        fetch(url)
+        fetch(`${baseUrl}/${id}`)
             .then(res => res.json())
             .then(res => {
                 if (res.error) reject(res.error);

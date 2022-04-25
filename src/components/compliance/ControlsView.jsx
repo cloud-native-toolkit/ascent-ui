@@ -8,6 +8,7 @@ import {
 import ControlsFilterPane from './ControlsFilterPane';
 import ControlsTable from './ControlsTable';
 import { ctrlsHeaders } from '../../data/data';
+import { getControls } from "../../services/controls";
 
 const b64 = require('../../utils/b64');
 
@@ -42,7 +43,7 @@ class ControlsView extends Component {
                 const filter = {
                     include: ["nist", "controlDetails"]
                 }
-                jsonData = await (await fetch(`/api/controls?filter=${encodeURIComponent(JSON.stringify(filter))}`)).json();
+                jsonData = await getControls(filter);
             } catch (error) {
                 this.props.addNotification('error', 'Error', 'Error fetching Controls data.');
             }
@@ -180,11 +181,7 @@ class ControlsView extends Component {
             <div className="bx--grid">
                 <div className="bx--row">
                     <div className="bx--col-lg-12">
-                        <br></br>
-                        <h2 className="landing-page__subheading">
-                            Controls
-                        </h2>
-                        <br></br>
+                        <h2>Controls</h2>
                         <p>
                             List of FS Cloud controls
                         </p>

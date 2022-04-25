@@ -7,17 +7,19 @@ import {
 import LandingPage from '../landing-page/LandingPage';
 import ControlsView from '../compliance/ControlsView';
 import ControlDetailsView from '../compliance/ControlDetailsView';
+import MappingView from '../compliance/mapping/MappingView';
 import NistView from '../compliance/NistView';
 import NistDetailsView from '../compliance/NistDetailsView';
 import OverView from '../OverView';
 import NotFound from '../NotFound';
 
 
-function ControlDetails() {
+function ControlDetails(props) {
     let { controlId } = useParams();
     if (controlId === controlId.toLowerCase().replace(' ', '_')) {
         return (
-            <ControlDetailsView controlId={controlId.toUpperCase().replace('_', ' ')} />
+            <ControlDetailsView {...props}
+                controlId={controlId.toUpperCase().replace('_', ' ')} />
         );
     }
     return (
@@ -25,13 +27,12 @@ function ControlDetails() {
     );
 }
 
-function NistDetails(addNotification) {
+function NistDetails(props) {
     let { number } = useParams();
     if (number === number.toLowerCase().replace(' ', '_')) {
         return (
-            <NistDetailsView
-                number={number.toUpperCase().replace('_', ' ')}
-                addNotification={addNotification} />
+            <NistDetailsView {...props}
+                number={number.toUpperCase().replace('_', ' ')} />
         );
     }
     return (
@@ -43,11 +44,12 @@ class AppRoutes extends React.Component {
     render() {
         return (
             <Routes>
-                <Route path='/' element={<LandingPage />} />
-                <Route path='/controls' element={<ControlsView addNotification={this.props.addNotification} />} />
-                <Route path='/controls/:controlId' element={<ControlDetails />} />
-                <Route path='/nists' element={<NistView addNotification={this.props.addNotification} />} />
-                <Route path='/nists/:number' element={<NistDetails addNotification={this.props.addNotification} />} />
+                <Route path='/' element={<LandingPage user={this.props.user} addNotification={this.props.addNotification} />} />
+                <Route path='/controls' element={<ControlsView user={this.props.user} addNotification={this.props.addNotification} />} />
+                <Route path='/mapping' element={<MappingView  user={this.props.user} addNotification={this.props.addNotification} />} />
+                <Route path='/controls/:controlId' element={<ControlDetails user={this.props.user} addNotification={this.props.addNotification} />} />
+                <Route path='/nists' element={<NistView user={this.props.user}  addNotification={this.props.addNotification} />} />
+                <Route path='/nists/:number' element={<NistDetails user={this.props.user} addNotification={this.props.addNotification} />} />
                 <Route path='/docs' exact element={<OverView />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>

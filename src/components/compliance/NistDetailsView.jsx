@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 
 import NotFound from "../../components/NotFound";
+import { getNistDetails } from "../../services/nist";
 
 
 class NistDetailsView extends Component {
@@ -23,7 +24,7 @@ class NistDetailsView extends Component {
   }
   async loadNist(number) {
     try {
-      const nistData = await (await fetch(`/api/nist/${number}`)).json();
+      const nistData = await getNistDetails(number);
       if (nistData.error) throw nistData.error;
       this.setState({
         nistData: nistData,

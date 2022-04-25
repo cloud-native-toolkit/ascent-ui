@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
     Accordion,
     AccordionItem,
-    MultiSelect,
+    FilterableMultiSelect,
     Checkbox
 } from 'carbon-components-react';
 import {
@@ -53,7 +53,6 @@ class ControlsFilterPane extends Component {
         await this.setState({
             selectedItems: selectedItems
         });
-        console.log(this.state.selectedItems);
         this.props.filterTable({selectedItems: this.state.selectedItems});
     }
 
@@ -77,22 +76,22 @@ class ControlsFilterPane extends Component {
                                     id='controls-and-operator'
                                     labelText='Use AND operator'
                                     onChange={(value, id, event) => this.handleCheck('and', 1, value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'and' && elt.val === 1)}  />
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'and' && elt.val === 1) !== undefined}  />
                                 <Checkbox
                                     id='controls-base-control'
                                     labelText='Base Controls'
                                     onChange={(value, id, event) => this.handleCheck('base_control', true, value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'base_control' && elt.val)}  />
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'base_control' && elt.val) !== undefined}  />
                                 <Checkbox
                                     id='controls-scc'
                                     labelText='Security and Compliance Center'
                                     onChange={(value, id, event) => this.handleCheck('scc', 'Y', value)}
-                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'scc' && elt.val)}  />
+                                    defaultChecked={this.props.selectedFilters.find((elt) => elt.attr === 'scc' && elt.val) !== undefined}  />
                             </AccordionItem>
                             <AccordionItem title="Category" 
                                 onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, family: !this.state.accordionOpen.family}})}
                                 open={this.state.accordionOpen.family}>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='focus-areas'
                                     items={controlFocusAreas}
                                     onChange={async (event) => {
@@ -106,7 +105,7 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                                 <div style={{marginBottom: '0.5rem'}}></div>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='control-families'
                                     items={controlFamilies}
                                     onChange={async (event) => {
@@ -123,7 +122,7 @@ class ControlsFilterPane extends Component {
                             <AccordionItem title="Type" 
                                 onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, type: !this.state.accordionOpen.type}})}
                                 open={this.state.accordionOpen.type}>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='control-type-3'
                                     items={controlType3}
                                     onChange={async (event) => {
@@ -137,7 +136,7 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                                 <div style={{marginBottom: '0.5rem'}}></div>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='control-type-1'
                                     items={controlType1}
                                     onChange={async (event) => {
@@ -151,7 +150,7 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                                 <div style={{marginBottom: '0.5rem'}}></div>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='control-type-2'
                                     items={controlType2}
                                     onChange={async (event) => {
@@ -165,7 +164,7 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                                 <div style={{marginBottom: '0.5rem'}}></div>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='nist-functions'
                                     items={nistFunctions}
                                     onChange={async (event) => {
@@ -182,7 +181,7 @@ class ControlsFilterPane extends Component {
                             <AccordionItem title="Risk" 
                                 onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, risk: !this.state.accordionOpen.risk}})}
                                 open={this.state.accordionOpen.risk}>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='control-risk-rating'
                                     items={controlRiskRating}
                                     onChange={async (event) => {
@@ -199,7 +198,7 @@ class ControlsFilterPane extends Component {
                             <AccordionItem title="Responsibility" 
                                 onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, resp: !this.state.accordionOpen.resp}})}
                                 open={this.state.accordionOpen.resp}>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='ibm-public-cloud-resp'
                                     items={controlIbmResp}
                                     onChange={async (event) => {
@@ -213,7 +212,7 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                                 <div style={{marginBottom: '0.5rem'}}></div>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='developer-resp'
                                     items={controlDevResp}
                                     onChange={async (event) => {
@@ -227,7 +226,7 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                                 <div style={{marginBottom: '0.5rem'}}></div>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='operator-resp'
                                     items={controlOperatorResp}
                                     onChange={async (event) => {
@@ -241,7 +240,7 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                                 <div style={{marginBottom: '0.5rem'}}></div>
-                                <MultiSelect.Filterable
+                                <FilterableMultiSelect
                                     id='consumer-resp'
                                     items={controlConsumerResp}
                                     onChange={async (event) => {

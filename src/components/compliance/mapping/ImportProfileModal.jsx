@@ -50,7 +50,6 @@ class ImportProfileModal extends Component {
             </p>
             <FileUploader 
               accept={['.csv']}
-              labelText={"Drag and drop a .csv file, or click to upload"}
               labelTitle={"Upload profile"}
               buttonLabel='Add file'
               labelDescription={"Max file size is 400Kb. Only .csv files are supported."}

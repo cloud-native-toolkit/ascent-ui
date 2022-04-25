@@ -43,6 +43,7 @@ const ControlsTable = ({ rows, headers, onClickFilter, filter, filterItems }) =>
               light
               renderIcon={Filter32}
               onClick={() => onClickFilter()}
+              children={<></>}
               />
           </TableToolbarContent>
         </TableToolbar>
@@ -81,7 +82,7 @@ const ControlsTable = ({ rows, headers, onClickFilter, filter, filterItems }) =>
                 ))}
                 <TableCell>
                   
-                  <OverflowMenu light flipped style={{flex:1, 'margin-left': 'auto'}}>
+                  <OverflowMenu light flipped style={{flex:1, marginLeft: 'auto'}}>
                     <Link class="bx--overflow-menu-options__option" to={"/controls/" + row.id.toLowerCase().replace(' ', '_')}>
                       <OverflowMenuItem itemText="Details" />
                     </Link>

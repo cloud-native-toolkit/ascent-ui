@@ -27,12 +27,15 @@ import {
 } from '../../data/data';
 import NotFound from "../NotFound";
 import { getMappings } from "../../services/mappings";
+import { getControlDetails } from "../../services/controls";
 
 class ControlDetailsView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      controlId: this.props.controlId,
       user: undefined,
+      loadControl: false,
       data: {},
       nistData: {},
       show: "",
@@ -55,7 +58,7 @@ class ControlDetailsView extends Component {
     }
     let controlData = null;
     try {
-      controlData = await (await fetch(`/api/controls/${controlId}?filter=${encodeURIComponent(JSON.stringify(filter))}`)).json();
+      controlData = await getControlDetails(controlId, filter);
     } catch (error) {
       this.props.addNotification('error', 'Error', 'Error fetching control details.');
     }
@@ -76,14 +79,21 @@ class ControlDetailsView extends Component {
   }
 
   async loadTable() {
-    const mappingData = await getMappings({ where: { control_id: this.props.controlId }, include: ["profile", "control", "service"] }, this.props.addNotification);
-    getMappings({ where: { control_id: this.props.controlId }, include: ["profile", "goals", "control", "service"] }, this.props.addNotification).then((mappings) => {
-      this.setState({
-        mappingData: mappings,
-        filterData: mappings,
-        totalItems: mappings.length
-      });
-    });
+    let mappingData = [];
+    try {
+      mappingData = await getMappings({ where: { control_id: this.props.controlId }, include: ["profile", "control", "service"] });
+    } catch (error) {
+      this.props.addNotification('error', `${error.statusCode ? `${error.statusCode} ${error.name}` : 'Error'}`, `${error.message ? `${error.message}` : 'Error fetching mapping data.'}`);
+    }
+    getMappings({ where: { control_id: this.props.controlId }, include: ["profile", "goals", "control", "service"] }, this.props.addNotification)
+      .then((mappings) => {
+        this.setState({
+          mappingData: mappings,
+          filterData: mappings,
+          totalItems: mappings.length
+        })
+      })
+      .catch(console.error);
     this.setState({
       mappingData: [],
       totalItems: 0
@@ -113,26 +123,31 @@ class ControlDetailsView extends Component {
   }
 
   async componentDidMount() {
-    fetch('/userDetails')
-      .then(res => res.json())
-      .then(user => {
-        if (user.name) {
-          this.setState({
-            user: user || undefined,
-            show: user?.roles?.includes("fs-viewer") ? "fs-cloud-desc" : "nist-desc"
-          });
-          this.loadControl(this.props.controlId);
-          this.loadTable();
-        } else {
-          // Redirect to login page
-          window.location.href = "/login";
-        }
-      });
+    if (!this.state.loadControl && this.state.user) {
+      await this.setState({ loadControl: true });
+      this.loadControl(this.props.controlId);
+      this.loadTable();
+    }
   }
 
-  async componentWillReceiveProps(newProps) {
-    if (newProps.controlId && newProps.controlId !== this.state.controlId) {
-      this.loadControl(newProps.controlId);
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.user !== prevState.user) {
+      return ({ user: nextProps.user,
+        show: nextProps.user?.roles?.includes("fs-viewer") ? "fs-cloud-desc" : "nist-desc"
+      });
+    }
+    return null
+  }
+
+  async componentDidUpdate() {
+    if (this.props.controlId !== this.state.controlId) {
+      this.setState({ controlId: this.props.controlId })
+      this.loadControl(this.props.controlId);
+    }
+    if (!this.state.loadControl && this.state.user) {
+      await this.setState({ loadControl: true });
+      this.loadControl(this.props.controlId);
+      this.loadTable();
     }
   }
 
@@ -167,11 +182,9 @@ class ControlDetailsView extends Component {
           {data.id ?
             <div className="bx--row">
               <div className="bx--col-lg-12">
-                <br></br>
                 <h2>
                   {(data.name && (data.id + ": " + data.name)) || data.id}
                 </h2>
-                <br></br>
               </div>
             </div>
             :
@@ -188,187 +201,163 @@ class ControlDetailsView extends Component {
             </ContentSwitcher>
           }
 
+          <div className="control-details">
+            {data?.controlDetails && this.state.show === "fs-cloud-desc" && <div>
+              {data.id && <ControlDetails data={data} />}
+            </div>}
 
-          {data?.controlDetails && this.state.show === "fs-cloud-desc" && <div className="control-details">
-            {data.id && <ControlDetails data={data} />}
-          </div>}
-
-          {this.state.show === "nist-desc" && <div>
-            { /* NIST Description */
-              nistData.number && <div className="bx--row">
-                <div className="bx--col-lg-12">
-                  <br></br>
-                  <h3 >
-                    Official NIST description
-                  </h3>
-                  <br></br>
-                  <h4 >{nistData.title && nistData.title.toLowerCase()}</h4>
-                  <br></br>
-                  <p>{nistData.statement && nistData.statement.description}</p>
-                  {nistData.statement && nistData.statement.statement ? <>
+            {this.state.show === "nist-desc" && <div>
+              { /* NIST Description */
+                nistData.number && <div className="bx--row">
+                  <div className="bx--col-lg-12">
+                    <h3 >
+                      Official NIST description
+                    </h3>
+                    <h4 >{nistData.title && nistData.title.toLowerCase()}</h4>
+                    <p>{nistData.statement && nistData.statement.description}</p>
+                    {nistData.statement && nistData.statement.statement ? <>
+                      <UnorderedList>
+                        {nistData.statement.statement.map((statement) => (
+                          <ListItem key={statement.description}>
+                            <p>{statement.description}</p>
+                          </ListItem>
+                        ))}
+                      </UnorderedList>
+                    </> : <></>}
+                  </div>
+                </div>
+              }
+              { /* NIST Family */
+                nistData.family && <div className="bx--row">
+                  <div className="bx--col-lg-12">
+                    <h4 >Family</h4>
+                    <p>
+                      {nistData.family.toLowerCase() + '.'}
+                    </p>
+                  </div>
+                </div>
+              }
+              { /* NIST Priority */
+                nistData.priority && <div className="bx--row">
+                  <div className="bx--col-lg-12">
+                    <h4 >Priority</h4>
+                    <Tag type="red">{nistData.priority}</Tag>
+                  </div>
+                </div>
+              }
+              { /* NIST Supplemental Guidance */
+                nistData?.supplemental_guidance?.description && <div className="bx--row">
+                  <div className="bx--col-lg-12">
+                    <h4 >Supplemental Guidance</h4>
+                    <p>
+                      {nistData.supplemental_guidance.description}
+                    </p>
+                  </div>
+                </div>
+              }
+              { /* NIST Parent Control */
+                nistData?.parent_control && <div className="bx--row">
+                  <div className="bx--col-lg-12">
+                    <h4 >Parent Control</h4>
+                    <Tag type="blue">
+                      <Link to={"/nists/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
+                        {nistData.parent_control}
+                      </Link>
+                    </Tag>
+                  </div>
+                </div>
+              }
+              { /* NIST Related Controls */
+                nistData?.supplemental_guidance?.related && <div className="bx--row">
+                  <div className="bx--col-lg-12">
+                    <h4 >Related NIST Controls</h4>
+                    {nistData.supplemental_guidance.related.map((related) => (
+                      <Tag type="blue">
+                        <Link to={"/nists/" + related.toLowerCase().replace(' ', '_')} >
+                          {related}
+                        </Link>
+                      </Tag>
+                    ))}
+                  </div>
+                </div>
+              }
+              { /* NIST Baseline Impact */
+                nistData?.baseline_impact && <div className="bx--row">
+                  <div className="bx--col-lg-12">
+                    <h4 >Baseline Impact</h4>
+                    {nistData.baseline_impact.map((baselineImpact) => (
+                      <Tag type="cyan">{baselineImpact}</Tag>
+                    ))}
+                  </div>
+                </div>
+              }
+              { /* NIST References */
+                nistData?.references?.reference && <div className="bx--row">
+                  <div className="bx--col-lg-12">
+                    <h4 >References</h4>
                     <UnorderedList>
-                      {nistData.statement.statement.map((statement) => (
+                      {nistData.references.reference.map((ref) => (
                         <ListItem>
-                          <p>{statement.description}</p>
+                          <a href={ref.item["@href"]} target="_blank" rel="noopener noreferrer">
+                            {ref.item["#text"]}
+                            <Launch16 style={{ "margin-left": "5px" }} />
+                          </a>
                         </ListItem>
                       ))}
                     </UnorderedList>
-                  </> : <></>}
-                  <br></br>
+                  </div>
                 </div>
-              </div>
-            }
-            { /* NIST Family */
-              nistData.family && <div className="bx--row">
-                <div className="bx--col-lg-12">
-                  <br></br>
-                  <h4 >Family</h4>
-                  <br></br>
-                  <p>
-                    {nistData.family.toLowerCase() + '.'}
-                  </p>
-                  <br></br>
-                </div>
-              </div>
-            }
-            { /* NIST Priority */
-              nistData.priority && <div className="bx--row">
-                <div className="bx--col-lg-12">
-                  <br></br>
-                  <h4 >Priority</h4>
-                  <br></br>
-                  <Tag type="red">{nistData.priority}</Tag>
-                  <br></br>
-                </div>
-              </div>
-            }
-            { /* NIST Supplemental Guidance */
-              nistData?.supplemental_guidance?.description && <div className="bx--row">
-                <div className="bx--col-lg-12">
-                  <br></br>
-                  <h4 >Supplemental Guidance</h4>
-                  <br></br>
-                  <p>
-                    {nistData.supplemental_guidance.description}
-                  </p>
-                  <br></br>
-                </div>
-              </div>
-            }
-            { /* NIST Parent Control */
-              nistData?.parent_control && <div className="bx--row">
-                <div className="bx--col-lg-12">
-                  <br></br>
-                  <h4 >Parent Control</h4>
-                  <br></br>
-                  <Tag type="blue">
-                    <Link to={"/nists/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
-                      {nistData.parent_control}
-                    </Link>
-                  </Tag>
-                  <br></br>
-                </div>
-              </div>
-            }
-            { /* NIST Related Controls */
-              nistData?.supplemental_guidance?.related && <div className="bx--row">
-                <div className="bx--col-lg-12">
-                  <br></br>
-                  <h4 >Related NIST Controls</h4>
-                  <br></br>
-                  {nistData.supplemental_guidance.related.map((related) => (
-                    <Tag type="blue">
-                      <Link to={"/nists/" + related.toLowerCase().replace(' ', '_')} >
-                        {related}
-                      </Link>
-                    </Tag>
-                  ))}
-                  <br></br>
-                </div>
-              </div>
-            }
-            { /* NIST Baseline Impact */
-              nistData?.baseline_impact && <div className="bx--row">
-                <div className="bx--col-lg-12">
-                  <br></br>
-                  <h4 >Baseline Impact</h4>
-                  <br></br>
-                  {nistData.baseline_impact.map((baselineImpact) => (
-                    <Tag type="cyan">{baselineImpact}</Tag>
-                  ))}
-                  <br></br>
-                </div>
-              </div>
-            }
-            { /* NIST References */
-              nistData?.references?.reference && <div className="bx--row">
-                <div className="bx--col-lg-12">
-                  <br></br>
-                  <h4 >References</h4>
-                  <br></br>
-                  <UnorderedList>
-                    {nistData.references.reference.map((ref) => (
-                      <ListItem>
-                        <a href={ref.item["@href"]} target="_blank" rel="noopener noreferrer">
-                          {ref.item["#text"]}
-                          <Launch16 style={{ "margin-left": "5px" }} />
-                        </a>
-                      </ListItem>
-                    ))}
-                  </UnorderedList>
-                  <br></br>
-                </div>
-              </div>
-            }
-          </div>}
+              }
+            </div>}
 
-          {this.state.show === "mapping" && <div>
-            {data.id &&
-              <>
-                <br />
-                <h3>Impacted Components</h3>
-                <br />
-                <MappingTable
-                  toast={this.props.addNotification}
-                  data={mappingData}
-                  headers={headers}
-                  rows={mappingData.slice(
-                    this.state.firstRowIndex,
-                    this.state.firstRowIndex + this.state.currentPageSize
-                  )}
-                  handleReload={this.loadTable}
-                  mapping={this.props.mapping}
-                  controls={this.props.controls}
-                  services={this.props.service}
-                  arch={this.props.arch}
-                  controlId={this.props.controlId}
-                  filterTable={this.filterTable}
-                />
-                <Pagination
-                  totalItems={this.state.totalItems}
-                  backwardText="Previous page"
-                  forwardText="Next page"
-                  pageSize={this.state.currentPageSize}
-                  pageSizes={[5, 10, 15, 25]}
-                  itemsPerPageText="Items per page"
-                  onChange={({ page, pageSize }) => {
-                    if (pageSize !== this.state.currentPageSize) {
+            {this.state.show === "mapping" && <div>
+              {data.id &&
+                <>
+                  <h3>Impacted Components</h3>
+                  <MappingTable
+                    user={this.props.user}
+                    toast={this.props.addNotification}
+                    data={mappingData}
+                    headers={headers}
+                    rows={mappingData.slice(
+                      this.state.firstRowIndex,
+                      this.state.firstRowIndex + this.state.currentPageSize
+                    )}
+                    handleReload={this.loadTable}
+                    mapping={this.props.mapping}
+                    controls={this.props.controls}
+                    services={this.props.service}
+                    arch={this.props.arch}
+                    controlId={this.props.controlId}
+                    filterTable={this.filterTable}
+                  />
+                  <Pagination
+                    totalItems={this.state.totalItems}
+                    backwardText="Previous page"
+                    forwardText="Next page"
+                    pageSize={this.state.currentPageSize}
+                    pageSizes={[5, 10, 15, 25]}
+                    itemsPerPageText="Items per page"
+                    onChange={({ page, pageSize }) => {
+                      if (pageSize !== this.state.currentPageSize) {
+                        this.setState({
+                          currentPageSize: pageSize
+                        });
+                      }
                       this.setState({
-                        currentPageSize: pageSize
+                        firstRowIndex: pageSize * (page - 1)
                       });
-                    }
-                    this.setState({
-                      firstRowIndex: pageSize * (page - 1)
-                    });
-                  }}
-                />
-              </>
-            }
-          </div>}
+                    }}
+                  />
+                </>
+              }
+            </div>}
+          </div>
 
         </Grid >
       </>
     );
   }
 }
+
 export default ControlDetailsView;

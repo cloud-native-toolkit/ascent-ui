@@ -9,9 +9,9 @@ import {
 
 import { InfoSection, InfoCard } from './Info';
 
-import ModelBuilder32 from '@carbon/icons-react/lib/model-builder/32';
-import SankeyDiagramAlt32 from '@carbon/icons-react/lib/sankey-diagram/32';
-import Cloud32 from "@carbon/icons-react/lib/cloud/32";
+import {
+  ModelBuilder32, SankeyDiagramAlt32, Cloud32, Close32
+} from '@carbon/icons-react';
 
 import {
   Login20,
@@ -24,22 +24,19 @@ import {
 class LandingPage extends Component {
 
   constructor(props) {
-      super(props);
+    super(props);
 
-      this.state = {
-          user: undefined
-      };
+    this.state = {
+      user: null,
+      hideBanner: false
+    };
   }
 
-  async componentDidMount() {
-      fetch('/userDetails')
-      .then(res => res.json())
-      .then(user => {
-        if (user.name) {
-          this.setState({ user: user });
-        }
-      })
-      .catch(console.error);
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.user !== prevState.user) {
+      return ({ user: nextProps.user });
+    }
+    return null
   }
 
   render() {
@@ -47,6 +44,15 @@ class LandingPage extends Component {
       <div className="bx--grid bx--grid--full-width landing-page">
         <div className="bx--row landing-page__banner">
           <div className="bx--col-lg-12">
+            <form
+              class="genesis--MarketingBanner-marketingBannerOverview"
+              id="marketingBanner" name="marketingBanner"
+              style={{ margin: '0 -2rem', display: this.state.hideBanner ? 'none': 'flex' }}>
+              <span class="genesis--MarketingBanner-content">
+                Did you know <a href='https://www.ibm.com/training/cloud/jobroles' target="_blank" rel="noopener noreferrer">IBM Cloud Training</a> is now free?
+              </span>
+              <Close32 onClick={() => {console.log(this.state);this.setState({ hideBanner: true })}} />
+            </form>
             <Breadcrumb noTrailingSlash aria-label="Page navigation">
               <BreadcrumbItem>
                 <Link to="/docs" >Documentation</Link>

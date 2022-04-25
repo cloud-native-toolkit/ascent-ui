@@ -5,6 +5,7 @@ import {
 
 import NistTable from './NistTable';
 import { nistHeaders } from '../../data/data';
+import { getNist } from "../../services/nist";
 
 const b64 = require('../../utils/b64');
 
@@ -32,7 +33,7 @@ class NistView extends Component {
         } catch (error) {
             let jsonData=[]
             try {
-                jsonData = await (await fetch('/api/nist')).json();
+                jsonData = await getNist();
             } catch (error) {
                 this.props.addNotification('error', 'Error', 'Error fetching NIST data.');
             }
@@ -121,11 +122,7 @@ class NistView extends Component {
             <Grid>
                 <Row>
                     <Column lg={{span: 12}}>
-                        <br></br>
-                        <h2>
-                            NIST
-                        </h2>
-                        <br></br>
+                        <h2>NIST</h2>
                         <p>
                             List of NIST 800-53 controls 
                         </p>
