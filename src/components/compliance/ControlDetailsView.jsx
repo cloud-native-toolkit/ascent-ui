@@ -324,10 +324,6 @@ class ControlDetailsView extends Component {
                       this.state.firstRowIndex + this.state.currentPageSize
                     )}
                     handleReload={this.loadTable}
-                    mapping={this.props.mapping}
-                    controls={this.props.controls}
-                    services={this.props.service}
-                    arch={this.props.arch}
                     controlId={this.props.controlId}
                     filterTable={this.filterTable}
                   />

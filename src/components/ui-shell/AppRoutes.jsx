@@ -4,6 +4,7 @@ import {
     Route, Routes, useParams
 } from 'react-router-dom';
 
+import ServiceDetailsView from '../builder/ServiceDetailsView';
 import LandingPage from '../landing-page/LandingPage';
 import ControlsView from '../compliance/ControlsView';
 import ControlDetailsView from '../compliance/ControlDetailsView';
@@ -13,6 +14,13 @@ import NistDetailsView from '../compliance/NistDetailsView';
 import OverView from '../OverView';
 import NotFound from '../NotFound';
 
+
+function ServiceDetails(props) {
+    let { serviceId } = useParams();
+    return (
+        <ServiceDetailsView {...props} serviceId={serviceId} />
+    );
+}
 
 function ControlDetails(props) {
     let { controlId } = useParams();
@@ -45,6 +53,7 @@ class AppRoutes extends React.Component {
         return (
             <Routes>
                 <Route path='/' element={<LandingPage user={this.props.user} addNotification={this.props.addNotification} />} />
+                <Route path='/services/:serviceId' element={<ServiceDetails addNotification={this.props.addNotification} />} />
                 <Route path='/controls' element={<ControlsView user={this.props.user} addNotification={this.props.addNotification} />} />
                 <Route path='/mapping' element={<MappingView  user={this.props.user} addNotification={this.props.addNotification} />} />
                 <Route path='/controls/:controlId' element={<ControlDetails user={this.props.user} addNotification={this.props.addNotification} />} />
