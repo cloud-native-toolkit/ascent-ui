@@ -1,6 +1,7 @@
 @import 'carbon-components/scss/globals/scss/vars';
 @import 'carbon-components/scss/globals/scss/mixins';
 
-@import './ui-shell/UIShell';
+@import './builder/ArchitectureView';
 @import './landing-page/landing-page';
+@import './ui-shell/UIShell';
 @import './compliance/index';

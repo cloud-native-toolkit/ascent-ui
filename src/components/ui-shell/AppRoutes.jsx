@@ -4,6 +4,7 @@ import {
     Route, Routes, useParams
 } from 'react-router-dom';
 
+import ArchitectureView from '../builder/ArchitectureView';
 import ServiceDetailsView from '../builder/ServiceDetailsView';
 import LandingPage from '../landing-page/LandingPage';
 import ControlsView from '../compliance/ControlsView';
@@ -53,6 +54,9 @@ class AppRoutes extends React.Component {
         return (
             <Routes>
                 <Route path='/' element={<LandingPage user={this.props.user} addNotification={this.props.addNotification} />} />
+                <Route exact path='/boms/user' element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isUser/>} />
+                <Route exact path='/boms/infrastructure' element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isInfra/>} />
+                <Route exact path='/boms/software' element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isSoftware/>} />
                 <Route path='/services/:serviceId' element={<ServiceDetails addNotification={this.props.addNotification} />} />
                 <Route path='/controls' element={<ControlsView user={this.props.user} addNotification={this.props.addNotification} />} />
                 <Route path='/mapping' element={<MappingView  user={this.props.user} addNotification={this.props.addNotification} />} />

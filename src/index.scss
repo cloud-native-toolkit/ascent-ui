@@ -1,4 +1,14 @@
 // Carbon 
+
+@import '~carbon-addons-iot-react/scss/components/PageWizard/page-wizard';
+@import '~carbon-addons-iot-react/scss/components/Tooltip/tooltip';
+@import '~carbon-addons-iot-react/scss/components/ProgressIndicator/progress-indicator';
+@import '~carbon-addons-iot-react/scss/components/SimplePagination/simple-pagination';
+@import '~carbon-addons-iot-react/scss/components/TileCatalog/catalog-content';
+@import '~carbon-addons-iot-react/scss/components/TileCatalog/tile-catalog';
+@import '~carbon-addons-iot-react/scss/components/TileCatalog/tile-group';
+@import '~carbon-addons-iot-react/scss/components/TileGallery/tile-gallery';
+
 @import 'carbon-components/scss/globals/scss/styles';
 
 @import 'react-sliding-pane/dist/react-sliding-pane.css';
