@@ -5,29 +5,24 @@ import {
 } from "react-router-dom";
 
 import {
-    Button,
-    SearchSkeleton
+    Button, SearchSkeleton, OverflowMenu, OverflowMenuItem,
+    Grid, Row, Column
 } from 'carbon-components-react';
 import {
-    Add16,
-    Edit16
-} from '@carbon/icons-react';
-
+    StatefulTileGallery
+} from 'carbon-addons-iot-react';
 import {
-    Card, CardGroup
-} from 'react-bootstrap';
+    Add16, Edit16, ContainerSoftware32, CheckmarkFilled16
+} from '@carbon/icons-react';
+import { spacing07 } from '@carbon/layout';
+import { green40 } from '@carbon/colors';
 
+import ImageWithStatus from '../../ImageWithStatus';
 import ValidateModal from '../../ValidateModal';
 import SolutionModal from "./SolutionModal";
 import CreateSolutionModal from "./CreateSolutionModal";
 import SolutionDetailsPane from './SolutionDetailsPane';
 
-
-let groupByN = (n, data) => {
-    let result = [];
-    for (let i = 0; i < data.length; i += n) result.push(data.slice(i, i + n));
-    return result;
-};
 
 class SolutionsView extends Component {
 
@@ -36,11 +31,13 @@ class SolutionsView extends Component {
         super(props);
 
         this.state = {
+            galleryData: [],
             solutions: [],
             showModal: false,
             showCreateModal: false,
             user: {},
         };
+        this.loadGallery = this.loadGallery.bind(this);
         this.showModal = this.showModal.bind(this);
         this.showCreateModal = this.showCreateModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -73,10 +70,37 @@ class SolutionsView extends Component {
                         restrictedProviders.push('aws');
                     }
                     return !restrictedProviders.includes(provider);
-                }), dataLoaded: true });
+                }), dataLoaded: true }, () =>  this.loadGallery());
             })
             .catch(console.error);
     }
+
+    async loadGallery() {
+        const galleryData = [];
+        galleryData.push({
+            id: 'public-boms',
+            sectionTitle: `${this.props.isUser ? 'Custom' : 'Public' } Solutions`,
+            galleryItems: this.state.solutions?.map(sol => {
+                return {
+                    title: sol.name,
+                    description: <Link to={`/solutions/${sol.id}`} ><div className="center-vertical">{sol.short_desc}</div> </Link>,
+                    icon: <Link to={`/solutions/${sol.id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
+                    afterContent: this.overflowComponent(sol, false),
+                    thumbnail: <ImageWithStatus imageUrl={`/api/solutions/${sol.id}/files/diagram.png`} replacement={<ContainerSoftware32 />} />
+                }
+            }),
+        });
+        this.setState({ galleryData: galleryData });
+    }
+
+    overflowComponent = (sol) => (
+        (this.state.user?.role === "admin" || sol?.owners?.find(user => user.email === this.state.user?.email)) ? <OverflowMenu style={{ height: spacing07 }}>
+            <OverflowMenuItem itemText="Delete" onClick={() => this.setState({
+                showValidate: true,
+                curSol: sol
+            })} isDelete />
+        </OverflowMenu> : <></>
+    );
 
     componentDidMount() {
         this.setState({ user: this.props.user });
@@ -167,16 +191,16 @@ class SolutionsView extends Component {
 
         return (
 
-            <div className="bx--grid"  >
+            <Grid className="solutions"  >
 
-                <div className="bx--row">
-                    <div className="bx--col-lg-12">
+                <Row>
+                    <Column lg={{ span: 12 }} md={{ span: 8 }} sm={{ span: 4 }}>
                         <br></br>
                         <h2 style={{"display": "flex"}}>
-                            Solutions
+                            {`${this.props.isUser ? 'Custom ' : ''}Solutions`}
                             {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Button
                                 size='sm'
-                                style={{"margin-left": "auto"}}
+                                style={{"marginLeft": "auto"}}
                                 onClick={() => this.showModal()}
                                 renderIcon={Add16} >
                                 Create
@@ -192,48 +216,17 @@ class SolutionsView extends Component {
                         </h2>
                         <br></br>
 
-                    </div>
-                </div>
+                    </Column>
+                </Row>
 
-                {this.state.dataLoaded ? this.state.solutions?.length > 0 ? groupByN(4, this.state.solutions).map(solGroup => (
-                    <CardGroup>
-                        {
-                            solGroup.map((solution) => (
-                                <Card style={{ marginBottom: '1rem', marginRight: '1rem', borderLeft: '1px solid rgba(0, 0, 0, 0.125)' }}>
-                                    <Card.Body>
-                                        <Card.Title>{solution.name}</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">{solution.id}</Card.Subtitle>
-                                        <Card.Text>{solution.short_desc}</Card.Text>
-                                    </Card.Body>
-                                    <Card.Footer>
-                                        <Card.Link href="#"
-                                            // onClick={() => {
-                                            //     this.setState({ isPaneOpen: true, dataDetails:undefined });
-                                            //     fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
-                                            //     .then((res) => res.json())
-                                            //     .then((sol) => {
-                                            //         this.setState({dataDetails: sol})
-                                            //     })
-                                            //     .catch(() => this.props.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
-                                            // }}
-                                        >
-                                            <Link to={`/solutions/${solution.id}`} >
-                                                Details
-                                            </Link>
-                                        </Card.Link>
-                                        <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
-                                        {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Card.Link style={{color: 'red', cursor: 'pointer'}} onClick={() => {
-                                            this.setState({
-                                                showValidate: true,
-                                                curSol: solution
-                                            });
-                                        }}>Delete</Card.Link> : <></>}
-                                    </Card.Footer>
-                                </Card>
-                            ))
-                        }
-                </CardGroup>
-                )) : <p>No Solutions to display at the moment{this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <>, click <strong>Create</strong> on the top right corner to create a new one.</>: <>.</>}</p> : <SearchSkeleton /> }
+                {this.state.dataLoaded ? this.state.solutions?.length > 0 ? 
+                    <StatefulTileGallery
+                        title='Solutions tile catalog'
+                        hasSearch
+                        hasSwitcher
+                        galleryData={this.state.galleryData}
+                    />    
+                : <p>No Solutions to display at the moment{this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <>, click <strong>Create</strong> on the top right corner to create a new one.</>: <>.</>}</p> : <SearchSkeleton /> }
 
                 {this.state.showModal &&
                     <SolutionModal
@@ -296,7 +289,7 @@ class SolutionsView extends Component {
                         onRequestClose={() => this.setState({ isPaneOpen: false })} />
                 </div>
 
-            </div>
+            </Grid>
 
         );
     }

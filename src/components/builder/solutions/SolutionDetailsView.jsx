@@ -1,14 +1,8 @@
 import React, { Component } from "react";
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbSkeleton,
-    SearchSkeleton,
-    InlineNotification,
-    Button,
+    Breadcrumb, BreadcrumbItem, BreadcrumbSkeleton, SearchSkeleton, Button,
     DataTableSkeleton, DataTable, TableContainer, Table, TableHead, TableRow,
-    TableHeader, TableBody, TableCell, Pagination, Tag,
-    ToastNotification, ContentSwitcher, Switch
+    TableHeader, TableBody, TableCell, Pagination, Tag, ContentSwitcher, Switch
 } from 'carbon-components-react';
 import {
     Link
@@ -18,12 +12,12 @@ import {
     Download16
 } from '@carbon/icons-react';
 
-import marked from 'marked';
+import { marked } from 'marked';
 
 import SolutionModal from "./SolutionModal";
 import { solutionBomsHeader } from '../../../data/data';
 
-import NotFound from "../../components/NotFound";
+import NotFound from "../../NotFound";
 
 
 class SolutionDetailsView extends Component {
@@ -33,8 +27,6 @@ class SolutionDetailsView extends Component {
             data: {},
             show: false,
             showContent: "solution-details",
-            notif: false,
-            notifications: [],
             totalItems: 0,
             firstRowIndex: 0,
             currentPageSize: 10,
@@ -43,7 +35,6 @@ class SolutionDetailsView extends Component {
         this.downloadTerraform = this.downloadTerraform.bind(this);
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
-        this.addNotification = this.addNotification.bind(this);
     }
 
     async loadSolution() {
@@ -62,24 +53,11 @@ class SolutionDetailsView extends Component {
                     this.setState({ error: sol });
                 }
             })
-            .catch(() => this.addNotification("error", "Error", `Error loading details for solution ${this.props.solId}`))
+            .catch(() => this.props.addNotification("error", "Error", `Error loading details for solution ${this.props.solId}`))
     }
 
     async componentDidMount() {
-        fetch('/userDetails')
-            .then(res => res.json())
-            .then(user => {
-                if (user.name) {
-                    this.setState({ user: user || undefined });
-                    this.loadSolution();
-                } else {
-                    // Redirect to login page
-                    window.location.href = "/login";
-                }
-            })
-            .catch(err => {
-                this.loadSolution();
-            });
+        this.loadSolution();
     }
 
     getMarkdownText() {
@@ -88,7 +66,7 @@ class SolutionDetailsView extends Component {
     }
 
     downloadTerraform() {
-        this.addNotification("info", "BUILDING", "Building your terraform module...");
+        this.props.addNotification("info", "BUILDING", "Building your terraform module...");
         fetch(`/api/solutions/${this.state.data?.id}/automation`)
             .then(response => {
                 if (response && response.status === 200) {
@@ -101,7 +79,7 @@ class SolutionDetailsView extends Component {
                     });
                 }
                 else {
-                    this.addNotification("error", response.status + " " + response.statusText, "Error building your terraform module.");
+                    this.props.addNotification("error", response.status + " " + response.statusText, "Error building your terraform module.");
                 }
             });
     }
@@ -122,60 +100,15 @@ class SolutionDetailsView extends Component {
         this.loadSolution();
     }
 
-    /** Notifications */
-
-    addNotification(type, message, detail) {
-        this.setState(prevState => ({
-            notifications: [
-                ...prevState.notifications,
-                {
-                    message: message || "Notification",
-                    detail: detail || "Notification text",
-                    severity: type || "info"
-                }
-            ]
-        }));
-    }
-
-    renderNotifications() {
-        return this.state.notifications.map(notification => {
-            return (
-                <ToastNotification
-                    title={notification.message}
-                    subtitle={notification.detail}
-                    kind={notification.severity}
-                    timeout={10000}
-                    caption={false}
-                />
-            );
-        });
-    }
-
-    /** Notifications END */
-
     render() {
         const data = this.state.data;
         const diagram = data?.files?.find(elt => elt.Key?.toLowerCase() === "diagram.png");
-        let notif = this.state.notif;
         return (
             this.state.error ?
                 <NotFound />
                 :
                 <>
-                    <div class='notif'>
-                        {this.state.notifications.length !== 0 && this.renderNotifications()}
-                    </div>
                     <div className="bx--grid">
-                        {notif &&
-                            <InlineNotification
-                                id={Date.now()}
-                                hideCloseButton lowContrast
-                                title={notif.title || "Notification title"}
-                                subtitle={<span kind='error' hideCloseButton lowContrast>{notif.message || "Subtitle"}</span>}
-                                kind={notif.kind || "info"}
-                                caption={notif.caption || "Caption"}
-                            />
-                        }
 
                         {this.state.data?.id ?
                             <Breadcrumb>
@@ -206,7 +139,7 @@ class SolutionDetailsView extends Component {
                                             href={`/api/solutions/${data.id}/files.zip`} >
                                             Files
                                         </Button>: <></>}
-                                        {data?.id && this.state.user?.role === "admin" &&
+                                        {data?.id && this.props.user?.role === "admin" &&
                                             <Button
                                                 style={{ marginLeft: '1rem' }}
                                                 renderIcon={Edit16}
@@ -346,9 +279,9 @@ class SolutionDetailsView extends Component {
                                 handleClose={this.hideModal}
                                 isUpdate={this.state.updateModal}
                                 data={this.state.data}
-                                toast={this.addNotification}
+                                toast={this.props.addNotification}
                                 isDuplicate={this.state.isDuplicate}
-                                user={this.state.user}
+                                user={this.props.user}
                             />
                         }
                     </div >

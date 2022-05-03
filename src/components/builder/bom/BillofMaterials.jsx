@@ -2,7 +2,9 @@ import React, { Component } from "react";
 
 import * as _ from 'lodash';
 
-import { Breadcrumb, BreadcrumbItem } from 'carbon-components-react'
+import {
+    Breadcrumb, BreadcrumbItem, Grid, Row, Column
+} from 'carbon-components-react'
 
 import {
     Link
@@ -134,17 +136,7 @@ class BillofMaterialsView extends Component {
         }
     }
     async componentDidMount() {
-        fetch('/userDetails')
-        .then(res => res.json())
-        .then(user => {
-            if (user.name) {
-                this.setState({ user: user || undefined });
-            } else {
-                // Redirect to login page
-                window.location.href = "/login";
-            }
-        })
-        await this.loadTable();
+        this.loadTable();
     }
 
     openPane = async (bomId) => {
@@ -433,10 +425,10 @@ class BillofMaterialsView extends Component {
                         }
                     </div>
                     
-                    <div className="bx--grid">
+                    <Grid>
                         {this.breadCrumbs(title)}
-                        <div className="bx--row">
-                            <div className="bx--col-lg-12">
+                        <Row>
+                            <Column lg={{span: 12}}>
                                 <br></br>
                                 <h2>
                                     {
@@ -455,8 +447,8 @@ class BillofMaterialsView extends Component {
                                     {this.state.architecture?.yaml ? <Switch name="arch-yaml" text="YAML Configuration" /> : <></>}
                                 </ContentSwitcher>
                                 <br />
-                            </div>
-                        </div>
+                            </Column>
+                        </Row>
     
                         { this.state.showContent === "arch-diagram" && <img src={`/api/architectures/${this.state.architecture.arch_id}/diagram/png`} alt="Reference Architecture diagram" style={{'width': '100%'}}/>}
                         { this.state.showContent === "arch-yaml" && <p>
@@ -486,8 +478,8 @@ class BillofMaterialsView extends Component {
                             </p>
                             <br></br>
     
-                            <div className="bx--row">
-                                <div className="bx--col-lg-12">
+                            <Row>
+                                <Column lg={{span: 12}}>
                                     {this.state.archid === false ?
                                         <DataTableSkeleton
                                             columnCount={headers.length + 1}
@@ -517,7 +509,7 @@ class BillofMaterialsView extends Component {
                                                 <TableContainer
                                                     {...getTableContainerProps()}>
                                                     <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
-                                                        {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
+                                                        {(this.props.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.props.user?.email)) && <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected}>
                                                             <TableBatchAction
                                                                 tabIndex={getBatchActionProps().shouldShowBatchActions ? 0 : -1}
                                                                 renderIcon={Delete}
@@ -545,7 +537,7 @@ class BillofMaterialsView extends Component {
                                                                     <div style={{ flex: 'left' }}>Diagram .drawio</div>
                                                                     <Download style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>
-                                                                {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
+                                                                {(this.props.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.props.user?.email)) && <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.updateArchitecture()}>
                                                                     <div style={{ flex: 'left' }}>Edit Architecure</div>
                                                                     <Edit16 style={{ marginLeft: "auto" }} />
                                                                 </TableToolbarAction>}
@@ -556,7 +548,7 @@ class BillofMaterialsView extends Component {
                                                             </TableToolbarMenu>
                         
                         
-                                                            {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <Button
+                                                            {(this.props.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.props.user?.email)) && <Button
                                                                 tabIndex={getBatchActionProps().shouldShowBatchActions ? -1 : 0}
                                                                 size="small"
                                                                 kind="primary"
@@ -570,13 +562,13 @@ class BillofMaterialsView extends Component {
                                                     <Table {...getTableProps()}>
                                                         <TableHead>
                                                             <TableRow>
-                                                                {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableSelectAll {...getSelectionProps()}/>}
+                                                                {(this.props.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.props.user?.email)) && <TableSelectAll {...getSelectionProps()}/>}
                                                                 {headers.map((header, i) => (
                                                                     <TableHeader key={i} {...getHeaderProps({ header })}>
                                                                         {header.header}
                                                                     </TableHeader>
                                                                 ))}
-                                                                {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableHeader />}
+                                                                {(this.props.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.props.user?.email)) && <TableHeader />}
                                                             </TableRow>
                                                         </TableHead>
                         
@@ -584,7 +576,7 @@ class BillofMaterialsView extends Component {
                                                             {rows.map((row, i) => (
                                                                 <>
                                                                     <TableRow key={i} {...getRowProps({ row })} >
-                                                                        {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableSelectRow {...getSelectionProps({ row })}/>}
+                                                                        {(this.props.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.props.user?.email)) && <TableSelectRow {...getSelectionProps({ row })}/>}
                                                                         {row.cells.map((cell) => (
                                                                             <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
                                                                                 {
@@ -612,7 +604,7 @@ class BillofMaterialsView extends Component {
                                                                                 }
                                                                             </TableCell>
                                                                         ))}
-                                                                        {(this.state.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.state.user?.email)) && <TableCell className="bx--table-column-menu">
+                                                                        {(this.props.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.props.user?.email)) && <TableCell className="bx--table-column-menu">
                                                                             <OverflowMenu light flipped>
                                                                                 <OverflowMenuItem itemText="Edit" onClick={() => this.doUpdateService(row.id)}/>
                                                                             </OverflowMenu>
@@ -645,10 +637,10 @@ class BillofMaterialsView extends Component {
                                             }} />
                                         </>
                                     }
-                                </div>
-                            </div>
+                                </Column>
+                            </Row>
                         </div>}
-                    </div>
+                    </Grid>
                     <div>
                         <ServiceDetailsPane data={this.state.dataDetails} open={this.state.isPaneOpen} onRequestClose={this.hidePane}/>
                     </div>
@@ -656,10 +648,14 @@ class BillofMaterialsView extends Component {
             : this.state.error ?
                 <NotFound />
             :
-                <>
-                    <BreadcrumbSkeleton />
-                    <SearchSkeleton />
-                </>
+                <Grid>
+                    <Row>
+                        <Column lg={{span: 12}}>
+                            <BreadcrumbSkeleton />
+                            <SearchSkeleton />``
+                        </Column>
+                    </Row>
+                </Grid>
         );
     }
 }

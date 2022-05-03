@@ -761,12 +761,13 @@ class CreateSolutionModal extends Component {
                                                     }
                                                     pagination={{ pageSize: 9 }}
                                                     isSelectedByDefault={false}
-                                                    defaultSelectedIds={this.state.software}
+                                                    selectedTileIds={this.state.software}
                                                     onSelection={(val) => {
                                                         const sw = this.state.software;
                                                         const swIx = this.state.software.indexOf(val);
                                                         if (swIx >= 0) sw.splice(swIx, 1);
                                                         else sw.push(val);
+                                                        console.log(sw)
                                                         this.setState({ software: sw });
                                                     }} />
                                             </Column>
