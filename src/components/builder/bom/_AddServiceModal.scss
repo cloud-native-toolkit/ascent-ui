@@ -1,0 +1,19 @@
+div.modal-wizard div.bx--modal-container{
+    width: 80%;
+  }
+
+.modal-wizard .iot-simple-pagination-container{
+    border: 1px solid #e0e0e0;
+}
+
+.modal-wizard .iot--tile-catalog--header {
+    display: none;
+}
+
+.modal-wizard .bx--tile.iot--greedy-tile {
+    display: none;
+}
+
+label.bx--tile {
+    max-height: 8rem;
+} 

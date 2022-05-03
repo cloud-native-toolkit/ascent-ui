@@ -13,7 +13,7 @@ import {
 } from "react-router-dom";
 
 import ErrorBoundary from "../ErrorBoundary";
-import AppRoutes from "./AppRoutes";
+import AppRoutes from "../AppRoutes";
 
 import { HeaderGlobalAction } from "carbon-components-react/lib/components/UIShell";
 import {

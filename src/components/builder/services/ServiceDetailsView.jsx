@@ -10,18 +10,18 @@ import {
 import {
   Link
 } from "react-router-dom";
-import MappingTable from "../compliance/mapping/MappingTable"
-import { mappingHeaders as headers } from '../../data/data';
+import MappingTable from "../../compliance/mapping/MappingTable"
+import { mappingHeaders as headers } from '../../../data/data';
 
 import {
   ContentSwitcher, Switch
 } from "carbon-components-react";
 
 import ServiceDetails from './ServiceDetails';
-import NotFound from "../../components/NotFound";
-import { getMappings } from '../../services/mappings';
-import { getServiceDetails, getServiceCatalog } from '../../services/services';
-import { getAutomation } from '../../services/automation';
+import NotFound from "../../NotFound";
+import { getMappings } from '../../../services/mappings';
+import { getServiceDetails, getServiceCatalog } from '../../../services/services';
+import { getAutomation } from '../../../services/automation';
 
 class ServiceDetailsView extends Component {
   constructor(props) {

@@ -6,7 +6,6 @@ const {
 var cookieParser = require("cookie-parser");
 const session = require('express-session')
 const passport = require('passport');
-const request = require('request');
 const https = require('https');
 
 (async function () {
@@ -45,7 +44,6 @@ const https = require('https');
     let oauthServer = {};
     try {
       oauthServer = await getOAuthServerConfig();
-      console.log(oauthServer);
     } catch (error) {
       console.log(error);
       oauthServer = {};
@@ -86,15 +84,19 @@ const https = require('https');
         callbackURL: conf.application_url + CALLBACK_URL
       },
       (accessToken, refreshToken, profile, done) => {
-        request({
-          url: `${conf.authConfig.api_endpoint}/apis/user.openshift.io/v1/users/~`,
+        https.get(`${conf.authConfig.api_endpoint}/apis/user.openshift.io/v1/users/~`, {
+          rejectUnauthorized: false,
           headers: {
             'Authorization': `Bearer ${accessToken}`
           }
-        }, (err, response, body) => {
-          const user = JSON.parse(body);
-          user.token = accessToken;
-          done(err, user);
+        }, (res) => {
+          res.on('data', (d) => {
+            const user = JSON.parse(d.toString());
+            user.token = accessToken;
+            done(undefined, user);
+          });
+        }).on('error', (e) => {
+          done(e, undefined);
         });
       }) :
     new AuthStrategy({
@@ -113,7 +115,7 @@ const https = require('https');
     cb(null, obj);
   });
   const redirectAfterLogin = (req, res, next) => {
-    if (req.session) console.log(req.session.redirectUrl);
+    if (req.session) console.log('test', req.session.redirectUrl);
     res.redirect(req.session?.redirectUrl ? req.session.redirectUrl : '/');
   }
   app.get(CALLBACK_URL, passport.authenticate(AUTH_PROVIDER), redirectAfterLogin);

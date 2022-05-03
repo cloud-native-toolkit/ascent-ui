@@ -4,17 +4,25 @@ import {
     Route, Routes, useParams
 } from 'react-router-dom';
 
-import ArchitectureView from '../builder/ArchitectureView';
-import ServiceDetailsView from '../builder/ServiceDetailsView';
-import LandingPage from '../landing-page/LandingPage';
-import ControlsView from '../compliance/ControlsView';
-import ControlDetailsView from '../compliance/ControlDetailsView';
-import MappingView from '../compliance/mapping/MappingView';
-import NistView from '../compliance/NistView';
-import NistDetailsView from '../compliance/NistDetailsView';
-import OverView from '../OverView';
-import NotFound from '../NotFound';
+import ArchitectureView from './builder/ArchitectureView';
+import BillofMaterialsView from './builder/bom/BillofMaterials';
+import ServiceDetailsView from './builder/services/ServiceDetailsView';
+import LandingPage from './landing-page/LandingPage';
+import ControlsView from './compliance/ControlsView';
+import ControlDetailsView from './compliance/ControlDetailsView';
+import MappingView from './compliance/mapping/MappingView';
+import NistView from './compliance/NistView';
+import NistDetailsView from './compliance/NistDetailsView';
+import OverView from './OverView';
+import NotFound from './NotFound';
 
+
+function BomDetails(props) {
+    let { bomId } = useParams();
+    return (
+        <BillofMaterialsView {...props} archId={bomId} />
+    );
+}
 
 function ServiceDetails(props) {
     let { serviceId } = useParams();
@@ -54,9 +62,10 @@ class AppRoutes extends React.Component {
         return (
             <Routes>
                 <Route path='/' element={<LandingPage user={this.props.user} addNotification={this.props.addNotification} />} />
-                <Route exact path='/boms/user' element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isUser/>} />
-                <Route exact path='/boms/infrastructure' element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isInfra/>} />
-                <Route exact path='/boms/software' element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isSoftware/>} />
+                <Route path='/boms/user' exact element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isUser/>} />
+                <Route path='/boms/infrastructure' exact element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isInfra/>} />
+                <Route path='/boms/software' exact element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isSoftware/>} />
+                <Route path='/boms/:bomId' element={<BomDetails user={this.props.user} addNotification={this.props.addNotification}/>} />
                 <Route path='/services/:serviceId' element={<ServiceDetails addNotification={this.props.addNotification} />} />
                 <Route path='/controls' element={<ControlsView user={this.props.user} addNotification={this.props.addNotification} />} />
                 <Route path='/mapping' element={<MappingView  user={this.props.user} addNotification={this.props.addNotification} />} />
