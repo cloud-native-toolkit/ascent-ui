@@ -87,7 +87,7 @@ class ServiceDetails extends Component {
                                             <ListItem href={this.props.data.catalog.metadata.ui.urls.catalog_details_url}>
                                                 <a href={this.props.data.catalog.metadata.ui.urls.catalog_details_url} target="_blank" rel="noopener noreferrer">
                                                     Catalog
-                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
+                                                    <Launch16 style={{"marginLeft": "3px", "paddingTop": "1px"}}/>
                                                 </a>
                                             </ListItem>
                                         }
@@ -95,7 +95,7 @@ class ServiceDetails extends Component {
                                             <ListItem href={this.props.data.catalog.metadata.ui.urls.apidocs_url}>
                                                 <a href={this.props.data.catalog.metadata.ui.urls.apidocs_url} target="_blank" rel="noopener noreferrer">
                                                     API Docs
-                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
+                                                    <Launch16 style={{"marginLeft": "3px", "paddingTop": "1px"}}/>
                                                 </a>
                                             </ListItem>
                                         }
@@ -103,7 +103,7 @@ class ServiceDetails extends Component {
                                             <ListItem href={this.props.data.catalog.metadata.ui.urls.doc_url}>
                                                 <a href={this.props.data.catalog.metadata.ui.urls.doc_url} target="_blank" rel="noopener noreferrer">
                                                     Documentation
-                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
+                                                    <Launch16 style={{"marginLeft": "3px", "paddingTop": "1px"}}/>
                                                 </a>
                                             </ListItem>
                                         }
@@ -111,7 +111,7 @@ class ServiceDetails extends Component {
                                             <ListItem >
                                                 <a href={this.props.data.catalog.metadata.ui.urls.instructions_url} target="_blank" rel="noopener noreferrer">
                                                     Instructions
-                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
+                                                    <Launch16 style={{"marginLeft": "3px", "paddingTop": "1px"}}/>
                                                 </a>
                                             </ListItem>
                                         }
@@ -119,7 +119,7 @@ class ServiceDetails extends Component {
                                             <ListItem href={this.props.data.catalog.metadata.ui.urls.terms_url}>
                                                 <a href={this.props.data.catalog.metadata.ui.urls.terms_url} target="_blank" rel="noopener noreferrer">
                                                     Terms
-                                                    <Launch16 style={{"margin-left": "3px", "padding-top": "1px"}}/>
+                                                    <Launch16 style={{"marginLeft": "3px", "paddingTop": "1px"}}/>
                                                 </a>
                                             </ListItem>
                                         }

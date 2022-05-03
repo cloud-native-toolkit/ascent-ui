@@ -26,13 +26,17 @@
     color: #c2c2c2;
 }
 
+.bx--header-panel--expanded.user-profile  .bx--switcher__item a {
+    display: flex;
+    align-items: center;
+}
+.bx--header-panel--expanded.user-profile  .bx--switcher__item svg {
+    margin-left: auto;
+}
 .bx--header-panel--expanded.user-profile  .bx--switcher__item.logout a {
     display: flex;
     align-items: center;
     font-size: 1.1rem;
-}
-.bx--header-panel--expanded.user-profile  .bx--switcher__item.logout svg {
-    margin-left: auto;
 }
 
 // Side nav

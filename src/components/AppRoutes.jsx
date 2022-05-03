@@ -4,6 +4,7 @@ import {
     Route, Routes, useParams
 } from 'react-router-dom';
 
+import SolutionsView from './builder/solutions/SolutionsView';
 import ArchitectureView from './builder/ArchitectureView';
 import BillofMaterialsView from './builder/bom/BillofMaterials';
 import ServiceDetailsView from './builder/services/ServiceDetailsView';
@@ -62,6 +63,8 @@ class AppRoutes extends React.Component {
         return (
             <Routes>
                 <Route path='/' element={<LandingPage user={this.props.user} addNotification={this.props.addNotification} />} />
+                <Route path='/solutions/user' exact element={<SolutionsView user={this.props.user} addNotification={this.props.addNotification} isUser />} />
+                <Route path='/solutions' exact element={<SolutionsView user={this.props.user} addNotification={this.props.addNotification} />} />
                 <Route path='/boms/user' exact element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isUser/>} />
                 <Route path='/boms/infrastructure' exact element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isInfra/>} />
                 <Route path='/boms/software' exact element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isSoftware/>} />

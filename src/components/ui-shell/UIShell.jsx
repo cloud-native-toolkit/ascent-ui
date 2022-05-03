@@ -17,12 +17,12 @@ import AppRoutes from "../AppRoutes";
 
 import { HeaderGlobalAction } from "carbon-components-react/lib/components/UIShell";
 import {
-  Launch16,
-  UserAvatar20,
-  Login20,
-  Locked16,
-  Logout20 as Logout
+  Launch16, UserAvatar20, Login20, Locked16, Logout20 as Logout,
+  TaskComplete20, Copy20
 } from '@carbon/icons-react';
+
+import b64 from "../../utils/b64";
+
 
 const ibmCloudDefaultConfig = {
   complianceFeatures: true,
@@ -44,6 +44,7 @@ class UIShell extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      copyTokenIcon: <Copy20 />,
       user: undefined,
       activeItem: `/${window.location.pathname.split('/')[1] ?? ''}`,
       builderExpended: true,
@@ -134,6 +135,21 @@ class UIShell extends Component {
       .catch(console.error);
   }
 
+  fetchToken() {
+    fetch('/api/token')
+      .then(res => res.json())
+      .then(res => {
+        if (!res.error) {
+          navigator.clipboard.writeText(b64.decode(res.token));
+          this.setState({ copyTokenIcon: <TaskComplete20 /> });
+          setTimeout(() => {
+            this.setState({ copyTokenIcon: <Copy20 /> });
+          }, 2000);
+        }
+      })
+      .catch(console.error);
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -175,6 +191,7 @@ class UIShell extends Component {
                   <Tag>{(this.state.user?.role) || "role"}</Tag>
                 </li>
                 <li className="bx--switcher__item"><strong>{(this.state.user?.email) || "example@ibm.com"}</strong></li>
+                {this.state.user?.role === 'admin' ? <div><SwitcherDivider /><SwitcherItem onClick={this.fetchToken.bind(this)}><span>API token</span>{this.state.copyTokenIcon}</SwitcherItem></div> : <></>}
                 <SwitcherDivider />
                 <li className="bx--switcher__item">
                   <Toggle labelText="Compliance features" size="md" id='compliance-toggle' toggled={this.state.content.complianceFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, complianceFeatures: checked })} />
@@ -197,14 +214,14 @@ class UIShell extends Component {
                 </SwitcherItem>
               </HeaderPanel>
               <ErrorBoundary>
-                <SideNav  aria-label="Side navigation" expanded={isSideNavExpanded} >
+                <SideNav aria-label="Side navigation" expanded={isSideNavExpanded} >
 
                   <SideNavItems>
-                      <SideNavMenuItem element={Link} to='/'
-                        isActive={this.state.activeItem === '/'}
-                        onClick={() => { this.setState({ activeItem: '/' }) }}>
-                        Overview
-                      </SideNavMenuItem>
+                    <SideNavMenuItem element={Link} to='/'
+                      isActive={this.state.activeItem === '/'}
+                      onClick={() => { this.setState({ activeItem: '/' }) }}>
+                      Overview
+                    </SideNavMenuItem>
 
                     {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Solutions">
 
@@ -215,7 +232,7 @@ class UIShell extends Component {
                         :
                         <SideNavMenuItem href='/solutions/user'>
                           Custom Solutions
-                          <Locked16 style={{ marginLeft: "auto" }}  />
+                          <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
 
@@ -226,14 +243,14 @@ class UIShell extends Component {
                         :
                         <SideNavMenuItem href='/solutions'>
                           Public Solutions
-                          <Locked16 style={{ marginLeft: "auto" }}  />
+                          <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
 
                     </SideNavMenu> : <></>}
 
                     {this.state.content.builderFeatures ? <SideNavMenu title="Reference Architectures" defaultExpanded
-                      isActive={['/solutions','/boms','/services'].includes(this.state.activeItem)}>
+                      isActive={['/solutions', '/boms', '/services'].includes(this.state.activeItem)}>
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/boms/user'
@@ -242,7 +259,7 @@ class UIShell extends Component {
                         :
                         <SideNavMenuItem href='/boms/user'>
                           Custom Architectures
-                          <Locked16 style={{ marginLeft: "auto" }}  />
+                          <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
 
@@ -253,7 +270,7 @@ class UIShell extends Component {
                         :
                         <SideNavMenuItem href='/boms/software'>
                           Software
-                          <Locked16 style={{ marginLeft: "auto" }}  />
+                          <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
 
@@ -264,7 +281,7 @@ class UIShell extends Component {
                         :
                         <SideNavMenuItem href='/boms/infrastructure'>
                           Infrastructure
-                          <Locked16 style={{ marginLeft: "auto" }}  />
+                          <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
 
@@ -282,13 +299,13 @@ class UIShell extends Component {
                     </SideNavMenu> : <></>}
 
                     {this.state.content.complianceFeatures ? <SideNavMenu title="Compliance" defaultExpanded
-                      isActive={['/onboarding','/controls','/mapping','/nists'].includes(this.state.activeItem)} >
+                      isActive={['/onboarding', '/controls', '/mapping', '/nists'].includes(this.state.activeItem)} >
 
                       {this.state.user?.roles?.includes("fs-viewer") ?
                         <SideNavMenuItem element={Link} to='/controls'
                           isActive={this.state.activeItem === '/controls'}
                           onClick={() => { this.setState({ activeItem: '/controls' }) }}>Controls</SideNavMenuItem>
-                      : <></>}
+                        : <></>}
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/mapping'
@@ -307,7 +324,7 @@ class UIShell extends Component {
                           onClick={() => { this.setState({ activeItem: '/nists' }) }}>
                           NIST 800-53
                         </SideNavMenuItem>
-                      :
+                        :
                         <SideNavMenuItem href='/nists'>
                           NIST 800-53
                           <Locked16 />
@@ -324,7 +341,7 @@ class UIShell extends Component {
                         <SideNavMenuItem element={Link} to='/docs'
                           isActive={this.state.activeItem === '/docs'}
                           onClick={() => { this.setState({ activeItem: '/docs', docsExpended: true }) }}>About</SideNavMenuItem>
-                      : <></>}
+                        : <></>}
                       <SideNavMenuItem href="https://www.ibm.com/training/cloud/jobroles"
                         target="_blank" rel="noopener noreferrer">
                         Free IBM Cloud Training

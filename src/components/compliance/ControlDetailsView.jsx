@@ -300,7 +300,7 @@ class ControlDetailsView extends Component {
                         <ListItem>
                           <a href={ref.item["@href"]} target="_blank" rel="noopener noreferrer">
                             {ref.item["#text"]}
-                            <Launch16 style={{ "margin-left": "5px" }} />
+                            <Launch16 style={{ "marginLeft": "5px" }} />
                           </a>
                         </ListItem>
                       ))}

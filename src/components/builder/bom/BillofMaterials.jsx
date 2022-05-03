@@ -442,8 +442,8 @@ class BillofMaterialsView extends Component {
                                     {
                                         this.state.architecture && this.state.architecture.name
                                     }
-                                    {this.state.architecture?.confidential === "TRUE" && <Tag type="red" style={{"margin-left": "10px"}}>Confidential</Tag>}
-                                    {this.state.architecture?.production_ready === "TRUE" && <Tag type="green" style={{"margin-left": "5px"}}>Production Ready</Tag> }
+                                    {this.state.architecture?.confidential === "TRUE" && <Tag type="red" style={{"marginLeft": "10px"}}>Confidential</Tag>}
+                                    {this.state.architecture?.production_ready === "TRUE" && <Tag type="green" style={{"marginLeft": "5px"}}>Production Ready</Tag> }
                                 </h2>
     
                                 <br />

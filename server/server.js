@@ -192,6 +192,27 @@ const https = require('https');
   })
   app.use(express.static(path.join(__dirname, "../build")));
 
+
+  app.use('/api/token', (req, res, next) => {
+    if (  req.isAuthenticated() &&
+        ((AUTH_PROVIDER === "appid" && AuthStrategy.hasScope(req, "super_edit"))
+        || (AUTH_PROVIDER === "openshift" && req.user.groups.includes("ascent-admins"))))
+    {
+      if (AUTH_PROVIDER === "openshift") {
+        res.json({token: Buffer.from(`${req.user.token}`).toString('base64')});
+      } else {
+        res.json({token: Buffer.from(`${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`).toString('base64')});
+      }
+      return next();
+    } else {
+      res.status(401).json({
+        error: {
+          message: "You cannot perform this request."
+        }
+      });
+    }
+  });
+
   const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
   app.use(
     '/api',
@@ -253,6 +274,5 @@ const https = require('https');
   app.listen(port, function () {
     console.info(`Server listening on http://localhost:${port}`);
   });
-
 
 })();
