@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbSkeleton, Tag, UnorderedList,
-  ListItem, SearchSkeleton
+  ListItem, SearchSkeleton, Grid, Row, Column
 } from 'carbon-components-react';
 import {
   Launch16
@@ -69,8 +69,8 @@ class NistDetailsView extends Component {
           <BreadcrumbItem href="#">{this.props.number}</BreadcrumbItem>
         </Breadcrumb>
       </>;
-      title = <div className="bx--row">
-        <div className="bx--col-lg-12">
+      title = <Row>
+        <Column lg={{span: 12}}>
           <br></br>
           <h2>
             {nistData.number}
@@ -89,11 +89,11 @@ class NistDetailsView extends Component {
             </UnorderedList>
           </> : <></>}
           <br></br>
-        </div>
-      </div>;
+        </Column>
+      </Row>;
       if (nistData.family) {
-        family = <div className="bx--row">
-          <div className="bx--col-lg-12">
+        family = <Row>
+          <Column lg={{span: 12}}>
             <br></br>
             <h3 >Family</h3>
             <br></br>
@@ -101,23 +101,23 @@ class NistDetailsView extends Component {
               {nistData.family.toLowerCase() + '.'}
             </p>
             <br></br>
-          </div>
-        </div>;
+          </Column>
+        </Row>;
       }
       if (nistData.priority) {
-        priority = <div className="bx--row">
-          <div className="bx--col-lg-12">
+        priority = <Row>
+          <Column lg={{span: 12}}>
             <br></br>
             <h3 >Priority</h3>
             <br></br>
             <Tag type="red">{nistData.priority}</Tag>
             <br></br>
-          </div>
-        </div>;
+          </Column>
+        </Row>;
       }
       if (nistData.supplemental_guidance) {
-        supplemental_guidance = <div className="bx--row">
-          <div className="bx--col-lg-12">
+        supplemental_guidance = <Row>
+          <Column lg={{span: 12}}>
             <br></br>
             <h3 >Supplemental Guidance</h3>
             <br></br>
@@ -125,12 +125,12 @@ class NistDetailsView extends Component {
               {nistData.supplemental_guidance.description}
             </p>
             <br></br>
-          </div>
-        </div>;
+          </Column>
+        </Row>;
       }
       if (nistData.parent_control) {
-        parent_control = <div className="bx--row">
-          <div className="bx--col-lg-12">
+        parent_control = <Row>
+          <Column lg={{span: 12}}>
             <br></br>
             <h3 >Parent Control</h3>
             <br></br>
@@ -140,12 +140,12 @@ class NistDetailsView extends Component {
               </Link>
             </Tag>
             <br></br>
-          </div>
-        </div>;
+          </Column>
+        </Row>;
       }
       if (nistData.supplemental_guidance && nistData.supplemental_guidance.related) {
-        related = <div className="bx--row">
-          <div className="bx--col-lg-12">
+        related = <Row>
+          <Column lg={{span: 12}}>
             <br></br>
             <h3 >Related NIST Controls</h3>
             <br></br>
@@ -157,12 +157,12 @@ class NistDetailsView extends Component {
               </Tag>
             ))}
             <br></br>
-          </div>
-        </div>;
+          </Column>
+        </Row>;
       }
       if (nistData.baseline_impact) {
-        baseline_impact = <div className="bx--row">
-          <div className="bx--col-lg-12">
+        baseline_impact = <Row>
+          <Column lg={{span: 12}}>
             <br></br>
             <h3 >Baseline Impact</h3>
             <br></br>
@@ -170,12 +170,12 @@ class NistDetailsView extends Component {
               <Tag type="cyan" key={baselineImpact}>{baselineImpact}</Tag>
             ))}
             <br></br>
-          </div>
-        </div>;
+          </Column>
+        </Row>;
       }
       if (nistData.references && nistData.references.reference) {
-        references = <div className="bx--row">
-          <div className="bx--col-lg-12">
+        references = <Row>
+          <Column lg={{span: 12}}>
             <br></br>
             <h3 >References</h3>
             <br></br>
@@ -190,15 +190,15 @@ class NistDetailsView extends Component {
               ))}
             </UnorderedList>
             <br></br>
-          </div>
-        </div>;
+          </Column>
+        </Row>;
       }
     }
     return (
       this.state.error ?
         <NotFound />
         :
-        <div className="bx--grid">
+        <Grid>
           {breadcrumb}
           {title}
           {family}
@@ -208,7 +208,7 @@ class NistDetailsView extends Component {
           {related}
           {baseline_impact}
           {references}
-        </div >
+        </Grid >
     );
   }
 }

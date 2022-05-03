@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-  DataTableSkeleton, Pagination
+  DataTableSkeleton, Pagination, Grid, Row, Column
 } from 'carbon-components-react';
 import MappingTable from './MappingTable';
 
@@ -78,18 +78,18 @@ class MappingView extends Component {
     const data = this.state.filterData;
     const headers = this.state.headerData;
     return (
-      <div className="bx--grid">
-        <div className="bx--row">
-          <div className="bx--col-lg-12">
+      <Grid>
+        <Row>
+          <Column lg={{span: 12}}>
             <h2>Control Mapping</h2>
             <p>
               Mapping list showing the relationship between FS controls, cloud services and reference architectures for the FS Cloud.
             </p>
             <br></br>
-          </div>
-        </div>
-        <div className="bx--row">
-          <div className="bx--col-lg-12">
+          </Column>
+        </Row>
+        <Row>
+          <Column lg={{span: 12}}>
             {this.state.totalItems < 0 ?
               <DataTableSkeleton
                 columnCount={headers.length + 1}
@@ -131,9 +131,9 @@ class MappingView extends Component {
                 />
               </>
             }
-          </div>
-        </div>
-      </div >
+          </Column>
+        </Row>
+      </Grid >
     );
 
   }

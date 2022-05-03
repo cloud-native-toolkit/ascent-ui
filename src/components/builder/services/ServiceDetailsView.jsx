@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbSkeleton,
-  Tag,
-  SearchSkeleton,
-  Pagination,
+  Breadcrumb, BreadcrumbItem, BreadcrumbSkeleton, Tag, SearchSkeleton,
+  Pagination, Grid, Row, Column
 } from 'carbon-components-react';
 import {
   Link
@@ -124,8 +120,8 @@ class ServiceDetailsView extends Component {
           <BreadcrumbItem href="#">{data.ibm_catalog_service ? data.ibm_catalog_service : data.service_id}</BreadcrumbItem>
         </Breadcrumb>
       </>;
-      title = <div className="bx--row">
-                <div className="bx--col-lg-12">
+      title = <Row>
+                <Column lg={{span: 12}}>
                   <br></br>
                   <h2 style={{ display: 'flex' }}>
                     {
@@ -141,21 +137,21 @@ class ServiceDetailsView extends Component {
                     }
                   </h2>
                   <br></br>
-                </div>
-              </div>;
-      content = <div className="bx--row">
-        <div className="bx--col-lg-12">
+                </Column>
+              </Row>;
+      content = <Row>
+        <Column lg={{span: 12}}>
           <br />
           <ServiceDetails data={data}/>
-        </div>
-      </div>;
+        </Column>
+      </Row>;
     }
     return (
       this.state.error ?
         <NotFound />
       :
       <>
-        <div className="bx--grid">
+        <Grid>
 
           {breadcrumb}
           {title}
@@ -209,7 +205,7 @@ class ServiceDetailsView extends Component {
               />
             </>
           }
-        </div >
+        </Grid >
       </>
     );
   }

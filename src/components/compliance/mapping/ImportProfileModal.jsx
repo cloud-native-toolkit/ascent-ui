@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Modal, FileUploader
+    Modal, FileUploader, Grid, Row
 } from 'carbon-components-react';
 
 class ImportProfileModal extends Component {
@@ -34,8 +34,8 @@ class ImportProfileModal extends Component {
 
   render() {
     return (
-      <div className="bx--grid">
-        <div className="bx--row">
+      <Grid>
+        <Row>
           <Modal
             danger={this.props.danger || false}
             open={this.props.show}
@@ -58,8 +58,8 @@ class ImportProfileModal extends Component {
               onDelete={() => this.setState({file: undefined})}>
             </FileUploader>
           </Modal>
-        </div>
-      </div>
+        </Row>
+      </Grid>
     );
   }
 

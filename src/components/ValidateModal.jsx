@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, TextInput } from 'carbon-components-react';
+import { Modal, TextInput, Grid, Row } from 'carbon-components-react';
 
 class ValidateModal extends Component {
 
@@ -19,8 +19,8 @@ class ValidateModal extends Component {
 
     render() {
         return (
-            <div className="bx--grid">
-                <div className="bx--row">
+            <Grid>
+                <Row>
 
                 <Modal
                     danger={this.props.danger || false}
@@ -49,8 +49,8 @@ class ValidateModal extends Component {
                     }
                 </Modal>
 
-                </div>
-            </div>
+                </Row>
+            </Grid>
         );
     }
 

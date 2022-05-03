@@ -429,7 +429,6 @@ class BillofMaterialsView extends Component {
                         {this.breadCrumbs(title)}
                         <Row>
                             <Column lg={{span: 12}}>
-                                <br></br>
                                 <h2>
                                     {
                                         this.state.architecture && this.state.architecture.name

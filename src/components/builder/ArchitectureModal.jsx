@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
 import {
-    Form,
-    ComposedModal,
-    ModalBody,
-    ModalHeader,
-    ModalFooter, 
-    FormGroup,
-    TextInput,
-    TextArea,
-    Select,
-    SelectItem,
-    FileUploader
+    Form, ComposedModal, ModalBody, ModalHeader, ModalFooter, FormGroup,
+    TextInput, TextArea, Select, SelectItem, FileUploader, Grid, Row
 } from 'carbon-components-react';
 
 import AceEditor from "react-ace";
@@ -181,8 +172,8 @@ class ArchitectureModal extends Component {
     }
     render() {
         return (
-            <div className="bx--grid">
-                <div className="bx--row">
+            <Grid>
+                <Row>
 
                     <ComposedModal
                         open={this.props.show}
@@ -336,8 +327,8 @@ class ArchitectureModal extends Component {
                         <ModalFooter primaryButtonText={this.props.isUpdate ? "Update" : this.props.isDuplicate ? "Duplicate" : "Add"} onRequestSubmit={this.handleSubmit} secondaryButtonText="Cancel" />
                     </ComposedModal>
 
-                </div>
-            </div>
+                </Row>
+            </Grid>
         );
     }
 }

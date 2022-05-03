@@ -10,7 +10,7 @@ import {
   ContentSwitcher,
   Switch,
   Pagination,
-  Grid,
+  Grid, Row, Column
 } from 'carbon-components-react';
 import {
   Link
@@ -180,13 +180,13 @@ class ControlDetailsView extends Component {
           }
 
           {data.id ?
-            <div className="bx--row">
-              <div className="bx--col-lg-12">
+            <Row>
+              <Column lg={{span: 12}}>
                 <h2>
                   {(data.name && (data.id + ": " + data.name)) || data.id}
                 </h2>
-              </div>
-            </div>
+              </Column>
+            </Row>
             :
             <SearchSkeleton />
           }
@@ -208,8 +208,8 @@ class ControlDetailsView extends Component {
 
             {this.state.show === "nist-desc" && <div>
               { /* NIST Description */
-                nistData.number && <div className="bx--row">
-                  <div className="bx--col-lg-12">
+                nistData.number && <Row>
+                  <Column lg={{span: 12}}>
                     <h3 >
                       Official NIST description
                     </h3>
@@ -224,52 +224,52 @@ class ControlDetailsView extends Component {
                         ))}
                       </UnorderedList>
                     </> : <></>}
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               }
               { /* NIST Family */
-                nistData.family && <div className="bx--row">
-                  <div className="bx--col-lg-12">
+                nistData.family && <Row>
+                  <Column lg={{span: 12}}>
                     <h4 >Family</h4>
                     <p>
                       {nistData.family.toLowerCase() + '.'}
                     </p>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               }
               { /* NIST Priority */
-                nistData.priority && <div className="bx--row">
-                  <div className="bx--col-lg-12">
+                nistData.priority && <Row>
+                  <Column lg={{span: 12}}>
                     <h4 >Priority</h4>
                     <Tag type="red">{nistData.priority}</Tag>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               }
               { /* NIST Supplemental Guidance */
-                nistData?.supplemental_guidance?.description && <div className="bx--row">
-                  <div className="bx--col-lg-12">
+                nistData?.supplemental_guidance?.description && <Row>
+                  <Column lg={{span: 12}}>
                     <h4 >Supplemental Guidance</h4>
                     <p>
                       {nistData.supplemental_guidance.description}
                     </p>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               }
               { /* NIST Parent Control */
-                nistData?.parent_control && <div className="bx--row">
-                  <div className="bx--col-lg-12">
+                nistData?.parent_control && <Row>
+                  <Column lg={{span: 12}}>
                     <h4 >Parent Control</h4>
                     <Tag type="blue">
                       <Link to={"/nists/" + nistData.parent_control.toLowerCase().replace(' ', '_')} >
                         {nistData.parent_control}
                       </Link>
                     </Tag>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               }
               { /* NIST Related Controls */
-                nistData?.supplemental_guidance?.related && <div className="bx--row">
-                  <div className="bx--col-lg-12">
+                nistData?.supplemental_guidance?.related && <Row>
+                  <Column lg={{span: 12}}>
                     <h4 >Related NIST Controls</h4>
                     {nistData.supplemental_guidance.related.map((related) => (
                       <Tag type="blue">
@@ -278,22 +278,22 @@ class ControlDetailsView extends Component {
                         </Link>
                       </Tag>
                     ))}
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               }
               { /* NIST Baseline Impact */
-                nistData?.baseline_impact && <div className="bx--row">
-                  <div className="bx--col-lg-12">
+                nistData?.baseline_impact && <Row>
+                  <Column lg={{span: 12}}>
                     <h4 >Baseline Impact</h4>
                     {nistData.baseline_impact.map((baselineImpact) => (
                       <Tag type="cyan">{baselineImpact}</Tag>
                     ))}
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               }
               { /* NIST References */
-                nistData?.references?.reference && <div className="bx--row">
-                  <div className="bx--col-lg-12">
+                nistData?.references?.reference && <Row>
+                  <Column lg={{span: 12}}>
                     <h4 >References</h4>
                     <UnorderedList>
                       {nistData.references.reference.map((ref) => (
@@ -305,8 +305,8 @@ class ControlDetailsView extends Component {
                         </ListItem>
                       ))}
                     </UnorderedList>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               }
             </div>}
 

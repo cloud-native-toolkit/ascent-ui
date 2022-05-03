@@ -1,10 +1,6 @@
 import React, { Component }  from 'react';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  Button,
-  Tabs,
-  Tab,
+  Breadcrumb, BreadcrumbItem, Button, Tabs, Tab, Grid, Row, Column
 } from 'carbon-components-react';
 
 import { InfoSection, InfoCard } from './Info';
@@ -41,9 +37,9 @@ class LandingPage extends Component {
 
   render() {
     return (
-      <div className="bx--grid bx--grid--full-width landing-page">
-        <div className="bx--row landing-page__banner">
-          <div className="bx--col-lg-12">
+      <Grid className="landing-page">
+        <Row className="landing-page__banner">
+          <Column lg={{span: 12}}>
             <form
               class="genesis--MarketingBanner-marketingBannerOverview"
               id="marketingBanner" name="marketingBanner"
@@ -61,15 +57,15 @@ class LandingPage extends Component {
             <h1 className="landing-page__heading">
               Architecture and Security Controls Enterprise Tool (ASCENT)
             </h1>
-          </div>
-        </div>
-        <div className="bx--row landing-page__r2">
-          <div className="bx--col bx--no-gutter">
+          </Column>
+        </Row>
+        <Row className="landing-page__r2">
+          <Column lg={{span: 12}}>
             <Tabs aria-label="Tab navigation">
               <Tab label="About">
-                <div className="bx--grid bx--grid--no-gutter bx--grid--full-width">
-                  <div className="bx--row landing-page__tab-content">
-                    <div className="bx--col-md-4 bx--col-lg-6">
+                <Grid>
+                  <Row className="landing-page__tab-content">
+                    <Column  lg={{span: 6}}  md={{span: 4}}>
                       <h2 className="landing-page__subheading">
                         What is Ascent?
                       </h2>
@@ -81,16 +77,16 @@ class LandingPage extends Component {
                       </p>
                       {this.state.user ? <Link to="/docs" ><Button>Learn more</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
 
-                    </div>
-                    <div className="bx--col-md-4 bx--col-lg-5">
+                    </Column>
+                    <Column lg={{span: 5}} md={{span: 4}}>
                       <img
                         className="landing-page__illo"
                         src={`${process.env.PUBLIC_URL}/ascent.png`}
                         alt="Tool illustration"
                       />
-                    </div>
-                  </div>
-                  <div className="bx--row landing-page__tab-content">
+                    </Column>
+                  </Row>
+                  <Row className="landing-page__tab-content">
                     <InfoSection heading="The Principles" className="landing-page__r3">
                       <InfoCard
                         heading="Security Controls"
@@ -100,7 +96,7 @@ class LandingPage extends Component {
                       <InfoCard
                         heading="Reference Architectures"
                         body="Build your solutions using our pre-defined reference architectures for IBM Cloud, AWS and Azure. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
-                        icon={this.state.user ? <Link to="/boms" ><ModelBuilder32  /></Link> : <ModelBuilder32  />}
+                        icon={this.state.user ? <Link to="/boms/software" ><ModelBuilder32  /></Link> : <ModelBuilder32  />}
                       />
 
                       <InfoCard
@@ -109,13 +105,13 @@ class LandingPage extends Component {
                         icon={this.state.user ? <Link to="/services" ><Cloud32  /></Link> : <Cloud32  />}
                       />
                     </InfoSection>
-                  </div>
-                </div>
+                  </Row>
+                </Grid>
               </Tab>
             </Tabs>
-          </div>
-        </div>
-      </div>
+          </Column>
+        </Row>
+      </Grid>
     );
   }
 };

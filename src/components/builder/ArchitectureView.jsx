@@ -18,7 +18,7 @@ import {
     OverflowMenuItem,
     SearchSkeleton,
     Button,
-    Grid,
+    Grid, Row, Column
 } from 'carbon-components-react';
 
 import YAML from 'yaml';
@@ -290,8 +290,9 @@ class ArchitectureView extends Component {
                             });
                         }} />
                 }
+                <Row>
+                    <Column lg={{span: 12}}>
 
-                <br />
 
                 <h2 style={{"display": "flex"}}>
                     {`${this.props.isUser ? 'Custom Reference Architectures' : this.props.isInfra ? 'Infrastructures' : this.props.isSoftware ? 'Software' :  'Public Reference Architectures' }`}
@@ -317,6 +318,8 @@ class ArchitectureView extends Component {
                 }
 
                 {!this.state.archLoaded && <SearchSkeleton />}
+                </Column>
+                </Row>
 
             </Grid>
 

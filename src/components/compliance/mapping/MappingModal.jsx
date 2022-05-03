@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     Form, FormGroup, ComposedModal, ModalBody, ModalFooter,
     ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput, 
-    TextInputSkeleton, Select, SelectItem, SelectSkeleton
+    TextInputSkeleton, Select, SelectItem, SelectSkeleton, Grid, Row
 } from 'carbon-components-react';
 
 
@@ -99,8 +99,8 @@ class MappingModal extends Component {
         let archData = this.state.archData;
         let profileData = this.state.profileData;
         return (
-            <div className="bx--grid">
-                <div className="bx--row">
+            <Grid>
+                <Row>
 
                     <ComposedModal
                         open={this.props.show}
@@ -302,8 +302,8 @@ class MappingModal extends Component {
                         <ModalFooter onRequestSubmit={this.handleSubmit} primaryButtonText={this.props.isUpdate ? "Update" : "Add"} secondaryButtonText="Cancel" />
                     </ComposedModal>
 
-                </div>
-            </div>
+                </Row>
+            </Grid>
         );
     }
 

@@ -6,7 +6,7 @@ import {
 
 import {
     Button,
-    SearchSkeleton
+    SearchSkeleton, Grid, Row, Column
 } from 'carbon-components-react';
 import {
     Add16,
@@ -167,13 +167,11 @@ class SolutionsView extends Component {
 
         return (
 
-            <div className="bx--grid"  >
-
-                <div className="bx--row">
-                    <div className="bx--col-lg-12">
-                        <br></br>
+            <Grid>
+                <Row>
+                    <Column lg={{span: 12}}>
                         <h2 style={{"display": "flex"}}>
-                            Solutions
+                            {`${this.props.isUser ? 'Custom' : 'Public'} Solutions`}
                             {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Button
                                 size='sm'
                                 style={{"margin-left": "auto"}}
@@ -192,8 +190,8 @@ class SolutionsView extends Component {
                         </h2>
                         <br></br>
 
-                    </div>
-                </div>
+                    </Column>
+                </Row>
 
                 {this.state.dataLoaded ? this.state.solutions?.length > 0 ? groupByN(4, this.state.solutions).map(solGroup => (
                     <CardGroup>
@@ -296,7 +294,7 @@ class SolutionsView extends Component {
                         onRequestClose={() => this.setState({ isPaneOpen: false })} />
                 </div>
 
-            </div>
+            </Grid>
 
         );
     }

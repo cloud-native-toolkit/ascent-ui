@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import {
     DataTableSkeleton,
-    Pagination
+    Pagination, Grid, Row, Column
 } from 'carbon-components-react';
-
 
 import ControlsFilterPane from './ControlsFilterPane';
 import ControlsTable from './ControlsTable';
@@ -11,6 +10,7 @@ import { ctrlsHeaders } from '../../data/data';
 import { getControls } from "../../services/controls";
 
 const b64 = require('../../utils/b64');
+
 
 const ASCENT_CONTROLS_CACHE = "ASCENT_CTRLS_CACHE";
 
@@ -178,23 +178,23 @@ class ControlsView extends Component {
         }
         return (
             <>
-            <div className="bx--grid">
-                <div className="bx--row">
-                    <div className="bx--col-lg-12">
+            <Grid>
+                <Row>
+                    <Column lg={{span: 12}}>
                         <h2>Controls</h2>
                         <p>
                             List of FS Cloud controls
                         </p>
                         <br></br>
-                    </div>
-                </div>
+                    </Column>
+                </Row>
                 
-                <div className="bx--row">
-                    <div className="bx--col-lg-12">
+                <Row>
+                    <Column lg={{span: 12}}>
                         {table}
-                    </div>
-                </div>
-            </div >
+                    </Column>
+                </Row>
+            </Grid >
             <div>
                 <ControlsFilterPane
                     open={this.state.isFilterPaneOpen}

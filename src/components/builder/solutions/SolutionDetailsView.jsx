@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import {
     Breadcrumb, BreadcrumbItem, BreadcrumbSkeleton, SearchSkeleton, Button,
     DataTableSkeleton, DataTable, TableContainer, Table, TableHead, TableRow,
-    TableHeader, TableBody, TableCell, Pagination, Tag, ContentSwitcher, Switch
+    TableHeader, TableBody, TableCell, Pagination, Tag, ContentSwitcher, Switch,
+    Grid, Row, Column
 } from 'carbon-components-react';
 import {
     Link
@@ -108,7 +109,7 @@ class SolutionDetailsView extends Component {
                 <NotFound />
                 :
                 <>
-                    <div className="bx--grid">
+                    <Grid>
 
                         {this.state.data?.id ?
                             <Breadcrumb>
@@ -121,9 +122,8 @@ class SolutionDetailsView extends Component {
                             <BreadcrumbSkeleton />
 
                         }
-                        <div className="bx--row">
-                            <div className="bx--col-lg-12">
-                                <br></br>
+                        <Row>
+                            <Column lg={{span: 12}}>
                                 {data?.name ? <h2 style={{ display: 'flex' }}>
                                     {data?.name}
                                     <div style={{ marginLeft: 'auto' }}>
@@ -151,8 +151,8 @@ class SolutionDetailsView extends Component {
                                     </div>
                                 </h2> : <SearchSkeleton />}
                                 <br></br>
-                            </div>
-                        </div>
+                            </Column>
+                        </Row>
 
                         {data?.id &&
                             <ContentSwitcher
@@ -284,7 +284,7 @@ class SolutionDetailsView extends Component {
                                 user={this.props.user}
                             />
                         }
-                    </div >
+                    </Grid >
                 </>
         );
     }
