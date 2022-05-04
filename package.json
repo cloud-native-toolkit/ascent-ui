@@ -18,6 +18,7 @@
     "d3": "^7.4.4",
     "express-http-proxy": "^1.6.3",
     "express-session": "^1.17.2",
+    "ibmcloud-appid": "^6.2.5",
     "marked": "^4.0.15",
     "passport": "^0.5.2",
     "passport-oauth": "^1.0.0",
