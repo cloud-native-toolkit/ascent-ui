@@ -22,8 +22,6 @@ import {
   TableSelectRow,
   TableBatchActions,
   TableBatchAction,
-  TableToolbarMenu,
-  TableToolbarAction,
   TagSkeleton
 } from 'carbon-components-react';
 import {
@@ -31,13 +29,13 @@ import {
 } from "react-router-dom";
 import {
   TrashCan16 as Delete,
-  Add16,
   Launch16,
   DocumentImport16 as DocumentImport
 } from '@carbon/icons-react';
-import MappingModal from "./MappingModal"
 import ImportProfileModal from "./ImportProfileModal"
 import ValidateModal from "../../ValidateModal"
+import { deleteMapping } from '../../../services/mappings';
+
 
 class MappingTable extends Component {
   constructor(props) {
@@ -50,15 +48,10 @@ class MappingTable extends Component {
       showImportProfile: false,
       selectedRows: []
     };
-    this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.validateCancel = this.validateCancel.bind(this);
     this.validateSubmit = this.validateSubmit.bind(this);
   }
-
-  showModal = () => {
-    this.setState({ show: true });
-  };
   
   validateSubmit = () => {
     this.setState({ showValidate: false });
@@ -106,7 +99,7 @@ class MappingTable extends Component {
           control_subsections: control_subsections
         }
       }
-      this.props.mapping.deleteMapping(body).then((res) => {
+      deleteMapping(body).then((res) => {
         count = count + 1;
         if (res.statusCode === 200) {
           count_success = count_success + 1;
@@ -163,7 +156,6 @@ class MappingTable extends Component {
   }
 
   render() {
-    const showModal = this.state.show;
     const showValidateModal = this.state.showValidate;
     for (let index = 0; index < this.props.rows.length; index++) {
       let row = this.props.rows[index];
@@ -182,18 +174,6 @@ class MappingTable extends Component {
     }
     return (
       <>
-        <div>
-          {showModal &&
-            <MappingModal
-              toast={this.props.toast}
-              show={this.state.show}
-              handleClose={this.hideModal}
-              isUpdate={this.state.isUpdate}
-              data={this.state.mappingRecord}
-              serviceId={this.props.serviceId} 
-              controlId={this.props.controlId} />
-          }
-        </div>
         <div>
           {showValidateModal &&
             <ValidateModal
@@ -247,17 +227,11 @@ class MappingTable extends Component {
                 </TableBatchActions>}
                 <TableToolbarContent>
                   <TableToolbarSearch onChange={(event) => this.props.filterTable(event.target.value)} />
-                  {this.state.user?.role === "admin" && <TableToolbarMenu>
-                    <TableToolbarAction style={{ display: 'flex' }} onClick={() => this.setState({ showImportProfile: true })}>
-                      <div style={{ flex: 'left' }}>Import Profile</div>
-                      <DocumentImport style={{ marginLeft: "auto" }} />
-                    </TableToolbarAction>
-                  </TableToolbarMenu>}
                   {this.state.user?.role === "admin" && <Button
                     size="small"
                     kind="primary"
-                    renderIcon={Add16} 
-                    onClick={this.showModal}>Add
+                    renderIcon={DocumentImport} 
+                    onClick={() => this.setState({ showImportProfile: true })}>Import
                   </Button>}
                 </TableToolbarContent>
               </TableToolbar>
