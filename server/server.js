@@ -214,39 +214,27 @@ const https = require('https');
   });
 
   const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
-  app.use(
-    '/api',
-    (req, res, next) => {
-      if (  req.isAuthenticated() && (!protectedMethods.includes(req.method)
-          || (AUTH_PROVIDER === "appid" && AuthStrategy.hasScope(req, "edit"))
-          || (AUTH_PROVIDER === "openshift" && (req.user.groups.includes("ascent-editors") || req.user.groups.includes("ascent-admins"))))
-        ) {
-        if (AUTH_PROVIDER === "openshift") {
-          req.headers['Authorization'] = `Bearer ${req.user.token}`;
-        } else {
-          req.headers['Authorization'] = `Bearer ${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`;
-        }
-        return next();
+  app.use('/api', (req, res, next) => {
+    if (  req.isAuthenticated() && (!protectedMethods.includes(req.method)
+        || (AUTH_PROVIDER === "appid" && AuthStrategy.hasScope(req, "edit"))
+        || (AUTH_PROVIDER === "openshift" && (req.user.groups.includes("ascent-editors") || req.user.groups.includes("ascent-admins"))))
+      ) {
+      if (AUTH_PROVIDER === "openshift") {
+        req.headers['Authorization'] = `Bearer ${req.user.token}`;
       } else {
-        res.status(401).json({
-          error: {
-            message: "You must be authenticated and have editor role to perform this request."
-          }
-        });
+        req.headers['Authorization'] = `Bearer ${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`;
       }
+      return next();
+    } else {
+      res.status(401).json({
+        error: {
+          message: "You must be authenticated and have editor role to perform this request."
+        }
+      });
     }
-  );
+  });
 
-  app.use(
-    '/api',
-    createProxyMiddleware({
-      target: process.env.API_HOST,
-      changeOrigin: true,
-      pathRewrite: {
-        '^/api': '/'
-      },
-    })
-  );
+  require('./api')(app);
 
   const loginEnpoints = ['/solutions*', '/bom*', '/services*', '/onboarding*', '/controls*', '/mapping*', '/nists*'];
 

@@ -37,7 +37,7 @@ class LandingPage extends Component {
 
   render() {
     return (
-      <Grid className="landing-page">
+      <Grid fullWidth className="landing-page">
         <Row className="landing-page__banner">
           <Column lg={{span: 12}}>
             <form
