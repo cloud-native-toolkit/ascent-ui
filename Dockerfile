@@ -1,17 +1,12 @@
-FROM registry.access.redhat.com/ubi8/nodejs-14:1-28.1618434924 AS builder
+FROM registry.access.redhat.com/ubi8/nodejs-16
+
+USER default
 
 WORKDIR /opt/app-root/src
 
 COPY --chown=default:root . .
 RUN npm ci
 RUN npm run build
-
-FROM registry.access.redhat.com/ubi8/nodejs-14:1-28.1618434924
-COPY --from=builder /opt/app-root/src/build build
-COPY public public
-COPY server server
-COPY package-lock.json .
-COPY package.json .
 
 RUN npm install --production
 
@@ -21,4 +16,3 @@ ENV HOST=0.0.0.0 PORT=3000
 EXPOSE 3000/tcp
 
 CMD ["npm", "start"]
-

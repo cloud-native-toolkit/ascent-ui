@@ -1,7 +1,0 @@
-{
-    "client_id": "<appid_client_id>",
-    "secret": "<appid_secret>",
-    "application_url":"http://localhost:3000",
-    "APPID_CONFIG": "<appid_config>",
-    "port": 3000
-}

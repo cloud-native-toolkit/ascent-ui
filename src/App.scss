@@ -1,6 +1,15 @@
-@import './ui-patterns/index.scss';
-@import './ui-patterns/builder/_ArchitectureView.scss';
-@import './ui-patterns/ui-shell/patterns.scss';
+.bx--content {
+  margin-left: 16rem;
+  padding: 0;
+}
+
+@media (max-width: 65.98rem) {
+  .bx--content {
+      margin-left: 0;
+  }
+}
+
+@import './components/index';
 
 .App {
   font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
@@ -12,34 +21,11 @@ a:hover, a:visited, a:link, a:active {
   text-decoration: none;
 }
 
-.resource-img {
-  height:35em;
-  padding-bottom: 5px;
+h2 {
+  margin: 1rem 0;
 }
 
-.content {
-  padding-top: 0;
-  padding-right: 0;
-}
-
-.pattern-container {
-  padding-right: 1em;
-}
-
-table.bx--data-table tbody tr td.bx--table-column-checkbox {
-  min-width: 2.5rem;
-}
-
-table.bx--data-table tbody tr td {
-  max-width: 700px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.bx--breadcrumb {
-  padding-top: 1rem;
-}
+// Marketing Banners
 
 .genesis--MarketingBanner-marketingBannerOverview {
   font-size: 1rem;
