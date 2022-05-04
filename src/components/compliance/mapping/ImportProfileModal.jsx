@@ -3,6 +3,8 @@ import {
     Modal, FileUploader, Grid, Row
 } from 'carbon-components-react';
 
+import { addProfile } from '../../../services/mappings';
+
 class ImportProfileModal extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +21,8 @@ class ImportProfileModal extends Component {
     if (file.size > 409600) return this.props.toast("error", "Too Large", "Max size exceeded: 400Kb.");
     let data = new FormData();
     data.append("file", file);
-    this.props.mapping.addProfile(data).then((res) => {
+    this.props.toast("info", "Uploading", `Uploadind profile ${file.name}`);
+    addProfile(data).then((res) => {
       console.log(res)
       if (res && res.body && res.body.error) {
         this.props.toast("error", "Error", res.body.error.message);
