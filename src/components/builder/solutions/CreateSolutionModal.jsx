@@ -763,7 +763,8 @@ class CreateSolutionModal extends Component {
                                                     isSelectedByDefault={false}
                                                     selectedTileIds={this.state.software}
                                                     onSelection={(val) => {
-                                                        const sw = this.state.software;
+                                                        const sw = Array.from(this.state.software);
+                                                        console.log(sw)
                                                         const swIx = this.state.software.indexOf(val);
                                                         if (swIx >= 0) sw.splice(swIx, 1);
                                                         else sw.push(val);
