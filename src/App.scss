@@ -3,6 +3,14 @@
   padding: 0;
 }
 
+bx--grid {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 99rem;
+  padding-right: 0em;
+  padding-left: 0em;
+}
+
 @media (max-width: 65.98rem) {
   .bx--content {
       margin-left: 0;
