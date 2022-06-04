@@ -76,15 +76,15 @@ class LandingPage extends Component {
                         </h2>
                         <p className="landing-page__p">
                          Ascent provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
-                          rapid composite solution creation.
+                          rapid composite solution creation
                         </p>
                         <div className="landing-page-list">
                           <UnorderedList>
                             <ListItem>
-                              Provides a set of cloud infrastructure reference archtiectures for AWS, Azure and IBM Cloud including Quick Start, Standard and Advanced patterns.
+                              Provides a set of cloud infrastructure reference architectures for AWS, Azure and IBM Cloud including Quick Start, Standard and Advanced patterns
                             </ListItem>
                             <ListItem>
-                              Provides s set of composite IBM Software architectures for common client and partner usecases
+                              Provides a set of composite IBM Software architectures for common client and partner use-cases
                             </ListItem>
                             <ListItem>
                               Enables the fast creation of solutions to be consumed by DevOps and SRE teams in setting up production state environments
