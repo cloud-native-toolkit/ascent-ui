@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders Software Everywhere header', () => {
+test('renders header', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Software Everywhere/i);
+  const linkElement = screen.getByText(/Architecture and Security Controls Enterprise Tool/i);
   expect(linkElement).toBeInTheDocument();
 });
