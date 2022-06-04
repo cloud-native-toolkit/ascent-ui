@@ -3,11 +3,11 @@
 @import './Info/info';
 
 .landing-page__illo {
-  max-width: 100%;
+  max-width: 130%;
 }
 
 .landing-page__banner {
-  padding-bottom: $spacing-07 * 4;
+  padding-bottom: 1em;
   @include landing-page-background;
 }
 
@@ -20,8 +20,22 @@
 }
 
 .landing-page__tab-content {
-  padding-bottom: $layout-05;
+  padding-bottom: 2em;
+  margin-left: -4em;
   padding-top  : 0;
+}
+
+.landing-page-list {
+  margin-bottom: 2em;
+  padding-left: 30px;
+}
+
+.bx--list--nested, .bx--list--unordered, .bx--list--ordered, .bx--list--ordered--native {
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0.16px;
+  list-style: none;
 }
 
 .landing-page__subheading {

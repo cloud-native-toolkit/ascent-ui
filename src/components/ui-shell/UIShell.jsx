@@ -223,15 +223,29 @@ class UIShell extends Component {
                       Overview
                     </SideNavMenuItem>
 
+                    <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
+                                     target="_blank" rel="noopener noreferrer">
+                      Module Catalog
+                      <Launch16 />
+                    </SideNavMenuItem>
+
+
+                    {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
+                        href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
+                        target="_blank" rel="noopener noreferrer">
+                      IBM Software Portfolio
+                      <Launch16 />
+                    </SideNavMenuItem> : <></>}
+
                     {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Solutions">
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/solutions/user'
                           isActive={this.state.activeItem === '/solutions/user'}
-                          onClick={() => { this.setState({ activeItem: '/solutions/user' }) }}>Custom Solutions</SideNavMenuItem>
+                          onClick={() => { this.setState({ activeItem: '/solutions/user' }) }}>Create Solution</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/solutions/user'>
-                          Custom Solutions
+                          Create Solution
                           <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
@@ -242,7 +256,7 @@ class UIShell extends Component {
                           onClick={() => { this.setState({ activeItem: '/solutions' }) }}>Public Solutions</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/solutions'>
-                          Public Solutions
+                           Solutions
                           <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
@@ -255,24 +269,14 @@ class UIShell extends Component {
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/boms/user'
                           isActive={this.state.activeItem === '/boms/user'}
-                          onClick={() => { this.setState({ activeItem: '/boms/user' }) }}>Custom Architectures</SideNavMenuItem>
+                          onClick={() => { this.setState({ activeItem: '/boms/user' }) }}>Create Architectures</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/boms/user'>
-                          Custom Architectures
+                          Create Architecture
                           <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
 
-                      {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/boms/software'
-                          isActive={this.state.activeItem === '/boms/software'}
-                          onClick={() => { this.setState({ activeItem: '/boms/software' }) }}>Software</SideNavMenuItem>
-                        :
-                        <SideNavMenuItem href='/boms/software'>
-                          Software
-                          <Locked16 style={{ marginLeft: "auto" }} />
-                        </SideNavMenuItem>
-                      }
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/boms/infrastructure'
@@ -285,17 +289,18 @@ class UIShell extends Component {
                         </SideNavMenuItem>
                       }
 
-                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
-                        target="_blank" rel="noopener noreferrer">
-                        Module Catalog
-                        <Launch16 />
-                      </SideNavMenuItem>
-                      {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
-                        href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
-                        target="_blank" rel="noopener noreferrer">
-                        IBM Software Portfolio
-                        <Launch16 />
-                      </SideNavMenuItem> : <></>}
+                      {this.state.user ?
+                          <SideNavMenuItem element={Link} to='/boms/software'
+                                           isActive={this.state.activeItem === '/boms/software'}
+                                           onClick={() => { this.setState({ activeItem: '/boms/software' }) }}>Software</SideNavMenuItem>
+                          :
+                          <SideNavMenuItem href='/boms/software'>
+                            Software
+                            <Locked16 style={{ marginLeft: "auto" }} />
+                          </SideNavMenuItem>
+                      }
+
+
                     </SideNavMenu> : <></>}
 
                     {this.state.content.complianceFeatures ? <SideNavMenu title="Compliance" defaultExpanded
@@ -331,7 +336,7 @@ class UIShell extends Component {
                         </SideNavMenuItem>
                       }
 
-                    </SideNavMenu> : <></>}
+                    </SideNavMenu> : <></> }
 
                     <SideNavMenu title="Documentation"
                       isSideNavExpanded={isSideNavExpanded}
