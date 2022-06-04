@@ -72,29 +72,33 @@ class LandingPage extends Component {
                     <Column  lg={{span: 6}}  md={{span: 4}}>
 
                         <h2 className="landing-page__subheading">
-                          What does this do ?
+                          What does Ascent do ?
                         </h2>
                         <p className="landing-page__p">
-                          We have built a module which will allow Civil Infrastructure owners and operators to make sustainability-led decisions to support decarbonization
-                        </p>
-                        <p className="landing-page__p">
-                          The module provides operators and owners with three key benefits:
+                         Ascent provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
+                          rapid composite solution creation.
                         </p>
                         <div className="landing-page-list">
                           <UnorderedList>
                             <ListItem>
-                              Generates information on carbon emissions throughout design, build and operations of infrastructure, including use of resources with the lowest carbon footprint
+                              Provides a set of cloud infrastructure reference archtiectures for AWS, Azure and IBM Cloud including Quick Start, Standard and Advanced patterns.
                             </ListItem>
                             <ListItem>
-                              Enables benchmarking of contractors according to their green profile
+                              Provides s set of composite IBM Software architectures for common client and partner usecases
                             </ListItem>
                             <ListItem>
-                              Automate reporting to adhere to new regulatory standards
+                              Enables the fast creation of solutions to be consumed by DevOps and SRE teams in setting up production state environments
                             </ListItem>
                           </UnorderedList>
                         </div>
+
+                        <h2 className="landing-page__subheading">
+                          Why do we need Ascent ?
+                        </h2>
                         <p className="landing-page__p">
-                          Our solution is focusing on Greenhouse gas emissions. Particularly, we focus on the indirect scope 3 emissions that stem from the company’s value chain. We do that, because ~80% of companies’ carbon emissions comes exactly from that
+                          To help speed up the delivery and adoption of IBM Software on multiple cloud environment including AWS, Azure and IBM Cloud.
+                          Support the co creation of composite solutions with Clients and IBM Partners. Provide consistent automation across clouds infrastructures
+                          and software architectures.
                         </p>
 
                         {this.state.user ? <Link to="/docs" ><Button>Learn more</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
