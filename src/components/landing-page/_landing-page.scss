@@ -2,29 +2,6 @@
 @import './overrides';
 @import './Info/info';
 
-.landing-page__illo {
-  max-width: 130%;
-}
-
-.landing-page__banner {
-  padding-bottom: 1em;
-  @include landing-page-background;
-}
-
-.landing-page__heading {
-  @include carbon--type-style('productive-heading-05');
-}
-
-.landing-page__r2 {
-  margin-top: rem(-40px);
-}
-
-.landing-page__tab-content {
-  padding-bottom: 2em;
-  margin-left: -4em;
-  padding-top  : 0;
-}
-
 .landing-page-list {
   margin-bottom: 2em;
   padding-left: 30px;

@@ -577,7 +577,7 @@ class BillofMaterialsView extends Component {
                                                                     <TableRow key={i} {...getRowProps({ row })} >
                                                                         {(this.props.user?.role === "admin" || this.state.architecture?.owners?.find(user => user.email === this.props.user?.email)) && <TableSelectRow {...getSelectionProps({ row })}/>}
                                                                         {row.cells.map((cell) => (
-                                                                            <TableCell key={cell.id} class="clickable" onClick={() => this.openPane(row.id)} >
+                                                                            <TableCell key={cell.id} className="clickable" onClick={() => this.openPane(row.id)} >
                                                                                 {
                                                                                     cell.info && cell.info.header === "ibm_service"?
                                                                                         <Tag type="blue">

@@ -83,7 +83,7 @@ const ControlsTable = ({ rows, headers, onClickFilter, filter, filterItems }) =>
                 <TableCell>
                   
                   <OverflowMenu light flipped style={{flex:1, marginLeft: 'auto'}}>
-                    <Link class="bx--overflow-menu-options__option" to={"/controls/" + row.id.toLowerCase().replace(' ', '_')}>
+                    <Link className="bx--overflow-menu-options__option" to={"/controls/" + row.id.toLowerCase().replace(' ', '_')}>
                       <OverflowMenuItem itemText="Details" />
                     </Link>
                   </OverflowMenu>

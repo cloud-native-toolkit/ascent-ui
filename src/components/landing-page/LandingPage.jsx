@@ -1,6 +1,6 @@
 import React, { Component }  from 'react';
 import {
-  Breadcrumb, BreadcrumbItem, Button, Tabs, Tab, Grid, Row, Column,UnorderedList,ListItem
+  Breadcrumb, BreadcrumbItem, Button, Grid, Row, Column,UnorderedList,ListItem
 } from 'carbon-components-react';
 
 import { InfoSection, InfoCard } from './Info';
@@ -37,14 +37,14 @@ class LandingPage extends Component {
 
   render() {
     return (
-      <Grid fullWidth className="landing-page">
+      <Grid fullWidth condensed className="landing-page">
         <Row className="landing-page__banner">
           <Column lg={{span: 12}}>
             <form
-              class="genesis--MarketingBanner-marketingBannerOverview"
+              className="genesis--MarketingBanner-marketingBannerOverview"
               id="marketingBanner" name="marketingBanner"
               style={{ margin: '0 -2rem', display: this.state.hideBanner ? 'none': 'flex' }}>
-              <span class="genesis--MarketingBanner-content">
+              <span className="genesis--MarketingBanner-content">
                 Did you know <a href='https://www.ibm.com/training/cloud/jobroles' target="_blank" rel="noopener noreferrer">IBM Cloud Training</a> is now free?
               </span>
               <Close32 onClick={() => {console.log(this.state);this.setState({ hideBanner: true })}} />
@@ -65,8 +65,6 @@ class LandingPage extends Component {
         </Row>
         <Row className="landing-page__r2">
           <Column lg={{span: 12}}>
-            <Tabs aria-label="Tab navigation">
-              <Tab label="About">
                 <Grid>
                   <Row className="landing-page__tab-content">
                     <Column  lg={{span: 6}}  md={{span: 4}}>
@@ -141,8 +139,6 @@ class LandingPage extends Component {
 
                   </Row>
                 </Grid>
-              </Tab>
-            </Tabs>
           </Column>
         </Row>
       </Grid>
