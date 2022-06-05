@@ -8,8 +8,7 @@ import {
 } from 'carbon-components-react';
 
 import {
-  BrowserRouter,
-  Link,
+  BrowserRouter, Link,
 } from "react-router-dom";
 
 import ErrorBoundary from "../ErrorBoundary";
