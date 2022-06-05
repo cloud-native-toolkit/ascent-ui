@@ -217,14 +217,14 @@ class CreateSolutionModal extends Component {
             {
                 id: "azure",
                 title: "Azure",
-                desc: "Microsoft Azure infrastructure with Red Hat OpenShift ARO",
+                desc: "Microsoft Azure infrastructure with Red Hat OpenShift ARO and IPI",
                 docs: "https://azure.microsoft.com/",
                 image: "azure.png",
                 enabled: true,
                 boms: {
                     quickstart: [
-                        "200-azure-openshift-gitops",
                         "105-azure-vnet-openshift",
+                        "200-azure-openshift-gitops",
                         "220-dev-tools"
                     ],
                     standard: [],
@@ -363,9 +363,22 @@ class CreateSolutionModal extends Component {
                 description: "Intelligent asset management, monitoring, predictive maintenance and reliability in a single platform.",
                 boms : [
                     "200-openshift-gitops",
-                    "400-mas-core-multicloud"
+                    "400-mas-core-multicloud",
+                    "405-mas-manage"
                 ]
             },
+            {
+                id: "data-foundation",
+                title: "data-foundation",
+                displayName: "Data Foundation",
+                status: "Released",
+                type: "",
+                description: "Base layer of components required to support different use cases with cloud pak for data",
+                boms : [
+                    "300-cloud-pak-for-data"
+                ]
+            },
+
             {
                 id: "data-fabric",
                 title: "data-fabric",
@@ -374,7 +387,9 @@ class CreateSolutionModal extends Component {
                 type: "",
                 description: "Use the right data architecture so employees can access quality data, wherever and whenever it’s needed.",
                 boms : [
-                    "600-datafabric-multicloud"
+                    "300-cloud-pak-for-data",
+                    "600-datafabric-services",
+                    "610-datafabric-demo"
                 ]
             },
             {
@@ -387,7 +402,7 @@ class CreateSolutionModal extends Component {
                 icon: true,
                 logo: "/images/integration.png",
                 boms : [
-                    "300-integration-platform-multicloud"
+                    "280-integration-platform-multicloud"
                 ]
             },
             {
@@ -400,7 +415,7 @@ class CreateSolutionModal extends Component {
                 icon: true,
                 logo: "/images/integration.png",
                 boms : [
-                    "300-integration-platform-multicloud"
+                    "240-integration-ace"
                 ]
             },
             {
@@ -413,7 +428,7 @@ class CreateSolutionModal extends Component {
                 icon: true,
                 logo: "/images/integration.png",
                 boms : [
-                    "300-integration-platform-multicloud"
+                    "220-integration-apiconnect"
                 ]
             },
             {
@@ -426,7 +441,7 @@ class CreateSolutionModal extends Component {
                 icon: true,
                 logo: "/images/integration.png",
                 boms : [
-                    "300-integration-platform-multicloud"
+                    "250-integration-eventstreams"
                 ]
             },
             {
@@ -439,7 +454,8 @@ class CreateSolutionModal extends Component {
                 icon: true,
                 logo: "/images/integration.png",
                 boms : [
-                    "300-integration-platform-multicloud"
+                    "230-integration-mq",
+                    "260-integration-mq-uniform-cluster"
                 ]
             },
             {
@@ -484,7 +500,7 @@ class CreateSolutionModal extends Component {
                 image: "odf.png",
                 boms : {
                     ibm : [
-                        "210-ibm-odf-storage",
+                        "210-ibm-portworx-storage",
                     ],
                     aws : [
                     ],
