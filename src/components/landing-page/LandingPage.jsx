@@ -58,7 +58,7 @@ class LandingPage extends Component {
               Software Everywhere
             </h1>
             <h2 className="landing-page__subheading">
-              Create Composite Solutions Rapidly with ASCENT
+              Create composite multi-cloud solutions rapidly with ASCENT
             </h2>
 
           </Column>

@@ -3,6 +3,18 @@
   padding: 0;
 }
 
+
+.bx--table-column-checkbox .bx--checkbox-label {
+  padding-left: 0;
+  padding-right: 10px;
+}
+
+.bx--data-table tbody td.bx--table-column-checkbox, .bx--data-table thead th.bx--table-column-checkbox {
+  padding-left: 15px;
+  padding-right: 0;
+  width: 2.5rem;
+}
+
 @media (min-width: 99rem) {
 .bx--grid {
   padding-left: 2.5rem;
