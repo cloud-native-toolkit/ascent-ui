@@ -375,7 +375,9 @@ class CreateSolutionModal extends Component {
                 type: "",
                 description: "Base layer of components required to support different use cases with cloud pak for data",
                 boms : [
-                    "300-cloud-pak-for-data"
+                    "300-cloud-pak-for-data-entitlement",
+                    "305-cloud-pak-for-data-foundation",
+                    "310-cloud-pak-for-data-db2wh"
                 ]
             },
 
@@ -387,7 +389,9 @@ class CreateSolutionModal extends Component {
                 type: "",
                 description: "Use the right data architecture so employees can access quality data, wherever and whenever it’s needed.",
                 boms : [
-                    "300-cloud-pak-for-data",
+
+                    "300-cloud-pak-for-data-entitlement",
+                    "305-cloud-pak-for-data-foundation",
                     "600-datafabric-services",
                     "610-datafabric-demo"
                 ]
