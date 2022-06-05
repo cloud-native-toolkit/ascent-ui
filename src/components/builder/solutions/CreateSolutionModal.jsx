@@ -153,7 +153,7 @@ class CreateSolutionModal extends Component {
                 }
                 else {
                     this.props.toast("success", "OK", `Solution ${res.id} has been created!`)
-                    this.props.handleClose();
+                    this.props.onSuccess(body.solution.id);
                 }
             })
             .catch(console.error);

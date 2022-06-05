@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import {
-    Link
+    Link, Navigate
 } from "react-router-dom";
 
 import {
@@ -163,6 +163,12 @@ class SolutionsView extends Component {
         this.loadSolutions();
     }
 
+    onNewSolution(solId) {
+        this.setState({
+            newSolId: solId
+        });
+    }
+
     render() {
 
         return (
@@ -245,10 +251,13 @@ class SolutionsView extends Component {
                     />
                 }
 
+                {this.state.newSolId ? <Navigate to={`/solutions/${this.state.newSolId}`} /> : <></>}
+
                 {this.state.showCreateModal &&
                     <CreateSolutionModal
                         show={this.state.showCreateModal}
                         handleClose={this.hideModal}
+                        onSuccess={this.onNewSolution.bind(this)}
                         isUpdate={this.state.updateModal}
                         data={this.state.dataDetails}
                         toast={this.props.addNotification}
