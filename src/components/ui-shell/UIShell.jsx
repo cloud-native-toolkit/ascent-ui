@@ -223,19 +223,31 @@ class UIShell extends Component {
                       Overview
                     </SideNavMenuItem>
 
-                    <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
-                                     target="_blank" rel="noopener noreferrer">
-                      Module Catalog
-                      <Launch16 />
-                    </SideNavMenuItem>
-
-
                     {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
                         href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
                         target="_blank" rel="noopener noreferrer">
                       IBM Software Portfolio
                       <Launch16 />
                     </SideNavMenuItem> : <></>}
+
+
+
+                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Automation Catalog">
+
+                    <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
+                                     target="_blank" rel="noopener noreferrer">
+                      Automation Modules
+                      <Launch16 />
+                    </SideNavMenuItem>
+
+                    <SideNavMenuItem href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=seansund&labels=new_module&template=new-module.md&title=Request+new+module%3A+%7Bname%7D"
+                                     target="_blank" rel="noopener noreferrer">
+                      Create a Module
+                      <Launch16 />
+                    </SideNavMenuItem>
+
+                    </SideNavMenu> : <></>}
+
 
                     {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Solutions">
 
@@ -368,6 +380,21 @@ class UIShell extends Component {
                         Builder CLI
                         <Launch16 />
                       </SideNavMenuItem>
+
+
+                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev/#/how-to/gitops"
+                                       target="_blank" rel="noopener noreferrer">
+                        Create a GitOps Module
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev/#/how-to/terraform"
+                                       target="_blank" rel="noopener noreferrer">
+                        Create a Terraform Module
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+
                     </SideNavMenu>
 
                     <SideNavMenu title="Join Us" >

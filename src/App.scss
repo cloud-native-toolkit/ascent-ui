@@ -3,6 +3,12 @@
   padding: 0;
 }
 
+@media (min-width: 99rem) {
+.bx--grid {
+  padding-left: 2.5rem;
+  padding-right: 0;
+} }
+
 bx--grid {
   margin-right: auto;
   margin-left: auto;

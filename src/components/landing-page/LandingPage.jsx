@@ -58,7 +58,7 @@ class LandingPage extends Component {
               Software Everywhere
             </h1>
             <h2 className="landing-page__subheading">
-              Architecture and Security Controls Enterprise Tool (ASCENT)
+              Create Composite Solutions Rapidly with ASCENT
             </h2>
 
           </Column>
@@ -71,7 +71,7 @@ class LandingPage extends Component {
                   <Row className="landing-page__tab-content">
                     <Column  lg={{span: 6}}  md={{span: 4}}>
 
-                        <h2 className="landing-page__subheading">
+                       <h2 className="landing-page__subheading">
                           What does Ascent do ?
                         </h2>
                         <p className="landing-page__p">
@@ -81,14 +81,15 @@ class LandingPage extends Component {
                         <div className="landing-page-list">
                           <UnorderedList>
                             <ListItem>
+                              Enables the fast creation of solution automation ready for production state environments
+                            </ListItem>
+                            <ListItem>
                               Provides a set of cloud infrastructure reference architectures for AWS, Azure and IBM Cloud including Quick Start, Standard and Advanced patterns
                             </ListItem>
                             <ListItem>
                               Provides a set of composite IBM Software architectures for common client and partner use-cases
                             </ListItem>
-                            <ListItem>
-                              Enables the fast creation of solutions to be consumed by DevOps and SRE teams in setting up production state environments
-                            </ListItem>
+
                           </UnorderedList>
                         </div>
 
@@ -106,6 +107,10 @@ class LandingPage extends Component {
 
                     </Column>
                     <Column lg={{span: 5}} md={{span: 4}}>
+                      <h2 className="landing-page__subheading">
+                        Architecture and Security Controls Enterprise Tool (ASCENT)
+                      </h2>
+
                       <img
                         className="landing-page__illo"
                         src={`${process.env.PUBLIC_URL}/ascent.png`}
