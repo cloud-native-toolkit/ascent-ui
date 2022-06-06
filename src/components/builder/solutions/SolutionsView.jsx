@@ -121,7 +121,7 @@ class SolutionsView extends Component {
 
     deleteSolution() {
         if (this.state.curSol) {
-            this.props.addNotification('info', 'Deleting', `Deleting solution ${this.state.curSol.id} id beeing deleted...`);
+            this.props.addNotification('info', 'Deleting', `Solution ${this.state.curSol.id} id being deleted...`);
             fetch(`/api/solutions/${this.state.curSol.id}`, {method: 'delete'})
                 .then(res => {
                     console.log(res);
