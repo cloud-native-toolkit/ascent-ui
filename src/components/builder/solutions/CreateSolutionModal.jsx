@@ -223,7 +223,7 @@ class CreateSolutionModal extends Component {
                 enabled: true,
                 boms: {
                     quickstart: [
-                        "105-azure-vnet-openshift",
+                        "110-azure-ocp-ipi",
                         "200-azure-openshift-gitops",
                         "220-dev-tools"
                     ],
