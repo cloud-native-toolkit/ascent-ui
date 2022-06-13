@@ -23,7 +23,7 @@ class ControlsView extends Component {
             headerData: ctrlsHeaders,
             totalItems: 0,
             firstRowIndex: 0,
-            currentPageSize: 15,
+            currentPageSize: 25,
             searchValue: '',
             selectedFilters: [],
             isPaneOpen: false
@@ -141,7 +141,7 @@ class ControlsView extends Component {
         if (this.state.data.length === 0) {
             table = <DataTableSkeleton
                 columnCount={headers.length + 1}
-                rowCount={15}
+                rowCount={25}
                 showHeader={false}
                 headers={null}
             />

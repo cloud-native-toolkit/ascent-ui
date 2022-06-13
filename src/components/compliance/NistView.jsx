@@ -20,7 +20,7 @@ class NistView extends Component {
             headerData: nistHeaders,
             totalItems: 0,
             firstRowIndex: 0,
-            currentPageSize: 15
+            currentPageSize: 25
         };
         this.filterTable = this.filterTable.bind(this);
     }
@@ -84,7 +84,7 @@ class NistView extends Component {
         if (this.state.data.length === 0) {
             table = <DataTableSkeleton
                 columnCount={headers.length + 1}
-                rowCount={15}
+                rowCount={25}
                 showHeader={false}
                 headers={null}
             />
