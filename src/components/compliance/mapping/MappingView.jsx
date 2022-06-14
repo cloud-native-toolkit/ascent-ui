@@ -79,7 +79,7 @@ class MappingView extends Component {
     const headers = this.state.headerData;
     return (
       <Grid>
-        <Row>
+        <Row className="compliance-page__row">
           <Column lg={{span: 12}}>
             <h2>Control Mapping</h2>
             <p>
@@ -88,7 +88,7 @@ class MappingView extends Component {
             <br></br>
           </Column>
         </Row>
-        <Row>
+        <Row className="compliance-page__row">
           <Column lg={{span: 12}}>
             {this.state.totalItems < 0 ?
               <DataTableSkeleton

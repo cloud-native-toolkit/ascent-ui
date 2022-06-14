@@ -69,7 +69,7 @@ class LandingPage extends Component {
               <Tab label="About">
                 <Grid>
                   <Row className="landing-page__tab-content">
-                    <Column  lg={{span: 6}}  md={{span: 4}}>
+                    <Column  className='landing-page__col'>
 
                        <h2 className="landing-page__subheading">
                           What does Ascent do ?
@@ -106,7 +106,7 @@ class LandingPage extends Component {
 
 
                     </Column>
-                    <Column lg={{span: 5}} md={{span: 4}}>
+                    <Column  className='landing-page__col'>
                       <h2 className="landing-page__subheading">
                         Architecture and Security Controls Enterprise Tool (ASCENT)
                       </h2>

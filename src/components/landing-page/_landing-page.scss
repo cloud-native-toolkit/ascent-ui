@@ -3,10 +3,12 @@
 @import './Info/info';
 
 .landing-page__illo {
+  width: 100%;
   max-width: 130%;
 }
 
 .landing-page__banner {
+  width: 100%;
   padding-bottom: 1em;
   @include landing-page-background;
 }
@@ -16,10 +18,11 @@
 }
 
 .landing-page__r2 {
+  width: 100%;
   margin-top: rem(-40px);
 }
 
-.landing-page__tab-content {
+.landing-page__tab-content { 
   padding-bottom: 2em;
   margin-left: -4em;
   padding-top  : 0;

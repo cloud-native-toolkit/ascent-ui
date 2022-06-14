@@ -290,8 +290,8 @@ class ArchitectureView extends Component {
                             });
                         }} />
                 }
-                <Row>
-                    <Column lg={{span: 12}}>
+                <Row className="arch-page__row">
+                    <Column className="arch-page__col">
 
 
                 <h2 style={{"display": "flex"}}>

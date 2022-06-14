@@ -174,7 +174,7 @@ class SolutionsView extends Component {
         return (
 
             <Grid>
-                <Row>
+                <Row className="sol-page__row">
                     <Column lg={{span: 12}}>
                         <h2 style={{"display": "flex"}}>
                             {`${this.props.isUser ? 'Custom' : 'Public'} Solutions`}
