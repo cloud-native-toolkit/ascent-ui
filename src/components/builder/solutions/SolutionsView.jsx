@@ -180,7 +180,7 @@ class SolutionsView extends Component {
                             {`${this.props.isUser ? 'Custom' : 'Public'} Solutions`}
                             {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Button
                                 size='sm'
-                                style={{"margin-left": "auto"}}
+                                style={{"marginLeft": "auto"}}
                                 onClick={() => this.showModal()}
                                 renderIcon={Add16} >
                                 Create
@@ -200,17 +200,17 @@ class SolutionsView extends Component {
                 </Row>
 
                 {this.state.dataLoaded ? this.state.solutions?.length > 0 ? groupByN(4, this.state.solutions).map(solGroup => (
-                    <CardGroup>
+                    <CardGroup key={solGroup.id}>
                         {
                             solGroup.map((solution) => (
-                                <Card style={{ marginBottom: '1rem', marginRight: '1rem', borderLeft: '1px solid rgba(0, 0, 0, 0.125)' }}>
+                                <Card key={solution.id} style={{ marginBottom: '1rem', marginRight: '1rem', borderLeft: '1px solid rgba(0, 0, 0, 0.125)' }}>
                                     <Card.Body>
                                         <Card.Title>{solution.name}</Card.Title>
                                         <Card.Subtitle className="mb-2 text-muted">{solution.id}</Card.Subtitle>
                                         <Card.Text>{solution.short_desc}</Card.Text>
                                     </Card.Body>
                                     <Card.Footer>
-                                        <Card.Link href="#"
+                                        {/* <Card.Link href="#"
                                             // onClick={() => {
                                             //     this.setState({ isPaneOpen: true, dataDetails:undefined });
                                             //     fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
@@ -220,11 +220,10 @@ class SolutionsView extends Component {
                                             //     })
                                             //     .catch(() => this.props.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
                                             // }}
-                                        >
+                                        > */}
                                             <Link to={`/solutions/${solution.id}`} >
                                                 Details
                                             </Link>
-                                        </Card.Link>
                                         <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
                                         {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Card.Link style={{color: 'red', cursor: 'pointer'}} onClick={() => {
                                             this.setState({
@@ -236,7 +235,7 @@ class SolutionsView extends Component {
                                 </Card>
                             ))
                         }
-                </CardGroup>
+                    </CardGroup>
                 )) : <p>No Solutions to display at the moment{this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <>, click <strong>Create</strong> on the top right corner to create a new one.</>: <>.</>}</p> : <SearchSkeleton /> }
 
                 {this.state.showModal &&

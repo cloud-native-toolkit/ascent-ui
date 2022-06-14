@@ -214,7 +214,7 @@ class MappingTable extends Component {
             getBatchActionProps,
             selectedRows
           }) => (
-            <TableContainer
+            <TableContainer 
               {...getTableContainerProps()}>
               <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
                 {this.state.user?.role === "admin" && <TableBatchActions {...getBatchActionProps()} shouldShowBatchActions={getBatchActionProps().totalSelected > 0}>

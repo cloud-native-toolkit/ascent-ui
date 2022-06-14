@@ -308,7 +308,7 @@ class ArchitectureView extends Component {
                 {
                     this.state.archLoaded ?
                         <StatefulTileGallery
-                            title='BOMs tile catalog'
+                            title="BOMs tile catalog"
                             hasSearch
                             hasSwitcher
                             galleryData={this.state.galleryData}
