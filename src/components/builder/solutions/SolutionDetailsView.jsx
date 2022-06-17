@@ -30,7 +30,7 @@ class SolutionDetailsView extends Component {
             showContent: "solution-details",
             totalItems: 0,
             firstRowIndex: 0,
-            currentPageSize: 10,
+            currentPageSize: 25,
         };
         this.loadSolution = this.loadSolution.bind(this);
         this.downloadTerraform = this.downloadTerraform.bind(this);
@@ -183,7 +183,7 @@ class SolutionDetailsView extends Component {
                                             {!data?.architectures?.length ?
                                                 <DataTableSkeleton
                                                     columnCount={solutionBomsHeader.length}
-                                                    rowCount={10}
+                                                    rowCount={25}
                                                     showHeader={false}
                                                     headers={null}
                                                 />

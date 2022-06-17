@@ -16,6 +16,7 @@ import {
 import {
     Card, CardGroup
 } from 'react-bootstrap';
+import { v4 as uuidv4 } from 'uuid';
 
 import ValidateModal from '../../ValidateModal';
 import SolutionModal from "./SolutionModal";
@@ -174,7 +175,7 @@ class SolutionsView extends Component {
         return (
 
             <Grid>
-                <Row>
+                <Row className="sol-page__row">
                     <Column lg={{span: 12}}>
                         <h2 style={{"display": "flex"}}>
                             {`${this.props.isUser ? 'Custom' : 'Public'} Solutions`}
@@ -200,7 +201,7 @@ class SolutionsView extends Component {
                 </Row>
 
                 {this.state.dataLoaded ? this.state.solutions?.length > 0 ? groupByN(4, this.state.solutions).map(solGroup => (
-                    <CardGroup key={solGroup.id}>
+                    <CardGroup key={uuidv4()}>
                         {
                             solGroup.map((solution) => (
                                 <Card key={solution.id} style={{ marginBottom: '1rem', marginRight: '1rem', borderLeft: '1px solid rgba(0, 0, 0, 0.125)' }}>

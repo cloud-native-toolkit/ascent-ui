@@ -8,7 +8,7 @@ class OverView extends Component {
     render() {
         return (
             <Grid>
-                <Row>
+                <Row className="compliance-page__row">
                     <Column lg={{span: 12}}>
                         <h2 style={{ margin: "30px 0" }} >
                             Ascent - Solution Builder & Security Controls

@@ -3,7 +3,6 @@
   padding: 0;
 }
 
-
 .bx--table-column-checkbox .bx--checkbox-label {
   padding-left: 0;
   padding-right: 10px;
@@ -13,20 +12,6 @@
   padding-left: 15px;
   padding-right: 0;
   width: 2.5rem;
-}
-
-@media (min-width: 99rem) {
-.bx--grid {
-  padding-left: 2.5rem;
-  padding-right: 0;
-} }
-
-bx--grid {
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 99rem;
-  padding-right: 0em;
-  padding-left: 0em;
 }
 
 @media (max-width: 65.98rem) {
