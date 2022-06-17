@@ -39,10 +39,10 @@ class LandingPage extends Component {
     return (
       <div>
         <form
-          class="genesis--MarketingBanner-marketingBannerOverview"
+          className="genesis--MarketingBanner-marketingBannerOverview"
           id="marketingBanner" name="marketingBanner"
           style={{ display: this.state.hideBanner ? 'none' : 'flex' }}>
-          <span class="genesis--MarketingBanner-content">
+          <span className="genesis--MarketingBanner-content">
             Did you know <a href='https://www.ibm.com/training/cloud/jobroles' target="_blank" rel="noopener noreferrer">IBM Cloud Training</a> is now free?
           </span>
           <Close32 onClick={() => { console.log(this.state); this.setState({ hideBanner: true }) }} />
