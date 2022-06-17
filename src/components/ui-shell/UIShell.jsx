@@ -190,7 +190,7 @@ class UIShell extends Component {
                   <Tag>{(this.state.user?.role) || "role"}</Tag>
                 </li>
                 <li className="bx--switcher__item"><strong>{(this.state.user?.email) || "example@ibm.com"}</strong></li>
-                {this.state.user?.role === 'admin' ? <div><SwitcherDivider /><SwitcherItem onClick={this.fetchToken.bind(this)}><span>API token</span>{this.state.copyTokenIcon}</SwitcherItem></div> : <></>}
+                {this.state.user?.role === 'admin' ? <div><SwitcherDivider /><SwitcherItem aria-label="API token" onClick={this.fetchToken.bind(this)}><span>API token</span>{this.state.copyTokenIcon}</SwitcherItem></div> : <></>}
                 <SwitcherDivider />
                 <li className="bx--switcher__item">
                   <Toggle labelText="Compliance features" size="md" id='compliance-toggle' toggled={this.state.content.complianceFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, complianceFeatures: checked })} />
