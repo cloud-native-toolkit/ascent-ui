@@ -179,7 +179,7 @@ class ControlsView extends Component {
         return (
             <>
             <Grid>
-                <Row>
+                <Row className="compliance-page__row">
                     <Column lg={{span: 12}}>
                         <h2>Controls</h2>
                         <p>
@@ -189,7 +189,7 @@ class ControlsView extends Component {
                     </Column>
                 </Row>
                 
-                <Row>
+                <Row className="compliance-page__row">
                     <Column lg={{span: 12}}>
                         {table}
                     </Column>

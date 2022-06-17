@@ -120,7 +120,7 @@ class NistView extends Component {
         }
         return (
             <Grid>
-                <Row>
+                <Row  className="compliance-page__row">
                     <Column lg={{span: 12}}>
                         <h2>NIST</h2>
                         <p>
@@ -129,7 +129,7 @@ class NistView extends Component {
                         <br></br>
                     </Column>
                 </Row>
-                <Row>
+                <Row className="compliance-page__row">
                     <Column lg={{span: 12}}>
                         {table}
                     </Column>
