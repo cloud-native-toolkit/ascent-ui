@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "./App.scss";
 
+import ReactGA from 'react-ga';
+
 import UIShell from './components/ui-shell/UIShell'
 
 
