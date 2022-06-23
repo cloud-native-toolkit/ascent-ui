@@ -13,6 +13,8 @@ import {
   Login20,
 } from '@carbon/icons-react';
 
+import ReactGA from 'react-ga';
+
 import {
   Link
 } from "react-router-dom";
@@ -26,6 +28,19 @@ class LandingPage extends Component {
       user: null,
       hideBanner: false
     };
+  }
+
+  componentDidMount() {
+    fetch('/analyticsId')
+    .then(res => res.json())
+    .then(res => {
+      if (res?.id) {
+        ReactGA.initialize(res.id);
+        ReactGA.pageview(window.location.pathname + window.location.search);
+      }
+    })
+    .catch(console.error)
+    
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
