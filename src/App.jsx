@@ -5,6 +5,11 @@ import UIShell from './components/ui-shell/UIShell'
 
 
 class App extends Component {
+  
+  componentDidMount() {
+    ReactGA.initialize('G-MPMLVG3TKT');
+  }
+
   render() {
     return (
       <div className="App">

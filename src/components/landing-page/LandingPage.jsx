@@ -31,16 +31,7 @@ class LandingPage extends Component {
   }
 
   componentDidMount() {
-    fetch('/analyticsId')
-    .then(res => res.json())
-    .then(res => {
-      if (res?.id) {
-        ReactGA.initialize(res.id);
-        ReactGA.pageview(window.location.pathname + window.location.search);
-      }
-    })
-    .catch(console.error)
-    
+    ReactGA.pageview(window.location.pathname + window.location.search);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
