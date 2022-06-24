@@ -81,11 +81,6 @@ spec:
                 configMapKeyRef:
                   name: ascent
                   key: api-host
-            - name: ANALYTICS_ID
-              valueFrom:
-                configMapKeyRef:
-                  name: ascent
-                  key: analytics-id
             - name: PROTOCOLS
               value: ""
             - name: LOG_LEVEL
