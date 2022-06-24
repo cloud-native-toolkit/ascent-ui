@@ -191,11 +191,6 @@ const https = require('https');
     }
   })
 
-  // Analytics 
-  app.get('/analyticsId', (req, res) => {
-    return res.json({id: process.env.ANALYTICS_ID ?? ''});
-  })
-
   app.use(express.static(path.join(__dirname, "../build")));
 
 
