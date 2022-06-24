@@ -13,8 +13,6 @@ import {
   Login20,
 } from '@carbon/icons-react';
 
-import ReactGA from 'react-ga';
-
 import {
   Link
 } from "react-router-dom";
@@ -31,7 +29,6 @@ class LandingPage extends Component {
   }
 
   componentDidMount() {
-    ReactGA.pageview(window.location.pathname + window.location.search);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

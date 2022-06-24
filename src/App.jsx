@@ -7,9 +7,14 @@ import UIShell from './components/ui-shell/UIShell'
 
 
 class App extends Component {
+
+  initReactGA = () => {
+    ReactGA.initialize('G-W6ZB5XVKKE', { testMode: process.env.NODE_ENV === 'test' });
+    ReactGA.pageview('init-pageview');
+  };
   
   componentDidMount() {
-    ReactGA.initialize('G-MPMLVG3TKT');
+    this.initReactGA();
   }
 
   render() {
