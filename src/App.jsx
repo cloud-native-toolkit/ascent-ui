@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.scss";
 
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 
 import UIShell from './components/ui-shell/UIShell'
 
