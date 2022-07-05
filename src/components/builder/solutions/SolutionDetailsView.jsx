@@ -15,6 +15,8 @@ import {
 
 import { marked } from 'marked';
 
+import ReactGA from 'react-ga4';
+
 import SolutionModal from "./SolutionModal";
 import { solutionBomsHeader } from '../../../data/data';
 
@@ -58,6 +60,7 @@ class SolutionDetailsView extends Component {
     }
 
     async componentDidMount() {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
         this.loadSolution();
     }
 

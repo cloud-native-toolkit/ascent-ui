@@ -10,6 +10,8 @@ import {
   Link
 } from "react-router-dom";
 
+import ReactGA from 'react-ga4';
+
 import NotFound from "../../components/NotFound";
 import { getNistDetails } from "../../services/nist";
 
@@ -37,6 +39,7 @@ class NistDetailsView extends Component {
     }
   }
   async componentDidMount() {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname });
     this.loadNist(this.props.number);
   }
   async componentDidUpdate() {

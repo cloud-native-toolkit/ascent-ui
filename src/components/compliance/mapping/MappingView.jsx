@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import {
   DataTableSkeleton, Pagination, Grid, Row, Column
 } from 'carbon-components-react';
+
+import ReactGA from 'react-ga4';
+
 import MappingTable from './MappingTable';
 
 import { mappingHeaders } from '../../../data/data';
@@ -54,6 +57,7 @@ class MappingView extends Component {
     });
   }
   async componentDidMount() {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname });
     this.loadTable();
   }
 

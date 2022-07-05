@@ -19,6 +19,7 @@ import {
   Launch16
 } from '@carbon/icons-react';
 
+import ReactGA from 'react-ga4';
 
 import MappingTable from "./mapping/MappingTable"
 import ControlDetails from './ControlDetails';
@@ -123,6 +124,7 @@ class ControlDetailsView extends Component {
   }
 
   async componentDidMount() {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname });
     if (!this.state.loadControl && this.state.user) {
       await this.setState({ loadControl: true });
       this.loadControl(this.props.controlId);

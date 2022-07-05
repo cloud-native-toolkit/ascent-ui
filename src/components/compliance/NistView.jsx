@@ -3,6 +3,8 @@ import {
     Grid, Row, Column, DataTableSkeleton, Pagination
 } from 'carbon-components-react';
 
+import ReactGA from 'react-ga4';
+
 import NistTable from './NistTable';
 import { nistHeaders } from '../../data/data';
 import { getNist } from "../../services/nist";
@@ -58,6 +60,7 @@ class NistView extends Component {
     }
 
     async componentDidMount() {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
         this.getNistControls();
     }
 
