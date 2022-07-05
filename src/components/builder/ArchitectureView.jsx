@@ -26,6 +26,8 @@ import YAML from 'yaml';
 import { spacing07 } from '@carbon/layout';
 import { green40 } from '@carbon/colors';
 
+import ReactGA from 'react-ga4';
+
 import ArchitectureModal from './ArchitectureModal';
 import ImageWithStatus from '../ImageWithStatus';
 import ValidateModal from '../ValidateModal';
@@ -191,6 +193,7 @@ class ArchitectureView extends Component {
 
     // Load the Data into the Project
     componentDidMount() {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
         this.setState({
             user: this.props.user,
             isUser: this.props.isUser,

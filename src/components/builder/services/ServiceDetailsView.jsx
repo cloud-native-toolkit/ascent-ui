@@ -13,6 +13,8 @@ import {
   ContentSwitcher, Switch
 } from "carbon-components-react";
 
+import ReactGA from 'react-ga4';
+
 import ServiceDetails from './ServiceDetails';
 import NotFound from "../../NotFound";
 import { getMappings } from '../../../services/mappings';
@@ -76,6 +78,7 @@ class ServiceDetailsView extends Component {
   }
 
   async componentDidMount() {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname });
     try {
       const serviceData = await getServiceDetails(this.props.serviceId);
       let catalog = await getServiceCatalog(this.props.serviceId);

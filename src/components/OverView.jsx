@@ -2,8 +2,14 @@ import React, { Component } from "react";
 
 import { Grid, Row, Column } from 'carbon-components-react';
 
+import ReactGA from 'react-ga4';
+
 
 class OverView extends Component {
+
+    componentDidMount() {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
+    }
 
     render() {
         return (

@@ -17,6 +17,8 @@ import {
   Link
 } from "react-router-dom";
 
+import ReactGA from 'react-ga4';
+
 class LandingPage extends Component {
 
   constructor(props) {
@@ -29,6 +31,7 @@ class LandingPage extends Component {
   }
 
   componentDidMount() {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

@@ -18,6 +18,8 @@ import {
 } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 
+import ReactGA from 'react-ga4';
+
 import ValidateModal from '../../ValidateModal';
 import SolutionModal from "./SolutionModal";
 import CreateSolutionModal from "./CreateSolutionModal";
@@ -80,6 +82,7 @@ class SolutionsView extends Component {
     }
 
     componentDidMount() {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
         this.setState({ user: this.props.user });
         this.loadSolutions();
     };

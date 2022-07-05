@@ -30,6 +30,8 @@ import {
 
 import YAML from 'yaml';
 
+import ReactGA from 'react-ga4';
+
 import ServiceModal from './AddServiceModal';
 import ArchitectureModal from '../../builder/ArchitectureModal';
 import ServiceDetailsPane from '../services/ServiceDetailsPane';
@@ -136,6 +138,7 @@ class BillofMaterialsView extends Component {
         }
     }
     async componentDidMount() {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
         this.loadTable();
     }
 

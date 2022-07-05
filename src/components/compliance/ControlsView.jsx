@@ -4,6 +4,8 @@ import {
     Pagination, Grid, Row, Column
 } from 'carbon-components-react';
 
+import ReactGA from 'react-ga4';
+
 import ControlsFilterPane from './ControlsFilterPane';
 import ControlsTable from './ControlsTable';
 import { ctrlsHeaders } from '../../data/data';
@@ -67,6 +69,7 @@ class ControlsView extends Component {
     }
 
     async componentDidMount() {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
         this.getControls();
     }
 
