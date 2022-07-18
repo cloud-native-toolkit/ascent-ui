@@ -346,6 +346,8 @@ class CreateSolutionModal extends Component {
                 displayName: "Turbonomic",
                 status: "Released",
                 type: "",
+                icon: true,
+                logo: "/images/turbonomic-short.png",
                 description: "Assure application performance with smarter resource management.",
                 boms : [
                     "200-openshift-gitops",
@@ -355,12 +357,28 @@ class CreateSolutionModal extends Component {
 
             },
             {
-                id: "maximo",
+                id: "maximo-",
                 title: "maximo",
-                displayName: "Maximo Application Core",
+                displayName: "Maximo Core",
                 status: "Released",
                 type: "",
+                icon: true,
+                logo: "/images/mas.svg",
                 description: "Intelligent asset management, monitoring, predictive maintenance and reliability in a single platform.",
+                boms : [
+                    "200-openshift-gitops",
+                    "400-mas-core-multicloud",
+                ]
+            },
+            {
+                id: "maximo-manage",
+                title: "maximo-manage",
+                displayName: "Maximo Manage",
+                status: "Released",
+                type: "",
+                icon: true,
+                logo: "/images/mas-manage.svg",
+                description: "Maximo Application Suite - Manage Application",
                 boms : [
                     "200-openshift-gitops",
                     "400-mas-core-multicloud",
@@ -368,11 +386,45 @@ class CreateSolutionModal extends Component {
                 ]
             },
             {
+                id: "maximo-iot",
+                title: "maximo-iot",
+                displayName: "Maximo IoT",
+                status: "Released",
+                type: "",
+                icon: true,
+                logo: "/images/mas-iot.svg",
+                description: " Maximo Application Suite - IoT Application",
+                boms : [
+                    "200-openshift-gitops",
+                    "400-mas-core-multicloud",
+                    "405-mas-iot"
+                ]
+            },
+
+            {
+                id: "maximo-monitor",
+                title: "maximo-monitor",
+                displayName: "Maximo Monitor",
+                status: "Released",
+                type: "",
+                icon: true,
+                logo: "/images/mas-monitor.svg",
+                description: " Maximo Application Suite - Monitor",
+                boms : [
+                    "200-openshift-gitops",
+                    "400-mas-core-multicloud",
+                    "405-mas-monitor"
+                ]
+            },
+
+            {
                 id: "data-foundation",
                 title: "data-foundation",
                 displayName: "Data Foundation",
                 status: "Released",
                 type: "",
+                icon: true,
+                logo: "/images/datafoundation.svg",
                 description: "Base layer of components required to support different use cases with cloud pak for data",
                 boms : [
                     "300-cloud-pak-for-data-entitlement",
@@ -387,6 +439,8 @@ class CreateSolutionModal extends Component {
                 displayName: "Data Fabric",
                 status: "Released",
                 type: "",
+                icon: true,
+                logo: "/images/datafabric.svg",
                 description: "Use the right data architecture so employees can access quality data, wherever and whenever it’s needed.",
                 boms : [
 
@@ -404,7 +458,7 @@ class CreateSolutionModal extends Component {
                 type: "Cloud Pak",
                 description: "Set of Integration tools that enable application connectivity ideal to compliment your solution",
                 icon: true,
-                logo: "/images/integration.png",
+                logo: "/images/integration.svg",
                 boms : [
                     "280-integration-platform-multicloud"
                 ]
@@ -417,7 +471,7 @@ class CreateSolutionModal extends Component {
                 type: "Cloud Pak",
                 description: "Unlocks the value of your systems and your data by connecting business applications, integrating data, building APIs and acting on events.",
                 icon: true,
-                logo: "/images/integration.png",
+                logo: "/images/appconnect.svg",
                 boms : [
                     "240-integration-ace"
                 ]
@@ -430,7 +484,7 @@ class CreateSolutionModal extends Component {
                 type: "Cloud Pak",
                 description: "Complete, intuitive and scalable API platform that lets you create, expose, manage and monetize APIs across clouds.",
                 icon: true,
-                logo: "/images/integration.png",
+                logo: "/images/apiconnect.svg",
                 boms : [
                     "220-integration-apiconnect"
                 ]
@@ -443,7 +497,7 @@ class CreateSolutionModal extends Component {
                 type: "Cloud Pak",
                 description: "Event-streaming platform that helps you build smart apps that can react to events as they happen.",
                 icon: true,
-                logo: "/images/integration.png",
+                logo: "/images/eventstreams.svg",
                 boms : [
                     "250-integration-eventstreams"
                 ]
@@ -456,7 +510,7 @@ class CreateSolutionModal extends Component {
                 type: "Cloud Pak",
                 description: "Proven messaging for hybrid and multi-cloud that’s high-performance and security-rich.",
                 icon: true,
-                logo: "/images/integration.png",
+                logo: "/images/mq.svg",
                 boms : [
                     "230-integration-mq",
                     "260-integration-mq-uniform-cluster"
@@ -468,12 +522,49 @@ class CreateSolutionModal extends Component {
                 displayName: "Security",
                 status: "Beta",
                 type: "",
+                icon: true,
+                logo: "/images/security.svg",
                 description: "Work smarter with an open security platform to advance your zero trust strategy.",
                 boms : [
                     "200-openshift-gitops",
                     "700-cp4s-multicloud"
                 ]
+            },
+            {
+                id: "db2",
+                title: "db2",
+                displayName: "Db2",
+                status: "Release",
+                type: "",
+                icon: true,
+                logo: "/images/db2.svg",
+                description: "Trusted SQL database",
+                boms : [
+                    "200-openshift-gitops",
+                    "300-cloud-pak-for-data-entitlement",
+                    "305-cloud-pak-for-data-foundation",
+                    "310-cloud-pak-for-data-db2uoperator",
+                    "320-cloud-pak-for-data-db2oltp"
+                ]
+            },
+            {
+                id: "db2w",
+                title: "db2w",
+                displayName: "Db2 Warehouse",
+                status: "Release",
+                type: "",
+                icon: true,
+                logo: "/images/DB2BigSQL.svg",
+                description: "Trusted SQL database for building a Data Warehouse",
+                boms : [
+                    "200-openshift-gitops",
+                    "300-cloud-pak-for-data-entitlement",
+                    "305-cloud-pak-for-data-foundation",
+                    "310-cloud-pak-for-data-db2uoperator",
+                    "315-cloud-pak-for-data-db2wh"
+                ]
             }
+
         ],
 
         storage_providers: [

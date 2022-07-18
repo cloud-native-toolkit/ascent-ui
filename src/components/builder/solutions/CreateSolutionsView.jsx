@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import {
-    Link, Navigate, useNavigate,
+    Link, Navigate
 } from "react-router-dom";
 
 import {
@@ -32,8 +32,7 @@ let groupByN = (n, data) => {
     return result;
 };
 
-
-class SolutionsView extends Component {
+class CreateSolutionsView extends Component {
 
     // Configure the App
     constructor(props) {
@@ -145,12 +144,6 @@ class SolutionsView extends Component {
         }
     }
 
-    async navigateToCreateSolution() {
-
-        this.navigate('/solution/create');
-    }
-
-
     async showCreateModal() {
         this.setState({
             showCreateModal: true
@@ -202,13 +195,6 @@ class SolutionsView extends Component {
                                 onClick={() => this.showCreateModal()}
                                 renderIcon={Add16} >
                                 Guided
-                            </Button> : <></>}
-                            &nbsp;
-                            {this.state.user?.role === "admin" ? <Button
-                                size='sm'
-                                onClick={() => this.navigateToCreateSolution()}
-                                renderIcon={Add16} >
-                                Create Solution
                             </Button> : <></>}
 
                         </h2>
@@ -326,4 +312,4 @@ class SolutionsView extends Component {
     }
 }
 
-export default SolutionsView;
+export default CreateSolutionsView;
