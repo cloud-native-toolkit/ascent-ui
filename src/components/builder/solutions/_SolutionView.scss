@@ -6,6 +6,11 @@ div.solutions .page-title-bar-title h2 {
     display: none;
 }
 
+div.solutions h2 {
+    display: flex;
+    justify-content: space-between;
+}
+
 div.solutions .bx--tile {
     min-width: 22rem;
 }
