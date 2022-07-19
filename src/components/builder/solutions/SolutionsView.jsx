@@ -22,7 +22,6 @@ import ReactGA from 'react-ga4';
 
 import ValidateModal from '../../ValidateModal';
 import SolutionModal from "./SolutionModal";
-import CreateSolutionModal from "./CreateSolutionModal";
 import SolutionDetailsPane from './SolutionDetailsPane';
 
 
@@ -41,42 +40,42 @@ class SolutionsView extends Component {
         this.state = {
             solutions: [],
             showModal: false,
-            showCreateModal: false,
             user: {},
         };
         this.showModal = this.showModal.bind(this);
-        this.showCreateModal = this.showCreateModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.deleteSolution = this.deleteSolution.bind(this);
     }
 
     async loadSolutions() {
-        this.setState({dataLoaded: false});
+        this.setState({ dataLoaded: false });
         const uri = this.props.isUser ? `/api/users/${encodeURIComponent(this.props?.user?.email)}/solutions` : '/api/solutions';
         fetch(uri)
             .then(res => res.json())
             .then(solutions => {
-                if (!solutions.error) this.setState({ solutions: solutions.filter(sol => {
-                    const solId = sol.id?.toLowerCase();
-                    const solName = sol.name?.toLowerCase();
-                    const solDesc = sol.short_desc?.toLowerCase();
-                    const provider = sol.platform ?? sol.provider ?? '';
-                    const restrictedProviders = [];
-                    if (!this.state.user?.config?.ibmContent) {
-                        if (solId?.includes('ibm') || solName.includes('ibm')) return false;
-                        restrictedProviders.push('ibm');
-                        restrictedProviders.push('ibm-cp');
-                    }
-                    if (!this.state.user?.config?.azureContent) {
-                        if (solId?.includes('azure') || solName.includes('azure') || solDesc.includes('azure')) return false;
-                        restrictedProviders.push('azure');
-                    }
-                    if (!this.state.user?.config?.awsContent) {
-                        if (solId?.includes('aws') || solName.includes('aws') || solDesc.includes('aws')) return false;
-                        restrictedProviders.push('aws');
-                    }
-                    return !restrictedProviders.includes(provider);
-                }), dataLoaded: true });
+                if (!solutions.error) this.setState({
+                    solutions: solutions.filter(sol => {
+                        const solId = sol.id?.toLowerCase();
+                        const solName = sol.name?.toLowerCase();
+                        const solDesc = sol.short_desc?.toLowerCase();
+                        const provider = sol.platform ?? sol.provider ?? '';
+                        const restrictedProviders = [];
+                        if (!this.state.user?.config?.ibmContent) {
+                            if (solId?.includes('ibm') || solName.includes('ibm')) return false;
+                            restrictedProviders.push('ibm');
+                            restrictedProviders.push('ibm-cp');
+                        }
+                        if (!this.state.user?.config?.azureContent) {
+                            if (solId?.includes('azure') || solName.includes('azure') || solDesc.includes('azure')) return false;
+                            restrictedProviders.push('azure');
+                        }
+                        if (!this.state.user?.config?.awsContent) {
+                            if (solId?.includes('aws') || solName.includes('aws') || solDesc.includes('aws')) return false;
+                            restrictedProviders.push('aws');
+                        }
+                        return !restrictedProviders.includes(provider);
+                    }), dataLoaded: true
+                });
             })
             .catch(console.error);
     }
@@ -113,7 +112,7 @@ class SolutionsView extends Component {
                         let url = window.URL.createObjectURL(blob);
                         let a = document.createElement('a');
                         a.href = url;
-                        a.download = `${solution.name?.toLowerCase()?.replace(/[ /\\_?;.=:,+]/g,'-')}-automation.zip`;
+                        a.download = `${solution.name?.toLowerCase()?.replace(/[ /\\_?;.=:,+]/g, '-')}-automation.zip`;
                         a.click();
                     });
                 }
@@ -126,7 +125,7 @@ class SolutionsView extends Component {
     deleteSolution() {
         if (this.state.curSol) {
             this.props.addNotification('info', 'Deleting', `Solution ${this.state.curSol.id} id being deleted...`);
-            fetch(`/api/solutions/${this.state.curSol.id}`, {method: 'delete'})
+            fetch(`/api/solutions/${this.state.curSol.id}`, { method: 'delete' })
                 .then(res => {
                     console.log(res);
                     if (res.error) return this.props.addNotification("error", res?.status === 401 ? "Unauthorized" : "Error", res.error.message);
@@ -144,12 +143,6 @@ class SolutionsView extends Component {
         }
     }
 
-    async showCreateModal() {
-        this.setState({
-            showCreateModal: true
-        });
-    }
-
     async showModal(updateModal) {
         this.setState({
             showModal: true,
@@ -159,42 +152,27 @@ class SolutionsView extends Component {
 
     async hideModal() {
         this.setState({
-            showCreateModal: false,
             showModal: false,
             isDuplicate: false,
             updateModal: false
         });
         this.loadSolutions();
     }
-
-    onNewSolution(solId) {
-        this.setState({
-            newSolId: solId
-        });
-    }
-
+    
     render() {
 
         return (
 
-            <Grid>
+            <Grid className="solutions">
                 <Row className="sol-page__row">
-                    <Column lg={{span: 12}}>
-                        <h2 style={{"display": "flex"}}>
+                    <Column lg={{ span: 12 }}>
+                        <h2>
                             {`${this.props.isUser ? 'Custom' : 'Public'} Solutions`}
-                            {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Button
-                                size='sm'
-                                style={{"marginLeft": "auto"}}
-                                onClick={() => this.showModal()}
-                                renderIcon={Add16} >
-                                Create
-                            </Button> : <></>}
-                            &nbsp;
                             {this.state.user?.role === "admin" ? <Button
+                                onClick={() => this.setState({ nav: '/solutions/new' })}
                                 size='sm'
-                                onClick={() => this.showCreateModal()}
                                 renderIcon={Add16} >
-                                Guided
+                                Create Solution
                             </Button> : <></>}
 
                         </h2>
@@ -225,11 +203,11 @@ class SolutionsView extends Component {
                                             //     .catch(() => this.props.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
                                             // }}
                                         > */}
-                                            <Link to={`/solutions/${solution.id}`} >
-                                                Details
-                                            </Link>
+                                        <Link to={`/solutions/${solution.id}`} >
+                                            Details
+                                        </Link>
                                         <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
-                                        {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Card.Link style={{color: 'red', cursor: 'pointer'}} onClick={() => {
+                                        {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Card.Link style={{ color: 'red', cursor: 'pointer' }} onClick={() => {
                                             this.setState({
                                                 showValidate: true,
                                                 curSol: solution
@@ -240,7 +218,7 @@ class SolutionsView extends Component {
                             ))
                         }
                     </CardGroup>
-                )) : <p>No Solutions to display at the moment{this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <>, click <strong>Create</strong> on the top right corner to create a new one.</>: <>.</>}</p> : <SearchSkeleton /> }
+                )) : <p>No Solutions to display at the moment{this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <>, click <strong>Create</strong> on the top right corner to create a new one.</> : <>.</>}</p> : <SearchSkeleton />}
 
                 {this.state.showModal &&
                     <SolutionModal
@@ -254,20 +232,7 @@ class SolutionsView extends Component {
                     />
                 }
 
-                {this.state.newSolId ? <Navigate to={`/solutions/${this.state.newSolId}`} /> : <></>}
-
-                {this.state.showCreateModal &&
-                    <CreateSolutionModal
-                        show={this.state.showCreateModal}
-                        handleClose={this.hideModal}
-                        onSuccess={this.onNewSolution.bind(this)}
-                        isUpdate={this.state.updateModal}
-                        data={this.state.dataDetails}
-                        toast={this.props.addNotification}
-                        isDuplicate={this.state.isDuplicate}
-                        user={this.state.user}
-                    />
-                }
+                {this.state.nav ? <Navigate to={this.state.nav} /> : <></>}
 
                 {this.state.showValidate && this.state.curSol &&
                     <ValidateModal
