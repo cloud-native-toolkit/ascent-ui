@@ -6,7 +6,7 @@ import {
 
 import {
     ToastNotification, Grid, Row
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 
 
 class NotFound extends Component {

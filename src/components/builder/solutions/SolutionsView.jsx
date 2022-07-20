@@ -7,7 +7,7 @@ import {
 import {
     Button, Tile, OverflowMenu, OverflowMenuItem,
     Grid, Row, Column
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 import {
     Add16,
     Edit16

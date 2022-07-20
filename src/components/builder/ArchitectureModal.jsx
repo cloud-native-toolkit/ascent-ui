@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     Form, ComposedModal, ModalBody, ModalHeader, ModalFooter, FormGroup,
     TextInput, TextArea, Select, SelectItem, FileUploader, Grid, Row
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 
 import AceEditor from "react-ace";
 import "brace/mode/yaml";

@@ -4,7 +4,7 @@ import {
 } from "react-router-dom";
 import {
     TextInput, Column, Grid, Row, Tag, Form, TextArea, Select, SelectItem, Button
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 import {
     PageWizardStep, StatefulPageWizard, PageWizardStepTitle, Tooltip
 } from 'carbon-addons-iot-react';

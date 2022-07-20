@@ -4,7 +4,7 @@ import {
     ModalBody, ModalHeader, TextInput,
     ModalFooter, FormGroup,
     Column, Grid, Row, Tag
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 
 import AceEditor from "react-ace";
 import "brace/mode/yaml";

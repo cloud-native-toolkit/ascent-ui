@@ -14,7 +14,7 @@ import {
     Select,
     SelectItem,
     Grid, Row
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 
 import * as superagent from "superagent";
 

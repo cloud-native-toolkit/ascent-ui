@@ -3,7 +3,7 @@ import {
     Form, FormGroup, ComposedModal, ModalBody, ModalFooter,
     ModalHeader, RadioButtonGroup, RadioButton, TextArea, TextInput, 
     TextInputSkeleton, Select, SelectItem, SelectSkeleton, Grid, Row
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 
 
 class MappingModal extends Component {

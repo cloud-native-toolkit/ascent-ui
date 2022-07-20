@@ -15,7 +15,7 @@ import {
   OverflowMenuItem,
   Tag,
   TableToolbarMenu
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 import {
   Filter32
 } from '@carbon/icons-react';

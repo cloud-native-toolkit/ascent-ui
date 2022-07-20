@@ -23,7 +23,7 @@ import {
   TableBatchActions,
   TableBatchAction,
   TagSkeleton
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 import {
   Link
 } from "react-router-dom";

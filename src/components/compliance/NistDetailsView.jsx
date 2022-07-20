@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbSkeleton, Tag, UnorderedList,
   ListItem, SearchSkeleton, Grid, Row, Column
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 import {
   Launch16
 } from '@carbon/icons-react';

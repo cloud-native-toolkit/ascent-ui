@@ -5,7 +5,7 @@ import {
   HeaderGlobalBar, HeaderPanel, SwitcherItem, SwitcherDivider,
   SkipToContent, SideNav, SideNavItems, SideNavMenu, SideNavMenuItem,
   HeaderContainer, Toggle, ToastNotification, HeaderGlobalAction
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 
 import {
   BrowserRouter, Link,

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
     BreadcrumbSkeleton, SearchSkeleton, Tag,
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 import {
     Launch32
 } from '@carbon/icons-react';

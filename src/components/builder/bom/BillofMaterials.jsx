@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 import {
     Breadcrumb, BreadcrumbItem, Grid, Row, Column
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react'
+} from 'carbon-components-react'
 
 import {
     Link
@@ -26,7 +26,7 @@ import {
     TableRow, TableHeader, TableBody, TableCell, TableToolbarAction,
     OverflowMenu, OverflowMenuItem, ContentSwitcher, Switch, BreadcrumbSkeleton,
     SearchSkeleton, CodeSnippet, Button, Pagination
-} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
+} from 'carbon-components-react';
 
 import YAML from 'yaml';
 
