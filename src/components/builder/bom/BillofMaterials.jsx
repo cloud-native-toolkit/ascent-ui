@@ -193,7 +193,7 @@ class BillofMaterialsView extends Component {
         var url = "/api/automation/" + archid;
         filename = filename + "-automation.zip";
         console.log(url, filename)
-        this.props.addNotification("info", "BUILDING", "Started building your terraform module.");
+        this.props.addNotification("info", "BUILDING", "Building automation...");
         fetch(url)
             .then(response => {
                 if (response && response.status === 200) {
@@ -206,7 +206,7 @@ class BillofMaterialsView extends Component {
                     });
                 }
                 else {
-                    this.props.addNotification("error", response.status + " " + response.statusText, "Error building your terraform module.");
+                    this.props.addNotification("error", response.status + " " + response.statusText, "Error building your automation.");
                 }
             });
     }

@@ -70,7 +70,7 @@ class SolutionDetailsView extends Component {
     }
 
     downloadTerraform() {
-        this.props.addNotification("info", "BUILDING", "Building your terraform module...");
+        this.props.addNotification("info", "BUILDING", "Building automation...");
         fetch(`/api/solutions/${this.state.data?.id}/automation`)
             .then(response => {
                 if (response && response.status === 200) {
@@ -83,7 +83,7 @@ class SolutionDetailsView extends Component {
                     });
                 }
                 else {
-                    this.props.addNotification("error", response.status + " " + response.statusText, "Error building your terraform module.");
+                    this.props.addNotification("error", response.status + " " + response.statusText, "Error building your automation module.");
                 }
             });
     }
