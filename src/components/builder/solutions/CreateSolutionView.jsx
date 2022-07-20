@@ -258,6 +258,18 @@ class CreateSolutionview extends Component {
                         "200-ibm-openshift-gitops-dev",
                         "200-ibm-openshift-gitops-integration",
                         "220-dev-tools"
+                    ],
+                    "fs-cloud": [
+                        "000-ibm-fs-account-setup",
+                        "100-ibm-fs-shared-services",
+                        "110-ibm-fs-edge-vpc",
+                        "120-ibm-fs-management-vpc",
+                        "130-ibm-fs-management-vpc-openshift",
+                        "140-ibm-fs-workload-vpc",
+                        "150-ibm-fs-workload-vpc-openshift",
+                        "160-ibm-fs-openshift-dev-tools",
+                        "165-ibm-fs-openshift-workload",
+                        "170-ibm-fs-openshift-gitops"
                     ]
                 }
 
@@ -324,7 +336,7 @@ class CreateSolutionview extends Component {
                 desc: "A more advanced deployment that employs network isolation to securely route traffic between the different layers, prepare environment for production deployed IBM Software",
                 docs: "https://github.com/cloud-native-toolkit/automation-solutions/blob/main/architectures/README.md#advanced",
                 image: "advanced.png"
-            },
+            }
         ],
         software: [
             {
@@ -615,6 +627,14 @@ class CreateSolutionview extends Component {
             ...architecture,
             enabled: this.solution_wizard.platforms.find(p => p.id === this.state.platform)?.boms[architecture.id]?.length > 0
         }));
+        if (this.props.user?.email?.endsWith('ibm.com') && this.state.platform === 'ibm') architectures.push({
+            id: "fs-cloud",
+            title: "FS Cloud",
+            desc: "Most secure regulated cloud infrastrcuture for managing business application and software",
+            docs: "https://www.ibm.com/cloud/financial-services",
+            image: "finance.svg",
+            enabled: true
+        });
         const storage_providers = this.solution_wizard.storage_providers.map(s => ({
             ...s,
             enabled: s.boms[this.state.platform]?.length > 0
