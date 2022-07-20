@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, TextInput, Grid, Row } from 'carbon-components-react';
+import { Modal, TextInput, Grid, Row } from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 
 class ValidateModal extends Component {
 

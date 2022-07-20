@@ -14,7 +14,7 @@ import {
   OverflowMenu,
   OverflowMenuItem,
   Tag
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 import {
   Link
 } from "react-router-dom";

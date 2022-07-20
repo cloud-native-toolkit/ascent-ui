@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   Button, Column, Grid, Row, Select, SelectItem, TextInput
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 import { Search16 } from '@carbon/icons-react';
 
 import { catalogFilters } from '../../../data/data';

@@ -4,7 +4,7 @@ import {
     AccordionItem,
     FilterableMultiSelect,
     Checkbox
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 import {
     Close32 as Close
 } from '@carbon/icons-react';

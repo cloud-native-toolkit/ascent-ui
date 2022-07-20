@@ -3,7 +3,7 @@ import {
     Tooltip,
     UnorderedList,
     ListItem
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 
 
 export const catalogFilters = {

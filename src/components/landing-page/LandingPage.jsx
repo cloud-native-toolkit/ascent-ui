@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   Breadcrumb, BreadcrumbItem, Button, Grid, Row, Column, UnorderedList, ListItem
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 
 import { InfoSection, InfoCard } from './Info';
 

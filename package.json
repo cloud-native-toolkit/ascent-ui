@@ -3,15 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@carbon/icons-react": "^10.49.0",
     "@craco/craco": "^7.0.0-alpha.3",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "brace": "^0.11.1",
     "carbon-addons-iot-react": "^2.148.0",
-    "carbon-components": "^10.56.0",
-    "carbon-components-react": "^7.56.0",
     "carbon-icons": "^7.0.7",
     "cookie-parser": "^1.4.6",
     "d3": "^7.4.4",
@@ -30,6 +27,7 @@
     "react-scripts": "5.0.0",
     "react-sliding-pane": "^7.1.0",
     "sass": "^1.49.9",
+    "source-map-explorer": "^2.5.2",
     "superagent": "^7.1.3",
     "web-vitals": "^2.1.4",
     "yaml": "^2.0.1"
@@ -37,6 +35,7 @@
   "scripts": {
     "start:dev": "craco start",
     "start": "node server/server.js",
+    "analyze": "source-map-explorer 'build/static/js/*.js' --sort --json",
     "build": "craco build",
     "test": "craco test"
   },

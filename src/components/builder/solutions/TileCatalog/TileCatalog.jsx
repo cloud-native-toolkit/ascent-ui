@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { RadioTile, Tile, SkeletonText, TableToolbarSearch } from 'carbon-components-react';
+import { RadioTile, Tile, SkeletonText, TableToolbarSearch } from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 import { Bee32 } from '@carbon/icons-react';
 import classnames from 'classnames';
 

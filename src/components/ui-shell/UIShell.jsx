@@ -4,8 +4,8 @@ import {
   Tag, Content, Header, HeaderMenuButton, HeaderName, HeaderNavigation,
   HeaderGlobalBar, HeaderPanel, SwitcherItem, SwitcherDivider,
   SkipToContent, SideNav, SideNavItems, SideNavMenu, SideNavMenuItem,
-  HeaderContainer, Toggle, ToastNotification,
-} from 'carbon-components-react';
+  HeaderContainer, Toggle, ToastNotification, HeaderGlobalAction
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 
 import {
   BrowserRouter, Link,
@@ -14,7 +14,6 @@ import {
 import ErrorBoundary from "../ErrorBoundary";
 import AppRoutes from "../AppRoutes";
 
-import { HeaderGlobalAction } from "carbon-components-react/lib/components/UIShell";
 import {
   Launch16, UserAvatar20, Login20, Locked16, Logout20 as Logout,
   TaskComplete20, Copy20

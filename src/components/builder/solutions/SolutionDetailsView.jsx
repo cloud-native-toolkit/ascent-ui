@@ -4,7 +4,7 @@ import {
     DataTableSkeleton, DataTable, TableContainer, Table, TableHead, TableRow,
     TableHeader, TableBody, TableCell, Pagination, Tag, ContentSwitcher, Switch,
     Grid, Row, Column
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 import {
     Link
 } from "react-router-dom";

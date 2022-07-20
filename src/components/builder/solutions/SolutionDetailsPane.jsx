@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
     BreadcrumbSkeleton, SearchSkeleton,
     Button
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 import {
     Link
 } from "react-router-dom";

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
     UnorderedList, ListItem, Tag, Accordion, AccordionItem, Tooltip
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 import {
     Link
 } from "react-router-dom";

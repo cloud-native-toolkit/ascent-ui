@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
     DataTableSkeleton,
     Pagination, Grid, Row, Column
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 
 import ReactGA from 'react-ga4';
 

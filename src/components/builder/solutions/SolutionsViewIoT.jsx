@@ -7,7 +7,7 @@ import {
 import {
     Button, SearchSkeleton, OverflowMenu, OverflowMenuItem,
     Grid, Row, Column
-} from 'carbon-components-react';
+} from 'carbon-addons-iot-react/node_modules/carbon-components-react';
 import {
     StatefulTileGallery
 } from 'carbon-addons-iot-react';
