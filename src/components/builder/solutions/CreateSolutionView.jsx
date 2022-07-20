@@ -629,7 +629,7 @@ class CreateSolutionview extends Component {
         }));
         if (this.props.user?.email?.endsWith('ibm.com') && this.state.platform === 'ibm') architectures.push({
             id: "fs-cloud",
-            title: "FS Cloud",
+            title: "Financial Services",
             desc: "Most secure regulated cloud infrastrcuture for managing business application and software",
             docs: "https://www.ibm.com/cloud/financial-services",
             image: "finance.svg",
