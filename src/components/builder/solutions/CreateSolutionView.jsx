@@ -3,13 +3,13 @@ import {
     Navigate
 } from "react-router-dom";
 import {
-    TextInput, Column, Grid, Row, Tag, Form, TextArea, Select, SelectItem
+    TextInput, Column, Grid, Row, Tag, Form, TextArea, Select, SelectItem, Button
 } from 'carbon-components-react';
 import {
     PageWizardStep, StatefulPageWizard, PageWizardStepTitle, Tooltip
 } from 'carbon-addons-iot-react';
 import {
-    ContainerSoftware32
+    ContainerSoftware32, Close32 as Close
 } from '@carbon/icons-react';
 
 import StatefulTileCatalog from './TileCatalog/StatefulTileCatalog';
@@ -150,7 +150,7 @@ class CreateSolutionview extends Component {
                 }
                 else {
                     this.props.addNotification("success", "OK", `Solution ${res.id} has been created!`)
-                    this.setState({ newSolId: res.id });
+                    this.setState({ navigate: `/solutions/${res.id}` });
                 }
             })
             .catch(console.error);
@@ -267,7 +267,7 @@ class CreateSolutionview extends Component {
                 title: "VMWare",
                 desc: "VMWare vSphere on premise infrastructure powered by Intel with Red Hat OpenShift",
                 docs: "",
-                image: "vmware.webp",
+                image: "vmware.svg",
                 enabled: false,
                 boms: {
                     quickstart: [],
@@ -280,7 +280,7 @@ class CreateSolutionview extends Component {
                 title: "IBM Cloud + Power",
                 desc: "IBM Power 10 AIX environments with Red Hat OpenShift",
                 docs: "",
-                image: "power.webp",
+                image: "power.png",
                 enabled: false,
                 boms: {
                     quickstart: [],
@@ -630,10 +630,18 @@ class CreateSolutionview extends Component {
         });
 
         return (
-            <Grid>
+            <Grid className='create-solution'>
                 <Row>
                     <Column lg={{ span: 12 }}>
-                        <h2>Create Solution</h2>
+                        <h2>
+                            Create Solution
+                            <Button 
+                                kind='secondary'
+                                renderIcon={Close}
+                                onClick={() => this.setState( { navigate: '/solutions/user' })}>
+                                Cancel
+                            </Button>
+                        </h2>
                         <br></br>
                     </Column>
                 </Row>
@@ -641,12 +649,12 @@ class CreateSolutionview extends Component {
                 <Row className="modal-wizard">
                     <Column lg={{ span: 12 }}>
 
-                        {this.state.newSolId ? <Navigate to={`/solutions/${this.state.newSolId}`} /> : <></>}
+                        {this.state.navigate ? <Navigate to={this.state.navigate} /> : <></>}
 
                         <StatefulPageWizard
                             currentStepId="persona"
                             onNext={this.handleNext}
-                            onClose={this.handleSubmit}
+                            onClose={() => this.setState({ navigate: '/solutions/user' })}
                             onSubmit={this.handleSubmit}
                             onClearError={this.handleSubmit}
                             onBack={this.handleBack}
