@@ -11,8 +11,30 @@ div.solutions h2 {
     justify-content: space-between;
 }
 
-div.solutions .bx--tile {
-    min-width: 22rem;
+div.solutions .tile-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+div.solutions .tile-group .bx--tile {
+    width: 20rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+div.solutions .tile-group .bx--tile .tile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .5rem;
+}
+
+div.solutions .tile-group .bx--tile .tile-header .tile-title {
+    max-width: 19rem;
+}
+
+div.solutions .tile-group .bx--tile .tile-desc {
+    margin-bottom: .5rem;
 }
 
 div.solutions .bx--accordion__content {
