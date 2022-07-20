@@ -182,7 +182,7 @@ class SolutionDetailsView extends Component {
                                     <br />
                                     {data?.architectures?.length &&
                                         <div>
-                                            <h3>BOMs</h3>
+                                            <h3>Bill of Materials Architectures</h3>
                                             {!data?.architectures?.length ?
                                                 <DataTableSkeleton
                                                     columnCount={solutionBomsHeader.length}
