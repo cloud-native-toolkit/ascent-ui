@@ -203,7 +203,7 @@ class CreateSolutionview extends Component {
                 enabled: true,
                 boms: {
                     quickstart: [
-                        "200-aws-openshift-gitops",
+                        "200-openshift-gitops",
                         "105-aws-vpc-openshift",
                         "220-dev-tools"
                     ],
@@ -221,10 +221,14 @@ class CreateSolutionview extends Component {
                 boms: {
                     quickstart: [
                         "110-azure-ocp-ipi",
-                        "200-azure-openshift-gitops",
+                        "200-openshift-gitops",
                         "220-dev-tools"
                     ],
-                    standard: [],
+                    standard: [
+                        "101-azure-vnet-base",
+                        "200-openshift-gitops",
+                        "220-dev-tools"
+                    ],
                     advanced: []
                 }
             },
