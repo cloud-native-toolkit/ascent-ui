@@ -5,31 +5,19 @@ import {
 } from "react-router-dom";
 
 import {
-    Button,
-    SearchSkeleton, Grid, Row, Column
+    Button, Tile, OverflowMenu, OverflowMenuItem,
+    Grid, Row, Column
 } from 'carbon-components-react';
 import {
     Add16,
     Edit16
 } from '@carbon/icons-react';
 
-import {
-    Card, CardGroup
-} from 'react-bootstrap';
-import { v4 as uuidv4 } from 'uuid';
-
 import ReactGA from 'react-ga4';
 
 import ValidateModal from '../../ValidateModal';
 import SolutionModal from "./SolutionModal";
 import SolutionDetailsPane from './SolutionDetailsPane';
-
-
-let groupByN = (n, data) => {
-    let result = [];
-    for (let i = 0; i < data.length; i += n) result.push(data.slice(i, i + n));
-    return result;
-};
 
 
 class SolutionsView extends Component {
@@ -159,7 +147,7 @@ class SolutionsView extends Component {
         });
         this.loadSolutions();
     }
-    
+
     render() {
 
         return (
@@ -181,45 +169,35 @@ class SolutionsView extends Component {
                     </Column>
                 </Row>
 
-                {this.state.dataLoaded ? this.state.solutions?.length > 0 ? groupByN(4, this.state.solutions).map(solGroup => (
-                    <CardGroup key={uuidv4()}>
-                        {
-                            solGroup.map((solution) => (
-                                <Card key={solution.id} style={{ marginBottom: '1rem', marginRight: '1rem', borderLeft: '1px solid rgba(0, 0, 0, 0.125)' }}>
-                                    <Card.Body>
-                                        <Card.Title>{solution.name}</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">{solution.id}</Card.Subtitle>
-                                        <Card.Text>{solution.short_desc}</Card.Text>
-                                    </Card.Body>
-                                    <Card.Footer>
-                                        {/* <Card.Link href="#"
-                                            // onClick={() => {
-                                            //     this.setState({ isPaneOpen: true, dataDetails:undefined });
-                                            //     fetch(`/api/solutions/${solution.id}?filter=${encodeURIComponent(JSON.stringify({include: ['architectures']}))}`)
-                                            //     .then((res) => res.json())
-                                            //     .then((sol) => {
-                                            //         this.setState({dataDetails: sol})
-                                            //     })
-                                            //     .catch(() => this.props.addNotification("error", "Error", `Error loading details for solution ${solution.id}`))
-                                            // }}
-                                        > */}
-                                        <Link to={`/solutions/${solution.id}`} >
-                                            Details
-                                        </Link>
-                                        <Card.Link href="#" onClick={() => this.downloadTerraform(solution)} >Download</Card.Link>
-                                        {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <Card.Link style={{ color: 'red', cursor: 'pointer' }} onClick={() => {
+                <div className="tile-group">
+                    {this.state.solutions.map((solution) => (
+                        <Tile
+                            key={solution.id}
+                            value={solution.id}
+                            name={solution.id}>
+                            <div className="tile-header">
+                                <Link to={`/solutions/${solution.id}`} className="tile-title">
+                                    <h5>{solution.name}</h5>
+                                </Link>
+
+                                <OverflowMenu flipped light>
+                                    <OverflowMenuItem
+                                        itemText="Download"
+                                        onClick={() => this.downloadTerraform(solution)} />
+                                    {this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ?
+                                        <OverflowMenuItem hasDivider isDelete itemText="Delete" onClick={() => {
                                             this.setState({
                                                 showValidate: true,
                                                 curSol: solution
                                             });
-                                        }}>Delete</Card.Link> : <></>}
-                                    </Card.Footer>
-                                </Card>
-                            ))
-                        }
-                    </CardGroup>
-                )) : <p>No Solutions to display at the moment{this.state.user?.role === "admin" || (this.state.user?.roles?.includes('editor') && this.props.isUser) ? <>, click <strong>Create</strong> on the top right corner to create a new one.</> : <>.</>}</p> : <SearchSkeleton />}
-
+                                        }} /> : <></>}
+                                </OverflowMenu>
+                            </div>
+                            {/* <h6>{solution.id}</h6> */}
+                            <div className="tile-desc">{solution.short_desc}</div>
+                        </Tile>
+                    ))
+                    }</div>
                 {this.state.showModal &&
                     <SolutionModal
                         show={this.state.showModal}
