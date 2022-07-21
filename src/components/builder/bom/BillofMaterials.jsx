@@ -654,7 +654,7 @@ class BillofMaterialsView extends Component {
                     <Row>
                         <Column lg={{span: 12}}>
                             <BreadcrumbSkeleton />
-                            <SearchSkeleton />``
+                            <SearchSkeleton />
                         </Column>
                     </Row>
                 </Grid>
