@@ -76,6 +76,11 @@ spec:
                 configMapKeyRef:
                   name: ascent
                   key: route
+            - name: REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: ascent
+                  key: region
             - name: API_HOST
               valueFrom:
                 configMapKeyRef:
