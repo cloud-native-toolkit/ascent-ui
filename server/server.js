@@ -181,7 +181,8 @@ const https = require('https');
           family_name: req.user.family_name,
           roles: roles,
           role: roles[roles.length - 1],
-          sessionExpire: req.session.cookie.expires
+          sessionExpire: req.session.cookie.expires,
+          region: process.env.REGION ?? 'unknown'
         });
       }
     } else {

@@ -190,7 +190,16 @@ class UIShell extends Component {
                   <Tag>{(this.state.user?.role) || "role"}</Tag>
                 </li>
                 <li className="bx--switcher__item"><strong>{(this.state.user?.email) || "example@ibm.com"}</strong></li>
-                {this.state.user?.role === 'admin' ? <div><SwitcherDivider /><SwitcherItem aria-label="API token" onClick={this.fetchToken.bind(this)}><span>API token</span>{this.state.copyTokenIcon}</SwitcherItem></div> : <></>}
+                {this.state.user?.role === 'admin' ? <li className="bx--switcher__item">
+                  <strong>region:</strong>
+                  <Tag style={{ marginLeft: '.5rem' }}>{this.state.user?.region}</Tag>
+                </li> : <></>}
+                {this.state.user?.role === 'admin' ? <div>
+                  <SwitcherDivider />
+                  <SwitcherItem aria-label="API token" onClick={this.fetchToken.bind(this)}>
+                    <span>API token</span>{this.state.copyTokenIcon}
+                  </SwitcherItem>
+                </div> : <></>}
                 <SwitcherDivider />
                 <li className="bx--switcher__item">
                   <Toggle labelText="Compliance features" size="md" id='compliance-toggle' toggled={this.state.content.complianceFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, complianceFeatures: checked })} />
@@ -223,8 +232,8 @@ class UIShell extends Component {
                     </SideNavMenuItem>
 
                     {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
-                        href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
-                        target="_blank" rel="noopener noreferrer">
+                      href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
+                      target="_blank" rel="noopener noreferrer">
                       IBM Software Portfolio
                       <Launch16 />
                     </SideNavMenuItem> : <></>}
@@ -233,17 +242,17 @@ class UIShell extends Component {
 
                     {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Automation Catalog">
 
-                    <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
-                                     target="_blank" rel="noopener noreferrer">
-                      Automation Modules
-                      <Launch16 />
-                    </SideNavMenuItem>
+                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
+                        target="_blank" rel="noopener noreferrer">
+                        Automation Modules
+                        <Launch16 />
+                      </SideNavMenuItem>
 
-                    <SideNavMenuItem href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=seansund&labels=new_module&template=new-module.md&title=Request+new+module%3A+%7Bname%7D"
-                                     target="_blank" rel="noopener noreferrer">
-                      Create a Module
-                      <Launch16 />
-                    </SideNavMenuItem>
+                      <SideNavMenuItem href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=seansund&labels=new_module&template=new-module.md&title=Request+new+module%3A+%7Bname%7D"
+                        target="_blank" rel="noopener noreferrer">
+                        Create a Module
+                        <Launch16 />
+                      </SideNavMenuItem>
 
                     </SideNavMenu> : <></>}
 
@@ -267,7 +276,7 @@ class UIShell extends Component {
                           onClick={() => { this.setState({ activeItem: '/solutions' }) }}>Public Solutions</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/solutions'>
-                           Solutions
+                          Solutions
                           <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
@@ -301,14 +310,14 @@ class UIShell extends Component {
                       }
 
                       {this.state.user ?
-                          <SideNavMenuItem element={Link} to='/boms/software'
-                                           isActive={this.state.activeItem === '/boms/software'}
-                                           onClick={() => { this.setState({ activeItem: '/boms/software' }) }}>Software</SideNavMenuItem>
-                          :
-                          <SideNavMenuItem href='/boms/software'>
-                            Software
-                            <Locked16 style={{ marginLeft: "auto" }} />
-                          </SideNavMenuItem>
+                        <SideNavMenuItem element={Link} to='/boms/software'
+                          isActive={this.state.activeItem === '/boms/software'}
+                          onClick={() => { this.setState({ activeItem: '/boms/software' }) }}>Software</SideNavMenuItem>
+                        :
+                        <SideNavMenuItem href='/boms/software'>
+                          Software
+                          <Locked16 style={{ marginLeft: "auto" }} />
+                        </SideNavMenuItem>
                       }
 
 
@@ -347,7 +356,7 @@ class UIShell extends Component {
                         </SideNavMenuItem>
                       }
 
-                    </SideNavMenu> : <></> }
+                    </SideNavMenu> : <></>}
 
                     <SideNavMenu title="Documentation"
                       isSideNavExpanded={isSideNavExpanded}
@@ -382,13 +391,13 @@ class UIShell extends Component {
 
 
                       <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev/#/how-to/gitops"
-                                       target="_blank" rel="noopener noreferrer">
+                        target="_blank" rel="noopener noreferrer">
                         Create a GitOps Module
                         <Launch16 />
                       </SideNavMenuItem>
 
                       <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev/#/how-to/terraform"
-                                       target="_blank" rel="noopener noreferrer">
+                        target="_blank" rel="noopener noreferrer">
                         Create a Terraform Module
                         <Launch16 />
                       </SideNavMenuItem>
