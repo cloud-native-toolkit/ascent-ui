@@ -154,17 +154,23 @@ class UIShell extends Component {
       <BrowserRouter>
         <HeaderContainer
           render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-            <Header aria-label="IBM Ecosystem Labs">
+
+
+            <Header aria-label="IBM">
+
               <SkipToContent />
+
               <HeaderMenuButton
                 aria-label="Open menu"
                 onClick={onClickSideNavExpand}
                 isActive={isSideNavExpanded}
               />
-              <HeaderName prefix='Software Everywhere - '>
-                ASCENT
+
+              <HeaderName prefix= {this.state.user?.role === 'fs-controls' ? 'IBM Cloud' : 'TechZone' }>
+                {this.state.user?.role === 'fs-controls' ? 'Control Catalog' : 'Automation Builder'}
               </HeaderName>
-              <HeaderNavigation aria-label="Ascent header navigation">
+
+              <HeaderNavigation aria-label="navigation">
               </HeaderNavigation>
               <HeaderGlobalBar>
                 {this.state.user ?
