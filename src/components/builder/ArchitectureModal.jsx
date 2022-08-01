@@ -16,6 +16,9 @@ import {
     updateArchitecture
 } from '../../services/architectures';
 
+import SlidingPane from 'react-sliding-pane'
+
+
 class ArchitectureModal extends Component {
     constructor(props) {
         super(props);
@@ -183,7 +186,7 @@ class ArchitectureModal extends Component {
                             <button className="bx--modal-close" type="button" title="Close" aria-label="Close"></button>
                         </ModalHeader>
                         <ModalBody>
-
+                
                             <Form name="architectureform" onSubmit={this.handleSubmit.bind(this)}>
                                 {!this.props.isImport && <TextInput
                                     data-modal-primary-focus
@@ -322,7 +325,6 @@ class ArchitectureModal extends Component {
                                     />
                                 </FormGroup>}
                             </Form>
-                            
                         </ModalBody>
                         <ModalFooter primaryButtonText={this.props.isUpdate ? "Update" : this.props.isDuplicate ? "Duplicate" : "Add"} onRequestSubmit={this.handleSubmit} secondaryButtonText="Cancel" />
                     </ComposedModal>
