@@ -7,15 +7,8 @@ USER default
 WORKDIR /opt/app-root/src
 
 COPY --chown=default:root . .
-RUN npm ci && \
-    npm cache clean --force && \
-    npm run build
-
-FROM registry.access.redhat.com/ubi8/nodejs-16-minimal:1-59
-
-USER 1001
-
-WORKDIR /opt/app-root/src
+RUN npm ci
+RUN npm run build
 
 COPY --from=builder --chown=1001:0 /opt/app-root/src/build ./build
 COPY --chown=1001:0 package.json package-lock.json ./
