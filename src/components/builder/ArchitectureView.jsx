@@ -211,6 +211,8 @@ class ArchitectureView extends Component {
                 if (res && res.body && res.body.error) {
                     this.props.toast("error", res?.status === 401 ? "Unauthorized" : "Error", res.body.error.message);
                 } else {
+                    // TODO: inspect element when you submit the form: "this.props.toast is not a function" --
+                        // form isn't submitting and Add/Cancel buttons don't work, this is prob why
                     this.props.toast("success", "Success", `Bill of Materials ${res.arch_id} successfully added!`);
                     this.uploadDiagrams(res.arch_id);
                 }
@@ -476,6 +478,7 @@ class ArchitectureView extends Component {
                         {(this.state.user?.roles?.includes("editor") && this.props.isUser) || this.state.user?.roles?.includes("admin") ? 
                             <Button onClick={() => this.setState({ showForm: true })} size='small'>Create +</Button> : <></>}
                         {(this.state.user?.roles?.includes("editor") && this.props.isUser) || this.state.user?.roles?.includes("admin") ? 
+                            // TODO: fix isImport being set, as of now it isn't being set so the Create and Import forms are unintentionally the same
                             <Button onClick={() => this.setState({ showForm: true , isImport: true})} style={{marginLeft: '1.5rem', marginRight: '1.5rem'}} size='small'>Import +</Button> : <></>}
                     </div>
                 </h2>
@@ -635,7 +638,7 @@ class ArchitectureView extends Component {
                                     placeholder="alias: example"
                                     value={this.state.fields.yaml}
                                     onChange={this.handleChange.bind(this, "yaml")}
-                                    // TODO: Noe can you help, inspect element warning
+                                    // TODO: Noe can you help, inspect element warning shows that editorInput isn't valid
                                     ref="editorInput"
                                     // fontSize={20}
                                     showPrintMargin
