@@ -17,13 +17,15 @@ import {
     OverflowMenu,
     OverflowMenuItem,
     SearchSkeleton,
-    Button,
+    Button, ButtonSet,
     Grid, Row, Column,
     Form, FormGroup,
-    TextInput, TextArea, Select, SelectItem, FileUploader
+    TextInput, TextArea, Select, SelectItem, FileUploader,
+    ModalFooter
 } from 'carbon-components-react';
 
 import YAML from 'yaml';
+
 
 import { spacing07 } from '@carbon/layout';
 import { green40 } from '@carbon/colors';
@@ -473,7 +475,8 @@ class ArchitectureView extends Component {
                     <div style={{marginLeft: "auto", "display": "flex"}}>
                         {(this.state.user?.roles?.includes("editor") && this.props.isUser) || this.state.user?.roles?.includes("admin") ? 
                             <Button onClick={() => this.setState({ showForm: true })} size='small'>Create +</Button> : <></>}
-                        {this.state.user?.role === "admin" ? <Button onClick={() => this.setState({ showForm: true })} style={{marginLeft: '1.5rem', marginRight: '1.5rem'}} size='small'>Import +</Button> : <></>}
+                        {(this.state.user?.roles?.includes("editor") && this.props.isUser) || this.state.user?.roles?.includes("admin") ? 
+                            <Button onClick={() => this.setState({ showForm: true , isImport: true})} style={{marginLeft: '1.5rem', marginRight: '1.5rem'}} size='small'>Import +</Button> : <></>}
                     </div>
                 </h2>
 
@@ -495,7 +498,7 @@ class ArchitectureView extends Component {
                 </Column>
                 </Row>
 
-                <div className="sliding-pane">
+                {/* <div className="sliding-pane"> */}
                 <SlidingPane
                     // closeIcon={<Close32 />}
                     title="Add Bill of Materials"
@@ -503,11 +506,15 @@ class ArchitectureView extends Component {
                     width="600px"
                     onRequestClose={() => this.setState({ showForm: false })}
                     onRequestSubmit={this.handleSubmit}
+                    open={this.props.show}
+                    onClose={this.props.handleClose}
                     data={this.state.archRecord}
                     handleReload={this.loadArchitectures}
                 >
-                        <Form name="architectureform" onSubmit={this.handleSubmit.bind(this)}
-                        style={{position: 'relative'}}>
+                        <Form name="architectureform" 
+                        // onSubmit={this.handleSubmit.bind(this)}
+                        style={{position: 'relative'}}
+                        >
                             {!this.props.isImport && <TextInput
                                 data-modal-primary-focus
                                 id="name"
@@ -547,7 +554,7 @@ class ArchitectureView extends Component {
                             />}
                             {this.props.isImport && <FileUploader 
                                 accept={['.yaml']}
-                                labelText={"Drag and drop a .yaml file, or click to upload"}
+                                // labelText={"Drag and drop a .yaml file, or click to upload"}
                                 labelTitle={"BOM Yaml"}
                                 buttonLabel='Add file(s)'
                                 multiple
@@ -579,7 +586,7 @@ class ArchitectureView extends Component {
                             </Select>}
                             {!this.props.isDuplicate && !this.props.isImport && <FileUploader 
                                 accept={['.drawio']}
-                                labelText={"Drag and drop a .drawio file, or click to upload"}
+                                // labelText={"Drag and drop a .drawio file, or click to upload"}
                                 labelTitle={"Diagram .drawio"}
                                 buttonLabel='Add file'
                                 labelDescription={"Max file size is 2MiB. Only .drawio files are supported."}
@@ -588,7 +595,7 @@ class ArchitectureView extends Component {
                                 onDelete={() => this.setState({diagramDrawio: undefined})} />}
                             {!this.props.isDuplicate && !this.props.isImport && <FileUploader 
                                 accept={['.png']}
-                                labelText={"Drag and drop a .png file, or click to upload"}
+                                // labelText={"Drag and drop a .png file, or click to upload"}
                                 labelTitle={"Diagram .png"}
                                 buttonLabel='Add file'
                                 labelDescription={"Max file size is 2MiB. Only .png files are supported."}
@@ -616,7 +623,7 @@ class ArchitectureView extends Component {
                                 <SelectItem value={false} text="False" />
                                 <SelectItem value={true} text="True" />
                             </Select>}
-                            {!this.props.isImport && !this.props.isDuplicate && <FormGroup legendText="YAML Configuration">
+                            {!this.props.isImport && !this.props.isDuplicate && <FormGroup legendText="YAML Configuration" >
                                 <AceEditor
                                     focus
                                     style={{ width: "100%" }}
@@ -628,7 +635,7 @@ class ArchitectureView extends Component {
                                     placeholder="alias: example"
                                     value={this.state.fields.yaml}
                                     onChange={this.handleChange.bind(this, "yaml")}
-                                    labelText="YAML Configuration"
+                                    // TODO: Noe can you help, inspect element warning
                                     ref="editorInput"
                                     // fontSize={20}
                                     showPrintMargin
@@ -644,9 +651,35 @@ class ArchitectureView extends Component {
                                     editorProps={{ $blockScrolling: true }}
                                 />
                             </FormGroup>}
+                            {/* <ButtonSet>
+                                <Button
+                                size='xl'
+                                kind='secondary'
+                                style={{ marginBottom: '3rem' }}
+                                onClick={() => { this.props.handleClose() }}>
+                                Cancel
+                                </Button>
+                                <Button
+                                size='xl'
+                                kind="primary"
+                                type="submit"
+                                style={{ marginBottom: '3rem' }}
+                                onClick={() => { this.props.handleSubmit() }}
+                                >
+                                    Create
+                                </Button>
+                            </ButtonSet> */}
+                            
                         </Form>
+                        <ModalFooter 
+                            primaryButtonText={this.props.isUpdate ? "Update" : this.props.isDuplicate ? "Duplicate" : "Add"} 
+                            onRequestSubmit={this.handleSubmit} 
+                            secondaryButtonText="Cancel" 
+                            style={{ marginBottom: '3rem' }}
+                        />
+                    
                 </SlidingPane>
-                </div>
+                {/* </div> */}
 
 
             </Grid>
