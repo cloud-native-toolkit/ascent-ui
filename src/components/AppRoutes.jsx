@@ -11,6 +11,7 @@ import ArchitectureView from './builder/ArchitectureView';
 import BillofMaterialsView from './builder/bom/BillofMaterials';
 import ServiceDetailsView from './builder/services/ServiceDetailsView';
 import LandingPage from './landing-page/LandingPage';
+import FSLandingPage from './fs-landing-page/FSLandingPage';
 import ControlsView from './compliance/ControlsView';
 import ControlDetailsView from './compliance/ControlDetailsView';
 import MappingView from './compliance/mapping/MappingView';
@@ -70,8 +71,12 @@ function NistDetails(props) {
 class AppRoutes extends React.Component {
     render() {
         return (
+
             <Routes>
-                <Route path='/' element={<LandingPage user={this.props.user} addNotification={this.props.addNotification} />} />
+
+                <Route path='/' element={<LandingPage user={this.props.user}
+                                                        addNotification={this.props.addNotification}/>}/>
+
                 <Route path='/solutions' exact element={<SolutionsView user={this.props.user} addNotification={this.props.addNotification} />} />
                 <Route path='/solutions/user' exact element={<SolutionsView user={this.props.user} addNotification={this.props.addNotification} isUser />} />
                 <Route path='/solutions/new' exact element={<CreateSolutionview user={this.props.user} addNotification={this.props.addNotification} />} />

@@ -62,10 +62,10 @@ class LandingPage extends Component {
                 </BreadcrumbItem>
               </Breadcrumb>
               <h1 className="landing-page__heading">
-                Software Everywhere
+               TechZone Automation
               </h1>
               <h2 className="landing-page__subheading">
-                Create composite multi-cloud solutions rapidly with ASCENT
+                Create composite multi-cloud solutions rapidly with automation
               </h2>
 
             </Column>
@@ -78,11 +78,11 @@ class LandingPage extends Component {
                   <Column lg={{ span: 6 }} sm={{ span: 12 }}>
 
                     <h2 className="landing-page__subheading">
-                      What does Ascent do ?
+                      What can you do with TechZone automation ?
                     </h2>
                     <p className="landing-page__p">
-                      Ascent provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
-                      rapid composite solution creation
+                      TechZone automation  provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
+                      rapid composite solution creation using common automation techniques
                     </p>
                     <UnorderedList nested>
                       <ListItem>
@@ -98,11 +98,11 @@ class LandingPage extends Component {
                     </UnorderedList>
 
                     <h2 className="landing-page__subheading">
-                      Why do we need Ascent ?
+                      Why do we need automation ?
                     </h2>
                     <p className="landing-page__p">
                       To help speed up the delivery and adoption of IBM Software on multiple cloud environment including AWS, Azure and IBM Cloud.
-                      Support the co creation of composite solutions with Clients and IBM Partners. Provide consistent automation across clouds infrastructures
+                      Support the co-creation of composite solutions with Clients and IBM Partners. Provide consistent automation across clouds infrastructures
                       and software architectures.
                     </p>
 
@@ -111,13 +111,10 @@ class LandingPage extends Component {
 
                   </Column>
                   <Column lg={{ span: 6 }} sm={{ span: 12 }}>
-                    <h2 className="landing-page__subheading">
-                      Architecture and Security Controls Enterprise Tool (ASCENT)
-                    </h2>
 
                     <img
                       className="landing-page__illo"
-                      src={`${process.env.PUBLIC_URL}/ascent.png`}
+                      src={`${process.env.PUBLIC_URL}/ascent.jpeg`}
                       alt="Tool illustration"
                     />
                   </Column>

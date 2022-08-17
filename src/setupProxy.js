@@ -11,6 +11,12 @@ module.exports = function(app) {
       },
     })
   );
+
+  // Setup Proxy for Local Development
+  // fs-viewer for controls view
+  // editor for others
+  // admin
+
   app.get(
     '/userDetails', (req, res) => {
       res.send({
@@ -19,7 +25,7 @@ module.exports = function(app) {
           given_name: "Noé",
           family_name: "Samaille",
           roles: ["fs-viewer", "ibm-cloud", "editor", "admin"],
-          role: "admin",
+          role: "fs-viewer",
           region: "eu-de",
           sessionExpire: new Date(Date.now()+3600*1000)
       });

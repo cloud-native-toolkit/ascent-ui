@@ -166,8 +166,8 @@ class UIShell extends Component {
                 isActive={isSideNavExpanded}
               />
 
-              <HeaderName prefix= {this.state.user?.role === 'fs-controls' ? 'IBM Cloud' : 'TechZone' }>
-                {this.state.user?.role === 'fs-controls' ? 'Control Catalog' : 'Automation Builder'}
+              <HeaderName prefix= {this.state.user?.role === 'fs-viewer' ? 'IBM Cloud' : 'IBM Technology Zone' }>
+                {this.state.user?.role === 'fs-viewer' ? 'Controls Catalog' : 'Automation'}
               </HeaderName>
 
               <HeaderNavigation aria-label="navigation">
@@ -231,11 +231,30 @@ class UIShell extends Component {
                 <SideNav aria-label="Side navigation" expanded={isSideNavExpanded} >
 
                   <SideNavItems>
-                    <SideNavMenuItem element={Link} to='/'
-                      isActive={this.state.activeItem === '/'}
-                      onClick={() => { this.setState({ activeItem: '/' }) }}>
-                      Overview
-                    </SideNavMenuItem>
+
+                    {this.state.user?.role === 'fs-viewer' ?
+
+                        <SideNavMenuItem element={Link} to='/'
+                                         isActive={this.state.activeItem === '/'}
+                                         onClick={() => {
+                                           this.setState({activeItem: '/'})
+                                         }}>
+                          Controls Catalog
+                        </SideNavMenuItem>
+
+
+                        :
+
+                        <SideNavMenuItem element={Link} to='/'
+                                         isActive={this.state.activeItem === '/'}
+                                         onClick={() => {
+                                           this.setState({activeItem: '/'})
+                                         }}>
+                          Overview
+                        </SideNavMenuItem>
+
+                    }
+
 
                     {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
                       href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"

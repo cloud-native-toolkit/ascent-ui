@@ -17,14 +17,14 @@ class OverView extends Component {
                 <Row className="compliance-page__row">
                     <Column lg={{span: 12}}>
                         <h2 style={{ margin: "30px 0" }} >
-                            Ascent - Solution Builder & Security Controls
+                           TechZone Automation & Security Controls
                         </h2>
 
                         <p style={{ lineHeight: "20px" }}>
-                            ASCENT's goal is to accelerate adoption of IBM Software on Hybrid-Cloud. Ascent drastically reduces the time and effort it takes
+                            The goal of this tool is to accelerate adoption of IBM Software on Hybrid-Cloud. TechZone Automation drastically reduces the time and effort it takes
                             to deploy solutions leveraging IBM Software on any Cloud, by providing a modular automation framework allowing users to build their
                             custom solutions and automate their deployment using our solution builder features.
-                            Ascent also simplifies the complexity of the data attributes that surround a rereference architecture for enterprise workloads with regulatory compliance.
+                            It simplifies the complexity of the data attributes that surround a reference architecture for enterprise workloads with regulatory compliance.
                             When we review the regulatory controls the number of cloud services and the possible reference
                             architectures these can be assembled in, it has become clear a tool will help manage this wide range of attributes.
                         </p>
