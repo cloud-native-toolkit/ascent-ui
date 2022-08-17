@@ -154,17 +154,23 @@ class UIShell extends Component {
       <BrowserRouter>
         <HeaderContainer
           render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-            <Header aria-label="IBM Ecosystem Labs">
+
+
+            <Header aria-label="IBM">
+
               <SkipToContent />
+
               <HeaderMenuButton
                 aria-label="Open menu"
                 onClick={onClickSideNavExpand}
                 isActive={isSideNavExpanded}
               />
-              <HeaderName prefix='Software Everywhere - '>
-                ASCENT
+
+              <HeaderName prefix= {this.state.user?.role === 'fs-viewer' ? 'IBM Cloud' : 'IBM Technology Zone' }>
+                {this.state.user?.role === 'fs-viewer' ? 'Controls Catalog' : 'Automation'}
               </HeaderName>
-              <HeaderNavigation aria-label="Ascent header navigation">
+
+              <HeaderNavigation aria-label="navigation">
               </HeaderNavigation>
               <HeaderGlobalBar>
                 {this.state.user ?
@@ -225,11 +231,30 @@ class UIShell extends Component {
                 <SideNav aria-label="Side navigation" expanded={isSideNavExpanded} >
 
                   <SideNavItems>
-                    <SideNavMenuItem element={Link} to='/'
-                      isActive={this.state.activeItem === '/'}
-                      onClick={() => { this.setState({ activeItem: '/' }) }}>
-                      Overview
-                    </SideNavMenuItem>
+
+                    {this.state.user?.role === 'fs-viewer' ?
+
+                        <SideNavMenuItem element={Link} to='/'
+                                         isActive={this.state.activeItem === '/'}
+                                         onClick={() => {
+                                           this.setState({activeItem: '/'})
+                                         }}>
+                          Controls Catalog
+                        </SideNavMenuItem>
+
+
+                        :
+
+                        <SideNavMenuItem element={Link} to='/'
+                                         isActive={this.state.activeItem === '/'}
+                                         onClick={() => {
+                                           this.setState({activeItem: '/'})
+                                         }}>
+                          Overview
+                        </SideNavMenuItem>
+
+                    }
+
 
                     {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
                       href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
