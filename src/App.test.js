@@ -16,6 +16,6 @@ test('renders header', () => {
     }))
   });
   render(<App />);
-  const linkElement = screen.getByText(/Architecture and Security Controls Enterprise Tool/i);
+  const linkElement = screen.getByText(/Create composite multi-cloud solutions rapidly with automation/i);
   expect(linkElement).toBeInTheDocument();
 });
