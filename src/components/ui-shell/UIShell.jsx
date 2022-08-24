@@ -167,7 +167,7 @@ class UIShell extends Component {
               />
 
               <HeaderName prefix= {this.state.user?.role === 'fs-viewer' ? 'IBM Cloud' : 'IBM Technology Zone' }>
-                {this.state.user?.role === 'fs-viewer' ? 'Controls Catalog' : 'Automation'}
+                {this.state.user?.role === 'fs-viewer' ? 'Controls Catalog' : 'Accelerator Toolkit'}
               </HeaderName>
 
               <HeaderNavigation aria-label="navigation">

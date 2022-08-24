@@ -62,10 +62,10 @@ class LandingPage extends Component {
                 </BreadcrumbItem>
               </Breadcrumb>
               <h1 className="landing-page__heading">
-               TechZone Automation
+               TechZone Accelerator Toolkit
               </h1>
               <h2 className="landing-page__subheading">
-                Create composite multi-cloud solutions rapidly with automation
+                Create composite multi-cloud solutions rapidly with automation that deploys IBM Software
               </h2>
 
             </Column>
@@ -78,10 +78,10 @@ class LandingPage extends Component {
                   <Column lg={{ span: 6 }} sm={{ span: 12 }}>
 
                     <h2 className="landing-page__subheading">
-                      What can you do with TechZone automation ?
+                      What can you do with Accelerator Toolkit automation ?
                     </h2>
                     <p className="landing-page__p">
-                      TechZone automation  provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
+                      The  automation  provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
                       rapid composite solution creation using common automation techniques
                     </p>
                     <UnorderedList nested>
@@ -101,12 +101,12 @@ class LandingPage extends Component {
                       Why do we need automation ?
                     </h2>
                     <p className="landing-page__p">
-                      To help speed up the delivery and adoption of IBM Software on multiple cloud environment including AWS, Azure and IBM Cloud.
+                      To help speed up the delivery and adoption of IBM Technology on multiple cloud environment including AWS, Azure and IBM Cloud.
                       Support the co-creation of composite solutions with Clients and IBM Partners. Provide consistent automation across clouds infrastructures
                       and software architectures.
                     </p>
 
-                    {this.state.user ? <Link to="/docs" ><Button>Learn more</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
+                    {this.state.user ? <Link to="/solutions/user" ><Button>Create a Solution</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
 
 
                   </Column>
