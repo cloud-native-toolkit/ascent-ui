@@ -25,7 +25,7 @@ module.exports = function(app) {
           given_name: "Noé",
           family_name: "Samaille",
           roles: ["fs-viewer", "ibm-cloud", "editor", "admin"],
-          role: "fs-viewer",
+          role: "admin",
           region: "eu-de",
           sessionExpire: new Date(Date.now()+3600*1000)
       });
