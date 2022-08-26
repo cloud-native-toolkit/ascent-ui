@@ -10,7 +10,7 @@ import CreateSolutionview from './builder/solutions/CreateSolutionView';
 import ArchitectureView from './builder/ArchitectureView';
 import BillofMaterialsView from './builder/bom/BillofMaterials';
 import ServiceDetailsView from './builder/services/ServiceDetailsView';
-import LandingPage from './landing-page/LandingPage';
+import BuilderLandingPage from './landing-page/LandingPage';
 import FSLandingPage from './fs-landing-page/FSLandingPage';
 import ControlsView from './compliance/ControlsView';
 import ControlDetailsView from './compliance/ControlDetailsView';
@@ -19,6 +19,7 @@ import NistView from './compliance/NistView';
 import NistDetailsView from './compliance/NistDetailsView';
 import OverView from './OverView';
 import NotFound from './NotFound';
+import ApplicationMode from '../utils/application-mode';
 
 
 function SolutionDetails(props) {
@@ -66,6 +67,14 @@ function NistDetails(props) {
     return (
         <></>
     );
+}
+
+function LandingPage(props) {
+    if (ApplicationMode.isFsControlsMode()) {
+        return (<FSLandingPage {...props} />)
+    } else {
+        return (<LandingPage {...props} />)
+    }
 }
 
 class AppRoutes extends React.Component {

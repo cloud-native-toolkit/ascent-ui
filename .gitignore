@@ -304,3 +304,5 @@ dist
 *.sass.map
 *.scss.map
 /.idea/
+.env
+*.iml

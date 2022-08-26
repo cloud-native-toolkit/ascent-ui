@@ -7,6 +7,7 @@ var cookieParser = require("cookie-parser");
 const session = require('express-session')
 const passport = require('passport');
 const https = require('https');
+const serverConfig = require('./server-config');
 
 (async function () {
 
@@ -48,12 +49,12 @@ const https = require('https');
       console.log(error);
       oauthServer = {};
     }
-    conf.authConfig = Object.assign(oauthServer, JSON.parse(process.env.OCP_OAUTH_CONFIG));
+    conf.authConfig = Object.assign(oauthServer, serverConfig.loadOcpOAuthConfig());
     conf.authConfig.secret = conf.authConfig.clientSecret;
   } else {
     // Auth provider defaults to App ID
     AuthStrategy = require("ibmcloud-appid").WebAppStrategy;
-    conf.authConfig = JSON.parse(process.env.APPID_CONFIG);
+    conf.authConfig = serverConfig.loadAppIdConfig();
   }
 
   const app = express();

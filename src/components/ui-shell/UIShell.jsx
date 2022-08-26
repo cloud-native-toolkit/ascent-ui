@@ -21,6 +21,7 @@ import {
 } from '@carbon/icons-react';
 
 import b64 from "../../utils/b64";
+import ApplicationMode from "../../utils/application-mode";
 
 
 const ibmCloudDefaultConfig = {
@@ -265,7 +266,7 @@ class UIShell extends Component {
 
 
 
-                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Automation Catalog">
+                    {ApplicationMode.isBuilderMode() ? <SideNavMenu defaultExpanded title="Automation Catalog">
 
                       <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
                         target="_blank" rel="noopener noreferrer">
@@ -282,7 +283,7 @@ class UIShell extends Component {
                     </SideNavMenu> : <></>}
 
 
-                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Solutions">
+                    {ApplicationMode.isBuilderMode() ? <SideNavMenu defaultExpanded title="Solutions">
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/solutions/user'
@@ -308,7 +309,7 @@ class UIShell extends Component {
 
                     </SideNavMenu> : <></>}
 
-                    {this.state.content.builderFeatures ? <SideNavMenu title="Reference Architectures" defaultExpanded
+                    {ApplicationMode.isBuilderMode() ? <SideNavMenu title="Reference Architectures" defaultExpanded
                       isActive={['/solutions', '/boms', '/services'].includes(this.state.activeItem)}>
 
                       {this.state.user ?
@@ -348,7 +349,7 @@ class UIShell extends Component {
 
                     </SideNavMenu> : <></>}
 
-                    {this.state.content.complianceFeatures ? <SideNavMenu title="Compliance" defaultExpanded
+                     <SideNavMenu title="Compliance" defaultExpanded
                       isActive={['/onboarding', '/controls', '/mapping', '/nists'].includes(this.state.activeItem)} >
 
                       {this.state.user?.roles?.includes("fs-viewer") ?
@@ -381,7 +382,7 @@ class UIShell extends Component {
                         </SideNavMenuItem>
                       }
 
-                    </SideNavMenu> : <></>}
+                    </SideNavMenu>
 
                     <SideNavMenu title="Documentation"
                       isSideNavExpanded={isSideNavExpanded}

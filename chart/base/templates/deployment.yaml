@@ -90,6 +90,8 @@ spec:
               value: ""
             - name: LOG_LEVEL
               value: {{ .Values.logLevel | quote }}
+            - name: REACT_APP_MODE
+              value: {{ .Values.mode | default "builder" }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
