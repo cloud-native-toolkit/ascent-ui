@@ -20,7 +20,7 @@
     "start": "dotenv node server/server.js",
     "prebuild": "rimraf build",
     "build": "cross-env NODE_ENV=production webpack --mode production --progress --config webpack.config.production.js",
-    "test": "craco --max_old_space_size=4096 test",
+    "test": "craco --max_old_space_size=4096 test"
   },
   "eslintConfig": {
     "extends": [

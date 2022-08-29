@@ -113,7 +113,7 @@ function LandingPage(props) {
     if (ApplicationMode.isFsControlsMode()) {
         return (<FSLandingPage {...props} />)
     } else {
-        return (<LandingPage {...props} />)
+        return (<BuildLandingPage {...props} />)
     }
 }
 
