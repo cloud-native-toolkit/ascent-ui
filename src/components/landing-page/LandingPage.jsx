@@ -18,7 +18,7 @@ import {
 } from "react-router-dom";
 
 import ReactGA from 'react-ga4';
-import { env } from '../../env'
+import ascentImg from '../../images/ascent.jpeg'
 
 class LandingPage extends Component {
 
@@ -115,7 +115,7 @@ class LandingPage extends Component {
 
                     <img
                       className="landing-page__illo"
-                      src={`${env.PUBLIC_URL}/ascent.jpeg`}
+                      src={ascentImg}
                       alt="Tool illustration"
                     />
                   </Column>

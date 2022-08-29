@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 
 import ReactGA from 'react-ga4';
 
-import { env } from '../../env'
+import controlsFramework from '../../images/controls-framework.svg'
 
 class FSLandingPage extends Component {
 
@@ -68,7 +68,7 @@ class FSLandingPage extends Component {
 
                             <img
                                 className="landing-page__illo"
-                                src={`${env.PUBLIC_URL}/images/controls-framework.svg`}
+                                src={controlsFramework}
                                 alt="Tool illustration"
                             />
                         </Column>

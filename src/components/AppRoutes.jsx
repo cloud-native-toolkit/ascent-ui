@@ -3,23 +3,63 @@ import React from 'react';
 import {
     Route, Routes, useParams
 } from 'react-router-dom';
+import importedComponent from 'react-imported-component';
 
-import SolutionsView from './builder/solutions/SolutionsView';
-import SolutionDetailsView from './builder/solutions/SolutionDetailsView';
-import CreateSolutionview from './builder/solutions/CreateSolutionView';
-import ArchitectureView from './builder/ArchitectureView';
-import BillofMaterialsView from './builder/bom/BillofMaterials';
-import ServiceDetailsView from './builder/services/ServiceDetailsView';
-import BuilderLandingPage from './landing-page/LandingPage';
+import Loading from './Loading';
+
+import BuildLandingPage from './landing-page/LandingPage';
 import FSLandingPage from './fs-landing-page/FSLandingPage';
-import ControlsView from './compliance/ControlsView';
-import ControlDetailsView from './compliance/ControlDetailsView';
-import MappingView from './compliance/mapping/MappingView';
-import NistView from './compliance/NistView';
-import NistDetailsView from './compliance/NistDetailsView';
 import OverView from './OverView';
 import NotFound from './NotFound';
+
 import ApplicationMode from '../utils/application-mode';
+
+const SolutionsView = importedComponent(
+    () => import(/* webpackChunkName:'solutions' */ './builder/solutions/SolutionsView'),
+    {LoadingComponent: Loading});
+
+const SolutionDetailsView = importedComponent(
+    () => import(/* webpackChunkName:'solutions' */ './builder/solutions/SolutionDetailsView'),
+    {LoadingComponent: Loading});
+
+const CreateSolutionView = importedComponent(
+    () => import(/* webpackChunkName:'solutions' */ './builder/solutions/CreateSolutionView'),
+    {LoadingComponent: Loading});
+
+
+const ArchitectureView = importedComponent(
+    () => import(/* webpackChunkName:'architecture' */ './builder/ArchitectureView'),
+    {LoadingComponent: Loading});
+
+const BillofMaterialsView = importedComponent(
+    () => import(/* webpackChunkName:'architecture' */ './builder/bom/BillofMaterials'),
+    {LoadingComponent: Loading});
+
+const ServiceDetailsView = importedComponent(
+    () => import(/* webpackChunkName:'architecture' */ './builder/services/ServiceDetailsView'),
+    {LoadingComponent: Loading});
+
+
+const ControlsView = importedComponent(
+    () => import(/* webpackChunkName:'controls' */ './compliance/ControlsView'),
+    {LoadingComponent: Loading});
+
+const ControlDetailsView = importedComponent(
+    () => import(/* webpackChunkName:'controls' */ './compliance/ControlDetailsView'),
+    {LoadingComponent: Loading}
+    );
+
+const MappingView = importedComponent(
+    () => import(/* webpackChunkName:'controls' */ './compliance/mapping/MappingView'),
+    {LoadingComponent: Loading});
+
+const NistView = importedComponent(
+    () => import(/* webpackChunkName:'controls' */ './compliance/NistView'),
+    {LoadingComponent: Loading});
+
+const NistDetailsView = importedComponent(
+    () => import(/* webpackChunkName:'controls' */ './compliance/NistDetailsView'),
+    {LoadingComponent: Loading});
 
 
 function SolutionDetails(props) {
@@ -73,7 +113,7 @@ function LandingPage(props) {
     if (ApplicationMode.isFsControlsMode()) {
         return (<FSLandingPage {...props} />)
     } else {
-        return (<LandingPage {...props} />)
+        return (<BuildLandingPage {...props} />)
     }
 }
 
@@ -88,7 +128,7 @@ class AppRoutes extends React.Component {
 
                 <Route path='/solutions' exact element={<SolutionsView user={this.props.user} addNotification={this.props.addNotification} />} />
                 <Route path='/solutions/user' exact element={<SolutionsView user={this.props.user} addNotification={this.props.addNotification} isUser />} />
-                <Route path='/solutions/new' exact element={<CreateSolutionview user={this.props.user} addNotification={this.props.addNotification} />} />
+                <Route path='/solutions/new' exact element={<CreateSolutionView user={this.props.user} addNotification={this.props.addNotification} />} />
                 <Route path={'/solutions/:id'} element={<SolutionDetails user={this.props.user} addNotification={this.props.addNotification}/>} />
                 <Route path='/boms/user' exact element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isUser/>} />
                 <Route path='/boms/infrastructure' exact element={<ArchitectureView user={this.props.user} addNotification={this.props.addNotification} isInfra/>} />

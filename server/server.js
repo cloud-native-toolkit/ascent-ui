@@ -18,7 +18,7 @@ const serverConfig = require('./server-config');
   const CALLBACK_URL = "/login/callback";
 
   const conf = {
-    application_url: process.env.APP_URI,
+    application_url: process.env.APP_URI || process.env.PUBLIC_URL,
     port: 3000
   };
 
