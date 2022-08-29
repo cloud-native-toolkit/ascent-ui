@@ -33,7 +33,7 @@
       "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!react-markdown|vfile|unist-util-stringify-position|unified|bail|is-plain-obj|trough|remark-parse|mdast-util-from-markdown|mdast-util-to-string|micromark|decode-named-character-reference|character-entities|remark-rehype|mdast-util|unist-builder|unist-util|property-information|hast-util|.*-separated-tokens)"
+      "node_modules/(?!react-markdown|vfile|unist-util-stringify-position|unified|bail|is-plain-obj|trough|remark-parse|mdast-util-from-markdown|mdast-util-to-string|micromark|decode-named-character-reference|character-entities|remark-rehype|mdast-util|unist-builder|unist-util|property-information|hast-util|trim-lines|.*-separated-tokens)"
     ],
     "moduleNameMapper": {
       "^lodash-es$": "lodash"
