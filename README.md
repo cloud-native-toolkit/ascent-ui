@@ -10,6 +10,20 @@ This app has been developped using an opinionated set of components for modern w
 * [Sass](http://sass-lang.com/)
 * [Carbon](https://www.carbondesignsystem.com/)
 
+### Configuring
+
+There are a number of configuration options available when deploying the application.
+
+#### Application mode
+
+The ASCENT UI has been built to run in one of two different modes: "Builder" and "FS Control". In "FS Control" mode, the application only shows the financial control information and mappings but none of the architecture builder content. In "Builder" mode, the application shows both the builder content and the financial controls content.
+
+To change the mode for the application, provide an environment variable named `REACT_APP_MODE` with a value of either "fs-controls" or "builder". If the environment variable is empty or contains a value other than the two defined then the application will default to "builder" mode.
+
+If deploying the container using the helm chart, provide the value in the `mode` variable.
+
+**Note:** The application uses the `react-inject-env` module to update the environment variable value in the built application content.
+
 ### Deploying 
 
 After you have created a new git repo from this git template, remember to rename the project.

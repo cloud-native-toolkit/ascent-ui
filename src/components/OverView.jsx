@@ -4,6 +4,8 @@ import { Grid, Row, Column } from 'carbon-components-react';
 
 import ReactGA from 'react-ga4';
 
+import dataModelImg from '../images/data-model.png'
+
 
 class OverView extends Component {
 
@@ -44,7 +46,7 @@ class OverView extends Component {
                             and output a package of consistent terraform that we can use to automate the provisionning of compliant reference architectures.
                             <br /> <br />
 
-                            <img src="/images/data-model.png" alt="Ascent data model"></img>
+                            <img src={dataModelImg} alt="Ascent data model"></img>
                             <br /> <br />
 
                         </p>

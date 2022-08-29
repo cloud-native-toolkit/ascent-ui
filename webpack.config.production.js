@@ -10,7 +10,6 @@ module.exports = {
   // Webpack configuration goes here
   mode: 'production',
   entry: {
-    vendor: ['carbon-icons', 'carbon-components', 'carbon-components-react', 'carbon-addons-iot-react', '@carbon/icons-react'],
     app: './src/index.js',
   },
   output: {
@@ -39,16 +38,14 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        type: "asset",
+        type: "asset/resource",
       },
     ]
   },
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserPlugin({
-        parallel: true,
-      }),
+      new TerserPlugin(),
       new ImageMinimizerPlugin({
         minimizer: {
           implementation: ImageMinimizerPlugin.imageminMinify,
@@ -82,6 +79,7 @@ module.exports = {
         },
       }),
     ],
+    runtimeChunk: 'single',
     splitChunks: {
       cacheGroups: {
         styles: {
@@ -91,10 +89,10 @@ module.exports = {
           enforce: true
         },
         vendor: {
-          chunks: 'initial',
-          test: 'vendor',
-          name: 'vendor',
-          enforce: true
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          maxSize: 2000000,
+          chunks: 'all'
         }
       }
     }
@@ -106,6 +104,9 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: 'styles/styles.[fullhash].css'
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {}
     }),
   ],
 };

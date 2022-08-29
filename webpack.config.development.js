@@ -8,7 +8,6 @@ module.exports = {
   // Webpack configuration goes here
   mode: 'development',
   entry: {
-    vendor: ['carbon-icons', 'carbon-components', 'carbon-components-react', 'carbon-addons-iot-react', '@carbon/icons-react'],
     app: './src/index.js',
   },
   output: {
@@ -53,7 +52,7 @@ module.exports = {
   ],
   devServer: {
     host: 'localhost',
-    port: port,
+    port,
     historyApiFallback: true,
     open: true,
     hot: true,

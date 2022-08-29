@@ -7,7 +7,7 @@ import importedComponent from 'react-imported-component';
 
 import Loading from './Loading';
 
-import LandingPage from './landing-page/LandingPage';
+import BuildLandingPage from './landing-page/LandingPage';
 import FSLandingPage from './fs-landing-page/FSLandingPage';
 import OverView from './OverView';
 import NotFound from './NotFound';
