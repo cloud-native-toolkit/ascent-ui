@@ -141,9 +141,7 @@ const serverConfig = require('./server-config');
     if (req.isAuthenticated()) {
       let roles = ["read-only"];
       if (AUTH_PROVIDER === "openshift") {
-        if (req.user?.groups?.includes("ascent-fs-viewers")) {
-          roles.push("fs-viewer");
-        }
+        roles.push("fs-viewer");
         if (req.user?.groups?.includes("ascent-ibm-cloud")) {
           roles.push("ibm-cloud");
         }
@@ -163,9 +161,7 @@ const serverConfig = require('./server-config');
           sessionExpire: req.session.cookie.expires
         });
       } else {
-        if (AuthStrategy.hasScope(req, "view_controls")) {
-          roles.push("fs-viewer");
-        }
+        roles.push("fs-viewer");
         if (AuthStrategy.hasScope(req, "ibm_cloud")) {
           roles.push("ibm-cloud");
         }
