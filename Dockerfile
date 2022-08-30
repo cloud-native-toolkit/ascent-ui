@@ -1,7 +1,5 @@
 FROM registry.access.redhat.com/ubi8/nodejs-16:1-52 as builder
 
-ARG NODE_OPTIONS="--max-old-space-size=4096"
-
 USER root
 
 RUN dnf -y install autoconf automake diffutils file && \
