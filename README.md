@@ -136,7 +136,6 @@ This option will allow you to use OpenShift RBAC and OpenShift users and groups 
 ```sh
 oc adm groups new ascent-admins
 oc adm groups new ascent-editors
-oc adm groups new ascent-fs-viewers
 oc adm groups add-users <GROUP_NAME> <USER_NAME>
 ...
 ```
