@@ -25,7 +25,8 @@ COPY --from=builder --chown=1001:0 /opt/app-root/src/build ./build
 COPY --chown=1001:0 package.json yarn.lock ./
 COPY --chown=1001:0 server ./server
 
-RUN npm i -g yarn && \
+RUN chmod -R g+w ./build && \
+    npm i -g yarn && \
     yarn install --production && \
     yarn cache clean
 
