@@ -1,17 +1,17 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 const port = process.env.PORT || 3000;
 
 module.exports = {
-  // Webpack configuration goes here
   mode: 'development',
   entry: {
     app: './src/index.js',
   },
   output: {
-    filename: '[name].[hash].js',
+    filename: 'static/[name].[fullhash].js',
     publicPath: '/'
   },
   resolve: {
@@ -25,6 +25,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
+        include: [path.resolve(__dirname, 'src')],
         exclude: /node_modules/,
         use: ['babel-loader']
       },
@@ -35,7 +36,11 @@ module.exports = {
           'css-loader',
           'sass-loader'
         ]
-      }
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        type: "asset/resource",
+      },
     ]
   },
   plugins: [
@@ -44,11 +49,7 @@ module.exports = {
       favicon: 'public/favicon.ico'
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        'PUBLIC_URL': '"http://localhost:3000"'
-      }
-    })  
+    new Dotenv()
   ],
   devServer: {
     host: 'localhost',
