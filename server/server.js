@@ -141,9 +141,6 @@ const serverConfig = require('./server-config');
     if (req.isAuthenticated()) {
       let roles = ["default"];
       if (AUTH_PROVIDER === "openshift") {
-        if (req.user?.groups?.includes("ascent-ibm-cloud")) {
-          roles.push("ibm-cloud");
-        }
         if (req.user?.groups?.includes("ascent-editors")) {
           roles.push("editor");
         }
@@ -160,9 +157,6 @@ const serverConfig = require('./server-config');
           sessionExpire: req.session.cookie.expires
         });
       } else {
-        if (AuthStrategy.hasScope(req, "ibm_cloud")) {
-          roles.push("ibm-cloud");
-        }
         if (AuthStrategy.hasScope(req, "edit")) {
           roles.push("editor");
         }

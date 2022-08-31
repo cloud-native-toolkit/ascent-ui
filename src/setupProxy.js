@@ -23,7 +23,7 @@ module.exports = function(app) {
           email: "noe.samaille@ibm.com",
           given_name: "Noé",
           family_name: "Samaille",
-          roles: ["ibm-cloud", "editor", "admin"],
+          roles: ["editor", "admin"],
           role: "admin",
           region: "eu-de",
           sessionExpire: new Date(Date.now()+3600*1000)
