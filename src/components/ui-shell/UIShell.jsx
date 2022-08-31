@@ -23,14 +23,6 @@ import {
 import b64 from "../../utils/b64";
 import ApplicationMode from "../../utils/application-mode";
 
-
-const ibmCloudDefaultConfig = {
-  complianceFeatures: true,
-  builderFeatures: false,
-  ibmContent: true,
-  azureContent: false,
-  awsContent: false,
-}
 const defaultConfig = {
   complianceFeatures: false,
   builderFeatures: true,
@@ -118,10 +110,6 @@ class UIShell extends Component {
             .then(res => res.json())
             .then(userInfo => {
               if (userInfo.config) this.setState({ content: userInfo.config, user: { ...user, config: userInfo.config } });
-              else if (user.roles?.includes('ibm-cloud')) {
-                this.setState({ user: { ...user, config: ibmCloudDefaultConfig } });
-                this.setContent(ibmCloudDefaultConfig);
-              }
               else {
                 this.setState({ user: { ...user, config: defaultConfig } });
                 this.setContent(defaultConfig);
@@ -167,8 +155,8 @@ class UIShell extends Component {
                 isActive={isSideNavExpanded}
               />
 
-              <HeaderName prefix= {this.state.user?.role === 'fs-viewer' ? 'IBM Cloud' : 'IBM Technology Zone' }>
-                {this.state.user?.role === 'fs-viewer' ? 'Controls Catalog' : 'Accelerator Toolkit'}
+              <HeaderName prefix= {ApplicationMode.isFsControlsMode() ? 'IBM Cloud' : 'IBM Technology Zone' }>
+                {ApplicationMode.isFsControlsMode() ? 'Controls Catalog' : 'Accelerator Toolkit'}
               </HeaderName>
 
               <HeaderNavigation aria-label="navigation">
@@ -233,28 +221,13 @@ class UIShell extends Component {
 
                   <SideNavItems>
 
-                    {this.state.user?.role === 'fs-viewer' ?
-
-                        <SideNavMenuItem element={Link} to='/'
-                                         isActive={this.state.activeItem === '/'}
-                                         onClick={() => {
-                                           this.setState({activeItem: '/'})
-                                         }}>
-                          Controls Catalog
-                        </SideNavMenuItem>
-
-
-                        :
-
-                        <SideNavMenuItem element={Link} to='/'
-                                         isActive={this.state.activeItem === '/'}
-                                         onClick={() => {
-                                           this.setState({activeItem: '/'})
-                                         }}>
-                          Overview
-                        </SideNavMenuItem>
-
-                    }
+                    <SideNavMenuItem element={Link} to='/'
+                        isActive={this.state.activeItem === '/'}
+                        onClick={() => {
+                          this.setState({activeItem: '/'})
+                        }}>
+                      {ApplicationMode.isFsControlsMode() ? 'Controls Catalog' : 'Overview'}
+                    </SideNavMenuItem>
 
 
                     {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
@@ -352,11 +325,16 @@ class UIShell extends Component {
                      <SideNavMenu title="Compliance" defaultExpanded
                       isActive={['/onboarding', '/controls', '/mapping', '/nists'].includes(this.state.activeItem)} >
 
-                      {this.state.user?.roles?.includes("fs-viewer") ?
+                      {this.state.user ?
                         <SideNavMenuItem element={Link} to='/controls'
                           isActive={this.state.activeItem === '/controls'}
                           onClick={() => { this.setState({ activeItem: '/controls' }) }}>Controls</SideNavMenuItem>
-                        : <></>}
+                        :
+                        <SideNavMenuItem href='/controls'>
+                          Controls
+                          <Locked16 />
+                        </SideNavMenuItem>
+                      }
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/mapping'

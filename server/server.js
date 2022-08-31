@@ -139,9 +139,8 @@ const serverConfig = require('./server-config');
   // app.use(passport.authenticate(WebAppStrategy.name ));
   app.get('/userDetails', (req, res) => {
     if (req.isAuthenticated()) {
-      let roles = ["read-only"];
+      let roles = ["default"];
       if (AUTH_PROVIDER === "openshift") {
-        roles.push("fs-viewer");
         if (req.user?.groups?.includes("ascent-ibm-cloud")) {
           roles.push("ibm-cloud");
         }
@@ -161,7 +160,6 @@ const serverConfig = require('./server-config');
           sessionExpire: req.session.cookie.expires
         });
       } else {
-        roles.push("fs-viewer");
         if (AuthStrategy.hasScope(req, "ibm_cloud")) {
           roles.push("ibm-cloud");
         }

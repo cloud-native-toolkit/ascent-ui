@@ -13,7 +13,6 @@ module.exports = function(app) {
   );
 
   // Setup Proxy for Local Development
-  // fs-viewer for controls view
   // editor for others
   // admin
 
@@ -24,7 +23,7 @@ module.exports = function(app) {
           email: "noe.samaille@ibm.com",
           given_name: "Noé",
           family_name: "Samaille",
-          roles: ["fs-viewer", "ibm-cloud", "editor", "admin"],
+          roles: ["ibm-cloud", "editor", "admin"],
           role: "admin",
           region: "eu-de",
           sessionExpire: new Date(Date.now()+3600*1000)
