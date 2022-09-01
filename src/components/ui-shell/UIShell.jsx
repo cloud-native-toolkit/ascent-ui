@@ -264,7 +264,7 @@ class UIShell extends Component {
                           onClick={() => { this.setState({ activeItem: '/solutions/user' }) }}>Create Solution</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/solutions/user'>
-                          Create Solution
+                          Created Solutions
                           <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
@@ -284,18 +284,6 @@ class UIShell extends Component {
 
                     {ApplicationMode.isBuilderMode() ? <SideNavMenu title="Reference Architectures" defaultExpanded
                       isActive={['/solutions', '/boms', '/services'].includes(this.state.activeItem)}>
-
-                      {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/boms/user'
-                          isActive={this.state.activeItem === '/boms/user'}
-                          onClick={() => { this.setState({ activeItem: '/boms/user' }) }}>Create Architectures</SideNavMenuItem>
-                        :
-                        <SideNavMenuItem href='/boms/user'>
-                          Create Architecture
-                          <Locked16 style={{ marginLeft: "auto" }} />
-                        </SideNavMenuItem>
-                      }
-
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/boms/infrastructure'
