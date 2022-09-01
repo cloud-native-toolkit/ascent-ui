@@ -157,7 +157,7 @@ class SolutionsView extends Component {
                     <Column lg={{ span: 12 }}>
                         <h2>
                             {`${this.props.isUser ? 'Custom' : 'Public'} Solutions`}
-                            {this.state.user?.role === "admin" ? <Button
+                            {this.state.user?.roles?.includes("editor") ? <Button
                                 onClick={() => this.setState({ nav: '/solutions/new' })}
                                 size='sm'
                                 renderIcon={Add16} >

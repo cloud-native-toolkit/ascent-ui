@@ -95,7 +95,7 @@ class ArchitectureView extends Component {
                     title: arch.name,
                     description: <Link to={`/boms/${arch.arch_id}`} ><div className="center-vertical">{arch.long_desc}</div> </Link>,
                     icon: <Link to={`/boms/${arch.arch_id}`} ><CheckmarkFilled16 fill={green40} /></Link>,
-                    afterContent: this.overflowComponent(arch, false),
+                    afterContent: this.overflowComponent(arch, this.state.isUser),
                     thumbnail: <ImageWithStatus imageUrl={`/api/architectures/${arch.arch_id}/diagram/png?small=true`} replacement={<AppConnectivity32 />} />
                 }
             }),

@@ -139,15 +139,9 @@ const serverConfig = require('./server-config');
   // app.use(passport.authenticate(WebAppStrategy.name ));
   app.get('/userDetails', (req, res) => {
     if (req.isAuthenticated()) {
-      let roles = ["read-only"];
+      // Grant editor role by default
+      let roles = ["default", "editor"];
       if (AUTH_PROVIDER === "openshift") {
-        roles.push("fs-viewer");
-        if (req.user?.groups?.includes("ascent-ibm-cloud")) {
-          roles.push("ibm-cloud");
-        }
-        if (req.user?.groups?.includes("ascent-editors")) {
-          roles.push("editor");
-        }
         if (req.user?.groups?.includes("ascent-admins")) {
           roles.push("admin");
         }
@@ -161,13 +155,6 @@ const serverConfig = require('./server-config');
           sessionExpire: req.session.cookie.expires
         });
       } else {
-        roles.push("fs-viewer");
-        if (AuthStrategy.hasScope(req, "ibm_cloud")) {
-          roles.push("ibm-cloud");
-        }
-        if (AuthStrategy.hasScope(req, "edit")) {
-          roles.push("editor");
-        }
         if (AuthStrategy.hasScope(req, "super_edit")) {
           roles.push("admin");
         }

@@ -139,12 +139,9 @@ class LandingPage extends Component {
                     <InfoCard
                       heading="Security Controls"
                       body="The IBM Cloud Framework for Financial Services provides a set of pre-configured compliance controls that are adhered to by the entire ecosystem — financial institutions, cloud services, and the digital supply chain of ISVs and SaaS providers."
-                      icon={this.state.user ? <Link to={this.state.user?.roles?.includes("fs-viewer") ? "/controls" : "/nists"} ><SankeyDiagramAlt32 /></Link> : <SankeyDiagramAlt32 />}
+                      icon={this.state.user ? <Link to="/controls" ><SankeyDiagramAlt32 /></Link> : <SankeyDiagramAlt32 />}
                     />
                   </InfoSection>
-
-
-
 
                 </Row>
               </Grid>

@@ -52,9 +52,6 @@ class ControlDetailsView extends Component {
 
   async loadControl(controlId) {
     let filter = {
-      include: ['nist', 'services', 'architectures']
-    }
-    if (this.state.user?.roles?.includes("fs-viewer")) filter = {
       include: ['controlDetails', 'nist', 'services', 'architectures']
     }
     let controlData = null;
@@ -135,7 +132,7 @@ class ControlDetailsView extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.user !== prevState.user) {
       return ({ user: nextProps.user,
-        show: nextProps.user?.roles?.includes("fs-viewer") ? "fs-cloud-desc" : "nist-desc"
+        show: "fs-cloud-desc"
       });
     }
     return null
@@ -169,11 +166,7 @@ class ControlDetailsView extends Component {
           {data.id ?
             <Breadcrumb>
               <BreadcrumbItem>
-                {this.state.user?.roles?.includes("fs-viewer") ?
-                  <Link to="/controls">Controls</Link>
-                  :
-                  <Link to="/nists">NIST</Link>
-                }
+                <Link to="/controls">Controls</Link>
               </BreadcrumbItem>
               <BreadcrumbItem href="#">{this.props.controlId}</BreadcrumbItem>
             </Breadcrumb>
@@ -197,8 +190,8 @@ class ControlDetailsView extends Component {
             <ContentSwitcher
               size='xl'
               onChange={(e) => { this.setState({ show: e.name }) }} >
-              {this.state.user?.roles?.includes("fs-viewer") ? <Switch name="fs-cloud-desc" text="Description" /> : <></>}
-              <Switch className={this.state.show === "nist-desc" && !this.state.user?.roles?.includes("fs-viewer") ? "bx--content-switcher--selected" : ""} name="nist-desc" text="Additional NIST Information" />
+              <Switch name="fs-cloud-desc" text="Description" />
+              <Switch name="nist-desc" text="Additional NIST Information" />
               <Switch name="mapping" text="Impacted Components" />
             </ContentSwitcher>
           }
