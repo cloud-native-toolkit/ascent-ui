@@ -107,7 +107,7 @@ class LandingPage extends Component {
                       and software architectures.
                     </p>
 
-                    {this.state.user ? <Link to="/solutions/user" ><Button>Create a Solution</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
+                    {this.state.user ? <Link to="/solutions/new" ><Button>Create a Solution</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
 
 
                   </Column>
