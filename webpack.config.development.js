@@ -17,7 +17,7 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx'],
     alias: {
-        "react-dom": "@hot-loader/react-dom",
+      'react-dom': '@hot-loader/react-dom',
     }
   },
   devtool: 'inline-source-map',
@@ -39,7 +39,7 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        type: "asset/resource",
+        type: 'asset/resource',
       },
     ]
   },
@@ -57,5 +57,27 @@ module.exports = {
     historyApiFallback: true,
     open: true,
     hot: true,
+    proxy: {
+      '/api': {
+        target: process.env.API_HOST ?? 'http://localhost:3001',
+        changeOrigin: true,
+        pathRewrite: { '^/api': '' }
+      },
+      '/userDetails': {
+        bypass: (req, res) => {
+          res.send({
+            name: 'NoeSamaille',
+            email: 'noe.samaille@ibm.com',
+            given_name: 'Noé',
+            family_name: 'Samaille',
+            roles: ['default', 'editor', 'admin'],
+            role: 'admin',
+            region: 'eu-de',
+            sessionExpire: new Date(Date.now() + 3600 * 1000)
+          });
+          return false;
+        },
+      },
+    }
   }
 };
