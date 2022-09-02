@@ -84,7 +84,7 @@ class CreateSolutionview extends Component {
         var guid = uuidv4();
         super(props);
         this.state = {
-            curStep: "persona",
+            curStep: "overview",
             persona: undefined,
             platform: undefined,
             architecture: undefined,
@@ -128,6 +128,8 @@ class CreateSolutionview extends Component {
 
     nextDisabled = () => {
         switch (this.state.curStep) {
+            case "overview":
+                return false;
             case "persona":
                 return this.state.persona === undefined;
             case "platform":
@@ -430,7 +432,7 @@ class CreateSolutionview extends Component {
                 icon: true,
                 logo: softwareMASManageImg,
                 description: "Maximo Application Suite - Manage Application",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "400-mas-core-multicloud",
                     "405-mas-manage"
@@ -445,7 +447,7 @@ class CreateSolutionview extends Component {
                 icon: true,
                 logo: softwareMASIoTImg,
                 description: " Maximo Application Suite - IoT Application",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "400-mas-core-multicloud",
                     "405-mas-iot"
@@ -461,7 +463,7 @@ class CreateSolutionview extends Component {
                 icon: true,
                 logo: softwareMASMonitorImg,
                 description: " Maximo Application Suite - Monitor",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "400-mas-core-multicloud",
                     "405-mas-monitor"
@@ -510,7 +512,7 @@ class CreateSolutionview extends Component {
                 description: "Set of Integration tools that enable application connectivity ideal to compliment your solution",
                 icon: true,
                 logo: softwareIntegrationImg,
-                boms : [
+                boms: [
                     "280-integration-platform-multicloud"
                 ]
             },
@@ -523,7 +525,7 @@ class CreateSolutionview extends Component {
                 description: "Unlocks the value of your systems and your data by connecting business applications, integrating data, building APIs and acting on events.",
                 icon: true,
                 logo: softwareApiConnectImg,
-                boms : [
+                boms: [
                     "240-integration-ace"
                 ]
             },
@@ -536,7 +538,7 @@ class CreateSolutionview extends Component {
                 description: "Complete, intuitive and scalable API platform that lets you create, expose, manage and monetize APIs across clouds.",
                 icon: true,
                 logo: softwareApiConnectImg,
-                boms : [
+                boms: [
                     "220-integration-apiconnect"
                 ]
             },
@@ -549,7 +551,7 @@ class CreateSolutionview extends Component {
                 description: "Event-streaming platform that helps you build smart apps that can react to events as they happen.",
                 icon: true,
                 logo: softwareEventStreamsImg,
-                boms : [
+                boms: [
                     "250-integration-eventstreams"
                 ]
             },
@@ -562,7 +564,7 @@ class CreateSolutionview extends Component {
                 description: "Proven messaging for hybrid and multi-cloud that’s high-performance and security-rich.",
                 icon: true,
                 logo: softwareMQImg,
-                boms : [
+                boms: [
                     "230-integration-mq",
                     "260-integration-mq-uniform-cluster"
                 ]
@@ -590,7 +592,7 @@ class CreateSolutionview extends Component {
                 icon: true,
                 logo: softwareDB2Img,
                 description: "Trusted SQL database",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "300-cloud-pak-for-data-entitlement",
                     "305-cloud-pak-for-data-foundation",
@@ -607,7 +609,7 @@ class CreateSolutionview extends Component {
                 icon: true,
                 logo: softwareDB2WarehouseImg,
                 description: "Trusted SQL database for building a Data Warehouse",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "300-cloud-pak-for-data-entitlement",
                     "305-cloud-pak-for-data-foundation",
@@ -694,10 +696,10 @@ class CreateSolutionview extends Component {
                     <Column lg={{ span: 12 }}>
                         <h2>
                             Create Solution
-                            <Button 
+                            <Button
                                 kind='secondary'
                                 renderIcon={Close}
-                                onClick={() => this.setState( { navigate: '/solutions/user' })}>
+                                onClick={() => this.setState({ navigate: '/solutions/user' })}>
                                 Cancel
                             </Button>
                         </h2>
@@ -711,7 +713,7 @@ class CreateSolutionview extends Component {
                         {this.state.navigate ? <Navigate to={this.state.navigate} /> : <></>}
 
                         <StatefulPageWizard
-                            currentStepId="persona"
+                            currentStepId="overview"
                             onNext={this.handleNext}
                             onClose={() => this.setState({ navigate: '/solutions/user' })}
                             onSubmit={this.handleSubmit}
@@ -719,6 +721,28 @@ class CreateSolutionview extends Component {
                             onBack={this.handleBack}
                             nextDisabled={this.nextDisabled()}
                         >
+                            <PageWizardStep id="overview" label="Overview" key="overview">
+                                <PageWizardStepTitle>Welcome to the Co-Creation Wizard!</PageWizardStepTitle>
+
+                                <div className="selection-set">
+                                    <form className="plans">
+
+                                        <div className="title">You are about to create your composite solution by completing the following steps:</div>
+
+                                        <ol>
+                                            <li><strong>Select your persona</strong>: specify if you want to create a solution for Demos, building an MVP, a Production environment or support development.</li>
+                                            <li><strong>Select your platform</strong>: where you want to deploy your solution (Azure, AWS or IBM Cloud).</li>
+                                            <li><strong>Select your architecture pattern</strong>: the sizing of the infrastructure, we will recommand one for you based on your use case.</li>
+                                            <li><strong>Select your storage option</strong>: the storage you need for IBM Software in your solution.</li>
+                                            <li><strong>Select your software</strong>: pick the IBM Software cartridges you need as part of your solution, from individual components of IBM Cloud Paks, Sustainability Software, or bringing your own custom Software tiles.</li>
+                                        </ol>
+
+                                        <div className="title">Once you have completed all these steps you will be redirected to your new solution and benefit from our automation patterns to get it deployed in no time!</div>
+
+                                    </form>
+                                </div>
+
+                            </PageWizardStep>
                             <PageWizardStep id="persona" label="Persona" key="persona">
                                 <PageWizardStepTitle>Step 1: What are you trying to achieve ?</PageWizardStepTitle>
 
