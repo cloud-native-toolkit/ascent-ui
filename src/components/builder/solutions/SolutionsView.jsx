@@ -9,15 +9,14 @@ import {
     Grid, Row, Column
 } from 'carbon-components-react';
 import {
-    Add16,
-    Edit16
+    Add16, Close32
 } from '@carbon/icons-react';
+import SlidingPane from "react-sliding-pane";
 
 import ReactGA from 'react-ga4';
 
 import ValidateModal from '../../ValidateModal';
 import SolutionModal from "./SolutionModal";
-import SolutionDetailsPane from './SolutionDetailsPane';
 
 
 class SolutionsView extends Component {
@@ -28,11 +27,9 @@ class SolutionsView extends Component {
 
         this.state = {
             solutions: [],
-            showModal: false,
+            showForm: false,
             user: {},
         };
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
         this.deleteSolution = this.deleteSolution.bind(this);
     }
 
@@ -132,22 +129,6 @@ class SolutionsView extends Component {
         }
     }
 
-    async showModal(updateModal) {
-        this.setState({
-            showModal: true,
-            updateModal: updateModal || false
-        });
-    }
-
-    async hideModal() {
-        this.setState({
-            showModal: false,
-            isDuplicate: false,
-            updateModal: false
-        });
-        this.loadSolutions();
-    }
-
     render() {
 
         return (
@@ -157,12 +138,16 @@ class SolutionsView extends Component {
                     <Column lg={{ span: 12 }}>
                         <h2>
                             {`${this.props.isUser ? 'Custom' : 'Public'} Solutions`}
-                            {this.state.user?.roles?.includes("editor") ? <Button
+                            {this.state.user?.roles?.includes("editor") ? <div className="create-buttons"><Button
+                                size="sm"
                                 onClick={() => this.setState({ nav: '/solutions/new' })}
-                                size='sm'
                                 renderIcon={Add16} >
                                 Create Solution
-                            </Button> : <></>}
+                            </Button><OverflowMenu flipped light>
+                                    <OverflowMenuItem
+                                        itemText="Create (Manual)"
+                                        onClick={() => this.setState({ showForm: true })} />
+                                </OverflowMenu></div> : <></>}
                         </h2>
                         <br></br>
 
@@ -198,17 +183,25 @@ class SolutionsView extends Component {
                         </Tile>
                     ))
                     }</div>
-                {this.state.showModal &&
+
+                <SlidingPane
+                    closeIcon={<Close32 />}
+                    title="Add a Solution"
+                    className="sliding-pane"
+                    isOpen={this.state.showForm}
+                    width="600px"
+                    onRequestClose={() => this.setState({ showForm: false })}
+                >
                     <SolutionModal
-                        show={this.state.showModal}
-                        handleClose={this.hideModal}
+                        show={this.state.showForm}
+                        handleClose={() => this.setState({ showForm: false })}
                         isUpdate={this.state.updateModal}
                         data={this.state.dataDetails}
                         toast={this.props.addNotification}
                         isDuplicate={this.state.isDuplicate}
                         user={this.state.user}
                     />
-                }
+                </SlidingPane>
 
                 {this.state.nav ? <Navigate to={this.state.nav} /> : <></>}
 
@@ -234,20 +227,6 @@ class SolutionsView extends Component {
                             });
                         }} />
                 }
-
-                <div>
-                    <SolutionDetailsPane
-                        data={this.state.dataDetails}
-                        open={this.state.isPaneOpen}
-                        buttonClick={() => {
-                            this.setState({ isPaneOpen: false });
-                            this.showModal(true);
-                        }}
-                        user={this.state.user}
-                        buttonIcon={Edit16}
-                        buttonText='Edit'
-                        onRequestClose={() => this.setState({ isPaneOpen: false })} />
-                </div>
 
             </Grid>
 
