@@ -157,7 +157,13 @@ div .arch p, div .summary p  {
     -ms-flex-preferred-size: 100%;
     flex-basis: 100%;
     color: #252f42;
-    margin-bottom: 20px;
+    margin: 1rem 0;
+}
+
+.selection-set ol {
+    font-size: 1rem;
+    list-style-type: decimal;
+    list-style-position: inside;
 }
 
 .plans .plan .plan-details p {
