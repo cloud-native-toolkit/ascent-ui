@@ -1,7 +1,7 @@
 const proxy = require("express-http-proxy");
 const bodyParser = require("body-parser");
 
-const apiHost = process.env.API_HOST || 'localhost:3001';
+const apiHost = process.env.API_HOST ?? 'http://localhost:3001';
 
 module.exports = function(app){
 

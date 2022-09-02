@@ -57,13 +57,13 @@ class ControlDetails extends Component {
                         </div>
                         {data.controlDetails?.fs_guidance && data.controlDetails?.fs_guidance !== 'None' &&
                             <>
-                                <h4>FS Guidance</h4>
+                                <h4>Additional FS Cloud Specifications</h4>
                                 <p>{data.controlDetails?.fs_guidance}</p>
                             </>
                         }
                         {data.controlDetails?.fs_params && data.controlDetails?.fs_params !== 'None' &&
                             <>
-                                <h4>FS Parameters</h4>
+                                <h4>FS Cloud Parameters</h4>
                                 <p>{data.controlDetails?.fs_params}</p>
                             </>
                         }

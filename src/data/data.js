@@ -579,31 +579,40 @@ export const controlResp = [
 
 export const controlTypeTooltip = {
     Preventative: <Tooltip triggerText='Preventative'>
-        <p><strong>Preventative: </strong>Designed to avoid an unintended event or result at the time of initial occurrence (e.g., upon initially granting access).</p>
+        <p><strong>Preventative: </strong> Control requirements designed to avoid an unintended event or result at the time of initial occurrence (e.g., upon initially granting access).</p>
+        <p><strong>Potential Examples:</strong> Control requirements related to policy, reviews, configurations, maintenance, quality assurance, restrictions, protections, retention, etc.</p>
     </Tooltip>,
     Detective: <Tooltip triggerText='Detective'>
-        <p><strong>Detective: </strong>Designed to detect an unintended event or result after the initial processing has occurred, but before the ultimate objective has concluded (e.g., access is granted).</p>
+        <p><strong>Detective: </strong> Control requirements designed to detect an unintended event or result after the initial processing has occurred, but before the ultimate objective has concluded (e.g., access is granted).</p>
+        <p><strong>Potential Examples:</strong> Control requirements related to analysis, monitoring, reporting, protection, alerts, etc.</p>
     </Tooltip>,
     Corrective: <Tooltip triggerText='Corrective'>
-        <p><strong>Corrective: </strong>Designed to correct an unintended event or result after the initial processing has occurred, but before the ultimate objective has concluded (e.g., access is granted).</p>
+        <p><strong>Corrective: </strong> Control requirements designed to correct an unintended event or result after the initial processing has occurred, but before the ultimate objective has concluded (e.g., access is granted).</p>
+        <p><strong>Potential Examples:</strong> Control Requirements related to actions taken, remediations, etc.</p>
     </Tooltip>,
     Administrative: <Tooltip triggerText='Administrative'>
-        <p><strong>Administrative: </strong>Controls that test policies, procedures, or guidelines that define personnel or business practices in accordance with the organization's security goals.</p>
+        <p><strong>Administrative: </strong> Control requirements that test policies, procedures, or guidelines that define personnel or business practices in accordance with the organization's security goals.</p>
+        <p><strong>Potential Examples:</strong> Control requirements related to policy, trainings, reporting, maintenance, etc.</p>
     </Tooltip>,
     Technical: <Tooltip triggerText='Technical'>
-        <p><strong>Technical: </strong>Controls that use technology as a basis for controlling the access and usage of sensitive data throughout a physical structure and over a network.</p>
+        <p><strong>Technical: </strong> Control requirements that use technology as a basis for controlling the access and usage of sensitive data throughout a physical structure and over a network.</p>
+        <p><strong>Potential Examples:</strong> Control requirements related to logging and monitoring, actions taken, data protection, configurations, usage, etc. </p>
     </Tooltip>,
     Physical: <Tooltip triggerText='Physical'>
-        <p><strong>Physical: </strong>Controls that describe anything tangible that’s used to prevent or detect unauthorized access to physical areas, systems, or assets.</p>
+        <p><strong>Physical: </strong> Control requirements that describe anything tangible that’s used to prevent or detect unauthorized access to physical areas, systems, or assets.</p>
+        <p><strong>Potential Examples:</strong> Control requirements related to physical security, etc. </p>
     </Tooltip>,
     Automated: <Tooltip triggerText='Automated'>
-        <p><strong>Automated: </strong>Controls wholly performed through technology.</p>
+        <p><strong>Automated: </strong> Control requirements wholly performed through technology.</p>
+        <p><strong>Potential Examples:</strong> Automated control requirements with functions programmed into computer software, configurations, maintenance, etc.</p>
     </Tooltip>,
     'Manual, Improbably Automated': <Tooltip triggerText='Manual, Improbably Automated'>
-        <p><strong>Manual, Improbably Automated: </strong>Controls performed manually and having a low possibility of automation.</p>
+        <p><strong>Manual, Improbably Automated: </strong> Control requirements performed manually, but having a high possibility of automation.</p>
+        <p><strong>Potential Examples:</strong> Control requirements related to logging and monitoring, analysis, reporting, monitoring, etc.</p>
     </Tooltip>,
     'Manual, Prospectively Automated': <Tooltip triggerText='Manual, Prospectively Automated'>
-        <p><strong>Manual, Prospectively Automated: </strong>Controls performed manually, but having a high possibility of automation.</p>
+        <p><strong>Manual, Prospectively Automated: </strong> Control requirements performed manually and having a low possibility of automation.</p>
+        <p><strong>Potential Examples:</strong> Control requirements related to policy, trainings, physical controls, etc.</p>
     </Tooltip>
 }
 
@@ -642,7 +651,7 @@ export const controlRiskRatingTooltip = {
 
 export const infoTooltips = {
     focus_area: <Tooltip>The IBM Cloud Framework for Financial Services was built by the industry for the industry. The Framework identifies seven primary focus areas built on cloud best practices, initially based upon NIST-800-53 as well as feedback from leading industry partners. These focus areas provide a roadmap to design and implement controls that meet the unique requirements of the Financial Services industry.</Tooltip>,
-    family: <Tooltip>The grouping of the controls in the broad areas in which the controls fall.</Tooltip>,
+    family: <Tooltip>The grouping of the control requirements in the broad areas in which the control requirements fall.</Tooltip>,
     nist_functions: <Tooltip>The core Functions of the NIST Cybersecurity Framework when performed concurrently and continuously form an operational culture that addresses the dynamic cybersecurity risk. The functions are categorized as follows:
         <UnorderedList nested>
             <ListItem>Identify (ID)* - The Identify Function assists in developing an organizational understanding to managing cybersecurity risk to systems, people, assets, data, and capabilities.</ListItem>
@@ -655,8 +664,8 @@ export const infoTooltips = {
         *Source: https://www.nist.gov/cyberframework/online-learning/five-functions
         **The IBM Enable function is a custom IBM function and not a part of the NIST Cybersecurity domains.
     </Tooltip>,
-    risk_desc: <Tooltip>The Risk Description attribute provides preliminary inherent risks for the processes and operations that threaten the achievement of the control objectives or trust services criteria as identified by management.</Tooltip>,
-    objective: <Tooltip>A control objective is the intent defined for a set of controls at a service organization with the primary aim to address risks that the controls are designed to mitigate.</Tooltip>,
+    risk_desc: <Tooltip>The risk description attribute provides preliminary inherent risks for the processes and operations that threaten the achievement of the control objectives or trust services criteria.</Tooltip>,
+    objective: <Tooltip>A control objective is the intent defined for a set of control requirements at a service organization with the primary aim to address risks that the controls are designed to mitigate.</Tooltip>,
     ibm_public_cloud_scope: <Tooltip>Indicates the scope of IBM Public Cloud.</Tooltip>,
     ibm_public_cloud_resp: <Tooltip>Indicates whether IBM Public Cloud is responsible for the performance of the control.</Tooltip>,
     developer_scope: <Tooltip>Indicates the scope of Organization that develops the software to be utilized in IBM public Cloud.</Tooltip>,

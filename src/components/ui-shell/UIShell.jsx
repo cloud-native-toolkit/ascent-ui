@@ -21,15 +21,8 @@ import {
 } from '@carbon/icons-react';
 
 import b64 from "../../utils/b64";
+import ApplicationMode from "../../utils/application-mode";
 
-
-const ibmCloudDefaultConfig = {
-  complianceFeatures: true,
-  builderFeatures: false,
-  ibmContent: true,
-  azureContent: false,
-  awsContent: false,
-}
 const defaultConfig = {
   complianceFeatures: false,
   builderFeatures: true,
@@ -117,10 +110,6 @@ class UIShell extends Component {
             .then(res => res.json())
             .then(userInfo => {
               if (userInfo.config) this.setState({ content: userInfo.config, user: { ...user, config: userInfo.config } });
-              else if (user.roles?.includes('ibm-cloud')) {
-                this.setState({ user: { ...user, config: ibmCloudDefaultConfig } });
-                this.setContent(ibmCloudDefaultConfig);
-              }
               else {
                 this.setState({ user: { ...user, config: defaultConfig } });
                 this.setContent(defaultConfig);
@@ -154,17 +143,23 @@ class UIShell extends Component {
       <BrowserRouter>
         <HeaderContainer
           render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-            <Header aria-label="IBM Ecosystem Labs">
+
+
+            <Header aria-label="IBM">
+
               <SkipToContent />
+
               <HeaderMenuButton
                 aria-label="Open menu"
                 onClick={onClickSideNavExpand}
                 isActive={isSideNavExpanded}
               />
-              <HeaderName prefix='Software Everywhere - '>
-                ASCENT
+
+              <HeaderName prefix={ApplicationMode.isFsControlsMode() ? 'IBM Cloud' : 'IBM Technology Zone'}>
+                {ApplicationMode.isFsControlsMode() ? 'Controls Catalog' : 'Accelerator Toolkit'}
               </HeaderName>
-              <HeaderNavigation aria-label="Ascent header navigation">
+
+              <HeaderNavigation aria-label="navigation">
               </HeaderNavigation>
               <HeaderGlobalBar>
                 {this.state.user ?
@@ -225,47 +220,24 @@ class UIShell extends Component {
                 <SideNav aria-label="Side navigation" expanded={isSideNavExpanded} >
 
                   <SideNavItems>
+
                     <SideNavMenuItem element={Link} to='/'
                       isActive={this.state.activeItem === '/'}
-                      onClick={() => { this.setState({ activeItem: '/' }) }}>
-                      Overview
+                      onClick={() => {
+                        this.setState({ activeItem: '/' })
+                      }}>
+                      {ApplicationMode.isFsControlsMode() ? 'Controls Catalog' : 'Overview'}
                     </SideNavMenuItem>
 
-                    {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
-                      href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
-                      target="_blank" rel="noopener noreferrer">
-                      IBM Software Portfolio
-                      <Launch16 />
-                    </SideNavMenuItem> : <></>}
-
-
-
-                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Automation Catalog">
-
-                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
-                        target="_blank" rel="noopener noreferrer">
-                        Automation Modules
-                        <Launch16 />
-                      </SideNavMenuItem>
-
-                      <SideNavMenuItem href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=seansund&labels=new_module&template=new-module.md&title=Request+new+module%3A+%7Bname%7D"
-                        target="_blank" rel="noopener noreferrer">
-                        Create a Module
-                        <Launch16 />
-                      </SideNavMenuItem>
-
-                    </SideNavMenu> : <></>}
-
-
-                    {this.state.content.builderFeatures ? <SideNavMenu defaultExpanded title="Solutions">
+                    {ApplicationMode.isBuilderMode() ? <SideNavMenu defaultExpanded title="Solutions">
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/solutions/user'
                           isActive={this.state.activeItem === '/solutions/user'}
-                          onClick={() => { this.setState({ activeItem: '/solutions/user' }) }}>Create Solution</SideNavMenuItem>
+                          onClick={() => { this.setState({ activeItem: '/solutions/user' }) }}>Created Solutions</SideNavMenuItem>
                         :
                         <SideNavMenuItem href='/solutions/user'>
-                          Create Solution
+                          Created Solutions
                           <Locked16 style={{ marginLeft: "auto" }} />
                         </SideNavMenuItem>
                       }
@@ -283,20 +255,8 @@ class UIShell extends Component {
 
                     </SideNavMenu> : <></>}
 
-                    {this.state.content.builderFeatures ? <SideNavMenu title="Reference Architectures" defaultExpanded
+                    {ApplicationMode.isBuilderMode() ? <SideNavMenu title="Reference Architectures" defaultExpanded
                       isActive={['/solutions', '/boms', '/services'].includes(this.state.activeItem)}>
-
-                      {this.state.user ?
-                        <SideNavMenuItem element={Link} to='/boms/user'
-                          isActive={this.state.activeItem === '/boms/user'}
-                          onClick={() => { this.setState({ activeItem: '/boms/user' }) }}>Create Architectures</SideNavMenuItem>
-                        :
-                        <SideNavMenuItem href='/boms/user'>
-                          Create Architecture
-                          <Locked16 style={{ marginLeft: "auto" }} />
-                        </SideNavMenuItem>
-                      }
-
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/boms/infrastructure'
@@ -323,14 +283,19 @@ class UIShell extends Component {
 
                     </SideNavMenu> : <></>}
 
-                    {this.state.content.complianceFeatures ? <SideNavMenu title="Compliance" defaultExpanded
+                    <SideNavMenu title="Compliance" defaultExpanded
                       isActive={['/onboarding', '/controls', '/mapping', '/nists'].includes(this.state.activeItem)} >
 
-                      {this.state.user?.roles?.includes("fs-viewer") ?
+                      {this.state.user ?
                         <SideNavMenuItem element={Link} to='/controls'
                           isActive={this.state.activeItem === '/controls'}
                           onClick={() => { this.setState({ activeItem: '/controls' }) }}>Controls</SideNavMenuItem>
-                        : <></>}
+                        :
+                        <SideNavMenuItem href='/controls'>
+                          Controls
+                          <Locked16 />
+                        </SideNavMenuItem>
+                      }
 
                       {this.state.user ?
                         <SideNavMenuItem element={Link} to='/mapping'
@@ -355,6 +320,29 @@ class UIShell extends Component {
                           <Locked16 />
                         </SideNavMenuItem>
                       }
+
+                    </SideNavMenu>
+
+                    {ApplicationMode.isBuilderMode() ? <SideNavMenu title="Automation Catalog">
+
+                      {this.state?.user?.email?.endsWith('ibm.com') ? <SideNavMenuItem
+                        href="https://pages.github.ibm.com/Ondrej-Svec2/ibm-software-map"
+                        target="_blank" rel="noopener noreferrer">
+                        IBM Software Portfolio
+                        <Launch16 />
+                      </SideNavMenuItem> : <></>}
+
+                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
+                        target="_blank" rel="noopener noreferrer">
+                        Automation Modules
+                        <Launch16 />
+                      </SideNavMenuItem>
+
+                      <SideNavMenuItem href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=seansund&labels=new_module&template=new-module.md&title=Request+new+module%3A+%7Bname%7D"
+                        target="_blank" rel="noopener noreferrer">
+                        Create a Module
+                        <Launch16 />
+                      </SideNavMenuItem>
 
                     </SideNavMenu> : <></>}
 

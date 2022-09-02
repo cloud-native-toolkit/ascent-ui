@@ -17,6 +17,44 @@ import { catalogFilters } from '../../../data/data';
 
 import { v4 as uuidv4 } from 'uuid';
 
+import openshiftImg from '../../../images/openshift.png'
+import financeImg from '../../../images/finance.svg'
+
+import personaTechSalesImg from '../../../images/personas/techsales_tammy.png'
+import personaMVPImg from '../../../images/personas/mvp_rohan.png'
+import personaProductionImg from '../../../images/personas/production_admin.png'
+import personaDeveloperImg from '../../../images/personas/developer_rubi.png'
+
+import archQuickstartImg from '../../../images/arch/quick-start.png'
+import archStandardImg from '../../../images/arch/standard.png'
+import archAdvancedImg from '../../../images/arch/advanced.png'
+
+import storagePortworxImg from '../../../images/storage/portworx.png'
+import storageOdfImg from '../../../images/storage/odf.png'
+
+import platformAwsImg from '../../../images/platforms/aws.png'
+import platformAzureImg from '../../../images/platforms/azure.png'
+import platformIBMImg from '../../../images/platforms/ibmcloud.png'
+import platformVmwareImg from '../../../images/platforms/vmware.svg'
+import platformPowerImg from '../../../images/platforms/power.png'
+import platformZosImg from '../../../images/platforms/zlogo.png'
+
+import softwareApiConnectImg from '../../../images/software/apiconnect.svg'
+import softwareAppConnectImg from '../../../images/software/appconnect.svg'
+import softwareDataFabricImg from '../../../images/software/datafabric.svg'
+import softwareDataFoundationImg from '../../../images/software/datafoundation.svg'
+import softwareDB2Img from '../../../images/software/db2.svg'
+import softwareDB2WarehouseImg from '../../../images/software/DB2BigSQL.svg'
+import softwareEventStreamsImg from '../../../images/software/eventstreams.svg'
+import softwareIntegrationImg from '../../../images/software/integration.svg'
+import softwareMASImg from '../../../images/software/mas.svg'
+import softwareMASIoTImg from '../../../images/software/mas-iot.svg'
+import softwareMASManageImg from '../../../images/software/mas-manage.svg'
+import softwareMASMonitorImg from '../../../images/software/mas-monitor.svg'
+import softwareMQImg from '../../../images/software/mq.svg'
+import softwareSecurityImg from '../../../images/software/security.svg'
+import softwareTurbonomicImg from '../../../images/software/turbonomic-short.png'
+
 const CatalogContent = ({ logo, icon, title, displayName, status, type, description }) => (
     <div className={`iot--sample-tile`}>
         {logo ? <div className={`iot--sample-tile-icon`}><img className="software-logo" loading="lazy" src={logo} alt="software logo" /></div> : icon ? <div className={`iot--sample-tile-icon`}>{icon}</div> : null}
@@ -46,7 +84,7 @@ class CreateSolutionview extends Component {
         var guid = uuidv4();
         super(props);
         this.state = {
-            curStep: "persona",
+            curStep: "overview",
             persona: undefined,
             platform: undefined,
             architecture: undefined,
@@ -90,6 +128,8 @@ class CreateSolutionview extends Component {
 
     nextDisabled = () => {
         switch (this.state.curStep) {
+            case "overview":
+                return false;
             case "persona":
                 return this.state.persona === undefined;
             case "platform":
@@ -164,7 +204,7 @@ class CreateSolutionview extends Component {
                 title: "Setup a Demo",
                 desc: "As a tech seller you want to demo the capability of IBM Technology use this personal to get started quickly",
                 docs: "url",
-                image: "techsales_tammy.png",
+                image: personaTechSalesImg,
                 recommendedArch: "quickstart"
             },
             {
@@ -172,7 +212,7 @@ class CreateSolutionview extends Component {
                 title: "Create a POC/POT/MVP",
                 desc: "You are past the demo phase and now need to prove the technology for a specific client use case",
                 docs: "",
-                image: "mvp_rohan.png",
+                image: personaMVPImg,
                 recommendedArch: "standard"
             },
             {
@@ -180,7 +220,7 @@ class CreateSolutionview extends Component {
                 title: "Prepare for Production",
                 desc: "You are now focused on the delivery phase of a project and need to place IBM Technology into a highly scalable secure production environment",
                 docs: "",
-                image: "production_admin.png",
+                image: personaProductionImg,
                 recommendedArch: "advanced"
             },
             {
@@ -188,7 +228,7 @@ class CreateSolutionview extends Component {
                 title: "Support Development",
                 desc: "You want to setup a Red Hat OpenShift environment to develop solution assets",
                 docs: "",
-                image: "developer_rubi.png",
+                image: personaDeveloperImg,
                 recommendedArch: "standard"
             },
 
@@ -199,7 +239,7 @@ class CreateSolutionview extends Component {
                 title: "AWS",
                 desc: "Amazon Web Services infrastructure with Red Hat OpenShift ROSA",
                 docs: "",
-                image: "aws.png",
+                image: platformAwsImg,
                 enabled: true,
                 boms: {
                     quickstart: [
@@ -216,7 +256,7 @@ class CreateSolutionview extends Component {
                 title: "Azure",
                 desc: "Microsoft Azure infrastructure with Red Hat OpenShift ARO and IPI",
                 docs: "https://azure.microsoft.com/",
-                image: "azure.png",
+                image: platformAzureImg,
                 enabled: true,
                 boms: {
                     quickstart: [
@@ -237,7 +277,7 @@ class CreateSolutionview extends Component {
                 title: "IBM Cloud",
                 desc: "IBM Cloud infrastructure with Red Hat OpenShift ROKS ",
                 docs: "https://www.ibm.com/cloud",
-                image: "ibmcloud.png",
+                image: platformIBMImg,
                 enabled: true,
                 boms: {
                     quickstart: [
@@ -283,7 +323,7 @@ class CreateSolutionview extends Component {
                 title: "VMWare",
                 desc: "VMWare vSphere on premise infrastructure powered by Intel with Red Hat OpenShift",
                 docs: "",
-                image: "vmware.svg",
+                image: platformVmwareImg,
                 enabled: false,
                 boms: {
                     quickstart: [],
@@ -296,7 +336,7 @@ class CreateSolutionview extends Component {
                 title: "IBM Cloud + Power",
                 desc: "IBM Power 10 AIX environments with Red Hat OpenShift",
                 docs: "",
-                image: "power.png",
+                image: platformPowerImg,
                 enabled: false,
                 boms: {
                     quickstart: [],
@@ -309,7 +349,7 @@ class CreateSolutionview extends Component {
                 title: "IBM Cloud + Z Platform",
                 desc: "IBM z/Linux and z/OS environment with Red Hat OpenShift",
                 docs: "",
-                image: "zlogo.png",
+                image: platformZosImg,
                 enabled: false,
                 boms: {
                     quickstart: [],
@@ -325,21 +365,21 @@ class CreateSolutionview extends Component {
                 title: "Quick-Start",
                 desc: "A simple architecture to quickly get an OpenShift cluster provisioned ideal for Demos",
                 docs: "https://github.com/cloud-native-toolkit/automation-solutions/blob/main/architectures/README.md#quickstart",
-                image: "quick-start.png"
+                image: archQuickstartImg
             },
             {
                 id: "standard",
                 title: "Standard",
                 desc: "A standard production deployment environment with typical security protections, private endpoints, VPN server, key management encryption, ideal for POC/POT/MVP",
                 docs: "https://github.com/cloud-native-toolkit/automation-solutions/blob/main/architectures/README.md#standard",
-                image: "standard.png"
+                image: archStandardImg
             },
             {
                 id: "advanced",
                 title: "Advanced",
                 desc: "A more advanced deployment that employs network isolation to securely route traffic between the different layers, prepare environment for production deployed IBM Software",
                 docs: "https://github.com/cloud-native-toolkit/automation-solutions/blob/main/architectures/README.md#advanced",
-                image: "advanced.png"
+                image: archAdvancedImg
             }
         ],
         software: [
@@ -360,7 +400,7 @@ class CreateSolutionview extends Component {
                 status: "Released",
                 type: "",
                 icon: true,
-                logo: "/images/turbonomic-short.png",
+                logo: softwareTurbonomicImg,
                 description: "Assure application performance with smarter resource management.",
                 boms: [
                     "200-openshift-gitops",
@@ -376,7 +416,7 @@ class CreateSolutionview extends Component {
                 status: "Released",
                 type: "",
                 icon: true,
-                logo: "/images/mas.svg",
+                logo: softwareMASImg,
                 description: "Intelligent asset management, monitoring, predictive maintenance and reliability in a single platform.",
                 boms: [
                     "200-openshift-gitops",
@@ -390,9 +430,9 @@ class CreateSolutionview extends Component {
                 status: "Released",
                 type: "",
                 icon: true,
-                logo: "/images/mas-manage.svg",
+                logo: softwareMASManageImg,
                 description: "Maximo Application Suite - Manage Application",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "400-mas-core-multicloud",
                     "405-mas-manage"
@@ -405,9 +445,9 @@ class CreateSolutionview extends Component {
                 status: "Released",
                 type: "",
                 icon: true,
-                logo: "/images/mas-iot.svg",
+                logo: softwareMASIoTImg,
                 description: " Maximo Application Suite - IoT Application",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "400-mas-core-multicloud",
                     "405-mas-iot"
@@ -421,9 +461,9 @@ class CreateSolutionview extends Component {
                 status: "Released",
                 type: "",
                 icon: true,
-                logo: "/images/mas-monitor.svg",
+                logo: softwareMASMonitorImg,
                 description: " Maximo Application Suite - Monitor",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "400-mas-core-multicloud",
                     "405-mas-monitor"
@@ -437,7 +477,7 @@ class CreateSolutionview extends Component {
                 status: "Released",
                 type: "",
                 icon: true,
-                logo: "/images/datafoundation.svg",
+                logo: softwareDataFoundationImg,
                 description: "Base layer of components required to support different use cases with cloud pak for data",
                 boms: [
                     "300-cloud-pak-for-data-entitlement",
@@ -453,7 +493,7 @@ class CreateSolutionview extends Component {
                 status: "Released",
                 type: "",
                 icon: true,
-                logo: "/images/datafabric.svg",
+                logo: softwareDataFabricImg,
                 description: "Use the right data architecture so employees can access quality data, wherever and whenever it’s needed.",
                 boms: [
 
@@ -471,8 +511,8 @@ class CreateSolutionview extends Component {
                 type: "Cloud Pak",
                 description: "Set of Integration tools that enable application connectivity ideal to compliment your solution",
                 icon: true,
-                logo: "/images/integration.svg",
-                boms : [
+                logo: softwareIntegrationImg,
+                boms: [
                     "280-integration-platform-multicloud"
                 ]
             },
@@ -484,8 +524,8 @@ class CreateSolutionview extends Component {
                 type: "Cloud Pak",
                 description: "Unlocks the value of your systems and your data by connecting business applications, integrating data, building APIs and acting on events.",
                 icon: true,
-                logo: "/images/appconnect.svg",
-                boms : [
+                logo: softwareApiConnectImg,
+                boms: [
                     "240-integration-ace"
                 ]
             },
@@ -497,8 +537,8 @@ class CreateSolutionview extends Component {
                 type: "Cloud Pak",
                 description: "Complete, intuitive and scalable API platform that lets you create, expose, manage and monetize APIs across clouds.",
                 icon: true,
-                logo: "/images/apiconnect.svg",
-                boms : [
+                logo: softwareApiConnectImg,
+                boms: [
                     "220-integration-apiconnect"
                 ]
             },
@@ -510,8 +550,8 @@ class CreateSolutionview extends Component {
                 type: "Cloud Pak",
                 description: "Event-streaming platform that helps you build smart apps that can react to events as they happen.",
                 icon: true,
-                logo: "/images/eventstreams.svg",
-                boms : [
+                logo: softwareEventStreamsImg,
+                boms: [
                     "250-integration-eventstreams"
                 ]
             },
@@ -523,8 +563,8 @@ class CreateSolutionview extends Component {
                 type: "Cloud Pak",
                 description: "Proven messaging for hybrid and multi-cloud that’s high-performance and security-rich.",
                 icon: true,
-                logo: "/images/mq.svg",
-                boms : [
+                logo: softwareMQImg,
+                boms: [
                     "230-integration-mq",
                     "260-integration-mq-uniform-cluster"
                 ]
@@ -536,7 +576,7 @@ class CreateSolutionview extends Component {
                 status: "Beta",
                 type: "",
                 icon: true,
-                logo: "/images/security.svg",
+                logo: softwareSecurityImg,
                 description: "Work smarter with an open security platform to advance your zero trust strategy.",
                 boms: [
                     "200-openshift-gitops",
@@ -550,9 +590,9 @@ class CreateSolutionview extends Component {
                 status: "Release",
                 type: "",
                 icon: true,
-                logo: "/images/db2.svg",
+                logo: softwareDB2Img,
                 description: "Trusted SQL database",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "300-cloud-pak-for-data-entitlement",
                     "305-cloud-pak-for-data-foundation",
@@ -567,9 +607,9 @@ class CreateSolutionview extends Component {
                 status: "Release",
                 type: "",
                 icon: true,
-                logo: "/images/DB2BigSQL.svg",
+                logo: softwareDB2WarehouseImg,
                 description: "Trusted SQL database for building a Data Warehouse",
-                boms : [
+                boms: [
                     "200-openshift-gitops",
                     "300-cloud-pak-for-data-entitlement",
                     "305-cloud-pak-for-data-foundation",
@@ -586,7 +626,7 @@ class CreateSolutionview extends Component {
                 title: "Portworx Enterprise",
                 desc: "Portworx Enterprise is the Kubernetes storage platform trusted in production by the world’s leading enterprises",
                 docs: "https://portworx.com/",
-                image: "portworx.png",
+                image: storagePortworxImg,
                 boms: {
                     ibm: [
                         "210-ibm-portworx-storage",
@@ -598,14 +638,13 @@ class CreateSolutionview extends Component {
                         "210-azure-portworx-storage",
                     ]
                 }
-
             },
             {
                 id: "odf",
                 title: "OpenShift Data Foundation",
                 desc: "(ODF) is a software-defined, container-native storage solution that's integrated with the OpenShift Container Platform",
                 docs: "https://www.redhat.com/en/technologies/cloud-computing/openshift-data-foundation",
-                image: "odf.png",
+                image: storageOdfImg,
                 boms: {
                     ibm: [
                         "210-ibm-portworx-storage",
@@ -614,9 +653,7 @@ class CreateSolutionview extends Component {
                     ],
                     azure: [
                     ]
-
                 }
-
             }]
 
     };
@@ -636,7 +673,7 @@ class CreateSolutionview extends Component {
             title: "Financial Services",
             desc: "Most secure regulated cloud infrastrcuture for managing business application and software",
             docs: "https://www.ibm.com/cloud/financial-services",
-            image: "finance.svg",
+            image: financeImg,
             enabled: true
         });
         const storage_providers = this.solution_wizard.storage_providers.map(s => ({
@@ -659,10 +696,10 @@ class CreateSolutionview extends Component {
                     <Column lg={{ span: 12 }}>
                         <h2>
                             Create Solution
-                            <Button 
+                            <Button
                                 kind='secondary'
                                 renderIcon={Close}
-                                onClick={() => this.setState( { navigate: '/solutions/user' })}>
+                                onClick={() => this.setState({ navigate: '/solutions/user' })}>
                                 Cancel
                             </Button>
                         </h2>
@@ -676,7 +713,7 @@ class CreateSolutionview extends Component {
                         {this.state.navigate ? <Navigate to={this.state.navigate} /> : <></>}
 
                         <StatefulPageWizard
-                            currentStepId="persona"
+                            currentStepId="overview"
                             onNext={this.handleNext}
                             onClose={() => this.setState({ navigate: '/solutions/user' })}
                             onSubmit={this.handleSubmit}
@@ -684,6 +721,28 @@ class CreateSolutionview extends Component {
                             onBack={this.handleBack}
                             nextDisabled={this.nextDisabled()}
                         >
+                            <PageWizardStep id="overview" label="Overview" key="overview">
+                                <PageWizardStepTitle>Welcome to the Co-Creation Wizard!</PageWizardStepTitle>
+
+                                <div className="selection-set">
+                                    <form className="plans">
+
+                                        <div className="title">You are about to create your composite solution by completing the following steps:</div>
+
+                                        <ol>
+                                            <li><strong>Select your persona</strong>: specify if you want to create a solution for Demos, building an MVP, a Production environment or support development.</li>
+                                            <li><strong>Select your platform</strong>: where you want to deploy your solution (Azure, AWS or IBM Cloud).</li>
+                                            <li><strong>Select your architecture pattern</strong>: the sizing of the infrastructure, we will recommand one for you based on your use case.</li>
+                                            <li><strong>Select your storage option</strong>: the storage you need for IBM Software in your solution.</li>
+                                            <li><strong>Select your software</strong>: pick the IBM Software cartridges you need as part of your solution, from individual components of IBM Cloud Paks, Sustainability Software, or bringing your own custom Software tiles.</li>
+                                        </ol>
+
+                                        <div className="title">Once you have completed all these steps you will be redirected to your new solution and benefit from our automation patterns to get it deployed in no time!</div>
+
+                                    </form>
+                                </div>
+
+                            </PageWizardStep>
                             <PageWizardStep id="persona" label="Persona" key="persona">
                                 <PageWizardStepTitle>Step 1: What are you trying to achieve ?</PageWizardStepTitle>
 
@@ -703,7 +762,7 @@ class CreateSolutionview extends Component {
                                                     <label className='plan complete-plan' htmlFor={persona.id} key={persona.id}>
                                                         <input type="radio" className={this.state.persona === persona.id ? 'checked' : ''} name={persona.id} id={persona.id} onClick={() => this.setState({ persona: persona.id })} />
                                                         <div className="plan-content">
-                                                            <img loading="lazy" src={"/images/" + persona.image} alt="" />
+                                                            <img loading="lazy" src={persona.image} alt="" />
                                                             <div className="plan-details">
                                                                 <span>{persona.title}</span>
                                                                 <p>{persona.desc}</p>
@@ -741,8 +800,7 @@ class CreateSolutionview extends Component {
                                                             className={this.state.platform === platform.id ? 'checked' : ''}
                                                             onClick={() => { if (platform.enabled) this.setState({ platform: platform.id }) }} />
                                                         <div className={platform.enabled ? "plan-content" : "plan-content coming-soon"}>
-                                                            <img loading="lazy" src={"/images/" + platform.image}
-                                                                alt="" />
+                                                            <img loading="lazy" src={platform.image} alt="" />
                                                             <div className="plan-details">
                                                                 <span>{platform.title}
                                                                     {!platform.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
@@ -771,8 +829,8 @@ class CreateSolutionview extends Component {
                                         </div>
 
                                         <div className="arch">
-                                            <p>You want to <strong>{persona?.title}</strong> <img loading="lazy" src={`/images/${persona?.image}`} alt={persona?.title ?? ""} /></p>
-                                            <p>on the platform <img loading="lazy" src={`/images/${platform?.image}`} alt="platform" align={"top"} /></p>
+                                            <p>You want to <strong>{persona?.title}</strong> <img loading="lazy" src={persona?.image} alt={persona?.title ?? ""} /></p>
+                                            <p>on the platform <img loading="lazy" src={platform?.image} alt="platform" align={"top"} /></p>
                                             <p>We recommend you use the <strong>{this.solution_wizard.architectures.find(a => a.id === persona?.recommendedArch)?.title}</strong> reference architecture</p>
 
                                         </div>
@@ -788,8 +846,7 @@ class CreateSolutionview extends Component {
                                                             className={this.state.architecture === architecture.id ? 'checked' : ''}
                                                             onClick={() => { if (architecture.enabled) this.setState({ architecture: architecture.id }) }} />
                                                         <div className={`plan-content${architecture.enabled ? '' : ' coming-soon'}`}>
-                                                            <img loading="lazy" src={"/images/" + architecture.image}
-                                                                alt="" />
+                                                            <img loading="lazy" src={architecture.image} alt="" />
 
                                                             <div className="plan-details">
                                                                 <span>{architecture.title}
@@ -837,8 +894,7 @@ class CreateSolutionview extends Component {
                                                             className={this.state.storage === storage.id ? 'checked' : ''}
                                                             onClick={() => { if (storage.enabled) this.setState({ storage: storage.id }) }} />
                                                         <div className={`plan-content${storage.enabled ? '' : ' coming-soon'}`}>
-                                                            <img loading="lazy" src={"/images/" + storage.image}
-                                                                alt="" />
+                                                            <img loading="lazy" src={storage.image} alt="" />
 
                                                             <div className="plan-details">
                                                                 <span>{storage.title}
@@ -1002,10 +1058,10 @@ class CreateSolutionview extends Component {
                                     <p>You have chosen to create an IBM Technology solution called <strong>{this.state.fields?.name}</strong></p>
 
                                     <div className='arch'>
-                                        <p>You want to <strong>{persona?.title}</strong> <img loading="lazy" src={`/images/${persona?.image}`} alt={persona?.title ?? ""} /></p>
-                                        <p>You chose to deploy you solution on <strong>{platform?.title}</strong> <img loading="lazy" src={`/images/${platform?.image}`} alt={platform?.title ?? ""} /></p>
-                                        <p>You have chosen the <strong>{arch?.title}</strong> reference architecture <div className='flex-inline'><img loading="lazy" src={`/images/${arch?.image}`} alt={arch?.title ?? ""} /> <img loading="lazy" src={`/images/openshift.png`} alt="OpenShift" /></div></p>
-                                        <p>It will install with the following Storage Option <img loading="lazy" src={`/images/${storage?.image}`} alt={storage?.title ?? ""} /></p>
+                                        <p>You want to <strong>{persona?.title}</strong> <img loading="lazy" src={persona?.image} alt={persona?.title ?? ""} /></p>
+                                        <p>You chose to deploy you solution on <strong>{platform?.title}</strong> <img loading="lazy" src={platform?.image} alt={platform?.title ?? ""} /></p>
+                                        <p>You have chosen the <strong>{arch?.title}</strong> reference architecture <div className='flex-inline'><img loading="lazy" src={arch?.image} alt={arch?.title ?? ""} /><img loading="lazy" src={openshiftImg} alt="OpenShift" /></div></p>
+                                        <p>It will install with the following Storage Option <img loading="lazy" src={storage?.image} alt={storage?.title ?? ""} /></p>
                                     </div>
 
                                     <p>You have chosen the following IBM Software to help get your solution started:

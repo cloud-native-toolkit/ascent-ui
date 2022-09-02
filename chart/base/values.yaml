@@ -48,3 +48,6 @@ partOf: "ascent"
 connectsTo: "ascent-bff"
 
 runtime: js
+
+## application mode: fs-controls or builder
+mode: builder

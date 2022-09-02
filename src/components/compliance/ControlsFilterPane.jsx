@@ -14,14 +14,14 @@ import {
     controlFocusAreas,
     controlFamilies,
     nistFunctions,
-    controlRiskRating,
+    // controlRiskRating,
     controlType1,
     controlType2,
     controlType3,
-    controlIbmResp,
-    controlDevResp,
-    controlOperatorResp,
-    controlConsumerResp
+    // controlIbmResp,
+    // controlDevResp,
+    // controlOperatorResp,
+    // controlConsumerResp
 } from '../../data/data';
 
 
@@ -178,7 +178,7 @@ class ControlsFilterPane extends Component {
                                     size='sm'
                                 />
                             </AccordionItem>
-                            <AccordionItem title="Risk" 
+                            {/* <AccordionItem title="Risk" 
                                 onClick={() => this.setState({accordionOpen: {...this.state.accordionOpen, risk: !this.state.accordionOpen.risk}})}
                                 open={this.state.accordionOpen.risk}>
                                 <FilterableMultiSelect
@@ -253,7 +253,7 @@ class ControlsFilterPane extends Component {
                                     placeholder='Consumer'
                                     size='sm'
                                 />
-                            </AccordionItem>
+                            </AccordionItem> */}
                         </Accordion>
                     </div>
                 }

@@ -7,6 +7,7 @@ var cookieParser = require("cookie-parser");
 const session = require('express-session')
 const passport = require('passport');
 const https = require('https');
+const serverConfig = require('./server-config');
 
 (async function () {
 
@@ -17,7 +18,7 @@ const https = require('https');
   const CALLBACK_URL = "/login/callback";
 
   const conf = {
-    application_url: process.env.APP_URI,
+    application_url: process.env.APP_URI || process.env.PUBLIC_URL,
     port: 3000
   };
 
@@ -48,12 +49,12 @@ const https = require('https');
       console.log(error);
       oauthServer = {};
     }
-    conf.authConfig = Object.assign(oauthServer, JSON.parse(process.env.OCP_OAUTH_CONFIG));
+    conf.authConfig = Object.assign(oauthServer, serverConfig.loadOcpOAuthConfig());
     conf.authConfig.secret = conf.authConfig.clientSecret;
   } else {
     // Auth provider defaults to App ID
     AuthStrategy = require("ibmcloud-appid").WebAppStrategy;
-    conf.authConfig = JSON.parse(process.env.APPID_CONFIG);
+    conf.authConfig = serverConfig.loadAppIdConfig();
   }
 
   const app = express();
@@ -138,17 +139,9 @@ const https = require('https');
   // app.use(passport.authenticate(WebAppStrategy.name ));
   app.get('/userDetails', (req, res) => {
     if (req.isAuthenticated()) {
-      let roles = ["read-only"];
+      // Grant editor role by default
+      let roles = ["default", "editor"];
       if (AUTH_PROVIDER === "openshift") {
-        if (req.user?.groups?.includes("ascent-fs-viewers")) {
-          roles.push("fs-viewer");
-        }
-        if (req.user?.groups?.includes("ascent-ibm-cloud")) {
-          roles.push("ibm-cloud");
-        }
-        if (req.user?.groups?.includes("ascent-editors")) {
-          roles.push("editor");
-        }
         if (req.user?.groups?.includes("ascent-admins")) {
           roles.push("admin");
         }
@@ -162,15 +155,6 @@ const https = require('https');
           sessionExpire: req.session.cookie.expires
         });
       } else {
-        if (AuthStrategy.hasScope(req, "view_controls")) {
-          roles.push("fs-viewer");
-        }
-        if (AuthStrategy.hasScope(req, "ibm_cloud")) {
-          roles.push("ibm-cloud");
-        }
-        if (AuthStrategy.hasScope(req, "edit")) {
-          roles.push("editor");
-        }
         if (AuthStrategy.hasScope(req, "super_edit")) {
           roles.push("admin");
         }
