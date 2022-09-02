@@ -21,6 +21,7 @@
 }
 
 @import './components/index';
+@import './ui-patterns/index';
 
 .App {
   font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
@@ -65,4 +66,10 @@ h2 {
 
 .bx--modal-container {
   overflow: scroll;
+}
+
+// Sliding pane
+
+.slide-pane__close svg {
+  width: unset;
 }

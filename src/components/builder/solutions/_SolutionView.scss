@@ -83,3 +83,11 @@ div.solutions .bx--tile.tile-card-title .description-card a .center-vertical {
 .sol-page__row {
     width: 100%;
 }
+
+div.solutions .create-buttons {
+    display: flex;
+}
+
+div.solutions .create-buttons .bx--btn {
+    margin-right: 1rem;
+}

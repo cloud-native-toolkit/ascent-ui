@@ -1,0 +1,25 @@
+.slide-pane {
+    margin-top: 47px;
+    position: relative;
+}
+
+// Forms
+.slide-pane .form-button.bx--btn--primary {
+    position: absolute;
+    bottom: calc(3rem - 1px);
+    right: 0;
+    width: 50%;
+}
+.slide-pane .form-button.bx--btn--secondary {
+    position: absolute;
+    bottom: calc(3rem - 1px);
+    left: 0;
+    width: 50%;
+}
+.slide-pane form {
+    max-height: calc(100vh - 112px - 8rem);
+    overflow-y: auto;
+}
+.bx--form-item {
+    margin-bottom: 1rem
+}
