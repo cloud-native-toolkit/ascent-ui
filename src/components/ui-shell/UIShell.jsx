@@ -189,20 +189,32 @@ class UIShell extends Component {
                   <strong>region:</strong>
                   <Tag style={{ marginLeft: '.5rem' }}>{this.state.user?.region}</Tag>
                 </li> : <></>}
-                {this.state.user?.role === 'admin' ? <div>
+                {ApplicationMode.isBuilderMode()  && this.state.user?.role === 'admin' ? <div>
                   <SwitcherDivider />
                   <SwitcherItem aria-label="API token" onClick={this.fetchToken.bind(this)}>
                     <span>API token</span>{this.state.copyTokenIcon}
                   </SwitcherItem>
-                </div> : <></>}
-                <SwitcherDivider />
-                <li className="bx--switcher__item">
-                  <Toggle labelText="Compliance features" size="md" id='compliance-toggle' toggled={this.state.content.complianceFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, complianceFeatures: checked })} />
-                </li>
-                <li className="bx--switcher__item">
-                  <Toggle labelText="Solution Builder features" size="md" id='builder-toggle' toggled={this.state.content.builderFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, builderFeatures: checked })} />
-                </li>
-                {this.state.content.builderFeatures ? <>
+                </div>
+
+                    : <></>}
+
+
+
+                {ApplicationMode.isBuilderMode() && this.state.user?.role === 'admin' ?
+
+                  <div>
+                  <SwitcherDivider />
+
+                    <li className="bx--switcher__item">
+                    <Toggle labelText="Compliance features" size="md" id='compliance-toggle' toggled={this.state.content.complianceFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, complianceFeatures: checked })} />
+                  </li>
+                  <li className="bx--switcher__item">
+                    <Toggle labelText="Solution Builder features" size="md" id='builder-toggle' toggled={this.state.content.builderFeatures} onToggle={(checked) => this.setContent({ ...this.state.content, builderFeatures: checked })} />
+                  </li>
+                  </div>  : <></>}
+
+
+                {ApplicationMode.isBuilderMode() && this.state.user?.role === 'admin' ? <>
                   <li className="bx--switcher__item">
                     <Toggle labelText="Azure content" size="sm" id='azure-toggle' toggled={this.state.content.azureContent} onToggle={(checked) => this.setContent({ ...this.state.content, azureContent: checked })} />
                   </li>
@@ -210,6 +222,7 @@ class UIShell extends Component {
                     <Toggle labelText="AWS content" size="sm" id='aws-toggle' toggled={this.state.content.awsContent} onToggle={(checked) => this.setContent({ ...this.state.content, awsContent: checked })} />
                   </li>
                 </> : <></>}
+
                 <SwitcherDivider />
                 <SwitcherItem aria-label="Logout" className="logout" href="/logout">
                   <span>Logout</span>
@@ -346,7 +359,8 @@ class UIShell extends Component {
 
                     </SideNavMenu> : <></>}
 
-                    <SideNavMenu title="Documentation"
+
+                    {ApplicationMode.isBuilderMode() ? <SideNavMenu title="Documentation"
                       isSideNavExpanded={isSideNavExpanded}
                       defaultExpanded={['/docs'].includes(this.state.activeItem)}
                       isActive={['/docs'].includes(this.state.activeItem)} >
@@ -377,7 +391,6 @@ class UIShell extends Component {
                         <Launch16 />
                       </SideNavMenuItem>
 
-
                       <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev/#/how-to/gitops"
                         target="_blank" rel="noopener noreferrer">
                         Create a GitOps Module
@@ -390,10 +403,9 @@ class UIShell extends Component {
                         <Launch16 />
                       </SideNavMenuItem>
 
+                    </SideNavMenu>  : <></>}
 
-                    </SideNavMenu>
-
-                    <SideNavMenu title="Join Us" >
+                    {ApplicationMode.isBuilderMode() ? <SideNavMenu title="Join Us" >
                       <SideNavMenuItem
                         href="https://github.com/cloud-native-toolkit"
                         target="_blank" rel="noopener noreferrer">
@@ -414,14 +426,23 @@ class UIShell extends Component {
                         Youtube Channel
                         <Launch16 />
                       </SideNavMenuItem>
-                    </SideNavMenu>
+                    </SideNavMenu>  : <></>}
+
+                    {ApplicationMode.isBuilderMode() ?
 
                     <SideNavMenuItem
                       href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=NoeSamaille&labels=ascent&template=issue-bug-report-on-ascent-tool.md&title=Issue+on+Ascent%3A+%7Bissue%7D"
                       target="_blank" rel="noopener noreferrer">
                       An Issue?
                       <Launch16 />
-                    </SideNavMenuItem>
+                    </SideNavMenuItem> :
+
+                    <SideNavMenuItem
+                        href="https://github.com/cloud-native-toolkit/software-everywhere/issues/new?assignees=NoeSamaille&labels=controls&template=controls-issue.md&title=Issue+on+Controls%3A+%7Bissue%7D"
+                        target="_blank" rel="noopener noreferrer">
+                      An Issue?
+                      <Launch16 />
+                    </SideNavMenuItem> }
 
                   </SideNavItems>
                 </SideNav>

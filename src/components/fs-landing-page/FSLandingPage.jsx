@@ -54,7 +54,7 @@ class FSLandingPage extends Component {
                         <Column lg={{span: 6}}>
                             <Breadcrumb noTrailingSlash aria-label="Page navigation">
                                 <BreadcrumbItem>
-                                    <Link to="/docs">Documentation</Link>
+                                    <a target="_blank" href="https://cloud.ibm.com/docs/framework-financial-services">Cloud Documentation</a>
                                 </BreadcrumbItem>
                             </Breadcrumb>
                             <h1 className="landing-page__heading">
@@ -81,64 +81,48 @@ class FSLandingPage extends Component {
                                 <Row className="landing-page__tab-content">
                                     <Column lg={{span: 12}} sm={{span: 12}}>
 
+
+
+
+
                                         <h2 className="landing-page__subheading">
-                                            What is the Control Framework ?
+                                            IBM Cloud Framework for Financial Services
                                         </h2>
                                         <p className="landing-page__p">
-                                            Ascent provides a simple experience for the creation of common architecture
-                                            patterns for software and cloud infrastructures to enable
-                                            rapid composite solution creation
+                                            IBM Cloud Framework for Financial Services™ is designed to help address the needs of financial services institutions with regulatory compliance, security, and resiliency during the initial deployment phase and with ongoing operations. The framework also helps to simplify the ability of financial institutions to transact with ecosystem partners who deliver software or SaaS applications, and who meet the requirements of the framework.
                                         </p>
                                         <UnorderedList nested>
                                             <ListItem>
-                                                Enables the fast creation of solution automation ready for production
-                                                state environments
+                                                A comprehensive set of control requirements designed to help address the security requirements and regulatory compliance obligations of financial institutions and cloud best practices. The cloud best practices include a shared responsibility model across financial institutions, application providers, and IBM Cloud.
                                             </ListItem>
                                             <ListItem>
-                                                Provides a set of cloud infrastructure reference architectures for AWS,
-                                                Azure and IBM Cloud including Quick Start, Standard and Advanced
-                                                patterns
+                                                Detailed control-by-control guidance for implementation and supporting evidence to help address the security and regulatory requirements of the financial industry.
                                             </ListItem>
                                             <ListItem>
-                                                Provides a set of composite IBM Software architectures for common client
-                                                and partner use-cases
+                                                Reference architectures designed to facilitate compliance with the control requirements. In addition, resources are provided to deploy infrastructure as code in order to automate deployment and configuration of the reference architectures.
+                                            </ListItem>
+                                            <ListItem>
+                                                Tools and IBM services, such as IBM Cloud® Security and Compliance Center, to enable parties to efficiently and effectively monitor compliance, remediate issues, and generate evidence of compliance.
                                             </ListItem>
 
                                         </UnorderedList>
 
                                         <h2 className="landing-page__subheading">
-                                            How can the controls framework help you ?
+                                            Control Requirements
                                         </h2>
                                         <p className="landing-page__p">
-                                            To help speed up the delivery and adoption of IBM Software on multiple cloud
-                                            environment including AWS, Azure and IBM Cloud.
-                                            Support the co creation of composite solutions with Clients and IBM
-                                            Partners. Provide consistent automation across clouds infrastructures
-                                            and software architectures.
+                                            The technology-agnostic control requirements defined in the framework were built by the industry for the industry. The framework contains 565 control requirements that span 7 focus areas and 21 control families. The control requirements were initially based on NIST 800-53 Rev 4 and have been enhanced based on feedback from leading industry partners.
                                         </p>
 
-                                        {this.state.user ? <Link to="/docs"><Button>Learn more</Button></Link> :
+                                        {this.state.user ?
+                                            <Link to="/controls"><Button>View the Controls</Button></Link> :
                                             <Button href="/login" renderIcon={Login20}>Login</Button>}
-
 
                                     </Column>
                                 </Row>
                                 <Row className="landing-page__tab-content">
 
                                     <InfoSection heading="The Principles" className="landing-page__r3">
-
-                                        <InfoCard
-                                            heading="Reference Architectures"
-                                            body="Build your solutions using our pre-defined reference architectures for AWS, Azure or IBM Cloud. Learn more about how your architecture meets your regulatory compliance and risk management obligations."
-                                            icon={this.state.user ? <Link to="/boms/software"><ModelBuilder32/></Link> :
-                                                <ModelBuilder32/>}
-                                        />
-
-                                        <InfoCard
-                                            heading="Cloud Infrastructures and Software"
-                                            body="Consume the Software Everywhere  module catalog, assemble them into your own custom reference architectures and deploy them in minutes using the infrascture as code bundles built by the solution builder!"
-                                            icon={this.state.user ? <Link to="/services"><Cloud32/></Link> : <Cloud32/>}
-                                        />
 
                                         <InfoCard
                                             heading="Security Controls"

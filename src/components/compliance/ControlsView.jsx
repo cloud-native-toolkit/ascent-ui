@@ -106,7 +106,7 @@ class ControlsView extends Component {
                             (item.attr === 'nist_functions' && elt?.controlDetails[item.attr]?.includes(item.val)) ||
                             (item.attr === 'focus_area' && elt?.controlDetails[item.attr] === item.val) ||
                             elt[item.attr] === item.val
-                        ) 
+                        )
                         && (filterIsOr || ++metFilters === selectedFilters.length)
                     ) return true;
                 }
@@ -138,7 +138,7 @@ class ControlsView extends Component {
             let row = data[index];
             row.family = row?.family || row?.nist?.family
             row.focus_area = row?.focus_area || row?.controlDetails?.focus_area
-        } 
+        }
         const headers = this.state.headerData;
         let table;
         if (this.state.data.length === 0) {
@@ -186,12 +186,14 @@ class ControlsView extends Component {
                     <Column lg={{span: 12}}>
                         <h2>Controls</h2>
                         <p>
-                            List of FS Cloud controls
+                            List of Controls defined for IBM Cloud for Financial Services&nbsp;
+                            <a target="_blank" href="https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-about#framework-control-requirements">(more info...)</a>
                         </p>
+
                         <br></br>
                     </Column>
                 </Row>
-                
+
                 <Row className="compliance-page__row">
                     <Column lg={{span: 12}}>
                         {table}
