@@ -199,9 +199,9 @@ const serverConfig = require('./server-config');
     }
   });
 
-  const protectedMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
+  const protectedMethods = [];
   app.use('/api', (req, res, next) => {
-    if (  req.isAuthenticated() && (!protectedMethods.includes(req.method)
+    if ( req.isAuthenticated() && (!protectedMethods.includes(req.method)
         || (AUTH_PROVIDER === "appid" && AuthStrategy.hasScope(req, "edit"))
         || (AUTH_PROVIDER === "openshift" && (req.user.groups.includes("ascent-editors") || req.user.groups.includes("ascent-admins"))))
       ) {
