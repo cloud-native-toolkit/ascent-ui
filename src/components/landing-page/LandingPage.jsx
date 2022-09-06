@@ -64,55 +64,53 @@ class LandingPage extends Component {
           </Row>
           <Row className="landing-page__r2">
             <Column lg={{ span: 12 }}>
+              <Row className="landing-page__tab-content">
+                <Column lg={{ span: 6 }} sm={{ span: 12 }}>
 
-              <Grid fullWidth>
-                <Row className="landing-page__tab-content">
-                  <Column lg={{ span: 6 }} sm={{ span: 12 }}>
+                  <h2 className="landing-page__subheading">
+                    What can you do with Accelerator Toolkit automation ?
+                  </h2>
+                  <p className="landing-page__p">
+                    The  automation  provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
+                    rapid composite solution creation using common automation techniques
+                  </p>
+                  <UnorderedList nested>
+                    <ListItem>
+                      Enables the fast creation of solution automation ready for production state environments
+                    </ListItem>
+                    <ListItem>
+                      Provides a set of cloud infrastructure reference architectures for AWS, Azure and IBM Cloud including Quick Start, Standard and Advanced patterns
+                    </ListItem>
+                    <ListItem>
+                      Provides a set of composite IBM Software architectures for common client and partner use-cases
+                    </ListItem>
 
-                    <h2 className="landing-page__subheading">
-                      What can you do with Accelerator Toolkit automation ?
-                    </h2>
-                    <p className="landing-page__p">
-                      The  automation  provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
-                      rapid composite solution creation using common automation techniques
-                    </p>
-                    <UnorderedList nested>
-                      <ListItem>
-                        Enables the fast creation of solution automation ready for production state environments
-                      </ListItem>
-                      <ListItem>
-                        Provides a set of cloud infrastructure reference architectures for AWS, Azure and IBM Cloud including Quick Start, Standard and Advanced patterns
-                      </ListItem>
-                      <ListItem>
-                        Provides a set of composite IBM Software architectures for common client and partner use-cases
-                      </ListItem>
+                  </UnorderedList>
 
-                    </UnorderedList>
+                  <h2 className="landing-page__subheading">
+                    Why do we need automation ?
+                  </h2>
+                  <p className="landing-page__p">
+                    To help speed up the delivery and adoption of IBM Technology on multiple cloud environment including AWS, Azure and IBM Cloud.
+                    Support the co-creation of composite solutions with Clients and IBM Partners. Provide consistent automation across clouds infrastructures
+                    and software architectures.
+                  </p>
 
-                    <h2 className="landing-page__subheading">
-                      Why do we need automation ?
-                    </h2>
-                    <p className="landing-page__p">
-                      To help speed up the delivery and adoption of IBM Technology on multiple cloud environment including AWS, Azure and IBM Cloud.
-                      Support the co-creation of composite solutions with Clients and IBM Partners. Provide consistent automation across clouds infrastructures
-                      and software architectures.
-                    </p>
-
-                    {this.state.user ? <Link to="/solutions/new" ><Button>Create a Solution</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
+                  {this.state.user ? <Link to="/solutions/new" ><Button>Create a Solution</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
 
 
-                  </Column>
-                  <Column lg={{ span: 6 }} sm={{ span: 12 }}>
+                </Column>
+                <Column lg={{ span: 6 }} sm={{ span: 12 }}>
 
-                    <img
-                      className="landing-page__illo"
-                      src={ascentImg}
-                      alt="Tool illustration"
-                    />
-                  </Column>
-                </Row>
-                <Row className="landing-page__tab-content">
-
+                  <img
+                    className="landing-page__illo"
+                    src={ascentImg}
+                    alt="Tool illustration"
+                  />
+                </Column>
+              </Row>
+              <Row className="landing-page__tab-content">
+                <Column lg={{ span: 12 }}>
                   <InfoSection heading="The Principles" className="landing-page__r3">
 
                     <InfoCard
@@ -133,9 +131,8 @@ class LandingPage extends Component {
                       icon={this.state.user ? <Link to="/controls" ><SankeyDiagramAlt32 /></Link> : <SankeyDiagramAlt32 />}
                     />
                   </InfoSection>
-
-                </Row>
-              </Grid>
+                </Column>
+              </Row>
             </Column>
           </Row>
         </Grid>
