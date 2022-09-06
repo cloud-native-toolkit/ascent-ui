@@ -3,7 +3,7 @@ import { env } from '../env'
 const fsControls = 'fs-controls'
 const builder = 'builder'
 
-const mode = "fs-controls" //env.REACT_APP_MODE
+const mode = env.REACT_APP_MODE
 console.log('Mode: ', mode)
 
 const ApplicationMode = {

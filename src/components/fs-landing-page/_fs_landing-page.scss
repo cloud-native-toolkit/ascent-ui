@@ -70,3 +70,13 @@
     margin-left: 0;
   }
 }
+
+.landing-page__banner .flex-right{
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 0;
+}
+
+.landing-page__banner .flex-right img{
+  margin-right: -1rem;
+}

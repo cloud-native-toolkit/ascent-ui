@@ -64,7 +64,7 @@ class FSLandingPage extends Component {
                                 IBM Cloud for Financial Services
                             </h2>
                         </Column>
-                        <Column lg={{span: 6}} sm={{span: 12}}>
+                        <Column lg={{span: 6}} sm={{span: 12}} className='flex-right'>
 
                             <img
                                 className="landing-page__illo"
@@ -76,52 +76,46 @@ class FSLandingPage extends Component {
                     </Row>
                     <Row className="landing-page__r2">
                         <Column lg={{span: 12}}>
+                            <Row className="landing-page__tab-content">
+                                <Column lg={{span: 12}} sm={{span: 12}}>
 
-                            <Grid fullWidth>
-                                <Row className="landing-page__tab-content">
-                                    <Column lg={{span: 12}} sm={{span: 12}}>
+                                    <h2 className="landing-page__subheading">
+                                        IBM Cloud Framework for Financial Services
+                                    </h2>
+                                    <p className="landing-page__p">
+                                        IBM Cloud Framework for Financial Services™ is designed to help address the needs of financial services institutions with regulatory compliance, security, and resiliency during the initial deployment phase and with ongoing operations. The framework also helps to simplify the ability of financial institutions to transact with ecosystem partners who deliver software or SaaS applications, and who meet the requirements of the framework.
+                                    </p>
+                                    <UnorderedList nested>
+                                        <ListItem>
+                                            A comprehensive set of control requirements designed to help address the security requirements and regulatory compliance obligations of financial institutions and cloud best practices. The cloud best practices include a shared responsibility model across financial institutions, application providers, and IBM Cloud.
+                                        </ListItem>
+                                        <ListItem>
+                                            Detailed control-by-control guidance for implementation and supporting evidence to help address the security and regulatory requirements of the financial industry.
+                                        </ListItem>
+                                        <ListItem>
+                                            Reference architectures designed to facilitate compliance with the control requirements. In addition, resources are provided to deploy infrastructure as code in order to automate deployment and configuration of the reference architectures.
+                                        </ListItem>
+                                        <ListItem>
+                                            Tools and IBM services, such as IBM Cloud® Security and Compliance Center, to enable parties to efficiently and effectively monitor compliance, remediate issues, and generate evidence of compliance.
+                                        </ListItem>
 
+                                    </UnorderedList>
 
+                                    <h2 className="landing-page__subheading">
+                                        Control Requirements
+                                    </h2>
+                                    <p className="landing-page__p">
+                                        The technology-agnostic control requirements defined in the framework were built by the industry for the industry. The framework contains 565 control requirements that span 7 focus areas and 21 control families. The control requirements were initially based on NIST 800-53 Rev 4 and have been enhanced based on feedback from leading industry partners.
+                                    </p>
 
+                                    {this.state.user ?
+                                        <Link to="/controls"><Button>View the Controls</Button></Link> :
+                                        <Button href="/login" renderIcon={Login20}>Login</Button>}
 
-
-                                        <h2 className="landing-page__subheading">
-                                            IBM Cloud Framework for Financial Services
-                                        </h2>
-                                        <p className="landing-page__p">
-                                            IBM Cloud Framework for Financial Services™ is designed to help address the needs of financial services institutions with regulatory compliance, security, and resiliency during the initial deployment phase and with ongoing operations. The framework also helps to simplify the ability of financial institutions to transact with ecosystem partners who deliver software or SaaS applications, and who meet the requirements of the framework.
-                                        </p>
-                                        <UnorderedList nested>
-                                            <ListItem>
-                                                A comprehensive set of control requirements designed to help address the security requirements and regulatory compliance obligations of financial institutions and cloud best practices. The cloud best practices include a shared responsibility model across financial institutions, application providers, and IBM Cloud.
-                                            </ListItem>
-                                            <ListItem>
-                                                Detailed control-by-control guidance for implementation and supporting evidence to help address the security and regulatory requirements of the financial industry.
-                                            </ListItem>
-                                            <ListItem>
-                                                Reference architectures designed to facilitate compliance with the control requirements. In addition, resources are provided to deploy infrastructure as code in order to automate deployment and configuration of the reference architectures.
-                                            </ListItem>
-                                            <ListItem>
-                                                Tools and IBM services, such as IBM Cloud® Security and Compliance Center, to enable parties to efficiently and effectively monitor compliance, remediate issues, and generate evidence of compliance.
-                                            </ListItem>
-
-                                        </UnorderedList>
-
-                                        <h2 className="landing-page__subheading">
-                                            Control Requirements
-                                        </h2>
-                                        <p className="landing-page__p">
-                                            The technology-agnostic control requirements defined in the framework were built by the industry for the industry. The framework contains 565 control requirements that span 7 focus areas and 21 control families. The control requirements were initially based on NIST 800-53 Rev 4 and have been enhanced based on feedback from leading industry partners.
-                                        </p>
-
-                                        {this.state.user ?
-                                            <Link to="/controls"><Button>View the Controls</Button></Link> :
-                                            <Button href="/login" renderIcon={Login20}>Login</Button>}
-
-                                    </Column>
-                                </Row>
-                                <Row className="landing-page__tab-content">
-
+                                </Column>
+                            </Row>
+                            <Row className="landing-page__tab-content">
+                                <Column lg={{ span: 12 }}>
                                     <InfoSection heading="The Principles" className="landing-page__r3">
 
                                         <InfoCard
@@ -133,10 +127,8 @@ class FSLandingPage extends Component {
                                                 <SankeyDiagramAlt32/>}
                                         />
                                     </InfoSection>
-
-
-                                </Row>
-                            </Grid>
+                                </Column>
+                            </Row>
                         </Column>
                     </Row>
                 </Grid>
