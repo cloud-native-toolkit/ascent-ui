@@ -46,7 +46,7 @@ class LandingPage extends Component {
     return (
       <div>
         <Grid fullWidth>
-          <Row className='landing-page__banner'>
+          <Row className='landing-page__banner' style={{ paddingBottom: '2rem' }}>
             <Column lg={{ span: 12 }}>
               <Breadcrumb noTrailingSlash aria-label="Page navigation">
                 <BreadcrumbItem>
