@@ -7,10 +7,11 @@
 
 .landing-page__illo {
   max-width: 100%;
+  padding-top: 1.25em;
 }
 
 .landing-page__banner {
-  padding-top: $spacing-05;
+  padding-top: 1em;
   padding-bottom: $spacing-07;
   @include landing-page-background;
 }
@@ -51,6 +52,12 @@
 
 .landing-page__tab-content ul li {
   font-size: 1rem;
+
+}
+
+.landing-page__tab-content {
+  padding-top: 1em;
+  padding-bottom: 1.5em;
 }
 
 @media (min-width: 99rem) {

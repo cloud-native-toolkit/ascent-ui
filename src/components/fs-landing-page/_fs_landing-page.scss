@@ -9,6 +9,7 @@
   max-width: 100%;
 }
 
+
 .landing-page__banner {
   padding-top: $spacing-05;
   @include landing-page-background;
@@ -18,6 +19,9 @@
   @include carbon--type-style('productive-heading-05');
 }
 
+.landing-page__tab-content{
+  padding-bottom: 1.5em;
+}
 .landing-page__r2 {
   margin-top: rem(-40px);
 }

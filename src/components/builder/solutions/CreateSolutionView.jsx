@@ -55,6 +55,8 @@ import softwareMQImg from '../../../images/software/mq.svg'
 import softwareSecurityImg from '../../../images/software/security.svg'
 import softwareTurbonomicImg from '../../../images/software/turbonomic-short.png'
 
+import StacksImg from '../../../images/stacks.png'
+
 const CatalogContent = ({ logo, icon, title, displayName, status, type, description }) => (
     <div className={`iot--sample-tile`}>
         {logo ? <div className={`iot--sample-tile-icon`}><img className="software-logo" loading="lazy" src={logo} alt="software logo" /></div> : icon ? <div className={`iot--sample-tile-icon`}>{icon}</div> : null}
@@ -722,24 +724,34 @@ class CreateSolutionview extends Component {
                             nextDisabled={this.nextDisabled()}
                         >
                             <PageWizardStep id="overview" label="Overview" key="overview">
-                                <PageWizardStepTitle>Welcome to the Co-Creation Wizard!</PageWizardStepTitle>
+                                <PageWizardStepTitle>Welcome to the Solution Wizard</PageWizardStepTitle>
 
                                 <div className="selection-set">
-                                    <form className="plans">
+                                    <Row>
+                                        <Column>
+                                            <form className="plans">
 
-                                        <div className="title">You are about to create your composite solution by completing the following steps:</div>
+                                                <p >You are about to create a composite solution using this co-creation wizard. You will be guided through the following steps:</p><br/>
 
-                                        <ol>
-                                            <li><strong>Select your persona</strong>: specify if you want to create a solution for Demos, building an MVP, a Production environment or support development.</li>
-                                            <li><strong>Select your platform</strong>: where you want to deploy your solution (Azure, AWS or IBM Cloud).</li>
-                                            <li><strong>Select your architecture pattern</strong>: the sizing of the infrastructure, we will recommand one for you based on your use case.</li>
-                                            <li><strong>Select your storage option</strong>: the storage you need for IBM Software in your solution.</li>
-                                            <li><strong>Select your software</strong>: pick the IBM Software cartridges you need as part of your solution, from individual components of IBM Cloud Paks, Sustainability Software, or bringing your own custom Software tiles.</li>
-                                        </ol>
+                                                <ol>
+                                                    <ul><strong>Select your persona</strong>: specify if you want to create a solution for Demos, building an MVP, a Production environment or support development.</ul>
+                                                    <ul><strong>Select your platform</strong>: where you want to deploy your solution (Azure, AWS or IBM Cloud).</ul>
+                                                    <ul><strong>Select your architecture pattern</strong>: the sizing of the infrastructure, we will recommand one for you based on your use case.</ul>
+                                                    <ul><strong>Select your storage option</strong>: the storage you need for IBM Software in your solution.</ul>
+                                                    <ul><strong>Select your software</strong>: pick the IBM Software cartridges you need as part of your solution, from individual components of IBM Cloud Paks, Sustainability Software, or bringing your own custom Software tiles.</ul>
+                                                </ol>
 
-                                        <div className="title">Once you have completed all these steps you will be redirected to your new solution and benefit from our automation patterns to get it deployed in no time!</div>
+                                                <div className="title">Once you have completed all these steps you will be redirected to your new solution and can download the automation to support the provisioning into your own environment</div>
 
-                                    </form>
+                                            </form>
+                                        </Column>
+                                        <Column>
+                                            <div class="overview-image">
+                                                <img loading="lazy" src={StacksImg} alt="Diagram representing a solution stack" />
+                                            </div>
+                                        </Column>
+                                    </Row>
+
                                 </div>
 
                             </PageWizardStep>
