@@ -726,33 +726,34 @@ class CreateSolutionview extends Component {
                             <PageWizardStep id="overview" label="Overview" key="overview">
                                 <PageWizardStepTitle>Welcome to the Solution Wizard</PageWizardStepTitle>
 
-                                <div className="selection-set">
+                                <Grid className='wizard-overview'>
                                     <Row>
-                                        <Column>
-                                            <form className="plans">
-
-                                                <p >You are about to create a composite solution using this co-creation wizard. You will be guided through the following steps:</p><br/>
-
-                                                <ol>
-                                                    <ul><strong>Select your persona</strong>: specify if you want to create a solution for Demos, building an MVP, a Production environment or support development.</ul>
-                                                    <ul><strong>Select your platform</strong>: where you want to deploy your solution (Azure, AWS or IBM Cloud).</ul>
-                                                    <ul><strong>Select your architecture pattern</strong>: the sizing of the infrastructure, we will recommand one for you based on your use case.</ul>
-                                                    <ul><strong>Select your storage option</strong>: the storage you need for IBM Software in your solution.</ul>
-                                                    <ul><strong>Select your software</strong>: pick the IBM Software cartridges you need as part of your solution, from individual components of IBM Cloud Paks, Sustainability Software, or bringing your own custom Software tiles.</ul>
-                                                </ol>
-
-                                                <div className="title">Once you have completed all these steps you will be redirected to your new solution and can download the automation to support the provisioning into your own environment</div>
-
-                                            </form>
+                                        <Column lg={{ span: 6 }} md={{ span: 12 }}>
+                                            <div className='overview-text'>
+                                                <p>
+                                                    You are about to create a composite solution using the co-creation wizard.
+                                                </p>
+                                                <br />
+                                                <p>
+                                                    To do that, you will have to specify if you want to create a solution for Demos, building an MVP, a Production environment or support development.
+                                                    You will then select the platform on which you wish to deploy your solution (Azure, AWS, IBM Cloud or bring your own OpenShift),
+                                                    the architecture pattern you which to deploy depending on your use case and the cluster storage you want to use.
+                                                </p>
+                                                <br />
+                                                <p>
+                                                    Then, you will have to pick the IBM Software cartridges you need as part of your solution, from individual components of IBM Cloud Paks,
+                                                    Sustainability Software, or bringing your own custom Software tiles. Once you have completed all these steps you will be redirected to
+                                                    your new solution and can download the automation to support the provisioning into your own environment.
+                                                </p>
+                                            </div>
                                         </Column>
-                                        <Column>
+                                        <Column lg={{ span: 6 }} md={{ span: 12 }}>
                                             <div class="overview-image">
                                                 <img loading="lazy" src={StacksImg} alt="Diagram representing a solution stack" />
                                             </div>
                                         </Column>
                                     </Row>
-
-                                </div>
+                                </Grid>
 
                             </PageWizardStep>
                             <PageWizardStep id="persona" label="Persona" key="persona">
