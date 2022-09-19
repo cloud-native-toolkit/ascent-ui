@@ -69,6 +69,21 @@ class SolutionDetailsView extends Component {
         return { __html: rawMarkup };
     }
 
+    deployInTechZone() {
+        this.props.addNotification("info", "BUILDING", "Deploying in TechZone...");
+        fetch(`/api/solutions/${this.state.data?.id}/automation`)
+        .then(response => {
+            if (response && response.status === 200) {
+                response.blob().then(blob => {
+                    // TODO POST to the TZ webservice the blob
+                });
+            }
+            else {
+                this.props.addNotification("error", response.status + " " + response.statusText, "Error building your automation module.");
+            }
+        });
+    }
+
     downloadTerraform() {
         this.props.addNotification("info", "BUILDING", "Building automation...");
         fetch(`/api/solutions/${this.state.data?.id}/automation`)
@@ -131,6 +146,11 @@ class SolutionDetailsView extends Component {
                                     {data?.name}
                                     <div style={{ marginLeft: 'auto' }}>
 
+                                        <Button
+                                            renderIcon={Download16}
+                                            onClick={() => this.deployInTechZone()} >
+                                            Deploy in TechZone
+                                        </Button>
                                         <Button
                                             renderIcon={Download16}
                                             onClick={() => this.downloadTerraform()} >
