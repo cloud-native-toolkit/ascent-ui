@@ -52,6 +52,23 @@ module.exports = {
     new Dotenv()
   ],
   devServer: {
+    onBeforeSetupMiddleware: function (devServer) {
+      if (!devServer) {
+        throw new Error('webpack-dev-server is not defined');
+      }
+      devServer.app.get('/userDetails', function (req, res) {
+        res.json({
+          name: 'NoeSamaille',
+          email: 'noe.samaille@ibm.com',
+          given_name: 'Noé',
+          family_name: 'Samaille',
+          roles: ['default', 'editor', 'admin'],
+          role: 'admin',
+          region: 'eu-de',
+          sessionExpire: new Date(Date.now() + 3600 * 1000)
+        });
+      });
+    },
     host: 'localhost',
     port,
     historyApiFallback: true,
@@ -62,22 +79,7 @@ module.exports = {
         target: process.env.API_HOST ?? 'http://localhost:3001',
         changeOrigin: true,
         pathRewrite: { '^/api': '' }
-      },
-      '/userDetails': {
-        bypass: (req, res) => {
-          res.send({
-            name: 'NoeSamaille',
-            email: 'noe.samaille@ibm.com',
-            given_name: 'Noé',
-            family_name: 'Samaille',
-            roles: ['default', 'editor', 'admin'],
-            role: 'admin',
-            region: 'eu-de',
-            sessionExpire: new Date(Date.now() + 3600 * 1000)
-          });
-          return false;
-        },
-      },
+      }
     }
   }
 };
