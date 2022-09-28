@@ -10,7 +10,8 @@ import {
 } from "react-router-dom";
 import {
     Edit16,
-    Download16
+    Download16, 
+    Subflow16
 } from '@carbon/icons-react';
 
 import { marked } from 'marked';
@@ -52,6 +53,7 @@ class SolutionDetailsView extends Component {
                         readme = await (await fetch(`/api/solutions/${this.props.solId}/files/${readme.Key}`)).text();
                     }
                     this.setState({ data: sol, totalItems: sol?.architectures?.length, readme: readme, showContent: readme ? 'solution-readme' : 'solution-details' });
+                    console.log(this.state.data);
                 } else {
                     this.setState({ error: sol });
                 }
@@ -67,6 +69,23 @@ class SolutionDetailsView extends Component {
     getMarkdownText() {
         var rawMarkup = marked(this.state.readme, { sanitize: true });
         return { __html: rawMarkup };
+    }
+
+    deployInTechZone() {
+        const el = document.getElementById('deployInTechZone');
+        el.disabled = true;
+        this.props.addNotification("info", "DEPLOYING", "Deploying automation to Techzone...");
+        fetch(`/api/solutions/${this.state.data?.id}/automation/techzone`)
+            .then((response) => { 
+            return response.text().then((data) => {
+                window.open(data, '_blank');
+                el.disabled = false;
+                return data;
+            }).catch((err) => {
+                el.disabled = false;
+                console.log(err);
+            }) 
+        });
     }
 
     downloadTerraform() {
@@ -130,7 +149,14 @@ class SolutionDetailsView extends Component {
                                 {data?.name ? <h2 style={{ display: 'flex' }}>
                                     {data?.name}
                                     <div style={{ marginLeft: 'auto' }}>
-
+                                        {data?.techzone === true && this.props.user?.role === "admin" && <Button
+                                            id="deployInTechZone"
+                                            style={{ marginRight: '1rem' }}
+                                            renderIcon={Subflow16}
+                                            disabled={false}
+                                            onClick={() => this.deployInTechZone()} >
+                                            Deploy in TechZone
+                                        </Button>}
                                         <Button
                                             renderIcon={Download16}
                                             onClick={() => this.downloadTerraform()} >
