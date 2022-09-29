@@ -1064,7 +1064,7 @@ class CreateSolutionview extends Component {
                                         required
                                         defaultValue={this.state.fields.techzone}
                                         invalidText="A valid value is required"
-                                        onChange={this.handleChange.bind(this, "public")}
+                                        onChange={this.handleChange.bind(this, "techzone")}
                                         style={{ marginBottom: '1rem' }}>
                                         <SelectItem value={false} text="False" />
                                         <SelectItem value={true} text="True" />

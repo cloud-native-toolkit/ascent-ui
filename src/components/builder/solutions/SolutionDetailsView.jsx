@@ -53,7 +53,6 @@ class SolutionDetailsView extends Component {
                         readme = await (await fetch(`/api/solutions/${this.props.solId}/files/${readme.Key}`)).text();
                     }
                     this.setState({ data: sol, totalItems: sol?.architectures?.length, readme: readme, showContent: readme ? 'solution-readme' : 'solution-details' });
-                    console.log(this.state.data);
                 } else {
                     this.setState({ error: sol });
                 }
