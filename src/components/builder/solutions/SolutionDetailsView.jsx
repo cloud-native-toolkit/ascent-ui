@@ -76,14 +76,19 @@ class SolutionDetailsView extends Component {
         this.props.addNotification("info", "DEPLOYING", "Deploying automation to Techzone...");
         fetch(`/api/solutions/${this.state.data?.id}/automation/techzone`)
             .then((response) => { 
-            return response.text().then((data) => {
+            if (response && response.status === 200) {
+                response.text().then((data) => {
                 window.open(data, '_blank');
                 el.disabled = false;
-                return data;
-            }).catch((err) => {
+                }).catch((err) => {
+                    el.disabled = false;
+                    console.log(err);
+                }) 
+            }
+            else {
+                this.props.addNotification("error", response.status + " " + response.statusText, "Error deploying your automation module to TechZone.");
                 el.disabled = false;
-                console.log(err);
-            }) 
+            }
         });
     }
 
