@@ -98,6 +98,7 @@ class CreateSolutionview extends Component {
                 short_desc: "",
                 long_desc: "",
                 public: false,
+                techzone: false,
                 platform: "",
             }
         };
@@ -1054,6 +1055,16 @@ class CreateSolutionview extends Component {
                                         defaultValue={this.state.fields.public}
                                         invalidText="A valid value is required"
                                         onChange={this.handleChange.bind(this, "public")}
+                                        style={{ marginBottom: '1rem' }}>
+                                        <SelectItem value={false} text="False" />
+                                        <SelectItem value={true} text="True" />
+                                    </Select>}
+                                    {!this.props.isDuplicate && this.props.user?.roles?.includes('admin') && <Select id="techzone" name="techzone"
+                                        labelText="Deploy to TechZone"
+                                        required
+                                        defaultValue={this.state.fields.techzone}
+                                        invalidText="A valid value is required"
+                                        onChange={this.handleChange.bind(this, "techzone")}
                                         style={{ marginBottom: '1rem' }}>
                                         <SelectItem value={false} text="False" />
                                         <SelectItem value={true} text="True" />
