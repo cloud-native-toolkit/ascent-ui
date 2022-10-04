@@ -70,7 +70,7 @@ class SolutionDetailsView extends Component {
         return { __html: rawMarkup };
     }
 
-    deployInTechZone() {
+    deployInTechZone(solutionId) {
         const el = document.getElementById('deployInTechZone');
         el.disabled = true;
         this.props.addNotification("info", "DEPLOYING", "Deploying automation to Techzone...");
@@ -78,12 +78,9 @@ class SolutionDetailsView extends Component {
             .then((response) => { 
             if (response && response.status === 200) {
                 response.text().then((data) => {
-                window.open(data, '_blank');
-                el.disabled = false;
-                }).catch((err) => {
                     el.disabled = false;
-                    console.log(err);
-                }) 
+                    window.open(data + `/solutions/reserve/${solutionId}`, '_blank');
+                });
             }
             else {
                 this.props.addNotification("error", response.status + " " + response.statusText, "Error deploying your automation module to TechZone.");
