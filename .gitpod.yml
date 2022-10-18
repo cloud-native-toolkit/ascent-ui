@@ -1,5 +1,24 @@
+additionalRepositories:
+  - url: https://github.com/cloud-native-toolkit/ascent-bff
+    checkoutLocation: ascent-bff
+
+workspaceLocation: ascent-ui/main.code-workspace
+
 tasks:
-  - init: yarn install && yarn run build
+  - name: ascent-bff
+    before: |
+      cd ../ascent-bff
+    init: |
+      sudo apt install redis-server -y
+      yarn install
+    command: |
+      sudo service redis-server start
+      yarn start:dev
+
+  - name: ascent-ui
+    init: |
+      yarn install
+      yarn run build
     command: yarn start:dev
 additionalRepositories:
   - url: https://github.com/cloud-native-toolkit/ascent-bff
