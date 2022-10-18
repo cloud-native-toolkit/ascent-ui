@@ -1,3 +1,6 @@
 tasks:
   - init: yarn install && yarn run build
     command: yarn start:dev
+additionalRepositories:
+  - url: https://github.com/cloud-native-toolkit/ascent-bff
+    checkoutLocation: ascent-bff
