@@ -24,26 +24,27 @@ If deploying the container using the helm chart, provide the value in the `mode`
 
 **Note:** The application uses the `react-inject-env` module to update the environment variable value in the built application content.
 
-### Deploying 
+### Develop on Gitpod
 
-After you have created a new git repo from this git template, remember to rename the project.
-Edit `package.json` and change the default name to the name you used to create the template.
+Gitpod can provide fully initialized, perfectly set-up developer environments for any kind of software project. A workspace configuration is provided in the `.gitpod.yml` file at the root of this repository. Follow these steps to get started coding on Ascent in a few minutes:
 
-Make sure you are logged into the IBM Cloud using the IBM Cloud CLI and have access 
-to you development cluster. If you are using OpenShift make sure you have logged into OpenShift CLI on the command line.
+1. Log in to [Gitpod](https://gitpod.io) using your GitHub account.
+2. Grant Gitpod [permissions](https://gitpod.io/integrations) to you GitHub repos
+    - In GitHub integration menu, click **Edit Permissions** and select `public_repo`.
 
-```$bash
-npm install -g @ibmgaragecloud/cloud-native-toolkit-cli
-```
+        ![Gitpod integrations](./readme-images/gitpod-permissions.png)
 
-Use the IBM Garage for Cloud CLI to register the GIT Repo with Tekton or Jenkins 
+    - In GitHub integration menu, click **Manage on GitHub** and make sure Gitpod has access to the `cloud-native-toolkit` organization.
 
-```$bash
-oc sync <project> --dev
-oc pipeline
-```
+        ![Gitpod GitHub permissions](./readme-images/gitpod-org.png)
 
-Ensure you have the Cloud-Native Toolkit installed in your cluster to make this method of pipeline registry quick and easy [Cloud-Native Toolkit](https://cloudnativetoolkit.dev/)
+3. Create the required [environment variables](https://gitpod.io/variables) for Ascent in your user settings:
+
+    ![Gitpod environment variables](./readme-images/gitpod-variables.png)
+
+4. Create your [Gitpod workspace](https://gitpod.io/workspaces) by clicking **New Workspace** then paste the URL of this repository.
+
+Ater a few seconds you should be ready to code with the BFF and UI started in your workspace!
 
 ### Running locally
 
@@ -98,6 +99,27 @@ The React code pattern having segregated folder structure. Each design pattern h
 
 - Remove the design files from Components, Models, Service,View(UI-patterns).
 - Every Design files having the reference in UI-Shell folder which contains UIShell and  UIShellBody files. So need to remove respective reference.
+
+### Deploying 
+
+After you have created a new git repo from this git template, remember to rename the project.
+Edit `package.json` and change the default name to the name you used to create the template.
+
+Make sure you are logged into the IBM Cloud using the IBM Cloud CLI and have access 
+to you development cluster. If you are using OpenShift make sure you have logged into OpenShift CLI on the command line.
+
+```$bash
+npm install -g @ibmgaragecloud/cloud-native-toolkit-cli
+```
+
+Use the IBM Garage for Cloud CLI to register the GIT Repo with Tekton or Jenkins 
+
+```$bash
+oc sync <project> --dev
+oc pipeline
+```
+
+Ensure you have the Cloud-Native Toolkit installed in your cluster to make this method of pipeline registry quick and easy [Cloud-Native Toolkit](https://cloudnativetoolkit.dev/)
 
 ### Authentication
 
