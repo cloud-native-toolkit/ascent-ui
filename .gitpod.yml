@@ -10,9 +10,9 @@ tasks:
       cd ../ascent-bff
     init: |
       yarn cache clean
-      sudo apt install redis-server -y
       yarn install
     command: |
+      sudo apt install redis-server -y
       sudo service redis-server start
       yarn start:dev
 
