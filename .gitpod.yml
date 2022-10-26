@@ -9,14 +9,16 @@ tasks:
     before: |
       cd ../ascent-bff
     init: |
-      sudo apt install redis-server -y
+      yarn cache clean
       yarn install
     command: |
+      sudo apt install redis-server -y
       sudo service redis-server start
       yarn start:dev
 
   - name: ascent-ui
     init: |
+      yarn cache clean
       yarn install
       yarn run build
     command: yarn start:dev
