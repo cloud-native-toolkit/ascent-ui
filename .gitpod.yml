@@ -1,6 +1,8 @@
 additionalRepositories:
   - url: https://github.com/cloud-native-toolkit/ascent-bff
     checkoutLocation: ascent-bff
+  - url: https://github.com/cloud-native-toolkit/iascable
+    checkoutLocation: iascable
 
 workspaceLocation: ascent-ui/main.code-workspace
 
