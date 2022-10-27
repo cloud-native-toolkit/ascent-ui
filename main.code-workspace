@@ -5,6 +5,9 @@
         },
         {
             "path": "../ascent-bff"
+        },
+        {
+            "path": "../iascable"
         }
     ],  
 }

@@ -1,10 +1,20 @@
 additionalRepositories:
   - url: https://github.com/cloud-native-toolkit/ascent-bff
     checkoutLocation: ascent-bff
+  - url: https://github.com/cloud-native-toolkit/iascable
+    checkoutLocation: iascable
 
 workspaceLocation: ascent-ui/main.code-workspace
 
 tasks:
+  - name: iascable
+    before: |
+      cd ../iascable
+    init: |
+      npm ci
+    command: |
+      npm run tdd
+
   - name: ascent-bff
     before: |
       cd ../ascent-bff
