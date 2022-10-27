@@ -114,6 +114,13 @@ class CreateSolutionview extends Component {
                 this.setState({ boms: boms });
             })
             .catch(console.error);
+        fetch('/api/automation/catalog/boms')
+            .then(res => res.json())
+            .then(catalog => {
+                console.log(catalog);
+                this.setState({ catalog: catalog });
+            })
+            .catch(console.error);
     }
 
     handleChange = (field, e) => {
@@ -662,7 +669,8 @@ class CreateSolutionview extends Component {
     };
 
     render() {
-        const persona = this.solution_wizard.personas.find(p => p.id === this.state.persona);
+        const persona = this.state.catalog?.metadata?.useCases?.find(p => p.name === this.state.persona);
+        console.log(persona);
         const platform = this.solution_wizard.platforms.find(p => p.id === this.state.platform);
         const arch = this.solution_wizard.architectures.find(a => a.id === this.state.architecture);
         const storage = this.solution_wizard.storage_providers.find(a => a.id === this.state.storage);
@@ -749,7 +757,7 @@ class CreateSolutionview extends Component {
                                             </div>
                                         </Column>
                                         <Column lg={{ span: 6 }} md={{ span: 12 }}>
-                                            <div class="overview-image">
+                                            <div className="overview-image">
                                                 <img loading="lazy" src={StacksImg} alt="Diagram representing a solution stack" />
                                             </div>
                                         </Column>
@@ -764,22 +772,21 @@ class CreateSolutionview extends Component {
                                     <form className="plans">
 
                                         <div className="title">To help guide your solution creation, the first
-                                            step is to select the persona you are trying to support.
+                                            step is to select the use case you are trying to support.
                                             this will help the solution wizard to guide you to the best outcome
                                             for your automation
                                         </div>
 
                                         {
-                                            this.solution_wizard.personas?.length ?
-                                                this.solution_wizard.personas.map((persona) => (
-
-                                                    <label className='plan complete-plan' htmlFor={persona.id} key={persona.id}>
-                                                        <input type="radio" className={this.state.persona === persona.id ? 'checked' : ''} name={persona.id} id={persona.id} onClick={() => this.setState({ persona: persona.id })} />
+                                            this.state.catalog?.metadata?.useCases?.length ?
+                                                this.state.catalog.metadata.useCases.map((useCase) => (
+                                                    <label className='plan complete-plan' htmlFor={useCase.name} key={useCase.name}>
+                                                        <input type="radio" className={this.state.persona === useCase.name ? 'checked' : ''} name={useCase.name} id={useCase.name} onClick={() => this.setState({ persona: useCase.name })} />
                                                         <div className="plan-content">
-                                                            <img loading="lazy" src={persona.image} alt="" />
+                                                            <img loading="lazy" src={useCase.iconUrl} alt="" />
                                                             <div className="plan-details">
-                                                                <span>{persona.title}</span>
-                                                                <p>{persona.desc}</p>
+                                                                <span>{useCase.displayName ?? useCase.name}</span>
+                                                                <p>{useCase.description}</p>
                                                             </div>
                                                         </div>
                                                     </label>
@@ -797,7 +804,7 @@ class CreateSolutionview extends Component {
                                 <div className="selection-set">
                                     <form className="plans platform">
 
-                                        <div className="title">Now you have selected an outcome aligned with your persona. You now want to
+                                        <div className="title">Now you have selected an outcome aligned with your use case. You now want to
                                             select the platform you want to target. This will be the compute layer of your solution
                                         </div>
 
@@ -838,7 +845,7 @@ class CreateSolutionview extends Component {
                                 <div className="selection-set">
                                     <form className="plans">
 
-                                        <div className="title">Now you have selected an outcome aligned with your persona you want to support
+                                        <div className="title">Now you have selected an outcome aligned with your use case you want to support
                                             now lets select the platform you want to target. This will be the compute layer of of you solution
                                         </div>
 
