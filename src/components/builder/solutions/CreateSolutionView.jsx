@@ -3,11 +3,9 @@ import {
     Navigate
 } from "react-router-dom";
 import {
-    TextInput, Column, Grid, Row, Tag, Form, TextArea, Select, SelectItem, Button
+    TextInput, Column, Grid, Row, Tag, Form, TextArea, Select, SelectItem,
+    Button, ProgressIndicator, ProgressStep
 } from 'carbon-components-react';
-import {
-    PageWizardStep, StatefulPageWizard, PageWizardStepTitle, Tooltip
-} from 'carbon-addons-iot-react';
 import {
     ContainerSoftware32, Close32 as Close
 } from '@carbon/icons-react';
@@ -18,7 +16,6 @@ import { catalogFilters } from '../../../data/data';
 import { v4 as uuidv4 } from 'uuid';
 
 import openshiftImg from '../../../images/openshift.png'
-import financeImg from '../../../images/finance.svg'
 
 import archQuickstartImg from '../../../images/arch/quick-start.png'
 import archStandardImg from '../../../images/arch/standard.png'
@@ -45,6 +42,17 @@ import softwareSecurityImg from '../../../images/software/security.svg'
 import softwareTurbonomicImg from '../../../images/software/turbonomic-short.png'
 
 import StacksImg from '../../../images/stacks.png'
+
+const STEP_OVERWIEW = 0;
+const STEP_USECASE = 1;
+const STEP_INFRASTRUCTURE = 2;
+const STEP_SOFTWARE = 3;
+const STEP_DETAILS = 4;
+const STEP_SUMMARY = 5;
+
+const STEP_INFRA_PLATFORM = 0;
+const STEP_INFRA_FLAVOR = 1;
+const STEP_INFRA_STORAGE = 2;
 
 const CatalogContent = ({ logo, icon, title, displayName, status, type, description }) => (
     <div className={`iot--sample-tile`}>
@@ -76,6 +84,8 @@ class CreateSolutionview extends Component {
         super(props);
         this.state = {
             curStep: "overview",
+            curStepIx: STEP_OVERWIEW,
+            infraStepIx: STEP_INFRA_PLATFORM,
             persona: undefined,
             platform: undefined,
             architecture: undefined,
@@ -93,7 +103,7 @@ class CreateSolutionview extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-
+        this.handleNext = this.handleNext.bind(this);
     }
 
     componentDidMount() {
@@ -125,22 +135,27 @@ class CreateSolutionview extends Component {
     }
 
     nextDisabled = () => {
-        switch (this.state.curStep) {
-            case "overview":
+        switch (this.state.curStepIx) {
+            case STEP_OVERWIEW:
                 return false;
-            case "persona":
+            case STEP_USECASE:
                 return this.state.persona === undefined;
-            case "platform":
-                return this.state.platform === undefined;
-            case "architecture":
-                return this.state.architecture === undefined;
-            case "storage":
-                return this.state.storage === undefined;
-            case "software":
+            case STEP_INFRASTRUCTURE:
+                switch (this.state.infraStepIx) {
+                    case STEP_INFRA_PLATFORM:
+                        return this.state.platform === undefined
+                    case STEP_INFRA_FLAVOR:
+                        return this.state.architecture === undefined
+                    case STEP_INFRA_STORAGE:
+                        return this.state.storage === undefined
+                    default:
+                        return true;
+                }
+            case STEP_SOFTWARE:
                 return this.state.software?.length === 0;
-            case "details":
+            case STEP_DETAILS:
                 return this.state.fields.name === "";
-            case "summary":
+            case STEP_SUMMARY:
                 return false;
             default:
                 return true;
@@ -151,14 +166,22 @@ class CreateSolutionview extends Component {
         console.log(JSON.stringify(event));
     }
 
-    handleNext = (newStep) => {
-        if (newStep === "software") this.setState({ software: [] });
-        this.setState({ curStep: newStep });
+    handleNext() {
+        if (this.state.curStepIx === STEP_INFRASTRUCTURE && this.state.platform !== 'byo-infra' && this.state.infraStepIx !== STEP_INFRA_STORAGE) {
+            this.setState({ infraStepIx: this.state.infraStepIx + 1 });
+        } else {
+            if (this.state.curStepIx + 1 === STEP_SOFTWARE) this.setState({ software: [] });
+            this.setState({ curStepIx: this.state.curStepIx + 1 });
+        }
     }
 
     handleBack = (newStep) => {
-        if (newStep === "software") this.setState({ software: [] });
-        this.setState({ curStep: newStep });
+        if (this.state.curStepIx === STEP_INFRASTRUCTURE && this.state.infraStepIx !== STEP_INFRA_PLATFORM) {
+            this.setState({ infraStepIx: this.state.infraStepIx - 1 });
+        } else {
+            if (newStep === "software") this.setState({ software: [] });
+            this.setState({ curStepIx: this.state.curStepIx > 0 ? this.state.curStepIx - 1 : 0 });
+        }
     }
 
     handleSubmit = () => {
@@ -495,6 +518,7 @@ class CreateSolutionview extends Component {
     };
 
     render() {
+        console.log(this.state.curStepIx)
         const persona = this.state.catalog?.metadata?.useCases?.find(p => p.name === this.state.persona);
         const platform = this.state.catalog?.metadata?.cloudProviders?.find(p => p.name === this.state.platform);
         const arch = this.state.catalog?.metadata?.flavors?.find(p => p.name === this.state.architecture);
@@ -516,6 +540,7 @@ class CreateSolutionview extends Component {
 
         return (
             <Grid className='create-solution'>
+                {this.state.navigate ? <Navigate to={this.state.navigate} /> : <></>}
                 <Row>
                     <Column lg={{ span: 12 }}>
                         <h2>
@@ -532,23 +557,27 @@ class CreateSolutionview extends Component {
                 </Row>
 
                 <Row className="modal-wizard">
-                    <Column lg={{ span: 12 }}>
+                    <Column lg={{ span: 2 }}>
 
-                        {this.state.navigate ? <Navigate to={this.state.navigate} /> : <></>}
-
-                        <StatefulPageWizard
-                            currentStepId="overview"
-                            onNext={this.handleNext}
-                            onClose={() => this.setState({ navigate: '/solutions/user' })}
-                            onSubmit={this.handleSubmit}
-                            onClearError={this.handleSubmit}
-                            onBack={this.handleBack}
-                            nextDisabled={this.nextDisabled()}
-                        >
-                            <PageWizardStep id="overview" label="Overview" key="overview">
-                                <PageWizardStepTitle>Welcome to the Solution Wizard</PageWizardStepTitle>
-
+                        <ProgressIndicator vertical currentIndex={this.state.curStepIx}>
+                            <ProgressStep label="Overview" />
+                            <ProgressStep label="Use Case" />
+                            <ProgressStep label="Infrastructure" />
+                            <ProgressStep label="Software" />
+                            <ProgressStep label="Solution Details" />
+                            <ProgressStep label="Summary" />
+                        </ProgressIndicator>
+                    </Column>
+                    <Column lg={{ span: 10 }}>
+                        {
+                            this.state.curStepIx === STEP_OVERWIEW ?
                                 <Grid className='wizard-overview'>
+                                    <Row>
+                                        <Column lg={{ span: 12 }}>
+                                            <h3>Welcome to the Solution Wizard</h3>
+                                            <br />
+                                        </Column>
+                                    </Row>
                                     <Row>
                                         <Column lg={{ span: 6 }} md={{ span: 12 }}>
                                             <div className='overview-text'>
@@ -576,183 +605,185 @@ class CreateSolutionview extends Component {
                                         </Column>
                                     </Row>
                                 </Grid>
-
-                            </PageWizardStep>
-                            <PageWizardStep id="persona" label="Persona" key="persona">
-                                <PageWizardStepTitle>Step 1: What are you trying to achieve ?</PageWizardStepTitle>
-
-                                <div className="selection-set">
-                                    <form className="plans">
-
-                                        <div className="title">To help guide your solution creation, the first
-                                            step is to select the use case you are trying to support.
-                                            this will help the solution wizard to guide you to the best outcome
-                                            for your automation
-                                        </div>
-
-                                        {
-                                            this.state.catalog?.metadata?.useCases?.length ?
-                                                this.state.catalog.metadata.useCases.map((useCase) => (
-                                                    <label className='plan complete-plan' htmlFor={useCase.name} key={useCase.name}>
-                                                        <input type="radio" className={this.state.persona === useCase.name ? 'checked' : ''} name={useCase.name} id={useCase.name} onClick={() => this.setState({ persona: useCase.name })} />
-                                                        <div className="plan-content">
-                                                            <img loading="lazy" src={useCase.iconUrl} alt="" />
-                                                            <div className="plan-details">
-                                                                <span>{useCase.displayName ?? useCase.name}</span>
-                                                                <p>{useCase.description}</p>
-                                                            </div>
-                                                        </div>
-                                                    </label>
-
-                                                )) : <p>No Personas</p>
-                                        }
-
-                                    </form>
-                                </div>
-
-                            </PageWizardStep>
-                            <PageWizardStep id="platform" key="platform" label="Platform">
-                                <PageWizardStepTitle>Step 2: Select your platform</PageWizardStepTitle>
-
-                                <div className="selection-set">
-                                    <form className="plans platform">
-
-                                        <div className="title">Now you have selected an outcome aligned with your use case. You now want to
-                                            select the platform you want to target. This will be the compute layer of your solution
-                                        </div>
-
-                                        {
-                                            this.state.catalog?.metadata?.cloudProviders?.length ?
-                                                this.state.catalog.metadata.cloudProviders.map((cloudProvider) => (
-                                                    <label className="plan complete-plan" htmlFor={cloudProvider.name} key={cloudProvider.name}>
-                                                        <input
-                                                            type="radio"
-                                                            name={cloudProvider.name}
-                                                            id={cloudProvider.name}
-                                                            className={this.state.platform === cloudProvider.name ? 'checked' : ''}
-                                                            onClick={() => { this.setState({ platform: cloudProvider.name }) }} />
-                                                        <div className="plan-content">
-                                                            <img loading="lazy" src={cloudProvider.iconUrl} alt="" />
-                                                            <div className="plan-details">
-                                                                <span>{cloudProvider.displayName ?? cloudProvider.name}</span>
-                                                                <p>{cloudProvider.description}</p>
-                                                            </div>
-                                                        </div>
-                                                    </label>
-
-                                                )) : <p>No Platforms</p>
-                                        }
-                                        <label className="plan complete-plan" htmlFor='byo-infra' key='byo-infra'>
-                                            <input
-                                                type="radio"
-                                                name='byo-infra'
-                                                id='byo-infra'
-                                                className={this.state.platform === 'byo-infra' ? 'checked' : ''}
-                                                onClick={() => { this.setState({ platform: 'byo-infra' }) }} />
-                                            <div className="plan-content">
-                                                <img loading="lazy" src={byoInfra} alt="" />
-                                                <div className="plan-details">
-                                                    <span>Bring Your Own</span>
-                                                    <p>Bring your own OpenShift infrastructure. Select only the software you want to deploy for your solution</p>
-                                                </div>
-                                            </div>
-                                        </label>
-                                    </form>
-                                </div>
-
-
-                            </PageWizardStep>
-                            <PageWizardStep id="architecture" key="architecture" label="Architecture">
-                                <PageWizardStepTitle>Step 3: Select your Architecture Pattern</PageWizardStepTitle>
-
-                                <div className="selection-set">
-                                    <form className="plans">
-
-                                        <div className="title">Now you have selected your use case and the platform you want to target. Let's select the architecture pattern you want to use</div>
-
-                                        <div className="arch">
-                                            <p>You want to <strong>{persona?.displayName ?? persona?.name}</strong> <img loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
-                                            <p>on the platform <img loading="lazy" src={platform?.iconUrl} alt="platform" align={"top"} /></p>
-                                            <p>We recommend you use the <strong>{persona?.flavor}</strong> reference architecture</p>
-
-                                        </div>
-
-                                        {
-                                            this.state.catalog?.metadata?.flavors?.length ?
-                                                this.state.catalog?.metadata?.flavors.map((flavor) => (
-                                                    <label className="plan complete-plan" htmlFor={flavor.name} key={flavor.name}>
-                                                        <input type="radio" name={flavor.name} id={flavor.name}
-                                                            disabled={!flavor.enabled}
-                                                            className={this.state.architecture === flavor.name ? 'checked' : ''}
-                                                            onClick={() => { if (flavor.enabled) this.setState({ architecture: flavor.name }) }} />
-                                                        <div className={`plan-content${flavor.enabled ? '' : ' coming-soon'}`}>
-                                                            <img loading="lazy" src={flavor.iconUrl} alt="" />
-
-                                                            <div className="plan-details">
-                                                                <span>{flavor.displayName ?? flavor.name}
-                                                                    {!flavor.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
-                                                                </span>
-                                                                <p>{flavor.description}</p>
-                                                            </div>
-                                                        </div>
-                                                    </label>
-                                                )) : <p>No Architecture Pattern</p>
-                                        }
-
-                                    </form>
-                                </div>
-
-                            </PageWizardStep>
-                            <PageWizardStep id="storage" key="storage" label="Storage">
-                                <PageWizardStepTitle>Step 4: What type of Storage ?</PageWizardStepTitle>
-
-                                <div className="selection-set">
-                                    <form className="plans">
-
-                                        <div className="title">Now you have selected your reference architecture you will require some file storage for your IBM Software
-                                        </div>
-
-                                        {
-                                            this.solution_wizard.storage_providers?.length ?
-                                                storage_providers.map((storage) => (
-
-                                                    <label className="plan complete-plan" htmlFor={storage.id} key={storage.id}>
-                                                        <input type="radio" name={storage.id} id={storage.id}
-                                                            disabled={!storage.enabled}
-                                                            className={this.state.storage === storage.id ? 'checked' : ''}
-                                                            onClick={() => { if (storage.enabled) this.setState({ storage: storage.id }) }} />
-                                                        <div className={`plan-content${storage.enabled ? '' : ' coming-soon'}`}>
-                                                            <img loading="lazy" src={storage.image} alt="" />
-
-                                                            <div className="plan-details">
-                                                                <span>{storage.title}
-                                                                    <Tooltip tooltipBodyId="tooltip-body">
-                                                                        <p id="tooltip-body">
-                                                                            To learn more about the your storage options click on Learn More below
-                                                                        </p>
-                                                                        <div>
-                                                                            <br></br>
-                                                                            <a href={storage.docs} target="_blank" rel="noopener noreferrer">
-                                                                                Learn More
-                                                                            </a>
+                            : this.state.curStepIx === STEP_USECASE ?
+                                <Grid className='wizard-overview'>
+                                    <Row>
+                                        <Column lg={{ span: 12 }}>
+                                            <h3>Step 1: What are you trying to achieve ?</h3>
+                                            <div className="selection-set">
+                                                <form className="plans">
+                                                    <div className="title">To help guide your solution creation, the first
+                                                        step is to select the use case you are trying to support.
+                                                        this will help the solution wizard to guide you to the best outcome
+                                                        for your automation
+                                                    </div>
+                                                    {
+                                                        this.state.catalog?.metadata?.useCases?.length ?
+                                                            this.state.catalog.metadata.useCases.map((useCase) => (
+                                                                <label className='plan complete-plan' htmlFor={useCase.name} key={useCase.name}>
+                                                                    <input type="radio" className={this.state.persona === useCase.name ? 'checked' : ''} name={useCase.name} id={useCase.name} onClick={() => this.setState({ persona: useCase.name })} />
+                                                                    <div className="plan-content">
+                                                                        <img loading="lazy" src={useCase.iconUrl} alt="" />
+                                                                        <div className="plan-details">
+                                                                            <span>{useCase.displayName ?? useCase.name}</span>
+                                                                            <p>{useCase.description}</p>
                                                                         </div>
-                                                                    </Tooltip>
-                                                                    {!storage.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
+                                                                    </div>
+                                                                </label>
+                                                            )) : <p>No Personas</p>
+                                                    }
+                                                </form>
+                                            </div>
+                                        </Column>
+                                    </Row>
+                                </Grid>
+                            : this.state.curStepIx === STEP_INFRASTRUCTURE ?
+                                <Grid className='wizard-overview'>
+                                    <Row>
+                                        <Column lg={{ span: 12 }}>
+                                            <h3>
+                                                Step 2: Select your infrastructure
+                                            </h3>
+                                            <br />
+                                            <ProgressIndicator currentIndex={this.state.infraStepIx}>
+                                                <ProgressStep label="Platform" />
+                                                <ProgressStep label="Architecture" />
+                                                <ProgressStep label="Storage" />
+                                            </ProgressIndicator>
+                                            <br />
+                                            { this.state.infraStepIx === STEP_INFRA_PLATFORM ? 
+                                                <div>
+                                                    <div className="selection-set">
+                                                        <form className="plans platform">
 
-                                                                </span>
-                                                                <p>{storage.desc}</p>
+                                                            <div className="title">Now you have selected an outcome aligned with your use case. You now want to
+                                                                select the platform you want to target. This will be the compute layer of your solution
                                                             </div>
-                                                        </div>
-                                                    </label>
 
-                                                )) : <p>No Storage options</p>
-                                        }
+                                                            {
+                                                                this.state.catalog?.metadata?.cloudProviders?.length ?
+                                                                    this.state.catalog.metadata.cloudProviders.map((cloudProvider) => (
+                                                                        <label className="plan complete-plan" htmlFor={cloudProvider.name} key={cloudProvider.name}>
+                                                                            <input
+                                                                                type="radio"
+                                                                                name={cloudProvider.name}
+                                                                                id={cloudProvider.name}
+                                                                                className={this.state.platform === cloudProvider.name ? 'checked' : ''}
+                                                                                onClick={() => { this.setState({ platform: cloudProvider.name }) }} />
+                                                                            <div className="plan-content">
+                                                                                <img loading="lazy" src={cloudProvider.iconUrl} alt="" />
+                                                                                <div className="plan-details">
+                                                                                    <span>{cloudProvider.displayName ?? cloudProvider.name}</span>
+                                                                                    <p>{cloudProvider.description}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </label>
 
-                                    </form>
-                                </div>
+                                                                    )) : <p>No Platforms</p>
+                                                            }
+                                                            <label className="plan complete-plan" htmlFor='byo-infra' key='byo-infra'>
+                                                                <input
+                                                                    type="radio"
+                                                                    name='byo-infra'
+                                                                    id='byo-infra'
+                                                                    className={this.state.platform === 'byo-infra' ? 'checked' : ''}
+                                                                    onClick={() => { this.setState({ platform: 'byo-infra' }) }} />
+                                                                <div className="plan-content">
+                                                                    <img loading="lazy" src={byoInfra} alt="" />
+                                                                    <div className="plan-details">
+                                                                        <span>Bring Your Own</span>
+                                                                        <p>Bring your own OpenShift infrastructure. Select only the software you want to deploy for your solution</p>
+                                                                    </div>
+                                                                </div>
+                                                            </label>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            : this.state.infraStepIx === STEP_INFRA_FLAVOR ? 
+                                                <div>
+                                                    <div className="selection-set">
+                                                        <form className="plans">
+                                                            {/* <div className="title">Now you have selected your use case and the platform you want to target. Let's select the architecture pattern you want to use</div> */}
+                                                            <div className="arch">
+                                                                <p>You want to <strong>{persona?.displayName ?? persona?.name}</strong> <img loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
+                                                                <p>on the platform <img loading="lazy" src={platform?.iconUrl} alt="platform" align={"top"} /></p>
+                                                                <p>We recommend you use the <strong>{persona?.flavor}</strong> reference architecture</p>
+                                                            </div>
+                                                            {
+                                                                this.state.catalog?.metadata?.flavors?.length ?
+                                                                    this.state.catalog?.metadata?.flavors.map((flavor) => (
+                                                                        <label className="plan complete-plan" htmlFor={flavor.name} key={flavor.name}>
+                                                                            <input type="radio" name={flavor.name} id={flavor.name}
+                                                                                disabled={!flavor.enabled}
+                                                                                className={this.state.architecture === flavor.name ? 'checked' : ''}
+                                                                                onClick={() => { if (flavor.enabled) this.setState({ architecture: flavor.name }) }} />
+                                                                            <div className={`plan-content${flavor.enabled ? '' : ' coming-soon'}`}>
+                                                                                <img loading="lazy" src={flavor.iconUrl} alt="" />
 
+                                                                                <div className="plan-details">
+                                                                                    <span>{flavor.displayName ?? flavor.name}
+                                                                                        {!flavor.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
+                                                                                    </span>
+                                                                                    <p>{flavor.description}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </label>
+                                                                    )) : <p>No Architecture Pattern</p>
+                                                            }
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            :  this.state.infraStepIx === STEP_INFRA_STORAGE ? 
+                                                <div>
+                                                    <div className="selection-set">
+                                                        <form className="plans">
 
-                            </PageWizardStep>
+                                                            <div className="title">Now you have selected your reference architecture you will require some file storage for your IBM Software
+                                                            </div>
+
+                                                            {
+                                                                this.solution_wizard.storage_providers?.length ?
+                                                                    storage_providers.map((storage) => (
+
+                                                                        <label className="plan complete-plan" htmlFor={storage.id} key={storage.id}>
+                                                                            <input type="radio" name={storage.id} id={storage.id}
+                                                                                disabled={!storage.enabled}
+                                                                                className={this.state.storage === storage.id ? 'checked' : ''}
+                                                                                onClick={() => { if (storage.enabled) this.setState({ storage: storage.id }) }} />
+                                                                            <div className={`plan-content${storage.enabled ? '' : ' coming-soon'}`}>
+                                                                                <img loading="lazy" src={storage.image} alt="" />
+
+                                                                                <div className="plan-details">
+                                                                                    <span>{storage.title}
+                                                                                        {!storage.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
+
+                                                                                    </span>
+                                                                                    <p>{storage.desc}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </label>
+
+                                                                    )) : <p>No Storage options</p>
+                                                            }
+
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            : <></>}
+                                        </Column>
+                                    </Row>
+                                </Grid>
+                            : <></>
+                        }
+                        <br />
+                        <Button kind='secondary'
+                            style={{ marginRight: '1rem', display: this.state.curStepIx <= 0 ? 'none' : 'unset' }}
+                            onClick={this.handleBack}>Back</Button>
+                        <Button onClick={this.handleNext}
+                            disabled={this.nextDisabled()}>Next</Button>
+                        {/* 
+                        
+                            
                             <PageWizardStep id="software" key="software" label="Software">
                                 <PageWizardStepTitle>Step 5: Select the Software</PageWizardStepTitle>
 
@@ -887,7 +918,6 @@ class CreateSolutionview extends Component {
 
 
                             </PageWizardStep>
-
                             <PageWizardStep id="summary" key="summary" label="Summary">
                                 <PageWizardStepTitle>Summary: Is this the solution you want ?</PageWizardStepTitle>
 
@@ -913,10 +943,7 @@ class CreateSolutionview extends Component {
                                         content later by adding an removing your own bill of materials.</p>
                                 </div>
 
-                            </PageWizardStep>
-
-
-                        </StatefulPageWizard>
+                            </PageWizardStep> */}
                     </Column>
                 </Row>
             </Grid>
