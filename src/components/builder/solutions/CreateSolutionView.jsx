@@ -20,11 +20,6 @@ import { v4 as uuidv4 } from 'uuid';
 import openshiftImg from '../../../images/openshift.png'
 import financeImg from '../../../images/finance.svg'
 
-import personaTechSalesImg from '../../../images/personas/techsales_tammy.png'
-import personaMVPImg from '../../../images/personas/mvp_rohan.png'
-import personaProductionImg from '../../../images/personas/production_admin.png'
-import personaDeveloperImg from '../../../images/personas/developer_rubi.png'
-
 import archQuickstartImg from '../../../images/arch/quick-start.png'
 import archStandardImg from '../../../images/arch/standard.png'
 import archAdvancedImg from '../../../images/arch/advanced.png'
@@ -32,15 +27,9 @@ import archAdvancedImg from '../../../images/arch/advanced.png'
 import storagePortworxImg from '../../../images/storage/portworx.png'
 import storageOdfImg from '../../../images/storage/odf.png'
 
-import platformAwsImg from '../../../images/platforms/aws.png'
-import platformAzureImg from '../../../images/platforms/azure.png'
-import platformIBMImg from '../../../images/platforms/ibmcloud.png'
-import platformVmwareImg from '../../../images/platforms/vmware.svg'
-import platformPowerImg from '../../../images/platforms/power.png'
-import platformZosImg from '../../../images/platforms/zlogo.png'
+import byoInfra from '../../../images/platforms/cloud-infra-center-byo-infra.svg';
 
 import softwareApiConnectImg from '../../../images/software/apiconnect.svg'
-import softwareAppConnectImg from '../../../images/software/appconnect.svg'
 import softwareDataFabricImg from '../../../images/software/datafabric.svg'
 import softwareDataFoundationImg from '../../../images/software/datafoundation.svg'
 import softwareDB2Img from '../../../images/software/db2.svg'
@@ -117,7 +106,6 @@ class CreateSolutionview extends Component {
         fetch('/api/automation/catalog/boms')
             .then(res => res.json())
             .then(catalog => {
-                console.log(catalog);
                 this.setState({ catalog: catalog });
             })
             .catch(console.error);
@@ -207,168 +195,6 @@ class CreateSolutionview extends Component {
     }
 
     solution_wizard = {
-
-        personas: [
-            {
-                id: "demo",
-                title: "Setup a Demo",
-                desc: "As a tech seller you want to demo the capability of IBM Technology use this personal to get started quickly",
-                docs: "url",
-                image: personaTechSalesImg,
-                recommendedArch: "quickstart"
-            },
-            {
-                id: "mvp",
-                title: "Create a POC/POT/MVP",
-                desc: "You are past the demo phase and now need to prove the technology for a specific client use case",
-                docs: "",
-                image: personaMVPImg,
-                recommendedArch: "standard"
-            },
-            {
-                id: "production",
-                title: "Prepare for Production",
-                desc: "You are now focused on the delivery phase of a project and need to place IBM Technology into a highly scalable secure production environment",
-                docs: "",
-                image: personaProductionImg,
-                recommendedArch: "advanced"
-            },
-            {
-                id: "developer",
-                title: "Support Development",
-                desc: "You want to setup a Red Hat OpenShift environment to develop solution assets",
-                docs: "",
-                image: personaDeveloperImg,
-                recommendedArch: "standard"
-            },
-
-        ],
-        platforms: [
-            {
-                id: "aws",
-                title: "AWS",
-                desc: "Amazon Web Services infrastructure with Red Hat OpenShift ROSA",
-                docs: "",
-                image: platformAwsImg,
-                enabled: true,
-                boms: {
-                    quickstart: [
-                        "200-openshift-gitops",
-                        "105-aws-vpc-openshift",
-                        "220-dev-tools"
-                    ],
-                    standard: [],
-                    advanced: []
-                }
-            },
-            {
-                id: "azure",
-                title: "Azure",
-                desc: "Microsoft Azure infrastructure with Red Hat OpenShift ARO and IPI",
-                docs: "https://azure.microsoft.com/",
-                image: platformAzureImg,
-                enabled: true,
-                boms: {
-                    quickstart: [
-                        "110-azure-ocp-ipi",
-                        "200-openshift-gitops",
-                        "220-dev-tools"
-                    ],
-                    standard: [
-                        "101-azure-vnet-base",
-                        "200-openshift-gitops",
-                        "220-dev-tools"
-                    ],
-                    advanced: []
-                }
-            },
-            {
-                id: "ibm",
-                title: "IBM Cloud",
-                desc: "IBM Cloud infrastructure with Red Hat OpenShift ROKS ",
-                docs: "https://www.ibm.com/cloud",
-                image: platformIBMImg,
-                enabled: true,
-                boms: {
-                    quickstart: [
-                        "200-ibm-openshift-gitops",
-                        "105-ibm-vpc-openshift",
-                        "220-dev-tools"
-                    ],
-                    standard: [
-                        "000-ibm-account-setup",
-                        "100-ibm-shared-services",
-                        "110-ibm-vpc-edge-standard",
-                        "115-ibm-vpc-openshift-standard",
-                        "200-ibm-openshift-gitops",
-                        "220-dev-tools"
-                    ],
-                    advanced: [
-                        "000-ibm-account-setup",
-                        "100-ibm-shared-services",
-                        "110-ibm-edge-vpc",
-                        "130-ibm-development-vpc-openshift",
-                        "150-ibm-production-vpc-openshift",
-                        "200-ibm-openshift-gitops-dev",
-                        "200-ibm-openshift-gitops-integration",
-                        "220-dev-tools"
-                    ],
-                    "fs-cloud": [
-                        "000-ibm-fs-account-setup",
-                        "100-ibm-fs-shared-services",
-                        "110-ibm-fs-edge-vpc",
-                        "120-ibm-fs-management-vpc",
-                        "130-ibm-fs-management-vpc-openshift",
-                        "140-ibm-fs-workload-vpc",
-                        "150-ibm-fs-workload-vpc-openshift",
-                        "160-ibm-fs-openshift-dev-tools",
-                        "165-ibm-fs-openshift-workload",
-                        "170-ibm-fs-openshift-gitops"
-                    ]
-                }
-
-            },
-            {
-                id: "vmware",
-                title: "VMWare",
-                desc: "VMWare vSphere on premise infrastructure powered by Intel with Red Hat OpenShift",
-                docs: "",
-                image: platformVmwareImg,
-                enabled: false,
-                boms: {
-                    quickstart: [],
-                    standard: [],
-                    advanced: []
-                }
-            },
-            {
-                id: "power",
-                title: "IBM Cloud + Power",
-                desc: "IBM Power 10 AIX environments with Red Hat OpenShift",
-                docs: "",
-                image: platformPowerImg,
-                enabled: false,
-                boms: {
-                    quickstart: [],
-                    standard: [],
-                    advanced: []
-                }
-            },
-            {
-                id: "z",
-                title: "IBM Cloud + Z Platform",
-                desc: "IBM z/Linux and z/OS environment with Red Hat OpenShift",
-                docs: "",
-                image: platformZosImg,
-                enabled: false,
-                boms: {
-                    quickstart: [],
-                    standard: [],
-                    advanced: []
-                }
-            }
-
-        ],
         architectures: [
             {
                 id: "quickstart",
@@ -670,23 +496,10 @@ class CreateSolutionview extends Component {
 
     render() {
         const persona = this.state.catalog?.metadata?.useCases?.find(p => p.name === this.state.persona);
-        console.log(persona);
-        const platform = this.solution_wizard.platforms.find(p => p.id === this.state.platform);
-        const arch = this.solution_wizard.architectures.find(a => a.id === this.state.architecture);
+        const platform = this.state.catalog?.metadata?.cloudProviders?.find(p => p.name === this.state.platform);
+        const arch = this.state.catalog?.metadata?.flavors?.find(p => p.name === this.state.architecture);
         const storage = this.solution_wizard.storage_providers.find(a => a.id === this.state.storage);
         const software = this.state.software.map(swId => (this.solution_wizard.software.find(sw => sw.id === swId)));
-        const architectures = this.solution_wizard.architectures.map(architecture => ({
-            ...architecture,
-            enabled: this.solution_wizard.platforms.find(p => p.id === this.state.platform)?.boms[architecture.id]?.length > 0
-        }));
-        if (this.props.user?.email?.endsWith('ibm.com') && this.state.platform === 'ibm') architectures.push({
-            id: "fs-cloud",
-            title: "Financial Services",
-            desc: "Most secure regulated cloud infrastrcuture for managing business application and software",
-            docs: "https://www.ibm.com/cloud/financial-services",
-            image: financeImg,
-            enabled: true
-        });
         const storage_providers = this.solution_wizard.storage_providers.map(s => ({
             ...s,
             enabled: s.boms[this.state.platform]?.length > 0
@@ -809,31 +622,41 @@ class CreateSolutionview extends Component {
                                         </div>
 
                                         {
-                                            this.solution_wizard.platforms?.length ?
-                                                this.solution_wizard.platforms.map((platform) => (
-
-                                                    <label className="plan complete-plan" htmlFor={platform.id} key={platform.id}>
+                                            this.state.catalog?.metadata?.cloudProviders?.length ?
+                                                this.state.catalog.metadata.cloudProviders.map((cloudProvider) => (
+                                                    <label className="plan complete-plan" htmlFor={cloudProvider.name} key={cloudProvider.name}>
                                                         <input
                                                             type="radio"
-                                                            name={platform.id}
-                                                            id={platform.id}
-                                                            disabled={!platform.enabled}
-                                                            className={this.state.platform === platform.id ? 'checked' : ''}
-                                                            onClick={() => { if (platform.enabled) this.setState({ platform: platform.id }) }} />
-                                                        <div className={platform.enabled ? "plan-content" : "plan-content coming-soon"}>
-                                                            <img loading="lazy" src={platform.image} alt="" />
+                                                            name={cloudProvider.name}
+                                                            id={cloudProvider.name}
+                                                            className={this.state.platform === cloudProvider.name ? 'checked' : ''}
+                                                            onClick={() => { this.setState({ platform: cloudProvider.name }) }} />
+                                                        <div className="plan-content">
+                                                            <img loading="lazy" src={cloudProvider.iconUrl} alt="" />
                                                             <div className="plan-details">
-                                                                <span>{platform.title}
-                                                                    {!platform.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
-                                                                </span>
-                                                                <p>{platform.desc}</p>
+                                                                <span>{cloudProvider.displayName ?? cloudProvider.name}</span>
+                                                                <p>{cloudProvider.description}</p>
                                                             </div>
                                                         </div>
                                                     </label>
 
                                                 )) : <p>No Platforms</p>
                                         }
-
+                                        <label className="plan complete-plan" htmlFor='byo-infra' key='byo-infra'>
+                                            <input
+                                                type="radio"
+                                                name='byo-infra'
+                                                id='byo-infra'
+                                                className={this.state.platform === 'byo-infra' ? 'checked' : ''}
+                                                onClick={() => { this.setState({ platform: 'byo-infra' }) }} />
+                                            <div className="plan-content">
+                                                <img loading="lazy" src={byoInfra} alt="" />
+                                                <div className="plan-details">
+                                                    <span>Bring Your Own</span>
+                                                    <p>Bring your own OpenShift infrastructure. Select only the software you want to deploy for your solution</p>
+                                                </div>
+                                            </div>
+                                        </label>
                                     </form>
                                 </div>
 
@@ -845,51 +668,35 @@ class CreateSolutionview extends Component {
                                 <div className="selection-set">
                                     <form className="plans">
 
-                                        <div className="title">Now you have selected an outcome aligned with your use case you want to support
-                                            now lets select the platform you want to target. This will be the compute layer of of you solution
-                                        </div>
+                                        <div className="title">Now you have selected your use case and the platform you want to target. Let's select the architecture pattern you want to use</div>
 
                                         <div className="arch">
-                                            <p>You want to <strong>{persona?.title}</strong> <img loading="lazy" src={persona?.image} alt={persona?.title ?? ""} /></p>
-                                            <p>on the platform <img loading="lazy" src={platform?.image} alt="platform" align={"top"} /></p>
-                                            <p>We recommend you use the <strong>{this.solution_wizard.architectures.find(a => a.id === persona?.recommendedArch)?.title}</strong> reference architecture</p>
+                                            <p>You want to <strong>{persona?.displayName ?? persona?.name}</strong> <img loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
+                                            <p>on the platform <img loading="lazy" src={platform?.iconUrl} alt="platform" align={"top"} /></p>
+                                            <p>We recommend you use the <strong>{persona?.flavor}</strong> reference architecture</p>
 
                                         </div>
 
                                         {
-                                            this.solution_wizard.architectures?.length ?
-                                                architectures.map((architecture) => (
-
-                                                    <label className="plan complete-plan" htmlFor={architecture.id} key={architecture.id}>
-                                                        <input type="radio" name={architecture.id} id={architecture.id}
-
-                                                            disabled={!architecture.enabled}
-                                                            className={this.state.architecture === architecture.id ? 'checked' : ''}
-                                                            onClick={() => { if (architecture.enabled) this.setState({ architecture: architecture.id }) }} />
-                                                        <div className={`plan-content${architecture.enabled ? '' : ' coming-soon'}`}>
-                                                            <img loading="lazy" src={architecture.image} alt="" />
+                                            this.state.catalog?.metadata?.flavors?.length ?
+                                                this.state.catalog?.metadata?.flavors.map((flavor) => (
+                                                    <label className="plan complete-plan" htmlFor={flavor.name} key={flavor.name}>
+                                                        <input type="radio" name={flavor.name} id={flavor.name}
+                                                            disabled={!flavor.enabled}
+                                                            className={this.state.architecture === flavor.name ? 'checked' : ''}
+                                                            onClick={() => { if (flavor.enabled) this.setState({ architecture: flavor.name }) }} />
+                                                        <div className={`plan-content${flavor.enabled ? '' : ' coming-soon'}`}>
+                                                            <img loading="lazy" src={flavor.iconUrl} alt="" />
 
                                                             <div className="plan-details">
-                                                                <span>{architecture.title}
-                                                                    <Tooltip tooltipBodyId="tooltip-body">
-                                                                        <p id="tooltip-body">
-                                                                            To learn more about the architectural pattern and the reference implementation click on Learn More below
-                                                                        </p>
-                                                                        <div>
-                                                                            <br></br>
-                                                                            <a href={architecture.docs} target="_blank" rel="noopener noreferrer">
-                                                                                Learn More
-                                                                            </a>
-                                                                        </div>
-                                                                    </Tooltip>
-                                                                    {!architecture.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
+                                                                <span>{flavor.displayName ?? flavor.name}
+                                                                    {!flavor.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
                                                                 </span>
-                                                                <p>{architecture.desc}</p>
+                                                                <p>{flavor.description}</p>
                                                             </div>
                                                         </div>
                                                     </label>
-
-                                                )) : <p>No Platforms</p>
+                                                )) : <p>No Architecture Pattern</p>
                                         }
 
                                     </form>
@@ -1089,9 +896,9 @@ class CreateSolutionview extends Component {
                                     <p>You have chosen to create an IBM Technology solution called <strong>{this.state.fields?.name}</strong></p>
 
                                     <div className='arch'>
-                                        <p>You want to <strong>{persona?.title}</strong> <img loading="lazy" src={persona?.image} alt={persona?.title ?? ""} /></p>
-                                        <p>You chose to deploy you solution on <strong>{platform?.title}</strong> <img loading="lazy" src={platform?.image} alt={platform?.title ?? ""} /></p>
-                                        <p>You have chosen the <strong>{arch?.title}</strong> reference architecture <div className='flex-inline'><img loading="lazy" src={arch?.image} alt={arch?.title ?? ""} /><img loading="lazy" src={openshiftImg} alt="OpenShift" /></div></p>
+                                        <p>You want to <strong>{persona?.displayName}</strong> <img loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
+                                        <p>You chose to deploy you solution on <strong>{platform?.displayName}</strong> <img loading="lazy" src={platform?.iconUrl} alt={platform?.displayName ?? ""} /></p>
+                                        <p>You have chosen the <strong>{arch?.displayName}</strong> reference architecture <div className='flex-inline'><img loading="lazy" src={arch?.iconUrl} alt={arch?.displayName ?? ""} /><img loading="lazy" src={openshiftImg} alt="OpenShift" /></div></p>
                                         <p>It will install with the following Storage Option <img loading="lazy" src={storage?.image} alt={storage?.title ?? ""} /></p>
                                     </div>
 
