@@ -15,13 +15,16 @@
     "react-inject-env": "^2.1.0",
     "yaml": "^2.0.1"
   },
+
   "scripts": {
     "start:dev": "webpack-dev-server --config ./webpack.config.development.js",
     "prestart": "react-inject-env set",
     "start": "dotenv node server/server.js",
     "prebuild": "rimraf build",
-    "build": "cross-env NODE_ENV=production webpack --mode production --progress --config webpack.config.production.js",
-    "test": "craco --max_old_space_size=4096 test"
+    "e2e": "npx nightwatch node_modules/nightwatch/examples/tests/ecosia.js",
+    "compile": "cross-env NODE_ENV=production webpack --mode production --progress --config webpack.config.production.js",
+    "unit-test": "craco --max_old_space_size=4096 test",
+    "scan" : "detect-secrets scan --update .secrets.baseline --exclude-files 'package-lock.json'"
   },
   "eslintConfig": {
     "extends": [
