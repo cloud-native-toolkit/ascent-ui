@@ -1,0 +1,16 @@
+apiVersion: automation.cio/v1alpha1
+kind: RepositoryConfig
+ealImapNumber: EAL-013208
+build:
+  strategy: cirrus-deployment
+  pipeline: nodejs-v16-npm-container-image
+  version: v2
+  config:
+    cirrus-pipeline-name: ascent-ui-ci
+    service-port: '3000'
+    cirrus-project-name: techzone-accelerator-toolkit
+    cirrus-region: us-east1
+    cirrus-api-username: encrypted:v1:AAABhD4EUZCt+IHsAtPbr+wJ5oADMDH/0rkqkFcHg9Oil0FpQneF1bj2aKqAp9rYV1NsJic4BXqLFWVm40n5QPP9GJjdnLZUYb5NO+peYWeayqcw9KMNSZKqFUudDIQ6TNZxw1yyyQHiI9MPTdVNMRsCUSNW1Tt9M98nQx5v5mJBZlnE33UjoEHOjbRpggJnZbw8
+    cirrus-api-password: encrypted:v1:AAABhD4EUZCaiV+etXabAix9TTgxcLHo7V41FKxIK1La3lR4M6Lu23SIczlR1yLcMAjzw9GCVr398TavBX8CTMJ38LFAqXU87gMnxkWAVCBkYgnFvzsSLvnT/2Et2PSxbJ4Mravp/0fHORQK89nh070D8xWCDss1PKBOIzAvRC6G5/FPqyaa2kshSWQfJl0cdqJQ6/b87PogiDPSwbREaZl+xyY5/axfa6mxJ3cEGw==
+    cirrus-pipeline-username: encrypted:v1:AAABhD4EUZBR3MUnx5Oo71B1sRJOQDVgwQjC0aJT2JID171iFaVHq4xD75q8aEeLZ7sbykhasjNUEx57kK1npx3Xs1bCTdssRfgLkmb3Jiv9OdD66N7g6ANJsRiYGFKim2+4+VUZHLSZKGTelwEd+qsJ+9rGmFn/DfHTA+ePJuNchf5iaw4GwK1Nz2hItf7uwB/XlYE5pr/yY39GUbQ=
+    cirrus-pipeline-password: encrypted:v1:AAABhD4EUZDL55p4xZimL3D+gFmdU97LdjZG9N3hq+oDyLSoT7vR6jXPud7Rx2MYy5iScStTnbh7ctAWhJ8+Vp6UnovZAheIFTtgMsFYSs3Q2qGbmwuR8sySTl3uKIuiS+7y3wm2TxXo1iFrI1fBZq4ObJf2iHadW2a7SU6hFPPgSBuUPuiFh8elQJ8zIN53H/YUJYSrSWkiferYNeNdjVd3RyKcxsiN
