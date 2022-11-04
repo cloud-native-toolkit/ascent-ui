@@ -591,7 +591,7 @@ export const controlTypeTooltip = {
         <p><strong>Potential Examples:</strong> Control Requirements related to actions taken, remediations, etc.</p>
     </Tooltip>,
     Administrative: <Tooltip triggerText='Administrative'>
-        <p><strong>Administrative: </strong> Control requirements that test policies, procedures, or guidelines that define personnel or business practices in accordance with the organization's security goals.</p>
+        <p><strong>Administrative: </strong> Control requirements that test policies, procedures, or guidelines that define personnel or business practices in accordance with the organizations security goals.</p>
         <p><strong>Potential Examples:</strong> Control requirements related to policy, trainings, reporting, maintenance, etc.</p>
     </Tooltip>,
     Technical: <Tooltip triggerText='Technical'>
@@ -643,7 +643,7 @@ export const controlRiskRatingTooltip = {
             <ListItem>Low level of precision (e.g. includes overall groups instead of end users, includes sampled or undefined types of relevant data/users, etc.)</ListItem>
             <ListItem>Non-routine (e.g. highly unique control, etc.)</ListItem>
             <ListItem>Significant degree of judgement required (e.g. operated only by highly skilled SMEs)</ListItem>
-            <ListItem>High likelihood of changes impacting control design (e.g. changes to groups of access that are considered "privileged", etc.)</ListItem>
+            <ListItem>High likelihood of changes impacting control design (e.g. changes to groups of access that are considered &quot;privileged&quot;, etc.)</ListItem>
             <ListItem>Controls operating on an ad hoc basis (e.g. controls where an event has to happen first, etc.)</ListItem>
         </UnorderedList>
     </Tooltip>,
