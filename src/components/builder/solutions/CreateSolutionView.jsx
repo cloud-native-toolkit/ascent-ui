@@ -627,7 +627,7 @@ class CreateSolutionview extends Component {
             {
                 id: "portworx",
                 title: "Portworx Enterprise",
-                desc: "Portworx Enterprise is the Kubernetes storage platform trusted in production by the world’s leading enterprises",
+                desc: "Portworx Enterprise is the Kubernetes storage platform trusted in production by the leading enterprises",
                 docs: "https://portworx.com/",
                 image: storagePortworxImg,
                 boms: {
