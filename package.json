@@ -21,7 +21,9 @@
     "start": "dotenv node server/server.js",
     "lint": "eslint .  --ext .js",
     "prebuild": "rimraf build",
-    "e2e": "npx nightwatch node_modules/nightwatch/examples/tests/ecosia.js",
+    "build": "cross-env NODE_ENV=production webpack --mode production --progress --config webpack.config.production.js",
+    "package": "npm run build",
+    "e2e": "echo 'We need to implement future E2E tests (look at something like nightwatch)'",
     "compile": "cross-env NODE_ENV=production webpack --mode production --progress --config webpack.config.production.js",
     "unit-test": "craco --max_old_space_size=4096 test",
     "scan": "detect-secrets scan --update .secrets.baseline --exclude-files 'package-lock.json'"

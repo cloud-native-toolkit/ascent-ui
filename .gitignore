@@ -1,5 +1,7 @@
 *.ignore*
 .vscode
+tests_output/
+node_modules/
 
 # dependencies
 /node_modules
