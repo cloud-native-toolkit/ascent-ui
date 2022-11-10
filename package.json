@@ -1,7 +1,9 @@
 {
-  "name": "ascent-ui-new",
+  "name": "ascent-ui",
   "version": "0.1.0",
   "private": true,
+  "author": "Noé Samaille <noe.samaille@ibm.com>",
+  "license": "Apache-2.0",
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
