@@ -172,7 +172,7 @@ const config = require('../config/config');
     }
   })
 
-  app.use(express.static(path.join(__dirname, "../build")));
+  app.use(express.static(path.join(__dirname, "../dist")));
 
 
   app.use('/api/token', (req, res, next) => {
@@ -237,7 +237,7 @@ const config = require('../config/config');
   });
 
   app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, '../build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
   });
 
   app.listen(config.servicePort, function () {

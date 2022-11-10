@@ -13,7 +13,7 @@ module.exports = {
     "plugins": [
         "react"
     ],
-    "ignorePatterns": [ "build/"],
+    "ignorePatterns": [ "build/", "dist/" ],
     "rules": {
     }
 }

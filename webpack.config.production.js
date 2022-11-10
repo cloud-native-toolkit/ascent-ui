@@ -14,7 +14,7 @@ module.exports = {
   },
   output: {
     filename: 'static/[name].[fullhash].js',
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'dist'),
     publicPath: '/'
   },
   resolve: {

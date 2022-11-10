@@ -21,11 +21,11 @@ USER 1001
 
 WORKDIR /opt/app-root/src
 
-COPY --from=builder --chown=1001:0 /opt/app-root/src/build ./build
+COPY --from=builder --chown=1001:0 /opt/app-root/src/dist ./dist
 COPY --chown=1001:0 package.json yarn.lock ./
 COPY --chown=1001:0 server ./server
 
-RUN chmod -R g+w ./build && \
+RUN chmod -R g+w ./dist && \
     npm i -g yarn && \
     yarn install --production && \
     yarn cache clean
