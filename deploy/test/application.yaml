@@ -1,0 +1,39 @@
+apiVersion: cirrus.ibm.com/v1alpha1
+kind: Application
+metadata:
+  name: ascent-ui-test
+spec:
+  headless: false
+  livenessProbe:
+    httpGet:
+      path: /health
+      scheme: HTTPS
+    periodSeconds: 30
+    timeoutSeconds: 30
+  readinessProbe:
+    httpGet:
+      path: /health
+      scheme: HTTPS
+    periodSeconds: 30
+    timeoutSeconds: 30
+  replicas: 1
+  quota: q256mb
+  env:
+    - name: NODE_ENV
+      value: production
+  mountServiceCerts:
+    mountPath: /app/certs
+  volumeMounts:
+    - name: app-config-map
+      mountPath: "/app/config/configmap/"
+      readOnly: true
+    - name: app-secret
+      mountPath: "/app/config/secret/"
+      readOnly: true
+  volumes:
+    - name: app-config-map
+      configMap:
+        name: ascent-ui-test
+    - name: app-secret
+      secret:
+        secretName: ascent-ui-test

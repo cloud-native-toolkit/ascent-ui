@@ -1,0 +1,8 @@
+# Since Application is a custom type for Cirrus it does not fall under default name
+# reference transformer.  We will add it to our kustomize according to specification.
+# https://github.com/kubernetes-sigs/kustomize/blob/master/examples/transformerconfigs/README.md 
+nameReference:
+- kind: ConfigMap
+  fieldSpecs:
+    - path: spec/volumes/configMap/name
+      kind: Application

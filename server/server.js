@@ -1,24 +1,20 @@
 const express = require('express');
 const path = require('path');
-const {
-  createProxyMiddleware
-} = require('http-proxy-middleware');
 var cookieParser = require("cookie-parser");
 const session = require('express-session')
 const passport = require('passport');
 const https = require('https');
-const serverConfig = require('./server-config');
+const config = require('../config/config');
 
 (async function () {
 
   // Auth config, defaults to AppId unless config for OpenShift is provided
-  const AUTH_PROVIDER = process.env.OCP_OAUTH_CONFIG ? "openshift" : "appid";
   const LOGIN_URL = "/login";
   const LOGOUT_URL = "/logout";
   const CALLBACK_URL = "/login/callback";
 
   const conf = {
-    application_url: process.env.APP_URI || process.env.PUBLIC_URL,
+    applicationUrl: config.externalUri,
     port: 3000
   };
 
@@ -39,7 +35,7 @@ const serverConfig = require('./server-config');
 
   // Set up authentication
   let AuthStrategy;
-  if (AUTH_PROVIDER === "openshift") {
+  if (config.authProvider === "openshift") {
     AuthStrategy = require('passport-oauth').OAuth2Strategy;
     // Fetch OpenShift auth server config
     let oauthServer = {};
@@ -49,12 +45,12 @@ const serverConfig = require('./server-config');
       console.log(error);
       oauthServer = {};
     }
-    conf.authConfig = Object.assign(oauthServer, serverConfig.loadOcpOAuthConfig());
+    conf.authConfig = Object.assign(oauthServer, config.authConfig);
     conf.authConfig.secret = conf.authConfig.clientSecret;
   } else {
     // Auth provider defaults to App ID
     AuthStrategy = require("ibmcloud-appid").WebAppStrategy;
-    conf.authConfig = serverConfig.loadAppIdConfig();
+    conf.authConfig = config.authConfig;
   }
 
   const app = express();
@@ -76,13 +72,13 @@ const serverConfig = require('./server-config');
   }));
   app.use(cookieParser());
 
-  passport.use(AUTH_PROVIDER, AUTH_PROVIDER === "openshift" ?
+  passport.use(config.authProvider, config.authProvider === "openshift" ?
     new AuthStrategy({
         authorizationURL: conf.authConfig.authorization_endpoint,
         tokenURL: conf.authConfig.token_endpoint,
         clientID: conf.authConfig.clientID,
         clientSecret: conf.authConfig.clientSecret,
-        callbackURL: conf.application_url + CALLBACK_URL
+        callbackURL: conf.applicationUrl + CALLBACK_URL
       },
       (accessToken, refreshToken, profile, done) => {
         https.get(`${conf.authConfig.api_endpoint}/apis/user.openshift.io/v1/users/~`, {
@@ -105,7 +101,7 @@ const serverConfig = require('./server-config');
       clientId: conf.authConfig.clientId,
       secret: conf.authConfig.secret,
       oauthServerUrl: conf.authConfig.oauthServerUrl,
-      redirectUri: conf.application_url + CALLBACK_URL
+      redirectUri: conf.applicationUrl + CALLBACK_URL
     })
   );
 
@@ -119,8 +115,8 @@ const serverConfig = require('./server-config');
     if (req.session) console.log('test', req.session.redirectUrl);
     res.redirect(req.session?.redirectUrl ? req.session.redirectUrl : '/');
   }
-  app.get(CALLBACK_URL, passport.authenticate(AUTH_PROVIDER), redirectAfterLogin);
-  app.get(LOGIN_URL, passport.authenticate(AUTH_PROVIDER), redirectAfterLogin);
+  app.get(CALLBACK_URL, passport.authenticate(config.authProvider), redirectAfterLogin);
+  app.get(LOGIN_URL, passport.authenticate(config.authProvider), redirectAfterLogin);
   app.get(LOGOUT_URL, function (req, res, next) {
     try {
       req.session.destroy();
@@ -141,7 +137,7 @@ const serverConfig = require('./server-config');
     if (req.isAuthenticated()) {
       // Grant editor role by default
       let roles = ["default", "editor"];
-      if (AUTH_PROVIDER === "openshift") {
+      if (config.authProvider === "openshift") {
         if (req.user?.groups?.includes("ascent-admins")) {
           roles.push("admin");
         }
@@ -166,7 +162,7 @@ const serverConfig = require('./server-config');
           roles: roles,
           role: roles[roles.length - 1],
           sessionExpire: req.session.cookie.expires,
-          region: process.env.REGION ?? 'unknown'
+          region: config.region
         });
       }
     } else {
@@ -181,10 +177,10 @@ const serverConfig = require('./server-config');
 
   app.use('/api/token', (req, res, next) => {
     if (  req.isAuthenticated() &&
-        ((AUTH_PROVIDER === "appid" && AuthStrategy.hasScope(req, "super_edit"))
-        || (AUTH_PROVIDER === "openshift" && req.user.groups.includes("ascent-admins"))))
+        ((config.authProvider === "appid" && AuthStrategy.hasScope(req, "super_edit"))
+        || (config.authProvider === "openshift" && req.user.groups.includes("ascent-admins"))))
     {
-      if (AUTH_PROVIDER === "openshift") {
+      if (config.authProvider === "openshift") {
         res.json({token: Buffer.from(`${req.user.token}`).toString('base64')});
       } else {
         res.json({token: Buffer.from(`${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`).toString('base64')});
@@ -202,10 +198,10 @@ const serverConfig = require('./server-config');
   const protectedMethods = [];
   app.use('/api', (req, res, next) => {
     if ( req.isAuthenticated() && (!protectedMethods.includes(req.method)
-        || (AUTH_PROVIDER === "appid" && AuthStrategy.hasScope(req, "edit"))
-        || (AUTH_PROVIDER === "openshift" && (req.user.groups.includes("ascent-editors") || req.user.groups.includes("ascent-admins"))))
+        || (config.authProvider === "appid" && AuthStrategy.hasScope(req, "edit"))
+        || (config.authProvider === "openshift" && (req.user.groups.includes("ascent-editors") || req.user.groups.includes("ascent-admins"))))
       ) {
-      if (AUTH_PROVIDER === "openshift") {
+      if (config.authProvider === "openshift") {
         req.headers['Authorization'] = `Bearer ${req.user.token}`;
       } else {
         req.headers['Authorization'] = `Bearer ${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`;
@@ -220,7 +216,7 @@ const serverConfig = require('./server-config');
     }
   });
 
-  require('./api')(app);
+  require('./api')(app, config.apiHost);
 
   const loginEnpoints = ['/solutions*', '/bom*', '/services*', '/onboarding*', '/controls*', '/mapping*', '/nists*'];
 
@@ -244,9 +240,8 @@ const serverConfig = require('./server-config');
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
 
-  const port = process.env.PORT ?? 3000;
-  app.listen(port, function () {
-    console.info(`Server listening on http://localhost:${port}`);
+  app.listen(config.servicePort, function () {
+    console.info(`Server listening on http://localhost:${config.servicePort}`);
   });
 
 })();
