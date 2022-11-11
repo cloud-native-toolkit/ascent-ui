@@ -9,8 +9,6 @@ if (fs.existsSync(cmPath))
 if (fs.existsSync(secretPath))
   dotenv.config({ path: secretPath });
 
-  console.log(process.env)
-
 const {
   // Environment Variables
   NODE_ENV,
