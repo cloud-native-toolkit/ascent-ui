@@ -2,7 +2,7 @@
 
 This repository contains the Front-End microservice of the Ascent tool.
 
-Ascent is a tool created by the IBM Ecosystem Lab to accelerate the adoption of IBM Software on Hybrid Cloud. Through automation and integration, Ascent enables enterprises to deliver compliant cloud architectures which can be clearly evidenced and communicated with Governance, Risk and Compliance teams.
+Ascent is a tool created by the IBM Ecosystem Engineering team to accelerate the adoption of IBM Software on Hybrid Cloud. Through automation and integration, Ascent enables enterprises to deliver compliant cloud architectures which can be clearly evidenced and communicated with Governance, Risk and Compliance teams.
 
 This app has been developped using an opinionated set of components for modern web development, including:
 
