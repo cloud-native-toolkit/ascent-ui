@@ -12,3 +12,4 @@ data:
     EXTERNAL_PROTOCOL=https
     APP_ENV=test
     REGION=us-east
+    API_HOST=http://ascent-bff-test

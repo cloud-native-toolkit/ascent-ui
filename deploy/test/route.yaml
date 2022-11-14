@@ -1,8 +1,0 @@
-apiVersion: route.openshift.io/v1
-kind: Route
-metadata:
-  name: ascent-ui-test
-spec:
-  tls:
-    termination: reencrypt
-    insecureEdgeTerminationPolicy: Redirect

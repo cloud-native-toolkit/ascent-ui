@@ -156,7 +156,7 @@ class UIShell extends Component {
               />
 
               <HeaderName prefix={ApplicationMode.isFsControlsMode() ? 'IBM Cloud' : 'IBM Technology Zone'}>
-                {ApplicationMode.isFsControlsMode() ? 'Controls Catalog' : 'Accelerator Toolkit'}
+                {ApplicationMode.isFsControlsMode() ? 'Controls Catalog' : 'Deployer'}
               </HeaderName>
 
               <HeaderNavigation aria-label="navigation">
