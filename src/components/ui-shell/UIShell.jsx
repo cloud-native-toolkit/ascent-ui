@@ -345,7 +345,7 @@ class UIShell extends Component {
                         <Launch16 />
                       </SideNavMenuItem> : <></>}
 
-                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev"
+                      <SideNavMenuItem href="https://modules.techzone.ibm.com"
                         target="_blank" rel="noopener noreferrer">
                         Automation Modules
                         <Launch16 />
@@ -391,13 +391,13 @@ class UIShell extends Component {
                         <Launch16 />
                       </SideNavMenuItem>
 
-                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev/#/how-to/gitops"
+                      <SideNavMenuItem href="https://modules.techzone.ibm.com/#/how-to/gitops"
                         target="_blank" rel="noopener noreferrer">
                         Create a GitOps Module
                         <Launch16 />
                       </SideNavMenuItem>
 
-                      <SideNavMenuItem href="https://modules.cloudnativetoolkit.dev/#/how-to/terraform"
+                      <SideNavMenuItem href="https://modules.techzone.ibm.com/#/how-to/terraform"
                         target="_blank" rel="noopener noreferrer">
                         Create a Terraform Module
                         <Launch16 />
