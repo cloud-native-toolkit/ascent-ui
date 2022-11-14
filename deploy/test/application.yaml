@@ -17,7 +17,7 @@ spec:
     periodSeconds: 30
     timeoutSeconds: 30
   replicas: 1
-  quota: q256mb
+  quota: q1gb
   env:
     - name: NODE_ENV
       value: production
