@@ -4,6 +4,18 @@ metadata:
   name: ascent-ui-test
 spec:
   headless: false
+  livenessProbe:
+    httpGet:
+      path: /health
+      scheme: HTTP
+    periodSeconds: 30
+    timeoutSeconds: 30
+  readinessProbe:
+    httpGet:
+      path: /health
+      scheme: HTTP
+    periodSeconds: 30
+    timeoutSeconds: 30
   replicas: 1
   quota: q3gb
   env:
