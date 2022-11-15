@@ -19,11 +19,11 @@ class OverView extends Component {
                 <Row className="compliance-page__row">
                     <Column lg={{span: 12}}>
                         <h2 style={{ margin: "30px 0" }} >
-                           TechZone Automation & Security Controls
+                           TechZone Deployer
                         </h2>
 
                         <p style={{ lineHeight: "20px" }}>
-                            The goal of this tool is to accelerate adoption of IBM Software on Hybrid-Cloud. TechZone Automation drastically reduces the time and effort it takes
+                            The goal of this tool is to accelerate adoption of IBM Software on Hybrid-Cloud. TechZone Deployer drastically reduces the time and effort it takes
                             to deploy solutions leveraging IBM Software on any Cloud, by providing a modular automation framework allowing users to build their
                             custom solutions and automate their deployment using our solution builder features.
                             It simplifies the complexity of the data attributes that surround a reference architecture for enterprise workloads with regulatory compliance.
@@ -41,8 +41,8 @@ class OverView extends Component {
 
                             <br /> <br />
 
-                            Once we have this data model in place, we link it to the Automation Catalog that is being
-                            built by Asset team, we take the BOM and input it into the Solution Builder API they have built
+                            Once we have this data model in place, we link it to the automation catalog that is being
+                            built by Asset team, we take the BOM and input it into the solution builder API they have built
                             and output a package of consistent terraform that we can use to automate the provisionning of compliant reference architectures.
                             <br /> <br />
 
