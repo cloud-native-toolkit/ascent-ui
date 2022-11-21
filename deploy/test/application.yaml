@@ -17,7 +17,7 @@ spec:
     periodSeconds: 30
     timeoutSeconds: 30
   replicas: 1
-  quota: q3gb
+  quota: turbo
   env:
     - name: NODE_ENV
       value: production
