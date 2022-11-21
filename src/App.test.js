@@ -15,7 +15,8 @@ test('renders header', () => {
       dispatchEvent: jest.fn(),
     }))
   });
-  render(<App />);
+  // eslint-disable-next-line react/react-in-jsx-scope
+  render(<App/>);
   const linkElement = screen.getByText(/Create composite multi-cloud solutions rapidly with automation/i);
   expect(linkElement).toBeInTheDocument();
 });

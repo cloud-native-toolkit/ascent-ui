@@ -2,8 +2,9 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const config = require('./config/config');
 
-const port = process.env.PORT || 3000;
+const port = config.servicePort;
 
 module.exports = {
   mode: 'development',
@@ -76,7 +77,7 @@ module.exports = {
     hot: true,
     proxy: {
       '/api': {
-        target: process.env.API_HOST ?? 'http://localhost:3001',
+        target: config.apiHost,
         changeOrigin: true,
         pathRewrite: { '^/api': '' }
       }

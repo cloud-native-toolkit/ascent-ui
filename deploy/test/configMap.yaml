@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ascent-ui-test
+data:
+  .env: |
+    #PORT=DEFINED BY CIRRUS RUNTIME
+    #HOSTNAME=DEFINED BY CIRRUS RUNTIME
+    PROTOCOL=http
+    EXTERNAL_HOSTNAME=ascent-ui-test.968d96a4.public.multi-containers.ibm.com
+    EXTERNAL_PORT=443
+    EXTERNAL_PROTOCOL=https
+    APP_ENV=test
+    REGION=us-east
+    API_HOST=http://ascent-bff-test
