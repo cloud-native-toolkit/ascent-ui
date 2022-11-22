@@ -4,5 +4,5 @@ metadata:
   name: ecosystem-engineering-ascent-ui-preprod
 spec:
   tls:
-    termination: reencrypt
+    termination: edge
     insecureEdgeTerminationPolicy: Redirect

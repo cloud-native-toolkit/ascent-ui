@@ -4,5 +4,5 @@ metadata:
   name: ascent-ui-test
 spec:
   tls:
-    termination: reencrypt
+    termination: edge
     insecureEdgeTerminationPolicy: Redirect
