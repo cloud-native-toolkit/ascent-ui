@@ -23,17 +23,6 @@ spec:
       value: production
   mountServiceCerts:
     mountPath: /app/certs
-  volumeMounts:
-    - name: app-config-map
-      mountPath: "/app/config/configmap/"
-      readOnly: true
-    - name: app-secret
-      mountPath: "/app/config/secret/"
-      readOnly: true
-  volumes:
-    - name: app-config-map
-      configMap:
-        name: ascent-ui-test
-    - name: app-secret
-      secret:
-        secretName: ascent-ui-test
+  envFrom:
+    - secretRef:
+        name: ecosystem-engineering-ascent-ui-test
