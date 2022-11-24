@@ -183,7 +183,7 @@ const config = require('../config/config');
       if (config.authProvider === "openshift") {
         res.json({token: Buffer.from(`${req.user.token}`).toString('base64')});
       } else {
-        res.json({token: Buffer.from(`${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`).toString('base64')});
+        res.json({token: Buffer.from(req.session[AuthStrategy.AUTH_CONTEXT].refreshToken).toString('base64')});
       }
       return next();
     } else {
