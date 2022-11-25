@@ -1,5 +1,9 @@
 *.ignore*
 .vscode
+tests_output/
+node_modules/
+config/configmap
+config/secret
 
 # dependencies
 /node_modules
@@ -11,6 +15,7 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -209,7 +214,6 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)

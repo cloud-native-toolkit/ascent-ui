@@ -1,9 +1,7 @@
 const proxy = require("express-http-proxy");
 const bodyParser = require("body-parser");
 
-const apiHost = process.env.API_HOST ?? 'http://localhost:3001';
-
-module.exports = function(app){
+module.exports = function(app, apiHost){
 
   const isMultipartRequest = function (req) {
     let contentTypeHeader = req.headers['content-type'];
@@ -30,7 +28,6 @@ module.exports = function(app){
       let reqAsBuffer = false;
       let reqBodyEncoding = true;
       let parseReqBody = true;
-      let contentTypeHeader = req.headers['content-type'];
       if (isMultipartRequest(req)) {
         reqAsBuffer = true;
         reqBodyEncoding = null;

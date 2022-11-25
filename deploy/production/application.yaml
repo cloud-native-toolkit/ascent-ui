@@ -1,0 +1,25 @@
+apiVersion: cirrus.ibm.com/v1alpha1
+kind: Application
+metadata:
+  name: ecosystem-engineering-ascent-ui-prod
+spec:
+  headless: false
+  livenessProbe:
+    httpGet:
+      path: /health
+      scheme: HTTP
+    periodSeconds: 5
+    timeoutSeconds: 30
+  readinessProbe:
+    httpGet:
+      path: /health
+      scheme: HTTP
+    periodSeconds: 5
+    timeoutSeconds: 30
+  replicas: 3
+  quota: turbo
+  mountServiceCerts:
+    mountPath: /app/certs
+  envFrom:
+    - secretRef:
+        name: ascent-ui-prod
