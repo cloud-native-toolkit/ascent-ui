@@ -15,33 +15,9 @@ import { catalogFilters } from '../../../data/data';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import openshiftImg from '../../../images/openshift.png'
-
-import archQuickstartImg from '../../../images/arch/quick-start.png'
-import archStandardImg from '../../../images/arch/standard.png'
-import archAdvancedImg from '../../../images/arch/advanced.png'
-
-import storagePortworxImg from '../../../images/storage/portworx.png'
-import storageOdfImg from '../../../images/storage/odf.png'
-
+import openshiftImg from '../../../images/openshift.png';
 import byoInfra from '../../../images/platforms/cloud-infra-center-byo-infra.svg';
-
-import softwareApiConnectImg from '../../../images/software/apiconnect.svg'
-import softwareDataFabricImg from '../../../images/software/datafabric.svg'
-import softwareDataFoundationImg from '../../../images/software/datafoundation.svg'
-import softwareDB2Img from '../../../images/software/db2.svg'
-import softwareDB2WarehouseImg from '../../../images/software/DB2BigSQL.svg'
-import softwareEventStreamsImg from '../../../images/software/eventstreams.svg'
-import softwareIntegrationImg from '../../../images/software/integration.svg'
-import softwareMASImg from '../../../images/software/mas.svg'
-import softwareMASIoTImg from '../../../images/software/mas-iot.svg'
-import softwareMASManageImg from '../../../images/software/mas-manage.svg'
-import softwareMASMonitorImg from '../../../images/software/mas-monitor.svg'
-import softwareMQImg from '../../../images/software/mq.svg'
-import softwareSecurityImg from '../../../images/software/security.svg'
-import softwareTurbonomicImg from '../../../images/software/turbonomic-short.png'
-
-import StacksImg from '../../../images/stacks.png'
+import StacksImg from '../../../images/stacks.png';
 
 const STEP_OVERWIEW = 0;
 const STEP_USECASE = 1;
@@ -116,6 +92,7 @@ class CreateSolutionview extends Component {
         fetch('/api/automation/catalog/boms')
             .then(res => res.json())
             .then(catalog => {
+                console.log(catalog)
                 this.setState({ catalog: catalog });
             })
             .catch(console.error);
@@ -145,7 +122,7 @@ class CreateSolutionview extends Component {
                     case STEP_INFRA_PLATFORM:
                         return this.state.platform === undefined
                     case STEP_INFRA_FLAVOR:
-                        return this.state.architecture === undefined
+                        return this.state.flavor === undefined
                     case STEP_INFRA_STORAGE:
                         return this.state.storage === undefined
                     default:
@@ -167,7 +144,9 @@ class CreateSolutionview extends Component {
     }
 
     handleNext() {
-        if (this.state.curStepIx === STEP_INFRASTRUCTURE && this.state.platform !== 'byo-infra' && this.state.infraStepIx !== STEP_INFRA_STORAGE) {
+        if (this.state.curStepIx === STEP_SUMMARY) {
+            this.handleSubmit();
+        } else if (this.state.curStepIx === STEP_INFRASTRUCTURE && this.state.platform !== 'byo-infra' && this.state.infraStepIx !== STEP_INFRA_STORAGE) {
             this.setState({ infraStepIx: this.state.infraStepIx + 1 });
         } else {
             if (this.state.curStepIx + 1 === STEP_SOFTWARE) this.setState({ software: [] });
@@ -186,18 +165,16 @@ class CreateSolutionview extends Component {
 
     handleSubmit = () => {
         // Get infrastructure layers
-        const platform = this.solution_wizard.platforms.find(p => p.id === this.state.platform);
-        const boms = new Set(platform.boms[this.state.architecture]);
-        // Get storage layers
-        const storage = this.solution_wizard.storage_providers.find(s => s.id === this.state.storage);
-        for (const bom of storage.boms[this.state.platform]) boms.add(bom);
+        const layers = new Set(this.state.catalog?.boms?.filter(bom => bom.category === 'infrastructure' && bom.cloudProvider === this.state.platform && bom.flavor === this.state.flavor));
+        // Get storage layer(s)
+        if (this.state.storage) layers.add(this.state.catalog?.boms?.find(bom => bom.name === this.state.storage));
         // Get software layers
-        const software = this.state.software.map(swId => (this.solution_wizard.software.find(sw => sw.id === swId)));
-        for (const sw of software) for (const bom of sw.boms) boms.add(bom);
+        for (const sw of this.state.software) layers.add(this.state.catalog?.boms?.find(bom => bom.name === sw));
         // Create solution
         const body = {
             solution: this.state.fields,
-            architectures: Array.from(boms).map(bom => ({ arch_id: bom })),
+            architectures: Array.from(layers).filter(layer => layer.type === 'bom').map(bom => ({ arch_id: bom.name })),
+            solutions: Array.from(layers).filter(layer => layer.type === 'solution').map(sol => sol.name),
             platform: this.state.platform
         };
         console.log(body);
@@ -217,319 +194,20 @@ class CreateSolutionview extends Component {
             .catch(console.error);
     }
 
-    solution_wizard = {
-        architectures: [
-            {
-                id: "quickstart",
-                title: "Quick-Start",
-                desc: "A simple architecture to quickly get an OpenShift cluster provisioned ideal for Demos",
-                docs: "https://github.com/cloud-native-toolkit/automation-solutions/blob/main/architectures/README.md#quickstart",
-                image: archQuickstartImg
-            },
-            {
-                id: "standard",
-                title: "Standard",
-                desc: "A standard production deployment environment with typical security protections, private endpoints, VPN server, key management encryption, ideal for POC/POT/MVP",
-                docs: "https://github.com/cloud-native-toolkit/automation-solutions/blob/main/architectures/README.md#standard",
-                image: archStandardImg
-            },
-            {
-                id: "advanced",
-                title: "Advanced",
-                desc: "A more advanced deployment that employs network isolation to securely route traffic between the different layers, prepare environment for production deployed IBM Software",
-                docs: "https://github.com/cloud-native-toolkit/automation-solutions/blob/main/architectures/README.md#advanced",
-                image: archAdvancedImg
-            }
-        ],
-        software: [
-            {
-                id: "custom-software",
-                title: "custom-software",
-                displayName: "Custom Software",
-                status: "Released",
-                type: "",
-                description: "Bring your own custom software components into your solution.",
-                boms: []
-
-            },
-            {
-                id: "turbo",
-                title: "turbo",
-                displayName: "Turbonomic",
-                status: "Released",
-                type: "",
-                icon: true,
-                logo: softwareTurbonomicImg,
-                description: "Assure application performance with smarter resource management.",
-                boms: [
-                    "200-openshift-gitops",
-                    "202-turbonomic-ibmcloud-storage-class",
-                    "250-turbonomic-multicloud"
-                ]
-
-            },
-            {
-                id: "maximo-",
-                title: "maximo",
-                displayName: "Maximo Core",
-                status: "Released",
-                type: "",
-                icon: true,
-                logo: softwareMASImg,
-                description: "Intelligent asset management, monitoring, predictive maintenance and reliability in a single platform.",
-                boms: [
-                    "200-openshift-gitops",
-                    "400-mas-core-multicloud",
-                ]
-            },
-            {
-                id: "maximo-manage",
-                title: "maximo-manage",
-                displayName: "Maximo Manage",
-                status: "Released",
-                type: "",
-                icon: true,
-                logo: softwareMASManageImg,
-                description: "Maximo Application Suite - Manage Application",
-                boms: [
-                    "200-openshift-gitops",
-                    "400-mas-core-multicloud",
-                    "405-mas-manage"
-                ]
-            },
-            {
-                id: "maximo-iot",
-                title: "maximo-iot",
-                displayName: "Maximo IoT",
-                status: "Released",
-                type: "",
-                icon: true,
-                logo: softwareMASIoTImg,
-                description: " Maximo Application Suite - IoT Application",
-                boms: [
-                    "200-openshift-gitops",
-                    "400-mas-core-multicloud",
-                    "405-mas-iot"
-                ]
-            },
-
-            {
-                id: "maximo-monitor",
-                title: "maximo-monitor",
-                displayName: "Maximo Monitor",
-                status: "Released",
-                type: "",
-                icon: true,
-                logo: softwareMASMonitorImg,
-                description: " Maximo Application Suite - Monitor",
-                boms: [
-                    "200-openshift-gitops",
-                    "400-mas-core-multicloud",
-                    "405-mas-monitor"
-                ]
-            },
-
-            {
-                id: "data-foundation",
-                title: "data-foundation",
-                displayName: "Data Foundation",
-                status: "Released",
-                type: "",
-                icon: true,
-                logo: softwareDataFoundationImg,
-                description: "Base layer of components required to support different use cases with cloud pak for data",
-                boms: [
-                    "300-cloud-pak-for-data-entitlement",
-                    "305-cloud-pak-for-data-foundation",
-                    "310-cloud-pak-for-data-db2wh"
-                ]
-            },
-
-            {
-                id: "data-fabric",
-                title: "data-fabric",
-                displayName: "Data Fabric",
-                status: "Released",
-                type: "",
-                icon: true,
-                logo: softwareDataFabricImg,
-                description: "Use the right data architecture so employees can access quality data, wherever and whenever it’s needed.",
-                boms: [
-
-                    "300-cloud-pak-for-data-entitlement",
-                    "305-cloud-pak-for-data-foundation",
-                    "600-datafabric-services",
-                    "610-datafabric-demo"
-                ]
-            },
-            {
-                id: "integration",
-                title: "integration",
-                displayName: "Integration Tools",
-                status: "Released",
-                type: "Cloud Pak",
-                description: "Set of Integration tools that enable application connectivity ideal to compliment your solution",
-                icon: true,
-                logo: softwareIntegrationImg,
-                boms: [
-                    "280-integration-platform-multicloud"
-                ]
-            },
-            {
-                id: "app-connect",
-                title: "app-connect",
-                displayName: "App Connect",
-                status: "Released",
-                type: "Cloud Pak",
-                description: "Unlocks the value of your systems and your data by connecting business applications, integrating data, building APIs and acting on events.",
-                icon: true,
-                logo: softwareApiConnectImg,
-                boms: [
-                    "240-integration-ace"
-                ]
-            },
-            {
-                id: "api-connect",
-                title: "api-connect",
-                displayName: "API Connect",
-                status: "Released",
-                type: "Cloud Pak",
-                description: "Complete, intuitive and scalable API platform that lets you create, expose, manage and monetize APIs across clouds.",
-                icon: true,
-                logo: softwareApiConnectImg,
-                boms: [
-                    "220-integration-apiconnect"
-                ]
-            },
-            {
-                id: "event-streams",
-                title: "event-streams",
-                displayName: "Event Streams",
-                status: "Released",
-                type: "Cloud Pak",
-                description: "Event-streaming platform that helps you build smart apps that can react to events as they happen.",
-                icon: true,
-                logo: softwareEventStreamsImg,
-                boms: [
-                    "250-integration-eventstreams"
-                ]
-            },
-            {
-                id: "mq",
-                title: "mq",
-                displayName: "MQ",
-                status: "Released",
-                type: "Cloud Pak",
-                description: "Proven messaging for hybrid and multi-cloud that’s high-performance and security-rich.",
-                icon: true,
-                logo: softwareMQImg,
-                boms: [
-                    "230-integration-mq",
-                    "260-integration-mq-uniform-cluster"
-                ]
-            },
-            {
-                id: "security",
-                title: "security",
-                displayName: "Security",
-                status: "Beta",
-                type: "",
-                icon: true,
-                logo: softwareSecurityImg,
-                description: "Work smarter with an open security platform to advance your zero trust strategy.",
-                boms: [
-                    "200-openshift-gitops",
-                    "700-cp4s-multicloud"
-                ]
-            },
-            {
-                id: "db2",
-                title: "db2",
-                displayName: "Db2",
-                status: "Release",
-                type: "",
-                icon: true,
-                logo: softwareDB2Img,
-                description: "Trusted SQL database",
-                boms: [
-                    "200-openshift-gitops",
-                    "300-cloud-pak-for-data-entitlement",
-                    "305-cloud-pak-for-data-foundation",
-                    "310-cloud-pak-for-data-db2uoperator",
-                    "320-cloud-pak-for-data-db2oltp"
-                ]
-            },
-            {
-                id: "db2w",
-                title: "db2w",
-                displayName: "Db2 Warehouse",
-                status: "Release",
-                type: "",
-                icon: true,
-                logo: softwareDB2WarehouseImg,
-                description: "Trusted SQL database for building a Data Warehouse",
-                boms: [
-                    "200-openshift-gitops",
-                    "300-cloud-pak-for-data-entitlement",
-                    "305-cloud-pak-for-data-foundation",
-                    "310-cloud-pak-for-data-db2uoperator",
-                    "315-cloud-pak-for-data-db2wh"
-                ]
-            }
-
-        ],
-
-        storage_providers: [
-            {
-                id: "portworx",
-                title: "Portworx Enterprise",
-                desc: "Portworx Enterprise is the Kubernetes storage platform trusted in production by the leading enterprises",
-                docs: "https://portworx.com/",
-                image: storagePortworxImg,
-                boms: {
-                    ibm: [
-                        "210-ibm-portworx-storage",
-                    ],
-                    aws: [
-                        "210-aws-portworx-storage",
-                    ],
-                    azure: [
-                        "210-azure-portworx-storage",
-                    ]
-                }
-            },
-            {
-                id: "odf",
-                title: "OpenShift Data Foundation",
-                desc: "(ODF) is a software-defined, container-native storage solution that's integrated with the OpenShift Container Platform",
-                docs: "https://www.redhat.com/en/technologies/cloud-computing/openshift-data-foundation",
-                image: storageOdfImg,
-                boms: {
-                    ibm: [
-                        "210-ibm-portworx-storage",
-                    ],
-                    aws: [
-                    ],
-                    azure: [
-                    ]
-                }
-            }]
-
-    };
-
     render() {
-        console.log(this.state.curStepIx)
         const persona = this.state.catalog?.metadata?.useCases?.find(p => p.name === this.state.persona);
         const platform = this.state.catalog?.metadata?.cloudProviders?.find(p => p.name === this.state.platform);
-        const arch = this.state.catalog?.metadata?.flavors?.find(p => p.name === this.state.architecture);
-        const storage = this.solution_wizard.storage_providers.find(a => a.id === this.state.storage);
-        const software = this.state.software.map(swId => (this.solution_wizard.software.find(sw => sw.id === swId)));
-        const storage_providers = this.solution_wizard.storage_providers.map(s => ({
-            ...s,
-            enabled: s.boms[this.state.platform]?.length > 0
+        const flavor = this.state.catalog?.metadata?.flavors?.find(p => p.name === this.state.flavor);
+        const flavors = this.state.catalog?.metadata?.flavors.map(f => ({
+            ...f,
+            enabled: this.state.catalog?.boms?.find(bom => bom.category === 'infrastructure' && bom.cloudProvider === platform?.name && bom.flavor === f.name) !== undefined ? true : false
         }));
-        const defaultShortDesc = this.state.fields.short_desc === "" && this.state.curStep === "details" ? `Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.title ?? sw.id}`)).join(', ')} on ${platform?.title}.` : '';
-        const defaultLongDesc = this.state.fields.long_desc === "" && this.state.curStep === "details" ? `Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.title ?? sw.id}`)).join(', ')} in ${arch?.title} reference architecture deployed on ${platform?.title} with ${storage?.title} as storage option.` : '';
+        const storageOptions = this.state.catalog?.boms?.filter(bom => bom.category === 'storage' && bom.cloudProvider === platform?.name);
+        const softwareOptions = this.state.catalog?.boms?.filter(bom => bom.category === 'software' && (bom.cloudProvider === 'multi' || bom.cloudProvider === undefined));
+        const storage = this.state.catalog?.boms?.find(bom => bom.name === this.state.storage);
+        const software = this.state.software.map(swId => (this.state.catalog?.boms?.find(sw => sw.name === swId)));
+        const defaultShortDesc = this.state.fields.short_desc === "" && this.state.curStepIx === STEP_DETAILS ? `Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.name ?? sw.id}`)).join(', ')} on ${platform?.displayName}.` : '';
+        const defaultLongDesc = this.state.fields.long_desc === "" && this.state.curStepIx === STEP_DETAILS ? `Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.name ?? sw.id}`)).join(', ')} in ${flavor?.displayName} reference architecture deployed on ${platform?.displayName} with ${storage?.displayName} as storage option.` : '';
         if (defaultShortDesc || defaultLongDesc) this.setState({
             fields: {
                 ...this.state.fields,
@@ -571,7 +249,7 @@ class CreateSolutionview extends Component {
                     <Column lg={{ span: 10 }}>
                         {
                             this.state.curStepIx === STEP_OVERWIEW ?
-                                <Grid className='wizard-overview'>
+                                <Grid className='wizard-grid'>
                                     <Row>
                                         <Column lg={{ span: 12 }}>
                                             <h3>Welcome to the Solution Wizard</h3>
@@ -606,7 +284,7 @@ class CreateSolutionview extends Component {
                                     </Row>
                                 </Grid>
                             : this.state.curStepIx === STEP_USECASE ?
-                                <Grid className='wizard-overview'>
+                                <Grid className='wizard-grid'>
                                     <Row>
                                         <Column lg={{ span: 12 }}>
                                             <h3>Step 1: What are you trying to achieve ?</h3>
@@ -638,7 +316,7 @@ class CreateSolutionview extends Component {
                                     </Row>
                                 </Grid>
                             : this.state.curStepIx === STEP_INFRASTRUCTURE ?
-                                <Grid className='wizard-overview'>
+                                <Grid className='wizard-grid'>
                                     <Row>
                                         <Column lg={{ span: 12 }}>
                                             <h3>
@@ -710,13 +388,13 @@ class CreateSolutionview extends Component {
                                                                 <p>We recommend you use the <strong>{persona?.flavor}</strong> reference architecture</p>
                                                             </div>
                                                             {
-                                                                this.state.catalog?.metadata?.flavors?.length ?
-                                                                    this.state.catalog?.metadata?.flavors.map((flavor) => (
+                                                                flavors?.length ?
+                                                                    flavors.map((flavor) => (
                                                                         <label className="plan complete-plan" htmlFor={flavor.name} key={flavor.name}>
                                                                             <input type="radio" name={flavor.name} id={flavor.name}
                                                                                 disabled={!flavor.enabled}
-                                                                                className={this.state.architecture === flavor.name ? 'checked' : ''}
-                                                                                onClick={() => { if (flavor.enabled) this.setState({ architecture: flavor.name }) }} />
+                                                                                className={this.state.flavor === flavor.name ? 'checked' : ''}
+                                                                                onClick={() => { if (flavor.enabled) this.setState({ flavor: flavor.name }) }} />
                                                                             <div className={`plan-content${flavor.enabled ? '' : ' coming-soon'}`}>
                                                                                 <img loading="lazy" src={flavor.iconUrl} alt="" />
 
@@ -738,27 +416,24 @@ class CreateSolutionview extends Component {
                                                     <div className="selection-set">
                                                         <form className="plans">
 
-                                                            <div className="title">Now you have selected your reference architecture you will require some file storage for your IBM Software
+                                                            <div className="title">
+                                                                Now you have selected your reference architecture you will require some file storage for your IBM Software
                                                             </div>
 
                                                             {
-                                                                this.solution_wizard.storage_providers?.length ?
-                                                                    storage_providers.map((storage) => (
+                                                                storageOptions?.length ?
+                                                                    storageOptions.map((storage) => (
 
-                                                                        <label className="plan complete-plan" htmlFor={storage.id} key={storage.id}>
-                                                                            <input type="radio" name={storage.id} id={storage.id}
-                                                                                disabled={!storage.enabled}
-                                                                                className={this.state.storage === storage.id ? 'checked' : ''}
-                                                                                onClick={() => { if (storage.enabled) this.setState({ storage: storage.id }) }} />
-                                                                            <div className={`plan-content${storage.enabled ? '' : ' coming-soon'}`}>
-                                                                                <img loading="lazy" src={storage.image} alt="" />
+                                                                        <label className="plan complete-plan" htmlFor={storage.name} key={storage.name}>
+                                                                            <input type="radio" name={storage.name} id={storage.name}
+                                                                                className={this.state.storage === storage.name ? 'checked' : ''}
+                                                                                onClick={() => { this.setState({ storage: storage.name }) }} />
+                                                                            <div className={`plan-content`}>
+                                                                                <img loading="lazy" src={storage.iconUrl} alt="" />
 
                                                                                 <div className="plan-details">
-                                                                                    <span>{storage.title}
-                                                                                        {!storage.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
-
-                                                                                    </span>
-                                                                                    <p>{storage.desc}</p>
+                                                                                    <span>{storage.displayName ?? storage.name}</span>
+                                                                                    <p>{storage.description}</p>
                                                                                 </div>
                                                                             </div>
                                                                         </label>
@@ -773,177 +448,178 @@ class CreateSolutionview extends Component {
                                         </Column>
                                     </Row>
                                 </Grid>
-                            : <></>
-                        }
-                        <br />
-                        <Button kind='secondary'
-                            style={{ marginRight: '1rem', display: this.state.curStepIx <= 0 ? 'none' : 'unset' }}
-                            onClick={this.handleBack}>Back</Button>
-                        <Button onClick={this.handleNext}
-                            disabled={this.nextDisabled()}>Next</Button>
-                        {/* 
-                        
-                            
-                            <PageWizardStep id="software" key="software" label="Software">
-                                <PageWizardStepTitle>Step 5: Select the Software</PageWizardStepTitle>
-
-
-                                <div className="title">We are getting close to create your custom solution for your client or partner, we need a few more details
-                                    like the solution name and description. Dont worry you can edit you solution once its created to refine it so you client or partner is completely happy
-                                </div>
-
-                                <br></br>
-
-                                <Grid>
+                            : this.state.curStepIx === STEP_SOFTWARE ?
+                                <Grid className='wizard-grid'>
                                     <Row>
-
-                                        <Column lg={{ span: 10 }} md={{ span: 6 }} sm={{ span: 4 }}>
-                                            <StatefulTileCatalog
-                                                title='Software Bundles'
-                                                id='software-bundles'
-                                                isMultiSelect
-                                                tiles={
-                                                    this.solution_wizard.software.map((software) => (
-                                                        {
-                                                            id: software.id,
-                                                            values: {
-                                                                title: software.id,
-                                                                logo: software.logo,
-                                                                displayName: software.displayName,
-                                                                description: software.description,
-                                                            },
-                                                            renderContent: tileRenderFunction,
-                                                        }
-                                                    ))
-                                                }
-                                                pagination={{ pageSize: 9 }}
-                                                isSelectedByDefault={false}
-                                                selectedTileIds={this.state.software}
-                                                onSelection={(val) => {
-                                                    const sw = Array.from(this.state.software);
-                                                    console.log(sw)
-                                                    const swIx = this.state.software.indexOf(val);
-                                                    if (swIx >= 0) sw.splice(swIx, 1);
-                                                    else sw.push(val);
-                                                    console.log(sw)
-                                                    this.setState({ software: sw });
-                                                }} />
+                                        <Column lg={{ span: 12 }}>
+                                            <h3>Step 3: Select your Software</h3>
+                                            <div className="title">
+                                                We are getting close to create your custom solution for your client or partner, we need a few more details like the solution name and description.
+                                                Dont worry you can edit you solution once its created to refine it so you client or partner is completely happy.
+                                            </div>
+                                            <Grid>
+                                                <Row>
+                                                    <Column lg={{ span: 10 }} md={{ span: 6 }} sm={{ span: 4 }}>
+                                                        <StatefulTileCatalog
+                                                            title='Software Bundles'
+                                                            id='software-bundles'
+                                                            isMultiSelect
+                                                            tiles= {
+                                                                softwareOptions.map((software) => ({
+                                                                    id: software.name,
+                                                                    values: {
+                                                                        title: software.name,
+                                                                        logo: software.iconUrl,
+                                                                        displayName: software.displayName ?? software.name,
+                                                                        description: software.description,
+                                                                    },
+                                                                    renderContent: tileRenderFunction,
+                                                                }))
+                                                            }
+                                                            pagination={{ pageSize: 9 }}
+                                                            isSelectedByDefault={false}
+                                                            selectedTileIds={this.state.software}
+                                                            onSelection={(val) => {
+                                                                const sw = Array.from(this.state.software);
+                                                                const swIx = this.state.software.indexOf(val);
+                                                                if (swIx >= 0) sw.splice(swIx, 1);
+                                                                else sw.push(val);
+                                                                this.setState({ software: sw });
+                                                            }} />
+                                                    </Column>
+                                                </Row>
+                                            </Grid>
                                         </Column>
                                     </Row>
                                 </Grid>
+                            : this.state.curStepIx === STEP_DETAILS ?
+                                <Grid className='wizard-grid'>
+                                    <Row>
+                                        <Column lg={{ span: 12 }}>
+                                            <h3>Step 4: What do you want to call your solution?</h3>
+                                            <div className="title">
+                                                We need a few more details before we can create your solution. We need the solution name
+                                                and description so we can identify it later
+                                            </div>
 
-                            </PageWizardStep>
-                            <PageWizardStep id="details" key="details" label="Solution Details">
-                                <PageWizardStepTitle>Step 6: What do you want to call your solution ?</PageWizardStepTitle>
+                                            <Form name="solutionform">
+                                                <TextInput
+                                                    data-modal-primary-focus
+                                                    id="id"
+                                                    name="id"
+                                                    required
+                                                    disabled
+                                                    invalidText="Please Enter The Value"
+                                                    onChange={this.handleChange.bind(this, "id")}
+                                                    value={this.state.fields.id}
+                                                    labelText={this.props.data ? "" : "Solution ID"}
+                                                    placeholder="e.g. fs-cloud-szr-ocp"
+                                                    style={{ marginBottom: '1rem' }}
+                                                />
+                                                <TextInput
+                                                    data-modal-primary-focus
+                                                    id="name"
+                                                    name="name"
+                                                    required
+                                                    invalidText="Please Enter The Value"
+                                                    onChange={this.handleChange.bind(this, "name")}
+                                                    value={this.state.fields.name}
+                                                    labelText="Solution Name"
+                                                    placeholder="e.g. OpenShift"
+                                                    style={{ marginBottom: '1rem' }}
+                                                />
+                                                {!this.props.isDuplicate && <TextInput
+                                                    data-modal-primary-focus
+                                                    id="short_desc"
+                                                    name="short_desc"
+                                                    required
+                                                    invalidText="Please Enter The Value"
+                                                    onChange={this.handleChange.bind(this, "short_desc")}
+                                                    defaultValue={defaultShortDesc}
+                                                    labelText="Short Description"
+                                                    placeholder="e.g. FS Cloud single zone environment with OpenShift cluster and SRE tools."
+                                                    style={{ marginBottom: '1rem' }}
+                                                />}
+                                                {!this.props.isDuplicate && <TextArea
+                                                    required
+                                                    // cols={50}
+                                                    id="long_desc"
+                                                    name="long_desc"
+                                                    defaultValue={defaultLongDesc}
+                                                    onChange={this.handleChange.bind(this, "long_desc")}
+                                                    invalidText="A valid value is required"
+                                                    labelText="Long Description"
+                                                    placeholder="Solution long description"
+                                                    rows={2}
+                                                    style={{ marginBottom: '1rem' }}
+                                                />}
+                                                {!this.props.isDuplicate && this.props.user?.roles?.includes('admin') && <Select id="public" name="public"
+                                                    labelText="Public"
+                                                    required
+                                                    defaultValue={this.state.fields.public}
+                                                    invalidText="A valid value is required"
+                                                    onChange={this.handleChange.bind(this, "public")}
+                                                    style={{ marginBottom: '1rem' }}>
+                                                    <SelectItem value={false} text="False" />
+                                                    <SelectItem value={true} text="True" />
+                                                </Select>}
+                                                {!this.props.isDuplicate && this.props.user?.roles?.includes('admin') && <Select id="techzone" name="techzone"
+                                                    labelText="Deploy to TechZone"
+                                                    required
+                                                    defaultValue={this.state.fields.techzone}
+                                                    invalidText="A valid value is required"
+                                                    onChange={this.handleChange.bind(this, "techzone")}
+                                                    style={{ marginBottom: '1rem' }}>
+                                                    <SelectItem value={false} text="False" />
+                                                    <SelectItem value={true} text="True" />
+                                                </Select>}
+                                            </Form>
+                                        </Column>
+                                    </Row>
+                                </Grid>
+                            : this.state.curStepIx === STEP_SUMMARY ?
+                                <Grid className='wizard-grid'>
+                                    <Row>
+                                        <Column lg={{ span: 12 }}>
+                                            <h3>Summary: Is this the solution you want?</h3>
+
+                                            <div className="summary">
+
+                                                <p>You have chosen to create an IBM Technology solution called <strong>{this.state.fields?.name}</strong></p>
+
+                                                <div className='arch'>
+                                                    <p>You want to <strong>{persona?.displayName}</strong> <img loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
+                                                    <p>You chose to deploy you solution on <strong>{platform?.displayName}</strong> <img loading="lazy" src={platform?.iconUrl} alt={platform?.displayName ?? ""} /></p>
+                                                    <p>You have chosen the <strong>{flavor?.displayName}</strong> reference architecture <div className='flex-inline'><img loading="lazy" src={flavor?.iconUrl} alt={flavor?.displayName ?? ""} /><img loading="lazy" src={openshiftImg} alt="OpenShift" /></div></p>
+                                                    <p>It will install with the following Storage Option <img loading="lazy" src={storage?.iconUrl} alt={storage?.displayName ?? ""} /></p>
+                                                </div>
+
+                                                <p>
+                                                    You have chosen the following IBM Software to help get your solution started:
+                                                    <ul>
+                                                        {software?.map(sw => (
+                                                            <li key={sw.name}>{sw.displayName ?? sw.name}</li>
+                                                        ))}
+                                                    </ul>
+                                                </p>
+                                                <p>
+                                                    If you are happy with this selection of content for your solution click on the Submit button below. You can always change the
+                                                    content later by adding an removing your own bill of materials.
+                                                </p>
+                                            </div>
 
 
-
-                                <div className="title">We need a few more details before we can create your solution. We need the solution name
-                                    and description so we can identify it later
-                                </div>
-                                <br></br>
-
-                                <Form name="solutionform" onSubmit={this.handleSubmit.bind(this)}>
-                                    <TextInput
-                                        data-modal-primary-focus
-                                        id="id"
-                                        name="id"
-                                        required
-                                        disabled
-                                        invalidText="Please Enter The Value"
-                                        onChange={this.handleChange.bind(this, "id")}
-                                        value={this.state.fields.id}
-                                        labelText={this.props.data ? "" : "Solution ID"}
-                                        placeholder="e.g. fs-cloud-szr-ocp"
-                                        style={{ marginBottom: '1rem' }}
-                                    />
-                                    <TextInput
-                                        data-modal-primary-focus
-                                        id="name"
-                                        name="name"
-                                        required
-                                        invalidText="Please Enter The Value"
-                                        onChange={this.handleChange.bind(this, "name")}
-                                        value={this.state.fields.name}
-                                        labelText="Solution Name"
-                                        placeholder="e.g. OpenShift"
-                                        style={{ marginBottom: '1rem' }}
-                                    />
-                                    {!this.props.isDuplicate && <TextInput
-                                        data-modal-primary-focus
-                                        id="short_desc"
-                                        name="short_desc"
-                                        required
-                                        invalidText="Please Enter The Value"
-                                        onChange={this.handleChange.bind(this, "short_desc")}
-                                        defaultValue={defaultShortDesc}
-                                        labelText="Short Description"
-                                        placeholder="e.g. FS Cloud single zone environment with OpenShift cluster and SRE tools."
-                                        style={{ marginBottom: '1rem' }}
-                                    />}
-                                    {!this.props.isDuplicate && <TextArea
-                                        required
-                                        // cols={50}
-                                        id="long_desc"
-                                        name="long_desc"
-                                        defaultValue={defaultLongDesc}
-                                        onChange={this.handleChange.bind(this, "long_desc")}
-                                        invalidText="A valid value is required"
-                                        labelText="Long Description"
-                                        placeholder="Solution long description"
-                                        rows={2}
-                                        style={{ marginBottom: '1rem' }}
-                                    />}
-                                    {!this.props.isDuplicate && this.props.user?.roles?.includes('admin') && <Select id="public" name="public"
-                                        labelText="Public"
-                                        required
-                                        defaultValue={this.state.fields.public}
-                                        invalidText="A valid value is required"
-                                        onChange={this.handleChange.bind(this, "public")}
-                                        style={{ marginBottom: '1rem' }}>
-                                        <SelectItem value={false} text="False" />
-                                        <SelectItem value={true} text="True" />
-                                    </Select>}
-                                    {!this.props.isDuplicate && this.props.user?.roles?.includes('admin') && <Select id="techzone" name="techzone"
-                                        labelText="Deploy to TechZone"
-                                        required
-                                        defaultValue={this.state.fields.techzone}
-                                        invalidText="A valid value is required"
-                                        onChange={this.handleChange.bind(this, "techzone")}
-                                        style={{ marginBottom: '1rem' }}>
-                                        <SelectItem value={false} text="False" />
-                                        <SelectItem value={true} text="True" />
-                                    </Select>}
-                                </Form>
-
-
-                            </PageWizardStep>
-                            <PageWizardStep id="summary" key="summary" label="Summary">
-                                <PageWizardStepTitle>Summary: Is this the solution you want ?</PageWizardStepTitle>
-
-                                <div className="summary">
-
-                                    <p>You have chosen to create an IBM Technology solution called <strong>{this.state.fields?.name}</strong></p>
-
-                                    <div className='arch'>
-                                        <p>You want to <strong>{persona?.displayName}</strong> <img loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
-                                        <p>You chose to deploy you solution on <strong>{platform?.displayName}</strong> <img loading="lazy" src={platform?.iconUrl} alt={platform?.displayName ?? ""} /></p>
-                                        <p>You have chosen the <strong>{arch?.displayName}</strong> reference architecture <div className='flex-inline'><img loading="lazy" src={arch?.iconUrl} alt={arch?.displayName ?? ""} /><img loading="lazy" src={openshiftImg} alt="OpenShift" /></div></p>
-                                        <p>It will install with the following Storage Option <img loading="lazy" src={storage?.image} alt={storage?.title ?? ""} /></p>
-                                    </div>
-
-                                    <p>You have chosen the following IBM Software to help get your solution started:
-                                        <ul>
-                                            {software?.map(sw => (
-                                                <li>{sw.displayName ?? sw.title}</li>
-                                            ))}
-                                        </ul>
-                                    </p>
-                                    <p>If you are happy with this selection of content for your solution click on the Submit button below. You can always change the
-                                        content later by adding an removing your own bill of materials.</p>
-                                </div>
-
-                            </PageWizardStep> */}
+                                        </Column>
+                                    </Row>
+                                </Grid>
+                            : <></>
+                        }
+                            <br />
+                            <Button kind='secondary'
+                                style={{ marginRight: '1rem', display: this.state.curStepIx <= 0 ? 'none' : 'unset' }}
+                                onClick={this.handleBack}>Back</Button>
+                            <Button onClick={this.handleNext}
+                                disabled={this.nextDisabled()}>{this.state.curStepIx < STEP_SUMMARY ? 'Next' : 'Submit'}</Button>
                     </Column>
                 </Row>
             </Grid>
