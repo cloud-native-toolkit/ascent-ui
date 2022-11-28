@@ -189,7 +189,7 @@ class UIShell extends Component {
                   <strong>region:</strong>
                   <Tag style={{ marginLeft: '.5rem' }}>{this.state.user?.region}</Tag>
                 </li> : <></>}
-                {ApplicationMode.isBuilderMode()  && this.state.user?.role === 'admin' ? <div>
+                {ApplicationMode.isBuilderMode() ? <div>
                   <SwitcherDivider />
                   <SwitcherItem aria-label="API token" onClick={this.fetchToken.bind(this)}>
                     <span>API token</span>{this.state.copyTokenIcon}
