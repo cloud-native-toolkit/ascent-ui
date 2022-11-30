@@ -457,38 +457,34 @@ class CreateSolutionview extends Component {
                                                 We are getting close to create your custom solution for your client or partner, we need a few more details like the solution name and description.
                                                 Dont worry you can edit you solution once its created to refine it so you client or partner is completely happy.
                                             </div>
-                                            <Grid>
-                                                <Row>
-                                                    <Column lg={{ span: 10 }} md={{ span: 6 }} sm={{ span: 4 }}>
-                                                        <StatefulTileCatalog
-                                                            title='Software Bundles'
-                                                            id='software-bundles'
-                                                            isMultiSelect
-                                                            tiles= {
-                                                                softwareOptions.map((software) => ({
-                                                                    id: software.name,
-                                                                    values: {
-                                                                        title: software.name,
-                                                                        logo: software.iconUrl,
-                                                                        displayName: software.displayName ?? software.name,
-                                                                        description: software.description,
-                                                                    },
-                                                                    renderContent: tileRenderFunction,
-                                                                }))
-                                                            }
-                                                            pagination={{ pageSize: 9 }}
-                                                            isSelectedByDefault={false}
-                                                            selectedTileIds={this.state.software}
-                                                            onSelection={(val) => {
-                                                                const sw = Array.from(this.state.software);
-                                                                const swIx = this.state.software.indexOf(val);
-                                                                if (swIx >= 0) sw.splice(swIx, 1);
-                                                                else sw.push(val);
-                                                                this.setState({ software: sw });
-                                                            }} />
-                                                    </Column>
-                                                </Row>
-                                            </Grid>
+                                            <br />
+                                            <StatefulTileCatalog
+                                                title='Software Bundles'
+                                                id='software-bundles'
+                                                isMultiSelect
+                                                tiles= {
+                                                    softwareOptions.map((software) => ({
+                                                        id: software.name,
+                                                        values: {
+                                                            title: software.name,
+                                                            logo: software.iconUrl,
+                                                            displayName: software.displayName ?? software.name,
+                                                            description: software.description,
+                                                        },
+                                                        renderContent: tileRenderFunction,
+                                                    }))
+                                                }
+                                                pagination={{ pageSize: 9 }}
+                                                isSelectedByDefault={false}
+                                                selectedTileIds={this.state.software}
+                                                onSelection={(val) => {
+                                                    const sw = Array.from(this.state.software);
+                                                    const swIx = this.state.software.indexOf(val);
+                                                    if (swIx >= 0) sw.splice(swIx, 1);
+                                                    else sw.push(val);
+                                                    this.setState({ software: sw });
+                                                }} />
+                                            <br />
                                         </Column>
                                     </Row>
                                 </Grid>
