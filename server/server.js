@@ -176,14 +176,12 @@ const config = require('../config/config');
 
 
   app.use('/api/token', (req, res, next) => {
-    if (  req.isAuthenticated() &&
-        ((config.authProvider === "appid" && AuthStrategy.hasScope(req, "super_edit"))
-        || (config.authProvider === "openshift" && req.user.groups.includes("ascent-admins"))))
+    if ( req.isAuthenticated() )
     {
       if (config.authProvider === "openshift") {
         res.json({token: Buffer.from(`${req.user.token}`).toString('base64')});
       } else {
-        res.json({token: Buffer.from(`${req.session[AuthStrategy.AUTH_CONTEXT].accessToken} ${req.session[AuthStrategy.AUTH_CONTEXT].identityToken}`).toString('base64')});
+        res.json({token: Buffer.from(req.session[AuthStrategy.AUTH_CONTEXT].refreshToken).toString('base64')});
       }
       return next();
     } else {
