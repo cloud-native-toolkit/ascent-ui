@@ -289,13 +289,13 @@ div .arch p, div .summary p  {
     }
 }
 
-.modal-wizard .bx--grid.wizard-overview {
+.modal-wizard .bx--grid.wizard-grid {
     padding-right: 0;
     padding-left: 0;
 }
 
 @media (min-width: 99rem){
-    .modal-wizard .bx--grid.wizard-overview .bx--row {
+    .modal-wizard .bx--grid.wizard-grid .bx--row {
         margin-right: 0;
         margin-left: 0;
     }
