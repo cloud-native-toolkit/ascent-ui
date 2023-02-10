@@ -8,14 +8,14 @@ spec:
     httpGet:
       path: /health
       scheme: HTTP
-    periodSeconds: 5
-    timeoutSeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 180
   readinessProbe:
     httpGet:
       path: /health
       scheme: HTTP
-    periodSeconds: 5
-    timeoutSeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 180
   replicas: 1
   quota: turbo
   mountServiceCerts:
