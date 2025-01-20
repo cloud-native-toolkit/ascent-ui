@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  ascent-ui:
+    build: .
+    environment:
+      - API_HOST=http://ascent-bff:3001
+      - EXTERNAL_PROTOCOL=http
+      - EXTERNAL_HOSTNAME=localhost
+      - EXTERNAL_PORT=3000
+      - PROTOCOL=http
+      - HOSTNAME=localhost
+      - PORT=3000
+      - NODE_ENV=test
+    ports:
+      - "3000:3000"
+    depends_on:
+      - ascent-bff
+  #    image: quay.io/cloudnativetoolkit/ascent-ui:0.0.77
+  ascent-bff:
+    image: quay.io/cloudnativetoolkit/ascent-bff:v1.0.1
+    environment:
+      - DATABASE_TEST={"connection":{"mongodb":{"composed":["mongodb://mongodb:27017/mongodb"],"authentication":{"username":"mongodb","password":"passw0rd"},"hosts":[{"hostname":"localhost","port":27017}],"database":"mongodb","query_options":{"authSource":"admin","tls":false}}}}
+      - DATABASE_DEV={"connection":{"mongodb":{"composed":["mongodb://mongodb:27017/mongodb"],"authentication":{"username":"mongodb","password":"passw0rd"},"hosts":[{"hostname":"localhost","port":27017}],"database":"mongodb","query_options":{"authSource":"admin","tls":false}}}}
+      - DATABASE={"connection":{"mongodb":{"composed":["mongodb://mongodb:27017/mongodb"],"authentication":{"username":"mongodb","password":"passw0rd"},"hosts":[{"hostname":"localhost","port":27017}],"database":"mongodb","query_options":{"authSource":"admin","tls":false}}}}
+    command:
+      - npm
+      - run
+      - serve:test
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+  mongodb:
+    image: docker.io/mongodb/mongodb-community-server:7.0.7-ubi9
+    ports:
+      - "25017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
+      - MONGO_INITDB_ROOT_PASSWORD=passw0rd

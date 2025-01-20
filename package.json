@@ -21,6 +21,7 @@
     "start:dev": "webpack-dev-server --config ./webpack.config.development.js",
     "prestart": "react-inject-env set",
     "start": "dotenv node server/server.js",
+    "start:dev": "dotenv node server/server-dev.js",
     "lint": "eslint .  --ext .js",
     "prebuild": "rimraf build",
     "build": "cross-env NODE_ENV=production webpack --mode production --progress --config webpack.config.production.js",
