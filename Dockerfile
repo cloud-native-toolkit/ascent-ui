@@ -10,7 +10,7 @@ USER default
 WORKDIR /opt/app-root/src
 
 COPY --chown=default:root . .
-RUN npm install && \
+RUN npm ci && \
     npm run build
 
 FROM registry.access.redhat.com/ubi8/nodejs-16-minimal:1-79
@@ -24,7 +24,7 @@ COPY --chown=1001:0 package.json package-lock.json ./
 COPY --chown=1001:0 server ./server
 
 RUN chmod -R g+w ./dist
-RUN npm install --production
+RUN npm ci --production
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0 PORT=3000
