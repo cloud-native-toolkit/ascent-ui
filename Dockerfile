@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/nodejs-16:1-72 as builder
+FROM registry.access.redhat.com/ubi8/nodejs-16:1-72 AS builder
 
 USER root
 
@@ -23,8 +23,8 @@ COPY --from=builder --chown=1001:0 /opt/app-root/src/dist ./dist
 COPY --chown=1001:0 package.json package-lock.json ./
 COPY --chown=1001:0 server ./server
 
-RUN chmod -R g+w ./dist && \
-    npm install --production
+RUN chmod -R g+w ./dist
+RUN npm install --production
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0 PORT=3000
