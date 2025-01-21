@@ -69,7 +69,7 @@
     "@carbon/icons-react": "^10.49.0",
     "@craco/craco": "^7.0.0-alpha.3",
     "@hot-loader/react-dom": "^17.0.2",
-    "@testing-library/jest-dom": "^5.16.3",
+    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.8",
