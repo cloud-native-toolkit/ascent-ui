@@ -29,9 +29,12 @@ const {
   OCP_OAUTH_CONFIG,
 } = process.env;
 
+console.log('NODE_ENV: ', NODE_ENV)
+
 // Generated configuration
 const isTest = NODE_ENV === 'test';
 const isDev = NODE_ENV !== 'production';
+const isProd = NODE_ENV === 'production';
 const internalUri =
   (PROTOCOL === 'https' && PORT === '443' && `${PROTOCOL}://${HOSTNAME}`) ||
   `${PROTOCOL}://${HOSTNAME}:${PORT}`;
@@ -45,7 +48,7 @@ let authConfig = {};
 try {
   authConfig = OCP_OAUTH_CONFIG ? JSON.parse(OCP_OAUTH_CONFIG) : JSON.parse(APPID_CONFIG);
 } catch (error) {
-  if (!isTest) throw new Error(`Error parsing auth config ${OCP_OAUTH_CONFIG ? 'OCP_OAUTH_CONFIG' : 'APPID_CONFIG'} as json`)
+  if (isProd) throw new Error(`Error parsing auth config ${OCP_OAUTH_CONFIG ? 'OCP_OAUTH_CONFIG' : 'APPID_CONFIG'} as json`)
 }
 
 module.exports = {
