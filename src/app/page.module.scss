@@ -1,0 +1,93 @@
+@use '@carbon/type' as carbon-type;
+@use '@carbon/grid' as carbon-grid;
+@use "@carbon/layout" as carbon-layout;
+@use "~sass-rem" as sass-rem;
+
+@mixin landing-page-background() {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+}
+
+.landing-page__r2 .cds--tabs__nav {
+  right: 0;
+}
+
+.landing-page a {
+  text-decoration: none;
+}
+
+.landing-page__illo {
+  max-width: 100%;
+  padding-top: 1.25em;
+}
+
+.landing-page__banner {
+  padding-top: 1em;
+  padding-bottom: carbon-layout.$spacing-07;
+  @include landing-page-background;
+}
+
+.landing-page__heading {
+  @include carbon-type.type-style('productive-heading-05');
+}
+
+.landing-page__r2 {
+  margin-top: sass-rem.rem(-40px);
+}
+
+.landing-page__subheading {
+  margin-top: carbon-layout.$spacing-06;
+  @include carbon-type.type-style('productive-heading-03');
+  @include carbon-type.font-weight('semibold');
+}
+
+.landing-page__p {
+  @include carbon-type.type-style('productive-heading-03');
+  margin-top: carbon-layout.$spacing-06;
+  margin-bottom: carbon-layout.$spacing-06;
+
+  @include carbon-grid.breakpoint-between((320px + 1), md) {
+    max-width: 75%;
+  }
+}
+
+.landing-page__r3 {
+  padding-top: carbon-layout.$spacing-09;
+  padding-bottom: carbon-layout.$spacing-09;
+  @include landing-page-background;
+}
+
+.landing-page__label {
+  @include carbon-type.type-style('heading-01');
+}
+
+.landing-page__tab-content ul li {
+  font-size: 1rem;
+
+}
+
+.landing-page__tab-content {
+  padding-top: 1em;
+  padding-bottom: 1.5em;
+}
+
+@media (min-width: 99rem) {
+  .cds--row {
+    margin-right: -1.5rem;
+    margin-left: -1.5rem;
+  }
+}
+
+@media (max-width: 42rem) {
+  .cds--row {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
