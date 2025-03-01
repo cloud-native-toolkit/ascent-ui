@@ -4,10 +4,10 @@ import {useAtom, useAtomValue} from "jotai";
 import {Column, FlexGrid, Row} from "@carbon/react";
 
 import {personaAtom, useCasesAtom} from "@/atoms";
+import {Icon} from "@/components";
 import {UseCaseMetadata} from "@/models";
 
 import styles from "../page.module.scss";
-import Image from "next/image";
 
 interface UseCaseStepProps {
     visible: boolean;
@@ -37,9 +37,9 @@ export const UseCaseStep = ({visible}: UseCaseStepProps) => {
                                 useCases?.length ?
                                     useCases.map((useCase: UseCaseMetadata) => (
                                         <label className={`${styles.plan} ${styles.completePlan}`} htmlFor={useCase.name} key={useCase.name}>
-                                            <input type="radio" className={persona?.name === useCase.name ? 'checked' : ''} name={useCase.name} id={useCase.name} onClick={() => setPersona(useCase)} />
+                                            <input type="radio" checked={!!(persona?.name && persona?.name === useCase.name)} name={useCase.name} id={useCase.name} onClick={() => setPersona(useCase)} />
                                             <div className={styles.planContent}>
-                                                <Image loading="lazy" src={useCase.iconUrl} alt="" width={40} height={40} />
+                                                <Icon src={useCase.iconUrl} alt="" />
                                                 <div className={styles.planDetails}>
                                                     <span>{useCase.displayName ?? useCase.name}</span>
                                                     <p>{useCase.description}</p>

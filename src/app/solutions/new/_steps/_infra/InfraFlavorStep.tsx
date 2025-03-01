@@ -1,9 +1,9 @@
 "use client"
 
 import {useAtom, useAtomValue} from "jotai";
-import Image from "next/image";
 
 import {flavorAtom, flavorsAtom, personaAtom, platformAtom} from "@/atoms";
+import {Icon} from "@/components";
 import {CloudProviderMetadata, FlavorMetadata, UseCaseMetadata} from "@/models";
 
 interface InfraFlavorStepProps {
@@ -19,14 +19,19 @@ export const InfraFlavorStep = ({visible}: InfraFlavorStepProps) => {
 
     if (!visible) return (<></>);
 
+    const isDisabled = (flavor: FlavorMetadata): boolean => {
+        if (flavor.enabled === undefined) return false;
+        return !flavor.enabled;
+    }
+
     return (
         <div>
             <div className="selection-set">
                 <form className="plans">
                     {/* <div className="title">Now you have selected your use case and the platform you want to target. Let's select the architecture pattern you want to use</div> */}
                     <div className="arch">
-                        <p>You want to <strong>{persona?.displayName ?? persona?.name}</strong> {persona?.iconUrl ? <Image loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /> : <></> }</p>
-                        <p>on the platform {platform?.iconUrl ? <Image loading="lazy" src={platform?.iconUrl} alt="platform" /> : <></>} </p>
+                        <p>You want to <strong>{persona?.displayName ?? persona?.name}</strong> <Icon loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
+                        <p>on the platform <Icon src={platform?.iconUrl} alt="platform" /></p>
                         <p>We recommend you use the <strong>{persona?.flavor}</strong> reference architecture</p>
                     </div>
                     {
@@ -34,16 +39,16 @@ export const InfraFlavorStep = ({visible}: InfraFlavorStepProps) => {
                             flavors.map((flavor: FlavorMetadata) => (
                                 <label className="plan complete-plan" htmlFor={flavor.name} key={flavor.name}>
                                     <input type="radio" name={flavor.name} id={flavor.name}
-                                           disabled={!flavor.enabled}
-                                           className={selectedFlavor?.name === flavor.name ? 'checked' : ''}
-                                           onClick={() => { if (flavor.enabled) setSelectedFlavor(flavor) }} />
+                                           disabled={isDisabled(flavor)}
+                                           checked={!!(selectedFlavor?.name && selectedFlavor?.name === flavor.name)}
+                                           onClick={() => setSelectedFlavor(flavor)} />
                                     <div className={`plan-content${flavor.enabled ? '' : ' coming-soon'}`}>
-                                        <Image loading="lazy" src={flavor.iconUrl} alt="" />
+                                        <Icon src={flavor.iconUrl} alt="" />
 
                                         <div className="plan-details">
-                                                                                    <span>{flavor.displayName ?? flavor.name}
-                                                                                        {!flavor.enabled && <i><b><h6>Coming Soon !</h6></b></i>}
-                                                                                    </span>
+                                            <span>{flavor.displayName ?? flavor.name}
+                                                {isDisabled(flavor) && <i><b><h6>Coming Soon !</h6></b></i>}
+                                            </span>
                                             <p>{flavor.description}</p>
                                         </div>
                                     </div>

@@ -1,6 +1,7 @@
 import {Bom} from "../../models";
 import {BaseRest} from "@/services/base-rest";
 import {BomsApi} from "@/services/boms/boms.api";
+import {handleJsonResponse} from "@/services/rest-crud.client";
 
 export class BomsRest extends BaseRest<Bom> implements BomsApi {
     constructor() {
@@ -9,12 +10,12 @@ export class BomsRest extends BaseRest<Bom> implements BomsApi {
 
     async getComposite(archId: string): Promise<object> {
         return fetch(`${this.client.baseUrl}/services/${archId}`)
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async getDetails(id: string): Promise<object> {
         return fetch(`${this.client.baseUrl}/${id}/composite`)
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async delete(id: string): Promise<boolean> {

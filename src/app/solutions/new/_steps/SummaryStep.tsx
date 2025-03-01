@@ -1,12 +1,12 @@
 "use client"
 
-import Image from "next/image";
 import {Column, FlexGrid, Row} from "@carbon/react";
 import {useAtomValue} from "jotai";
 
 import {flavorAtom, newSolutionAtom, personaAtom, platformAtom, softwareAtom, storageAtom} from "@/atoms";
 
 import openshiftImg from '../../../../images/openshift.png';
+import {Icon} from "@/components";
 
 interface SummaryStepProps {
     visible: boolean;
@@ -33,10 +33,10 @@ export const SummaryStep = ({visible}: SummaryStepProps) => {
                         <p>You have chosen to create an IBM Technology solution called <strong>{solution?.name}</strong></p>
 
                         <div className='arch'>
-                            <p>You want to <strong>{persona?.displayName}</strong> {persona?.iconUrl ? <Image loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /> : <></>}</p>
-                            <p>You chose to deploy you solution on <strong>{platform?.displayName}</strong> {platform?.iconUrl ? <Image loading="lazy" src={platform?.iconUrl} alt={platform?.displayName ?? ""} /> : <></>}</p>
-                            <p>You have chosen the <strong>{flavor?.displayName}</strong> reference architecture <div className='flex-inline'>{flavor?.iconUrl ? <Image loading="lazy" src={flavor?.iconUrl} alt={flavor?.displayName ?? ""} /> : <></>}<Image loading="lazy" src={openshiftImg} alt="OpenShift" /></div></p>
-                            <p>It will install with the following Storage Option {storage?.iconUrl ? <Image loading="lazy" src={storage?.iconUrl} alt={storage?.displayName ?? ""} /> : <></>}</p>
+                            <p>You want to <strong>{persona?.displayName}</strong> <Icon src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
+                            <p>You chose to deploy you solution on <strong>{platform?.displayName}</strong> <Icon src={platform?.iconUrl} alt={platform?.displayName ?? ""} /></p>
+                            <p>You have chosen the <strong>{flavor?.displayName}</strong> reference architecture <div className='flex-inline'><Icon src={flavor?.iconUrl} alt={flavor?.displayName ?? ""} /> <Icon src={openshiftImg} alt="OpenShift" /></div></p>
+                            <p>It will install with the following Storage Option <Icon src={storage?.iconUrl} alt={storage?.displayName ?? ""} /></p>
                         </div>
 
                         <p>

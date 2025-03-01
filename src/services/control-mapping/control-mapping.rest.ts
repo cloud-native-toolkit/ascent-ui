@@ -1,6 +1,7 @@
 import {ControlMapping, parametersToQueryString, Profile, QueryParameters} from "../../models";
 import {ControlMappingApi} from ".";
 import {BaseRest} from "@/services/base-rest";
+import {handleJsonResponse} from "@/services/rest-crud.client";
 
 export class ControlMappingRest extends BaseRest<ControlMapping> implements ControlMappingApi {
     constructor() {
@@ -21,7 +22,7 @@ export class ControlMappingRest extends BaseRest<ControlMapping> implements Cont
                     'Content-Type': 'application/json',
                 }
             })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async listArchMappings(archId: string): Promise<object> {
@@ -34,7 +35,7 @@ export class ControlMappingRest extends BaseRest<ControlMapping> implements Cont
                     'Content-Type': 'application/json',
                 }
             })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async listProfiles(parameters?: QueryParameters): Promise<Profile> {
@@ -49,7 +50,7 @@ export class ControlMappingRest extends BaseRest<ControlMapping> implements Cont
                     'Content-Type': 'application/json',
                 }
             })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async importProfile(file: object): Promise<Profile> {
@@ -63,6 +64,6 @@ export class ControlMappingRest extends BaseRest<ControlMapping> implements Cont
                 },
                 body: JSON.stringify(file)
             })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 }

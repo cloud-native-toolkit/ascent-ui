@@ -3,10 +3,10 @@
 import {useAtom, useAtomValue} from "jotai";
 
 import {cloudProvidersAtom, platformAtom} from "@/atoms";
+import {Icon} from "@/components";
 import {CloudProviderMetadata} from "@/models";
 
 import byoInfra from '../../../../../images/platforms/cloud-infra-center-byo-infra.svg';
-import Image from "next/image";
 
 interface InfraPlatformStepProps {
     visible: boolean;
@@ -42,10 +42,10 @@ export const InfraPlatformStep = ({visible}: InfraPlatformStepProps) => {
                                         type="radio"
                                         name={cloudProvider.name}
                                         id={cloudProvider.name}
-                                        className={platform?.name === cloudProvider.name ? 'checked' : ''}
+                                        checked={!!(platform?.name && platform?.name === cloudProvider.name)}
                                         onClick={() => setPlatform(cloudProvider) } />
                                     <div className="plan-content">
-                                        <Image loading="lazy" src={cloudProvider.iconUrl} alt="" />
+                                        <Icon src={cloudProvider.iconUrl} alt="" />
                                         <div className="plan-details">
                                             <span>{cloudProvider.displayName ?? cloudProvider.name}</span>
                                             <p>{cloudProvider.description}</p>
@@ -60,10 +60,10 @@ export const InfraPlatformStep = ({visible}: InfraPlatformStepProps) => {
                             type="radio"
                             name='byo-infra'
                             id='byo-infra'
-                            className={platform?.name === byoInfraProvider.name ? 'checked' : ''}
+                            checked={!!(platform?.name && platform?.name === byoInfraProvider.name)}
                             onClick={() => setPlatform(byoInfraProvider)} />
                         <div className="plan-content">
-                            <Image loading="lazy" src={byoInfra} alt="" />
+                            <Icon src={byoInfra} alt="" />
                             <div className="plan-details">
                                 <span>Bring Your Own</span>
                                 <p>Bring your own OpenShift infrastructure. Select only the software you want to deploy for your solution</p>

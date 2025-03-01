@@ -28,6 +28,7 @@ class ProgressStepStateImpl implements ProgressStepState {
     label: string;
     n?: ProgressStepState;
     p?: ProgressStepState;
+    isValidInternal?: (data?: any) => boolean;
 
     constructor({index, label, n, isValid}: ProgressStepStateImplFields) {
         this.index = index;
@@ -35,7 +36,7 @@ class ProgressStepStateImpl implements ProgressStepState {
         this.n = n;
 
         if (isValid) {
-            this.isValid = isValid;
+            this.isValidInternal = isValid;
         }
     }
 
@@ -60,8 +61,8 @@ class ProgressStepStateImpl implements ProgressStepState {
         return !!this.p;
     }
 
-    isValid(): boolean {
-        return true;
+    isValid(data?: any): boolean {
+        return this.isValidInternal?.(data) ?? true;
     }
 }
 
@@ -83,6 +84,7 @@ export const buildSteps = (steps: ProgressStepInput[]): ProgressStepState => {
             index,
             label: (typeof currentValue === "string") ? currentValue : currentValue.label,
             p: last,
+            isValid: (typeof currentValue !== "string") ? currentValue.isValid : undefined,
         })
 
         if (last) {

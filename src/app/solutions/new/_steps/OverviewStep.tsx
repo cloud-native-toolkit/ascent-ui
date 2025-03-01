@@ -1,11 +1,11 @@
 "use client"
 
-import Image from "next/image";
 import {Column, FlexGrid, Row} from "@carbon/react";
 
 import StacksImg from '../../../../images/stacks.png';
 
 import styles from '../page.module.scss';
+import {Icon} from "@/components";
 
 interface OverviewStepProps {
     visible: boolean;
@@ -46,7 +46,7 @@ export const OverviewStep = ({visible}: OverviewStepProps) => {
                 </Column>
                 <Column lg={{ span: 6 }} md={{ span: 12 }}>
                     <div className={styles.overviewImage}>
-                        <Image loading="lazy" src={StacksImg} alt="Diagram representing a solution stack" />
+                        <Icon loading="lazy" src={StacksImg} alt="Diagram representing a solution stack" />
                     </div>
                 </Column>
             </Row>

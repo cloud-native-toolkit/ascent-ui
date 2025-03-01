@@ -1,9 +1,9 @@
 "use client"
 
-import Image from "next/image";
 import {useAtom} from "jotai";
 
 import {storageAtom, storageOptionsAtom} from "@/atoms";
+import {Icon} from "@/components";
 import {Bom} from "@/models";
 
 import styles from "../../page.module.scss";
@@ -31,10 +31,10 @@ export const InfraStorageStep = ({visible}: InfraStorageStepProps) => {
 
                                 <label className={`${styles.plan} ${styles.completePlan}`} htmlFor={storage.name} key={storage.name}>
                                     <input type="radio" name={storage.name} id={storage.name}
-                                           className={selectedStorage?.name === storage.name ? 'checked' : ''}
+                                           checked={!!(selectedStorage?.name && selectedStorage?.name === storage.name)}
                                            onClick={() => setSelectedStorage(storage) } />
                                     <div className={styles.planContent}>
-                                        {storage.iconUrl ? <Image loading="lazy" src={storage.iconUrl} alt="" /> : <></>}
+                                        <Icon src={storage.iconUrl} alt={storage.displayName ?? storage.name} />
 
                                         <div className={styles.planDetails}>
                                             <span>{storage.displayName ?? storage.name}</span>

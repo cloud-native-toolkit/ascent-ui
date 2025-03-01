@@ -1,6 +1,7 @@
 import {Architectures, Bom, parametersToQueryString, QueryParameters} from "../../models";
 import {ArchitecturesApi, NewArchitecture} from ".";
 import {BaseRest} from "@/services/base-rest";
+import {handleBlobResponse, handleBooleanResponse, handleJsonResponse} from "@/services/rest-crud.client";
 
 export class ArchitecturesRest extends BaseRest<Architectures, NewArchitecture> implements ArchitecturesApi {
     constructor() {
@@ -13,7 +14,7 @@ export class ArchitecturesRest extends BaseRest<Architectures, NewArchitecture> 
 
     async listUserArchitectures(email: string): Promise<Architectures[]> {
         return fetch(`/api/users/${encodeURIComponent(email)}/architectures`)
-            .then(response => response.json());
+            .then(handleJsonResponse);
     }
 
     async duplicateArchitecture(id: string, data: { arch_id: string; name: string; }): Promise<Architectures> {
@@ -27,7 +28,7 @@ export class ArchitecturesRest extends BaseRest<Architectures, NewArchitecture> 
                 },
                 body: JSON.stringify(data)
             })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async importBomYaml(newArchitecture: NewArchitecture, overwrite?: boolean, publicArch?: boolean): Promise<Architectures> {
@@ -41,7 +42,7 @@ export class ArchitecturesRest extends BaseRest<Architectures, NewArchitecture> 
                 },
                 body: JSON.stringify(newArchitecture)
             })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async uploadDiagrams(id: string, diagram: { drawio?: string; png?: string; }): Promise<boolean> {
@@ -55,22 +56,22 @@ export class ArchitecturesRest extends BaseRest<Architectures, NewArchitecture> 
                 },
                 body: JSON.stringify(diagram)
             })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async sync(): Promise<object> {
         return fetch(`${this.client.baseUrl}/public/sync`, { method: "POST" })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async getComplianceReport(id: string, profile: string = 'IBM_CLOUD_FS_BP_0_1'): Promise<Blob> {
         return fetch(`${this.client.baseUrl}/${id}/compliance-report?profile=${profile}`)
-            .then(res => res.blob())
+            .then(handleBlobResponse)
     }
 
     async getBom(id: string, parameters?: QueryParameters): Promise<Bom[]> {
         return fetch(`${this.client.baseUrl}/${id}/boms${parametersToQueryString(parameters)}`)
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async addBom(id: string, bom: Bom): Promise<Bom> {
@@ -84,6 +85,6 @@ export class ArchitecturesRest extends BaseRest<Architectures, NewArchitecture> 
                 },
                 body: JSON.stringify(bom)
             })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 }

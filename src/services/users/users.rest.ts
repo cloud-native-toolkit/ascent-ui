@@ -1,19 +1,18 @@
-import {BackendUser, defaultUserConfig, LoggedInUser, User} from "../../models";
-import {UsersApi} from ".";
+import {BackendUser, defaultUserConfig, LoggedInUser, User} from "@/models";
+import {UsersApi} from "@/services";
 import {BaseRest} from "@/services/base-rest";
+import {handleJsonResponse, isRestError} from "@/services/rest-crud.client";
 
-export class UsersRest extends BaseRest<User> implements UsersApi {
+type NewUser = Omit<User, 'architectures' | 'solutions'>;
+
+export class UsersRest extends BaseRest<User, NewUser> implements UsersApi {
     constructor() {
         super('/api/users');
     }
 
     async getLoggedInUser(): Promise<LoggedInUser> {
         return fetch('/userDetails')
-            .catch(error => {
-                console.error(error)
-                throw error
-            })
-            .then(res => res.json())
+            .then(handleJsonResponse)
     }
 
     async getCurrentUser(): Promise<User> {
@@ -24,12 +23,19 @@ export class UsersRest extends BaseRest<User> implements UsersApi {
         try {
             backendUser = await this.get(loggedInUser.email);
         } catch (error) {
-            console.error(`Unable to get user details: ${loggedInUser.email}`, error)
-            backendUser = {
-                email: loggedInUser.email,
-                architectures: [],
-                solutions: [],
-            };
+            if (isRestError(error) && error.status === 404) {
+                backendUser = await this.add({
+                    email: loggedInUser.email,
+                    config: defaultUserConfig()
+                })
+            } else {
+                // TODO handle error condition
+                backendUser = {
+                    email: loggedInUser.email,
+                    architectures: [],
+                    solutions: []
+                };
+            }
         }
 
         if (!backendUser.config) {

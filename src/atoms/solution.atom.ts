@@ -1,10 +1,11 @@
-import {atom, useAtom} from "jotai";
+import {atom, useAtom, useAtomValue} from "jotai";
 import {loadable} from "jotai/utils";
 import {atomWithQuery} from "jotai-tanstack-query";
 
 import {BaseSolution, Bom, CloudProviderMetadata, FlavorMetadata, Solution, UserConfig} from "@/models";
 import {solutionsApi} from "@/services";
 import {currentUserEmailAtom} from "@/atoms/user.atom";
+import {isArray} from "es-toolkit/compat";
 
 const baseCurrentSolutionAtom = atom<Promise<Solution | undefined>>(Promise.resolve(undefined))
 
@@ -60,9 +61,12 @@ export const userSolutionsAtom = atomWithQuery(get => ({
 }))
 
 export const useFilteredSolutions = (email?: string, userConfig?: UserConfig) => {
-    const [{data, isPending, isError}] = useAtom(email ? userSolutionsAtom : solutionsAtom);
+    const result = useAtomValue(email ? userSolutionsAtom : solutionsAtom);
 
-    return [{data: (data || []).filter(filterSolution(userConfig)), isPending, isError}]
+    return {
+        ...result,
+        data: (result?.data || []).filter(filterSolution(userConfig))
+    }
 }
 
 export const newSolutionAtom = atom<BaseSolution | undefined>()

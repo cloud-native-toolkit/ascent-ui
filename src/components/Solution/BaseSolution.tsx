@@ -28,7 +28,7 @@ export const BaseSolution = ({user}: {user?: User}) => {
     const isDuplicate = useAtomValue(isDuplicateAtom);
     const dataDetails = useAtomValue(dataDetailsAtom);
     const addNotificationAtom = useSetAtom(notificationsAtom)
-    const [{data: solutions}] = useFilteredSolutions(user?.email, user?.config)
+    const {data: solutions} = useFilteredSolutions(user?.email, user?.config)
     const [showForm, setShowForm] = useState(false);
     const [showValidate, setShowValidate] = useState(false);
     const router = useRouter();
