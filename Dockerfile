@@ -1,34 +1,58 @@
-FROM registry.access.redhat.com/ubi8/nodejs-16:1-72 AS builder
+FROM registry.access.redhat.com/ubi9/nodejs-22:9.5-1740412185 AS base
 
-USER root
-
-RUN dnf -y install autoconf automake diffutils file && \
-    dnf clean all
-
-USER default
+# Install dependencies only when needed
+FROM base AS deps
 
 WORKDIR /opt/app-root/src
 
+# Install dependencies based on the preferred package manager
+COPY --chown=default:root package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /opt/app-root/src
+COPY --from=deps --chown=default:root /opt/app-root/src/node_modules ./node_modules
 COPY --chown=default:root . .
-RUN npm ci && \
-    npm run build
 
-FROM registry.access.redhat.com/ubi8/nodejs-16-minimal:1-79
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+# ENV NEXT_TELEMETRY_DISABLED=1
 
-USER 1001
+RUN \
+  if [ -f yarn.lock ]; then yarn run build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
+# Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /opt/app-root/src
-
-COPY --from=builder --chown=1001:0 /opt/app-root/src/dist ./dist
-COPY --chown=1001:0 package.json package-lock.json ./
-COPY --chown=1001:0 server ./server
 
 ENV NODE_ENV=production
-RUN chmod -R g+w ./dist
-RUN npm ci
+# Uncomment the following line in case you want to disable telemetry during runtime.
+# ENV NEXT_TELEMETRY_DISABLED=1
 
-ENV HOST=0.0.0.0 PORT=3000
+COPY --from=builder --chown=default:root /opt/app-root/src/public ./public
 
-EXPOSE 3000/tcp
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=default:root /opt/app-root/src/.next/standalone ./
+COPY --from=builder --chown=default:root /opt/app-root/src/.next/static ./.next/static
 
-CMD ["npm", "start"]
+EXPOSE 3000
+
+ENV PORT=3000
+
+# server.js is created by next build from the standalone output
+# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
+ENV HOSTNAME="0.0.0.0"
+CMD ["node", "server.js"]

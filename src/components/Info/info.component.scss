@@ -1,0 +1,58 @@
+@use "@carbon/type/index" as carbon-type;
+@use "@carbon/grid/index" as carbon-grid;
+@use "@carbon/layout" as carbon-layout;
+@use "@carbon/themes" as carbon-themes;
+
+.info-section__heading {
+  @include carbon-type.type-style('heading-01');
+}
+
+.info-card {
+  margin-top: carbon-layout.$spacing-09;
+  display: flex;
+  flex-direction: column;
+
+  svg {
+    margin-top: carbon-layout.$spacing-09;
+  }
+
+  // top border in only small breakpoints to prevent overrides
+  @include carbon-grid.breakpoint-down(md) {
+    &:not(:nth-child(2)) {
+      border-top: 1px solid carbon-themes.$layer-accent-01;
+      padding-top: carbon-layout.$spacing-09;
+    }
+  }
+
+  // left border in just the 2nd column items
+  @include carbon-grid.breakpoint(md) {
+    &:nth-child(odd) {
+      border-left: 1px solid carbon-themes.$layer-accent-01;
+    }
+  }
+
+  // left border in all items
+  @include carbon-grid.breakpoint(lg) {
+    margin-top: 0;
+    border-left: 1px solid carbon-themes.$layer-accent-01;
+
+    svg {
+      margin-top: carbon-layout.$layout-06;
+    }
+  }
+}
+
+.info-card__heading {
+  @include carbon-type.type-style('productive-heading-03');
+}
+
+.info-card__body {
+  margin-top: carbon-layout.$spacing-06;
+  flex-grow: 1; // fill space so icons are bottom aligned
+  @include carbon-type.type-style('body-long-01');
+
+  // prevent large line lengths between small and medium viewports
+  @include carbon-grid.breakpoint-between(321px, md) {
+    max-width: 75%;
+  }
+}

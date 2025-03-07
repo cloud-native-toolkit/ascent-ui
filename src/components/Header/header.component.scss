@@ -1,0 +1,100 @@
+@use '@carbon/react/scss/colors';
+
+// overriding header tooltip bg color
+// because the navigation is dark themed while the content is white
+// which means the dark theme tooltip bg blends into the white content bg
+.cds--header__global .cds--popover-content {
+  background-color: colors.$gray-20;
+}
+
+.cds--header__global .cds--popover-caret {
+  background-color: colors.$gray-20;
+}
+
+@media (max-width: 320px) {
+  .action-icons {
+    display: none;
+  }
+}
+
+// User Profile Header Panel
+
+.cds--header-panel--expanded.user-profile {
+  width: fit-content;
+}
+
+.cds--header-panel--expanded.user-profile .cds--switcher__item {
+  padding: .5rem 1rem;
+  height: fit-content;
+}
+
+.cds--header-panel--expanded.user-profile .cds--switcher__item.title {
+  display: flex;
+  align-items: center;
+}
+.cds--header-panel--expanded.user-profile .cds--switcher__item.title strong {
+  font-size: 1.3rem;
+}
+.cds--header-panel--expanded.user-profile .cds--switcher__item.title div.cds--tag {
+  margin-left: auto;
+}
+
+.cds--header-panel--expanded.user-profile  .cds--toggle-input__label {
+  width: 100%;
+  display: flex;
+  color: #c2c2c2;
+}
+
+.cds--header-panel--expanded.user-profile  .cds--switcher__item a {
+  display: flex;
+  align-items: center;
+}
+.cds--header-panel--expanded.user-profile  .cds--switcher__item svg {
+  margin-left: auto;
+}
+.cds--header-panel--expanded.user-profile  .cds--switcher__item.logout a {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+// Side nav
+
+.cds--side-nav__link-text {
+  display: flex;
+  align-items: center;
+}
+.cds--side-nav__link-text svg {
+  margin-left: .5rem;
+}
+
+// Notifications
+
+div.notif {
+  position: fixed;
+  top: 3rem;
+  right: 1rem;
+  z-index: 10000;
+}
+
+// Grid
+
+div.cds--grid {
+  margin-left: unset;
+}
+
+// Breadcrumbs
+
+.cds--breadcrumb {
+  padding-top: 1rem;
+}
+
+// Sliding pane
+
+div.slide-pane {
+  margin-top: 3rem;
+}
+
+.cds--content {
+  padding-bottom: 2rem;
+}
