@@ -1,16 +1,15 @@
 
-export interface QueryFilter {
-    include?: string[]
-}
-
-export interface QueryPagination {
-    page?: number;
-    pageSize?: number;
+export interface QueryFilter<T = any> {
+    include?: string[];
+    offset?: number;
+    limit?: number;
+    skip?: number;
+    order?: string;
+    fields?: {[key in keyof T]: boolean};
 }
 
 export interface QueryParameters {
     filter?: QueryFilter;
-    pagination?: QueryPagination;
 }
 
 export const parametersToQueryString = (parameters?: QueryParameters): string => {

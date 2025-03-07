@@ -32,7 +32,7 @@ export const InfraStorageStep = ({visible}: InfraStorageStepProps) => {
                                 <label className={`${styles.plan} ${styles.completePlan}`} htmlFor={storage.name} key={storage.name}>
                                     <input type="radio" name={storage.name} id={storage.name}
                                            checked={!!(selectedStorage?.name && selectedStorage?.name === storage.name)}
-                                           onClick={() => setSelectedStorage(storage) } />
+                                           onChange={() => setSelectedStorage(storage) } />
                                     <div className={styles.planContent}>
                                         <Icon src={storage.iconUrl} alt={storage.displayName ?? storage.name} />
 

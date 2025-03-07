@@ -29,13 +29,10 @@ import {BaseSolution, Bom, buildSteps, CloudProviderMetadata, FlavorMetadata, Us
 import {solutionsApi} from "@/services";
 import {unique} from "@/util";
 
-const logIsValid = (context: string, isValid: boolean): boolean => {
-    console.log(`${context} ${isValid}`);
-    return isValid;
-}
+import styles from './page.module.scss';
 
 export default function NewSolutionPage() {
-    const [currentStep, setCurrentStep] = useState(buildSteps(['Overview', {label: 'Use Case', isValid: ({persona}: {persona?: UseCaseMetadata}) => logIsValid('Use case isValid:', !!persona)}, 'Infrastructure', {label: 'Software', isValid: ({software}: {software: Bom[]}) => logIsValid('Software isValid:', software.length > 0)}, {label: 'Solution Details', isValid: ({solution}: {solution?: BaseSolution}) => logIsValid('Solution isValid:', !!solution?.name)}, 'Summary']));
+    const [currentStep, setCurrentStep] = useState(buildSteps(['Overview', {label: 'Use Case', isValid: ({persona}: {persona?: UseCaseMetadata}) => !!persona}, 'Infrastructure', {label: 'Software', isValid: ({software}: {software: Bom[]}) => software.length > 0}, {label: 'Solution Details', isValid: ({solution}: {solution?: BaseSolution}) => !!solution?.name}, 'Summary']));
     const [infrastructureStep, setInfrastructureStep] = useState(buildSteps([{label: 'Platform', isValid: ({platform}: {platform?: CloudProviderMetadata}) => !!platform}, {label: 'Architecture', isValid: ({flavor}: {flavor?: FlavorMetadata}) => !!flavor}, {label: 'Storage', isValid: ({storage}: {storage?: Bom}) => !!storage}]));
 
     const persona: UseCaseMetadata | undefined = useAtomValue(personaAtom);
@@ -113,14 +110,11 @@ export default function NewSolutionPage() {
     const nextDisabled = (): boolean => {
         const step = (currentStep.label === 'Infrastructure') ? infrastructureStep : currentStep;
 
-        const nextDisabled = !step.isValid({persona, platform, flavor, storage, software, solution});
-        console.log('nextDisabled: ', {step, nextDisabled})
-
-        return nextDisabled;
+        return !step.isValid({persona, platform, flavor, storage, software, solution});
     }
 
     return (
-        <FlexGrid className='create-solution'>
+        <FlexGrid className={styles.createSolution}>
             <Row>
                 <Column lg={{ span: 12 }}>
                     <h2>
@@ -136,7 +130,7 @@ export default function NewSolutionPage() {
                 </Column>
             </Row>
 
-            <Row className="modal-wizard">
+            <Row className={styles.modalWizard}>
                 <Column lg={{ span: 2 }}>
                     <ProgressIndicator vertical currentIndex={currentStep?.index || 0}>
                         <ProgressStep label="Overview" />

@@ -1,7 +1,7 @@
 "use client"
 
-import Image from "next/image";
 import {Tag} from "@carbon/react";
+import {Icon} from "@/components";
 import { catalogFilters } from '@/data';
 
 interface CatalogContentProps {
@@ -17,7 +17,7 @@ interface CatalogContentProps {
 export const CatalogContent = ({ logo, icon, title, displayName, status, type, description }: CatalogContentProps) => {
     return (
         <div className={`iot--sample-tile`}>
-            {logo ? <div className={`iot--sample-tile-icon`}><Image className="software-logo" loading="lazy" src={logo} alt="software logo" /></div> : icon ? <div className={`iot--sample-tile-icon`}>{icon}</div> : null}
+            {logo ? <div className={`iot--sample-tile-icon`}><Icon className="software-logo" src={logo} alt="software logo" /></div> : icon ? <div className={`iot--sample-tile-icon`}>{icon}</div> : null}
             <div className={`iot--sample-tile-contents`}>
                 <div className={`iot--sample-tile-title`}>
                     <span title={title}>{displayName}</span>

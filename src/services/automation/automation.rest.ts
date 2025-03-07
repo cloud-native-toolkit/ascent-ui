@@ -1,4 +1,4 @@
-import {AutomationRelease, Catalog, QueryParameters} from "../../models";
+import {AutomationRelease, Catalog, parametersToQueryString, QueryParameters} from "../../models";
 import {AutomationApi} from "@/services/automation/automation.api";
 import {handleBlobResponse, handleJsonResponse} from "@/services/rest-crud.client";
 
@@ -17,11 +17,7 @@ export class AutomationRest implements AutomationApi {
     }
 
     async getCatalog(parameters?: QueryParameters): Promise<Catalog> {
-        const catalog: Catalog = await fetch(`${baseUrl}/catalog/boms`)
+        return fetch(`${baseUrl}/catalog/boms${parametersToQueryString(parameters)}`)
             .then(handleJsonResponse)
-
-        // TODO implement pagination
-
-        return catalog;
     }
 }

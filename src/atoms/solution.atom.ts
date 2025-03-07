@@ -6,6 +6,10 @@ import {BaseSolution, Bom, CloudProviderMetadata, FlavorMetadata, Solution, User
 import {solutionsApi} from "@/services";
 import {currentUserEmailAtom} from "@/atoms/user.atom";
 import {isArray} from "es-toolkit/compat";
+import {softwareAtom} from "@/atoms/software.atom";
+import {platformAtom} from "@/atoms/platform.atom";
+import {flavorAtom} from "@/atoms/flavors.atom";
+import {storageAtom} from "@/atoms/storage.atom";
 
 const baseCurrentSolutionAtom = atom<Promise<Solution | undefined>>(Promise.resolve(undefined))
 
@@ -56,7 +60,7 @@ export const solutionsAtom = atomWithQuery(() => ({
 }))
 
 export const userSolutionsAtom = atomWithQuery(get => ({
-    queryKey: ['solutions', get(currentUserEmailAtom)],
+    queryKey: ['solutions', get(currentUserEmailAtom).data],
     queryFn: ({ queryKey: [, email]}) => solutionsApi().listUserSolutions(email as string),
 }))
 
@@ -69,7 +73,21 @@ export const useFilteredSolutions = (email?: string, userConfig?: UserConfig) =>
     }
 }
 
-export const newSolutionAtom = atom<BaseSolution | undefined>()
+export const baseNewSolutionAtom = atom<BaseSolution | undefined>()
+export const newSolutionAtom = atom(
+    get => {
+        const newSolution = get(baseNewSolutionAtom)
+        const software = get(softwareAtom)
+        const platform = get(platformAtom)
+        const flavor = get(flavorAtom)
+        const storage = get(storageAtom)
+
+        return Object.assign(initializeSolution({software, platform, flavor, storage}), newSolution)
+    },
+    (_, set, newSolution: BaseSolution | undefined) => {
+        set(baseNewSolutionAtom, newSolution)
+    }
+)
 
 export const initializeSolutionShortDesc = ({software, platform}: {software: Bom[], platform?: CloudProviderMetadata}): string => {
     return `Solution based on ${software?.map(sw => (`${sw.displayName ?? sw.name}`)).join(', ')} on ${platform?.displayName}.`

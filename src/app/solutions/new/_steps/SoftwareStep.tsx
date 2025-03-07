@@ -8,6 +8,8 @@ import {softwareAtom, softwareOptionsAtom} from "@/atoms";
 import {CatalogContent, StatefulTileCatalog} from "@/components";
 import {Bom} from "@/models";
 
+import styles from '../page.module.scss';
+
 interface SoftwareStepProps {
     visible: boolean;
 }
@@ -16,17 +18,17 @@ interface SoftwareStepProps {
 const tileRenderFunction = ({values}: {values: any}) => <CatalogContent {...values} icon={<ContainerSoftware />} />;
 
 export const SoftwareStep = ({visible}: SoftwareStepProps) => {
-    const {data: softwareOptions} = useAtomValue(softwareOptionsAtom);
+    const {data: softwareOptions, isLoading} = useAtomValue(softwareOptionsAtom);
     const setSoftware = useSetAtom(softwareAtom);
 
     if (!visible) return (<></>);
 
     return (
-        <FlexGrid className='wizard-grid'>
+        <FlexGrid className={styles.wizardGrid}>
             <Row>
                 <Column lg={{ span: 12 }}>
                     <h3>Step 3: Select your Software</h3>
-                    <div className="title">
+                    <div className={styles.title}>
                         We are getting close to create your custom solution for your client or partner, we need a few more details like the solution name and description.
                         Dont worry you can edit you solution once its created to refine it so you client or partner is completely happy.
                     </div>
@@ -47,6 +49,7 @@ export const SoftwareStep = ({visible}: SoftwareStepProps) => {
                                 renderContent: tileRenderFunction,
                             }))
                         }
+                        isLoading={isLoading}
                         pagination={{ pageSize: 9 }}
                         isSelectedByDefault={false}
                         onSelection={(selection: string[]) => {

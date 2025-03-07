@@ -5,6 +5,9 @@ import {useAtom, useAtomValue} from "jotai";
 import {flavorAtom, flavorsAtom, personaAtom, platformAtom} from "@/atoms";
 import {Icon} from "@/components";
 import {CloudProviderMetadata, FlavorMetadata, UseCaseMetadata} from "@/models";
+import {classnames} from "@/util";
+
+import styles from "../../page.module.scss";
 
 interface InfraFlavorStepProps {
     visible: boolean;
@@ -26,10 +29,9 @@ export const InfraFlavorStep = ({visible}: InfraFlavorStepProps) => {
 
     return (
         <div>
-            <div className="selection-set">
-                <form className="plans">
-                    {/* <div className="title">Now you have selected your use case and the platform you want to target. Let's select the architecture pattern you want to use</div> */}
-                    <div className="arch">
+            <div className={styles.selectionSet}>
+                <form className={styles.plans}>
+                    <div className={styles.arch}>
                         <p>You want to <strong>{persona?.displayName ?? persona?.name}</strong> <Icon loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
                         <p>on the platform <Icon src={platform?.iconUrl} alt="platform" /></p>
                         <p>We recommend you use the <strong>{persona?.flavor}</strong> reference architecture</p>
@@ -37,15 +39,15 @@ export const InfraFlavorStep = ({visible}: InfraFlavorStepProps) => {
                     {
                         flavors?.length ?
                             flavors.map((flavor: FlavorMetadata) => (
-                                <label className="plan complete-plan" htmlFor={flavor.name} key={flavor.name}>
+                                <label className={classnames(styles.plan, styles.completePlan)} htmlFor={flavor.name} key={flavor.name}>
                                     <input type="radio" name={flavor.name} id={flavor.name}
                                            disabled={isDisabled(flavor)}
                                            checked={!!(selectedFlavor?.name && selectedFlavor?.name === flavor.name)}
-                                           onClick={() => setSelectedFlavor(flavor)} />
-                                    <div className={`plan-content${flavor.enabled ? '' : ' coming-soon'}`}>
+                                           onChange={() => setSelectedFlavor(flavor)} />
+                                    <div className={classnames(styles.planContent, !flavor.enabled ? styles.comingSoon : undefined)}>
                                         <Icon src={flavor.iconUrl} alt="" />
 
-                                        <div className="plan-details">
+                                        <div className={styles.planDetails}>
                                             <span>{flavor.displayName ?? flavor.name}
                                                 {isDisabled(flavor) && <i><b><h6>Coming Soon !</h6></b></i>}
                                             </span>

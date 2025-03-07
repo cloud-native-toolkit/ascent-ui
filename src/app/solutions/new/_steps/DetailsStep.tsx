@@ -1,11 +1,11 @@
 "use client"
 
 import {Column, FlexGrid, Form, Row, SelectItem} from "@carbon/react";
-import {useAtom, useAtomValue} from "jotai";
+import {useAtom} from "jotai";
 
-import {flavorAtom, initializeSolution, newSolutionAtom, platformAtom, softwareAtom, storageAtom} from "@/atoms";
+import {newSolutionAtom} from "@/atoms";
 import {Select, TextArea, TextInput} from "@/components/Form";
-import {Bom, CloudProviderMetadata, FlavorMetadata, User} from "@/models";
+import {User} from "@/models";
 
 interface DetailsStepProps {
     visible: boolean;
@@ -13,17 +13,15 @@ interface DetailsStepProps {
     user?: User;
 }
 
+import styles from '../page.module.scss';
+
 export const DetailsStep = ({visible, isDuplicate, user}: DetailsStepProps) => {
-    const flavor: FlavorMetadata | undefined = useAtomValue(flavorAtom);
-    const platform: CloudProviderMetadata | undefined = useAtomValue(platformAtom);
-    const software: Bom[] = useAtomValue(softwareAtom);
-    const storage: Bom | undefined = useAtomValue(storageAtom);
     const [newSolution, setNewSolution] = useAtom(newSolutionAtom);
 
     const getValue = (name: string) => {
         return (): string => {
             /* eslint-disable @typescript-eslint/no-explicit-any */
-            return (newSolution as any)[name] || (initializeSolution({flavor, platform, software, storage}) as any)[name];
+            return (newSolution as any)[name];
         }
     }
     const setValue = (name: string) => {
@@ -36,11 +34,11 @@ export const DetailsStep = ({visible, isDuplicate, user}: DetailsStepProps) => {
     if (!visible) return (<></>);
 
     return (
-        <FlexGrid className='wizard-grid'>
+        <FlexGrid className={styles.wizardGrid}>
             <Row>
                 <Column lg={{ span: 12 }}>
                     <h3>Step 4: What do you want to call your solution?</h3>
-                    <div className="title">
+                    <div className={styles.title}>
                         We need a few more details before we can create your solution. We need the solution name
                         and description so we can identify it later
                     </div>
@@ -51,7 +49,6 @@ export const DetailsStep = ({visible, isDuplicate, user}: DetailsStepProps) => {
                             id="id"
                             name="id"
                             required
-                            disabled
                             invalidText="Please Enter The Value"
                             getValue={getValue("id")}
                             setValue={setValue("id")}

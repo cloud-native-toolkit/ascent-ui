@@ -4,7 +4,7 @@ import React, {Fragment, ReactNode, useState} from "react";
 import {Pagination, SkeletonText, TableToolbarSearch, Tile, TileGroup} from "@carbon/react";
 import {Bee} from "@carbon/icons-react";
 
-import {DynamicTile} from "@/components/TileCatalog/DynamicTile";
+import {DynamicTile} from "./DynamicTile";
 import {classnames} from "@/util";
 
 export interface Pagination {
@@ -110,24 +110,28 @@ export const TileCatalog = ({id, className, isLoading, error, isMultiSelect, pag
                     totalTiles={totalTiles}
                 />
             ) : tiles.length > 0 ? (
-                <TileGroup
-                    tiles={tiles.map((tile) => (
-                        <DynamicTile
-                            isMultiSelect={isMultiSelect}
-                            className={tile.className}
-                            key={tile.id}
-                            id={tile.id}
-                            value={tile.id}
-                            name={id}
-                            checked={selectedTileIds.includes(tile.id)}
-                            onChange={onChange}
-                        >
-                            {tile.renderContent
-                                ? tile.renderContent({ values: tile.value, id: tile.id })
-                                : tile.value}
-                        </DynamicTile>
-                    ))}
-                />
+                <>
+                <TileGroup>
+                    {tiles.map((tile) => {
+                        return (
+                            <DynamicTile
+                                isMultiSelect={isMultiSelect}
+                                className={tile.className}
+                                key={tile.id}
+                                id={tile.id}
+                                value={tile.id}
+                                name={id}
+                                checked={selectedTileIds.includes(tile.id)}
+                                onChange={onChange}
+                            >
+                                {tile.renderContent
+                                    ? tile.renderContent({ values: tile.value, id: tile.id })
+                                    : tile.value}
+                            </DynamicTile>
+                        )
+                    })}
+                </TileGroup>
+                    </>
             ) : (
                 <Tile className={`${iotPrefix}--tile-catalog--empty-tile`}>
                     {error || (

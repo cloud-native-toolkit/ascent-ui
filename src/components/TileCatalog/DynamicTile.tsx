@@ -24,7 +24,8 @@ export const DynamicTile = ({isMultiSelect, className, id, value, name, checked,
                 value={value}
                 name={name}
                 selected={checked}
-                onChange={(e, selected) => onChange(e.target.id, selected)}>
+                onChange={() => onChange(id, !checked)}
+            >
                 {children}
             </SelectableTile>
         )
@@ -38,7 +39,8 @@ export const DynamicTile = ({isMultiSelect, className, id, value, name, checked,
             value={value}
             name={name}
             checked={checked}
-            onChange={() => onChange(id, true)}>
+            onChange={() => onChange(id, true)}
+        >
             {children}
         </RadioTile>
     )

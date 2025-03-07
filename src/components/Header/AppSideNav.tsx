@@ -1,18 +1,18 @@
 "use client"
 
 import {ReactNode} from "react";
+import {useRouter} from "next/navigation";
 import {SideNav, SideNavItems, SideNavMenu, SideNavMenuItem} from "@carbon/react";
 import {Launch, Locked} from "@carbon/icons-react";
-
 import {useAtom, useAtomValue} from "jotai";
-import Link from "next/link";
 
+import {activeItemAtom} from "@/atoms";
 import { User } from "@/models";
 import {applicationMode} from "@/util";
-import {activeItemAtom} from "@/atoms";
 
 const LinkSideNavItem = ({disabled, children, href, hideDisabled}: {disabled?: boolean, href: string, hideDisabled?: boolean, children: ReactNode}) => {
     const [activeItem, setActiveItem] = useAtom(activeItemAtom);
+    const router = useRouter();
 
     if (disabled) {
         if (hideDisabled) {
@@ -29,8 +29,8 @@ const LinkSideNavItem = ({disabled, children, href, hideDisabled}: {disabled?: b
         return (
             <SideNavMenuItem
                 isActive={activeItem === href}
-                onClick={() => setActiveItem(href)}>
-                <Link href={href}>{children}</Link>
+                onClick={() => {setActiveItem(href); router.push(href)}}>
+                {children}
             </SideNavMenuItem>
         )
     }

@@ -8,16 +8,17 @@ interface IconProps {
     alt: string;
     width?: number;
     height?: number;
+    className?: string;
 }
 
-export const Icon = ({src, loading, alt, width, height}: IconProps) => {
+export const Icon = ({className, src, loading, alt, width, height}: IconProps) => {
     if (!src) {
         return (<></>);
     }
 
     if (typeof src === "string") {
-        return (<Image src={src} loading={loading ?? "lazy"} alt={alt} width={width ?? 40} height={height ?? 40} />);
+        return (<Image className={className} src={src} loading={loading ?? "lazy"} alt={alt} width={width ?? 40} height={height ?? 40} />);
     }
 
-    return (<Image src={src} loading={loading} alt={alt} width={width} height={height} />);
+    return (<Image className={className} src={src} loading={loading} alt={alt} width={width} height={height} />);
 }

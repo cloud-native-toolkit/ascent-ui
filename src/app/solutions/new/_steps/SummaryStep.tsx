@@ -8,6 +8,8 @@ import {flavorAtom, newSolutionAtom, personaAtom, platformAtom, softwareAtom, st
 import openshiftImg from '../../../../images/openshift.png';
 import {Icon} from "@/components";
 
+import styles from '../page.module.scss';
+
 interface SummaryStepProps {
     visible: boolean;
 }
@@ -23,30 +25,30 @@ export const SummaryStep = ({visible}: SummaryStepProps) => {
     if (!visible) return (<></>);
 
     return (
-        <FlexGrid className='wizard-grid'>
+        <FlexGrid className={styles.wizardGrid}>
             <Row>
                 <Column lg={{ span: 12 }}>
                     <h3>Summary: Is this the solution you want?</h3>
 
-                    <div className="summary">
+                    <div className={styles.summary}>
 
                         <p>You have chosen to create an IBM Technology solution called <strong>{solution?.name}</strong></p>
 
-                        <div className='arch'>
+                        <div className={styles.arch}>
                             <p>You want to <strong>{persona?.displayName}</strong> <Icon src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
                             <p>You chose to deploy you solution on <strong>{platform?.displayName}</strong> <Icon src={platform?.iconUrl} alt={platform?.displayName ?? ""} /></p>
-                            <p>You have chosen the <strong>{flavor?.displayName}</strong> reference architecture <div className='flex-inline'><Icon src={flavor?.iconUrl} alt={flavor?.displayName ?? ""} /> <Icon src={openshiftImg} alt="OpenShift" /></div></p>
+                            <p>You have chosen the <strong>{flavor?.displayName}</strong> reference architecture <span className={styles.flexInline}><Icon src={flavor?.iconUrl} alt={flavor?.displayName ?? ""} /> <Icon src={openshiftImg} alt="OpenShift" /></span></p>
                             <p>It will install with the following Storage Option <Icon src={storage?.iconUrl} alt={storage?.displayName ?? ""} /></p>
                         </div>
 
-                        <p>
+                        <div>
                             You have chosen the following IBM Software to help get your solution started:
                             <ul>
                                 {software?.map(sw => (
                                     <li key={sw.name}>{sw.displayName ?? sw.name}</li>
                                 ))}
                             </ul>
-                        </p>
+                        </div>
                         <p>
                             If you are happy with this selection of content for your solution click on the Submit button below. You can always change the
                             content later by adding an removing your own bill of materials.

@@ -5,12 +5,14 @@ import {automationCatalogAtom} from "@/atoms/automation.atom";
 import {Bom, Catalog} from "@/models";
 
 export const softwareOptionsAtom = atom(
-    async get => {
+    get => {
         const result: AtomWithQueryResult<Catalog> = get(automationCatalogAtom)
+
+        const data: Bom[] = (result?.data?.boms || []).filter(bom => bom.category === 'software' && (bom.cloudProvider === 'multi' || bom.cloudProvider === undefined)) || []
 
         return {
             ...result,
-            data: (result?.data?.boms || []).filter(bom => bom.category === 'software' && (bom.cloudProvider === 'multi' || bom.cloudProvider === undefined)) || [],
+            data,
         }
     }
 )
