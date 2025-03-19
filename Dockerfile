@@ -26,7 +26,7 @@ COPY --chown=1001:0 server ./server
 
 ENV NODE_ENV=production
 RUN chmod -R g+w ./dist && \
-    npm ci --omit=dev --production
+    npm ci --omit=dev --production --force
 
 ENV HOST=0.0.0.0 PORT=3000
 
