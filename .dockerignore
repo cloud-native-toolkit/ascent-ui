@@ -1,3 +1,6 @@
 logs
 .git
 *.md
+node_modules/
+.github/
+chart/
