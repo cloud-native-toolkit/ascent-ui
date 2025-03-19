@@ -7,6 +7,7 @@ RUN dnf -y install autoconf automake diffutils file && \
 
 USER default
 
+ENV NODE_ENV=dev
 WORKDIR /opt/app-root/src
 
 COPY --chown=default:root . .
@@ -24,8 +25,8 @@ COPY --chown=1001:0 package.json package-lock.json ./
 COPY --chown=1001:0 server ./server
 
 ENV NODE_ENV=production
-RUN chmod -R g+w ./dist
-RUN npm ci
+RUN chmod -R g+w ./dist && \
+    npm ci --force
 
 ENV HOST=0.0.0.0 PORT=3000
 
