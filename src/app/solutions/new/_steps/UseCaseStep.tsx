@@ -37,7 +37,7 @@ export const UseCaseStep = ({visible}: UseCaseStepProps) => {
                                 useCases?.length ?
                                     useCases.map((useCase: UseCaseMetadata) => (
                                         <label className={`${styles.plan} ${styles.completePlan}`} htmlFor={useCase.name} key={useCase.name}>
-                                            <input type="radio" checked={!!(persona?.name && persona?.name === useCase.name)} name={useCase.name} id={useCase.name} onChange={(e) => setPersona(useCase)} />
+                                            <input type="radio" checked={!!(persona?.name && persona?.name === useCase.name)} name={useCase.name} id={useCase.name} onChange={() => setPersona(useCase)} />
                                             <div className={styles.planContent}>
                                                 <Icon src={useCase.iconUrl} alt="" />
                                                 <div className={styles.planDetails}>

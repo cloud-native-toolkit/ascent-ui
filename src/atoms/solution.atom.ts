@@ -1,15 +1,15 @@
-import {atom, useAtom, useAtomValue} from "jotai";
+import {atom, useAtomValue} from "jotai";
 import {loadable} from "jotai/utils";
 import {atomWithQuery} from "jotai-tanstack-query";
+import {v4 as uuidv4} from "uuid";
 
 import {BaseSolution, Bom, CloudProviderMetadata, FlavorMetadata, Solution, UserConfig} from "@/models";
-import {solutionsApi} from "@/services";
-import {currentUserEmailAtom} from "@/atoms/user.atom";
-import {isArray} from "es-toolkit/compat";
-import {softwareAtom} from "@/atoms/software.atom";
-import {platformAtom} from "@/atoms/platform.atom";
 import {flavorAtom} from "@/atoms/flavors.atom";
+import {platformAtom} from "@/atoms/platform.atom";
+import {softwareAtom} from "@/atoms/software.atom";
 import {storageAtom} from "@/atoms/storage.atom";
+import {currentUserEmailAtom} from "@/atoms/user.atom";
+import {solutionsApi} from "@/services";
 
 const baseCurrentSolutionAtom = atom<Promise<Solution | undefined>>(Promise.resolve(undefined))
 
@@ -98,7 +98,7 @@ export const initializeSolutionLongDesc = ({flavor, platform, software, storage}
 }
 
 export const initializeSolution = ({flavor, platform, software, storage}: {flavor?: FlavorMetadata, platform?: CloudProviderMetadata, software: Bom[], storage?: Bom}): BaseSolution => ({
-    id: '',
+    id: uuidv4(),
     name: '',
     short_desc: initializeSolutionShortDesc({software, platform}),
     long_desc: initializeSolutionLongDesc({flavor, platform, software, storage}),

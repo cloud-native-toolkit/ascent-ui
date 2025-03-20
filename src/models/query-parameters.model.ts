@@ -1,5 +1,5 @@
 
-export interface QueryFilter<T = any> {
+export interface QueryFilter<T = unknown> {
     include?: string[];
     offset?: number;
     limit?: number;
@@ -8,8 +8,8 @@ export interface QueryFilter<T = any> {
     fields?: {[key in keyof T]: boolean};
 }
 
-export interface QueryParameters {
-    filter?: QueryFilter;
+export interface QueryParameters<T = unknown> {
+    filter?: QueryFilter<T>;
 }
 
 export const parametersToQueryString = (parameters?: QueryParameters): string => {

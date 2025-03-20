@@ -31,6 +31,7 @@
     "eslint-config-next": "15.1.7",
     "sass": "^1.84.0",
     "sass-rem": "^4.0.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "uuidv4": "^6.2.13"
   }
 }

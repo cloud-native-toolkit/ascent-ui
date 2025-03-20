@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 import { join } from "path";
-import {Rewrite} from "next/dist/lib/load-custom-routes";
 
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001'
 

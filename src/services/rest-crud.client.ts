@@ -6,8 +6,8 @@ export class RestError extends Error {
     }
 }
 
-export const isRestError = (error: any): error is RestError => {
-    return error && (error as any).status;
+export const isRestError = (error: unknown): error is RestError => {
+    return !!error && !!(error as {status: string}).status;
 };
 
 export const handleJsonResponse = (response: Response) => {

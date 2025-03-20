@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/nodejs-22:9.5-1740412185 AS base
+FROM registry.access.redhat.com/ubi9/nodejs-22:9.5-1741891114 AS base
 
 # Install dependencies only when needed
 FROM base AS deps

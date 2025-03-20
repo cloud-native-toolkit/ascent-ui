@@ -1,7 +1,7 @@
-import {Architectures, Bom, parametersToQueryString, QueryParameters} from "../../models";
 import {ArchitecturesApi, NewArchitecture} from ".";
+import {Architectures, Bom, parametersToQueryString, QueryParameters} from "@/models";
 import {BaseRest} from "@/services/base-rest";
-import {handleBlobResponse, handleBooleanResponse, handleJsonResponse} from "@/services/rest-crud.client";
+import {handleBlobResponse, handleJsonResponse} from "@/services/rest-crud.client";
 
 export class ArchitecturesRest extends BaseRest<Architectures, NewArchitecture> implements ArchitecturesApi {
     constructor() {
