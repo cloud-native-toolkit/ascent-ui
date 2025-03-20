@@ -45,7 +45,9 @@ class UIShell extends Component {
       patternName: "Overview",
       profileExpanded: false,
       content: defaultConfig,
-      notifications: []
+      notifications: [],
+      headerPrefix: '',
+      headerName: 'Solution Deployer'
     };
   }
 
@@ -121,6 +123,14 @@ class UIShell extends Component {
         }
       })
       .catch(console.error);
+
+    fetch('/config')
+      .then(res => res.json())
+      .then(config => {
+        if (config.headerPrefix !== undefined) this.setState({ headerPrefix: config.headerPrefix });
+        if (config.headerName !== undefined) this.setState({ headerName: config.headerName });
+      })
+      .catch(console.error);
   }
 
   fetchToken() {
@@ -145,7 +155,7 @@ class UIShell extends Component {
           render={({ isSideNavExpanded, onClickSideNavExpand }) => (
 
 
-            <Header aria-label="IBM">
+            <Header aria-label="CNTK">
 
               <SkipToContent />
 
@@ -155,8 +165,8 @@ class UIShell extends Component {
                 isActive={isSideNavExpanded}
               />
 
-              <HeaderName prefix={ApplicationMode.isFsControlsMode() ? 'IBM Cloud' : 'IBM Technology Zone'}>
-                {ApplicationMode.isFsControlsMode() ? 'Controls Catalog' : 'Deployer'}
+              <HeaderName prefix={this.state.headerPrefix}>
+                {this.state.headerName}
               </HeaderName>
 
               <HeaderNavigation aria-label="navigation">

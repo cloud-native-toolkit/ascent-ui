@@ -12,6 +12,7 @@ const config = require('../config/config');
   const LOGIN_URL = "/login";
   const LOGOUT_URL = "/logout";
   const CALLBACK_URL = "/login/callback";
+  const CONFIG_URL = "/config";
 
   const conf = {
     applicationUrl: config.externalUri,
@@ -115,6 +116,14 @@ const config = require('../config/config');
     if (req.session) console.log('test', req.session.redirectUrl);
     res.redirect(req.session?.redirectUrl ? req.session.redirectUrl : '/');
   }
+  app.get(CONFIG_URL, (req, res) => {
+    res.header("Content-Type", "application/json; charset=utf-8")
+    res.status(200);
+    res.json({
+      headerPrefix: config.headerPrefix,
+      headerName: config.headerName,
+    });
+  });
   app.get(CALLBACK_URL, passport.authenticate(config.authProvider), redirectAfterLogin);
   app.get(LOGIN_URL, passport.authenticate(config.authProvider), redirectAfterLogin);
   app.get(LOGOUT_URL, function (req, res, next) {

@@ -19,12 +19,12 @@ class OverView extends Component {
                 <Row className="compliance-page__row">
                     <Column lg={{span: 12}}>
                         <h2 style={{ margin: "30px 0" }} >
-                           TechZone Deployer
+                           Solution Deployer
                         </h2>
 
                         <p style={{ lineHeight: "20px" }}>
-                            The goal of this tool is to accelerate adoption of IBM Software on Hybrid-Cloud. TechZone Deployer drastically reduces the time and effort it takes
-                            to deploy solutions leveraging IBM Software on any Cloud, by providing a modular automation framework allowing users to build their
+                            The goal of this tool is to accelerate solution value in a hybrid-cloud landscape. Solution Deployer drastically reduces the time and effort it takes
+                            to deploy solutions on any cloud or on-premise infrastructure, by providing a modular automation framework allowing users to build their
                             custom solutions and automate their deployment using our solution builder features.
                             It simplifies the complexity of the data attributes that surround a reference architecture for enterprise workloads with regulatory compliance.
                             When we review the regulatory controls the number of cloud services and the possible reference
