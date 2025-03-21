@@ -58,7 +58,7 @@ class LandingPage extends Component {
                 {this.state.headerName || defaultHeaderName}
               </h1>
               <h2 className="landing-page__subheading">
-                Create composite multi-cloud solutions rapidly with automation that deploys IBM Software
+                Create composite multi-cloud solutions rapidly with automation that deploys software and/or cloud services and infrastructure.
               </h2>
 
             </Column>
@@ -67,10 +67,10 @@ class LandingPage extends Component {
               <Column lg={{ span: 6 }} sm={{ span: 12 }}>
 
                 <h2 className="landing-page__subheading">
-                  What can you do with Accelerator Toolkit automation ?
+                  What can you do with {this.state.headerName || defaultHeaderName} automation?
                 </h2>
                 <p className="landing-page__p">
-                  The  automation  provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
+                  The automation provides a simple experience for the creation of common architecture patterns for software and cloud infrastructures to enable
                   rapid composite solution creation using common automation techniques
                 </p>
                 <UnorderedList nested>
@@ -81,18 +81,17 @@ class LandingPage extends Component {
                     Provides a set of cloud infrastructure reference architectures for AWS, Azure and IBM Cloud including Quick Start, Standard and Advanced patterns
                   </ListItem>
                   <ListItem>
-                    Provides a set of composite IBM Software architectures for common client and partner use-cases
+                    Provides a set of composite software architectures for common use-cases
                   </ListItem>
 
                 </UnorderedList>
 
                 <h2 className="landing-page__subheading">
-                  Why do we need automation ?
+                  Why do we need automation?
                 </h2>
                 <p className="landing-page__p">
-                  To help speed up the delivery and adoption of IBM Technology on multiple cloud environment including AWS, Azure and IBM Cloud.
-                  Support the co-creation of composite solutions with Clients and IBM Partners. Provide consistent automation across clouds infrastructures
-                  and software architectures.
+                  To help speed up the delivery and adoption of business solutions multiple cloud environments including AWS, Azure and IBM Cloud.
+                  Provide consistent and repeatable automation across clouds infrastructures and software architectures.
                 </p>
 
                 {this.state.user ? <Link to="/solutions/new" ><Button>Create a Solution</Button></Link> : <Button href="/login" renderIcon={Login20}>Login</Button>}
