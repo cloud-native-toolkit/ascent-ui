@@ -560,7 +560,7 @@ class CreateSolutionview extends Component {
                                                     <SelectItem value={true} text="True" />
                                                 </Select>}
                                                 {!this.props.isDuplicate && this.props.user?.roles?.includes('admin') && <Select id="techzone" name="techzone"
-                                                    labelText="Deploy to TechZone"
+                                                    labelText="Deploy to IBM TechZone"
                                                     required
                                                     defaultValue={this.state.fields.techzone}
                                                     invalidText="A valid value is required"

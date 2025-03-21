@@ -73,7 +73,7 @@ class SolutionDetailsView extends Component {
     deployInTechZone(solutionId) {
         const el = document.getElementById('deployInTechZone');
         el.disabled = true;
-        this.props.addNotification("info", "DEPLOYING", "Deploying automation to Techzone...");
+        this.props.addNotification("info", "DEPLOYING", "Deploying automation to IBM Techzone...");
         fetch(`/api/solutions/${this.state.data?.id}/automation/techzone`)
             .then((response) => { 
             if (response && response.status === 200) {
@@ -83,7 +83,7 @@ class SolutionDetailsView extends Component {
                 });
             }
             else {
-                this.props.addNotification("error", response.status + " " + response.statusText, "Error deploying your automation module to TechZone.");
+                this.props.addNotification("error", response.status + " " + response.statusText, "Error deploying your automation module to IBM TechZone.");
                 el.disabled = false;
             }
         });
@@ -156,7 +156,7 @@ class SolutionDetailsView extends Component {
                                             renderIcon={Subflow16}
                                             disabled={false}
                                             onClick={() => this.deployInTechZone()} >
-                                            Deploy in TechZone
+                                            Deploy in IBM TechZone
                                         </Button>}
                                         <Button
                                             renderIcon={Download16}

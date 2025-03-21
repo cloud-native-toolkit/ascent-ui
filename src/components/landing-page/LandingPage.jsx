@@ -19,6 +19,7 @@ import {
 
 import ReactGA from 'react-ga4';
 import ascentImg from '../../images/ascent.jpeg'
+import { defaultHeaderName } from '../default-labels';
 
 class LandingPage extends Component {
 
@@ -54,7 +55,7 @@ class LandingPage extends Component {
                 </BreadcrumbItem>
               </Breadcrumb>
               <h1 className="landing-page__heading">
-               TechZone Deployer
+                {this.state.headerName || defaultHeaderName}
               </h1>
               <h2 className="landing-page__subheading">
                 Create composite multi-cloud solutions rapidly with automation that deploys IBM Software

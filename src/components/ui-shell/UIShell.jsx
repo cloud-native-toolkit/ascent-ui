@@ -20,6 +20,7 @@ import {
   TaskComplete20, Copy20
 } from '@carbon/icons-react';
 
+import { defaultHeaderName, defaultHeaderPrefix } from '../default-labels';
 import b64 from "../../utils/b64";
 import ApplicationMode from "../../utils/application-mode";
 
@@ -46,8 +47,8 @@ class UIShell extends Component {
       profileExpanded: false,
       content: defaultConfig,
       notifications: [],
-      headerPrefix: '',
-      headerName: 'Solution Deployer'
+      headerPrefix: defaultHeaderPrefix,
+      headerName: defaultHeaderName
     };
   }
 
