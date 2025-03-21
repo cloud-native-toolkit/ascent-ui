@@ -54,7 +54,7 @@ class LandingPage extends Component {
                 </BreadcrumbItem>
               </Breadcrumb>
               <h1 className="landing-page__heading">
-               TechZone Deployer
+               Solution Deployer
               </h1>
               <h2 className="landing-page__subheading">
                 Create composite multi-cloud solutions rapidly with automation that deploys IBM Software
