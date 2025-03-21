@@ -270,7 +270,7 @@ class CreateSolutionview extends Component {
                                                 </p>
                                                 <br />
                                                 <p>
-                                                    Then, you will have to pick the IBM Software cartridges you need as part of your solution, from individual components of IBM Cloud Paks,
+                                                    Then, you will have to pick the software cartridges you need as part of your solution, from individual components of IBM Cloud Paks,
                                                     Sustainability Software, or bringing your own custom Software tiles. Once you have completed all these steps you will be redirected to
                                                     your new solution and can download the automation to support the provisioning into your own environment.
                                                 </p>
@@ -417,7 +417,7 @@ class CreateSolutionview extends Component {
                                                         <form className="plans">
 
                                                             <div className="title">
-                                                                Now you have selected your reference architecture you will require some file storage for your IBM Software
+                                                                Now you have selected your reference architecture you will require some file storage for your software selections.
                                                             </div>
 
                                                             {
@@ -581,7 +581,7 @@ class CreateSolutionview extends Component {
 
                                             <div className="summary">
 
-                                                <p>You have chosen to create an IBM Technology solution called <strong>{this.state.fields?.name}</strong></p>
+                                                <p>You have chosen to create a solution called <strong>{this.state.fields?.name}</strong></p>
 
                                                 <div className='arch'>
                                                     <p>You want to <strong>{persona?.displayName}</strong> <img loading="lazy" src={persona?.iconUrl} alt={persona?.displayName ?? ""} /></p>
@@ -591,7 +591,7 @@ class CreateSolutionview extends Component {
                                                 </div>
 
                                                 <p>
-                                                    You have chosen the following IBM Software to help get your solution started:
+                                                    You have chosen the following software to help get your solution started:
                                                     <ul>
                                                         {software?.map(sw => (
                                                             <li key={sw.name}>{sw.displayName ?? sw.name}</li>

@@ -27,6 +27,8 @@ const {
   // Secret
   APPID_CONFIG,
   OCP_OAUTH_CONFIG,
+  HEADER_PREFIX,
+  HEADER_NAME,
 } = process.env;
 
 console.log('NODE_ENV: ', NODE_ENV)
@@ -61,5 +63,7 @@ module.exports = {
   apiHost: API_HOST ?? 'http://localhost:3001',
   region: REGION ?? 'unknown',
   authProvider: OCP_OAUTH_CONFIG ? "openshift" : "appid",
-  authConfig: authConfig
+  authConfig: authConfig,
+  headerPrefix: HEADER_PREFIX,
+  headerName: HEADER_NAME,
 };
